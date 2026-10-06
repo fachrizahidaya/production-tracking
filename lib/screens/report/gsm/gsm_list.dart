@@ -97,6 +97,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 <<<<<<< HEAD
@@ -110,10 +111,15 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 =======
     _status = widget.status.trim();
+=======
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+>>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
@@ -242,6 +248,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
@@ -250,11 +257,19 @@ class _GsmListState extends State<GsmList> {
         _completedCount = counts['reviewed'];
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        _completedCount = counts['reviewed'];
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -452,8 +467,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 label: 'Direview',
                 status: 'Direview',
 =======
@@ -467,7 +485,14 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+                label: 'Direview',
+                status: 'Direview',
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -491,8 +516,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     final selected = _status == status;
 =======
     final selected =
@@ -504,7 +532,13 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    final selected = _status == status;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -666,14 +700,20 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -687,6 +727,12 @@ class _GsmListState extends State<GsmList> {
 =======
                                 'Tanggal Packing',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+                                'Tanggal Packing',
+=======
+                                'Tanggal GSM',
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -697,6 +743,7 @@ class _GsmListState extends State<GsmList> {
                               Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
@@ -704,6 +751,12 @@ class _GsmListState extends State<GsmList> {
 =======
                                 _formatDateTime(item.startDate),
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+                                _formatDateTime(item.startDate),
+=======
+                                _formatDateTime(date),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
@@ -712,8 +765,11 @@ class _GsmListState extends State<GsmList> {
                             ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
                           child: Text(
                             _formatDateTime(date),
@@ -727,7 +783,12 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -1088,8 +1149,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     return normalized == 'direview' ||
         normalized == 'reviewed' ||
         normalized == 'selesai' ||
@@ -1104,7 +1168,15 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -1310,6 +1382,7 @@ class _GsmListState extends State<GsmList> {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1321,11 +1394,22 @@ class _GsmListState extends State<GsmList> {
         return const Color(0xFFF2F7FF);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
+<<<<<<< HEAD
         return const Color(0xFFEBFDF4);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        return const Color(0xFFF2F7FF);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -1346,6 +1430,7 @@ class _GsmListState extends State<GsmList> {
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1355,13 +1440,21 @@ class _GsmListState extends State<GsmList> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+        return const Color(0xFF955B34);
+>>>>>>> db08c830 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }

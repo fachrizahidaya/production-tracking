@@ -1877,6 +1877,7 @@ import 'package:textile_tracking/models/report/wo_list.dart';
       final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
       final total =
           int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
+<<<<<<< HEAD
 
       return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
@@ -2932,8 +2933,10 @@ import 'package:textile_tracking/models/report/wo_list.dart';
                 '',
           ) ??
           pending + completed;
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(
@@ -3192,22 +3195,11 @@ import 'package:textile_tracking/models/report/wo_list.dart';
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
       final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
-      final completed = int.tryParse(
-            data?['completed']?.toString() ??
-                data?['complete']?.toString() ??
-                data?['done']?.toString() ??
-                '',
-          ) ??
-          0;
-      final total = int.tryParse(
-            data?['total']?.toString() ??
-                data?['all']?.toString() ??
-                data?['total_count']?.toString() ??
-                '',
-          ) ??
-          pending + completed;
+      final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
+      final total =
+          int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(
@@ -3255,6 +3247,7 @@ import 'package:textile_tracking/models/report/wo_list.dart';
       'qtyBs': _first(data, ['qty_bs', 'bs_qty', 'qty']) ??
           _first(sorting, ['qty_bs', 'bs_qty', 'qty']) ??
           '-',
+      'bsRate': _first(data, ['bs_rate']) ?? _first(sorting, ['bs_rate']) ?? '',
       'material': _formatBsMaterial(data),
       'topMaterialCode':
           data['top_material_code']?.toString().trim().isNotEmpty == true
@@ -3366,22 +3359,11 @@ import 'package:textile_tracking/models/report/wo_list.dart';
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
       final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
-      final completed = int.tryParse(
-            data?['completed']?.toString() ??
-                data?['complete']?.toString() ??
-                data?['done']?.toString() ??
-                '',
-          ) ??
-          0;
-      final total = int.tryParse(
-            data?['total']?.toString() ??
-                data?['all']?.toString() ??
-                data?['total_count']?.toString() ??
-                '',
-          ) ??
-          pending + completed;
+      final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
+      final total =
+          int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(

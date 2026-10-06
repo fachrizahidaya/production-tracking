@@ -144,7 +144,9 @@ class _ReworkListState extends State<ReworkList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+<<<<<<< HEAD
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     _status = widget.status;
@@ -161,6 +163,11 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+=======
+    _showSavedDialogAfterLoad = widget.savedWoNo != null;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     _searchController.text = widget.search;
 <<<<<<< HEAD
 
@@ -1276,6 +1283,7 @@ class _ReworkListState extends State<ReworkList> {
                     //   _categories(item),
                     //   maxLines: 1,
                     // ),
+<<<<<<< HEAD
                     const SizedBox(height: 12),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -1283,6 +1291,12 @@ class _ReworkListState extends State<ReworkList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+=======
+                    if (!_isWaitingStatus(status)) ...[
+                      const SizedBox(height: 12),
+                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
+                    ],
+>>>>>>> d256f82 (fix: UI evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1301,7 +1315,11 @@ class _ReworkListState extends State<ReworkList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
+=======
+                                _formatDateTime(date),
+>>>>>>> d256f82 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
@@ -2056,6 +2074,7 @@ class _ReworkListState extends State<ReworkList> {
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
+<<<<<<< HEAD
       case 'reviewed':
       case 'selesai':
       case 'completed':
@@ -2083,6 +2102,9 @@ class _ReworkListState extends State<ReworkList> {
       case 'reviewed':
       case 'selesai':
       case 'completed':
+=======
+      case 'completed':
+>>>>>>> d256f82 (fix: UI evaluasi)
         return const Color(0xFFF2F7FF);
       case 'menunggu':
       case 'waiting':
@@ -2165,13 +2187,17 @@ class _ReworkListState extends State<ReworkList> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
-      case 'selesai':
+      case 'direview':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> 1ac53f67 (fix: rework)
+=======
+        return const Color(0xFF955B34);
+>>>>>>> db08c830 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }

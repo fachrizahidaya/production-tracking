@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math' as math;
 
 =======
@@ -10,16 +11,26 @@ import 'dart:math' as math;
 
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 import 'dart:math' as math;
 
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+import 'dart:math' as math;
+
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -41,6 +52,10 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 =======
 =======
 >>>>>>> 566eb72e (fix:)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
@@ -95,6 +110,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   bool _saving = false;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
   int _visibleStep = 1;
@@ -104,6 +120,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+  int _visibleStep = 1;
+
+  String get _draftType => 'gsm';
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
 
   @override
   void initState() {
@@ -111,8 +135,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -138,7 +165,20 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    _reasonController.text = _textValue(widget.data['reason']);
+    _actionPlanController.text = _textValue(widget.data['actionPlan']);
+    _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _visibleStep = _stepFromValues();
+    _reasonController.addListener(_persistDraft);
+    _actionPlanController.addListener(_persistDraft);
+    _preventivePlanController.addListener(_persistDraft);
+    _loadDraft();
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   }
 
   @override
@@ -146,12 +186,16 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     _reasonController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     _reasonController.removeListener(_persistDraft);
@@ -164,6 +208,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
+=======
+=======
+    _reasonController.removeListener(_persistDraft);
+    _actionPlanController.removeListener(_persistDraft);
+    _preventivePlanController.removeListener(_persistDraft);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     _reasonController.dispose();
     _actionPlanController.dispose();
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
@@ -175,10 +226,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
@@ -187,14 +243,21 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   int _stepFromValues() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 =======
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
     if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     return 1;
   }
 
@@ -208,19 +271,29 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
       if (draft.containsKey('actionPlan')) {
         _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
       }
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       if (draft.containsKey('attachments')) {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
@@ -247,6 +320,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         parsedStep.clamp(1, 2),
 =======
       final savedStep = draft['visibleStep'];
+<<<<<<< HEAD
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
@@ -263,6 +337,12 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
         parsedStep.clamp(1, 2),
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+      _visibleStep = math.max(
+        _stepFromValues(),
+        savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       );
     });
   }
@@ -270,6 +350,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reason': _reasonController.text,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       'preventivePlan': _preventivePlanController.text,
@@ -285,11 +366,22 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+      'attachments': _attachments,
+=======
+      'actionPlan': _actionPlanController.text,
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -307,6 +399,12 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -340,6 +438,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       if (!mounted) return;
       Navigator.pop(context, message);
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -376,6 +475,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   Future<void> _save() async {
     if (_saving || !_canSave) return;
     setState(() => _saving = true);
@@ -387,6 +490,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         actionPlan: _actionPlanController.text,
         preventivePlan: _preventivePlanController.text,
       );
+      await EvaluationDraft.clear(_draftType, widget.data['id']);
 
       if (!mounted) return;
       Navigator.pop(context, true);
@@ -470,6 +574,12 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
   }
 
+  bool get _canGoNext {
+    if (_visibleStep == 1) return _reasonController.text.trim().isNotEmpty;
+    if (_visibleStep == 2) return _actionPlanController.text.trim().isNotEmpty;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -483,8 +593,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -533,6 +646,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
               ],
 =======
           padding: const EdgeInsets.all(16),
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
@@ -598,26 +712,60 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
               ],
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+=======
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
           child: Column(
             children: [
-              _buildOverviewCard(),
-              const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Alasan dan Penyebab',
-                controller: _reasonController,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildOverviewCard(),
               ),
               const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Tindakan',
-                controller: _actionPlanController,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildEditorForm(
+                  label: 'Alasan dan Penyebab',
+                  controller: _reasonController,
+                ),
               ),
-              const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Pencegahan',
-                controller: _preventivePlanController,
-              ),
+<<<<<<< HEAD
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+              if (_visibleStep >= 2) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildEditorForm(
+                    label: 'Rencana Tindakan',
+                    controller: _actionPlanController,
+                  ),
+                ),
+              ],
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildEditorForm(
+                    label: 'Rencana Pencegahan',
+                    controller: _preventivePlanController,
+                  ),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildNextButton(),
+                ),
+              ],
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
             ],
           ),
         ),
@@ -694,10 +842,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       ),
     );
   }
@@ -707,8 +860,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       width: double.infinity,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle.copyWith(
@@ -1015,12 +1171,16 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
         onChanged: (_) => setState(() {}),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
       height: 48,
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle,
         child: const Text('Selanjutnya'),
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
       ),
     );
@@ -1311,6 +1471,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 >>>>>>> 72ffc257 (fix:)
 =======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       ),
     );
   }
@@ -1323,7 +1486,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'selesai' || status == 'completed';
+    return status == 'direview' ||
+        status == 'reviewed' ||
+        status == 'selesai' ||
+        status == 'completed';
   }
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
@@ -1357,13 +1523,27 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-            label: 'Packing GSM',
-            value: _formatGsmNumber(_raw('packingGsm')),
+            label: 'No. Packing',
+            value: _value('packingNo'),
+            valueColor: const Color(0xFF234393),
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-            label: 'Material GSM',
-            value: _formatGsmNumber(_raw('materialGsm')),
+            label: 'Packing GSM',
+            value: _formatGsmNumber(_raw('packingGsm')),
+            valueColor: const Color(0xFFB42318),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Mulai',
+            person: _packing['start_by'],
+            time: _packing['start_time']?.toString(),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Selesai',
+            person: _packing['end_by'],
+            time: _packing['end_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -1372,14 +1552,28 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  _formatDateTime(
-                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanggal GSM',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _formatDateTime(
+                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -1483,9 +1677,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1502,15 +1698,84 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }
+  }
+
+  Map<String, dynamic> get _packing {
+    final packing = widget.data['packing'];
+    return packing is Map ? Map<String, dynamic>.from(packing) : {};
+  }
+
+  Widget _buildProcessTimeItem({
+    required String label,
+    required dynamic person,
+    required String? time,
+  }) {
+    final name = _personName(person);
+    final formattedTime = _formatProcessTime(time);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            if (name != '-' || formattedTime == null)
+              Text(
+                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (formattedTime != null)
+              Text(
+                formattedTime,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _personName(dynamic person) {
+    if (person is Map) {
+      final name = person['name'] ?? person['full_name'];
+      if (name != null && name.toString().trim().isNotEmpty) {
+        return name.toString();
+      }
+    }
+    return '-';
+  }
+
+  String? _formatProcessTime(String? value) {
+    if (value == null || value.trim().isEmpty || value.trim() == '-') {
+      return null;
+    }
+    return _formatDateTime(value);
   }
 
   String _formatDateTime(String value) {

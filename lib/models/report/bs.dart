@@ -44,10 +44,15 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   final bsRate;
   final material;
   final item;
@@ -82,10 +87,15 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       this.bsRate,
       this.material,
       this.item,
@@ -160,10 +170,15 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
         material: json['material'] ??
             json['semi_finished_product'] ??

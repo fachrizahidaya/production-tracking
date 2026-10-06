@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -271,6 +272,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
+<<<<<<< HEAD
   final ReportService _reportService = ReportService();
   bool _saving = false;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
@@ -279,7 +281,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+  int _selectedHistoryIndex = 0;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
 
   @override
   void initState() {
@@ -327,10 +335,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
@@ -342,6 +355,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final message = await Navigator.push<String>(
 =======
     return status == 'selesai' || status == 'completed';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -355,6 +369,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final message = await Navigator.push<String>(
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   }
 
   Future<void> _openEditScreen() async {
@@ -554,8 +572,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               const SizedBox(height: 16),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
@@ -631,7 +652,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+              _buildHistoryCard(),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
             ],
           ),
         ),
@@ -681,8 +708,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
             label: 'No. Packing',
             value: _value('packingNo'),
             valueColor: const Color(0xFF234393),
@@ -720,10 +750,14 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             label: 'Packing GSM',
             value: _formatGsmNumber(_raw('packingGsm')),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
             label: 'No. Packing',
             value: _value('packingNo'),
             valueColor: const Color(0xFF234393),
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
           ),
           const SizedBox(height: 12),
@@ -755,11 +789,27 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           const SizedBox(height: 12),
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-            label: 'Material GSM',
-            value: _formatGsmNumber(_raw('materialGsm')),
+            label: 'Packing GSM',
+            value: _formatGsmNumber(_raw('packingGsm')),
+            valueColor: const Color(0xFFB42318),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Mulai',
+            person: _packing['start_by'],
+            time: _packing['start_time']?.toString(),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Selesai',
+            person: _packing['end_by'],
+            time: _packing['end_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -770,11 +820,18 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             children: [
               Expanded(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+<<<<<<< HEAD
                       'Tanggal',
+=======
+                      'Tanggal GSM',
+>>>>>>> db08c830 (fix: UI evaluasi)
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,
@@ -792,6 +849,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                       ),
                     ),
                   ],
+<<<<<<< HEAD
 =======
                 child: Text(
                   _formatDateTime(
@@ -802,6 +860,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                     fontSize: 16,
                   ),
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -1092,8 +1152,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1114,7 +1177,17 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+      case 'direview':
+      case 'reviewed':
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFF2F7FF);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1134,8 +1207,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1145,6 +1221,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       case 'direview':
@@ -1162,14 +1239,27 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         return const Color(0xFF955B34);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        return const Color(0xFF955B34);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }
@@ -1178,10 +1268,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   Map<String, dynamic> get _packing {
     final packing = widget.data['packing'];
     return packing is Map ? Map<String, dynamic>.from(packing) : {};
@@ -1251,6 +1346,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
@@ -1259,6 +1355,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -1509,8 +1611,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1550,15 +1655,22 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     });
     return items;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
   String _historyGroupLabel(Map<String, dynamic> group) {
     final label = group['label']?.toString().trim() ?? '';
     return label.isNotEmpty
         ? label
         : _historyFieldLabel(group['field']?.toString());
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -1568,15 +1680,22 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         .whereType<Map>()
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
         .where((item) => item['new_value'] != null)
 =======
         .where(
           (item) => item['old_value'] != null && item['new_value'] != null,
         )
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
         .where((item) => item['new_value'] != null)
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
@@ -1584,8 +1703,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -1618,6 +1740,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return value.toString().trim();
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Widget _buildHistoryCard() {
@@ -1635,6 +1758,21 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   Widget _buildHistoryCard() {
     final histories = _histories;
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+  Widget _buildHistoryCard() {
+    final histories = _histories
+        .where((history) => _historyItems(history).isNotEmpty)
+        .toList();
+    final selectedIndex =
+        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
+            ? _selectedHistoryIndex
+            : 0;
+    final items = histories.isEmpty
+        ? <Map<String, dynamic>>[]
+        : _historyItems(histories[selectedIndex]);
+>>>>>>> db08c830 (fix: UI evaluasi)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1642,6 +1780,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         title: 'Riwayat Perubahan',
         icon: Icons.history_outlined,
         child: Column(
+<<<<<<< HEAD
 <<<<<<< HEAD
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1677,6 +1816,36 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               if (i > 0) const SizedBox(height: 12),
               _buildHistoryItem(histories[i]),
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (histories.isEmpty)
+              const NoData()
+            else ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < histories.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text(_historyGroupLabel(histories[i])),
+                        selected: i == selectedIndex,
+                        showCheckmark: false,
+                        onSelected: (_) {
+                          setState(() => _selectedHistoryIndex = i);
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              if (items.isNotEmpty) const SizedBox(height: 12),
+              for (int i = 0; i < items.length; i++) ...[
+                if (i > 0) const SizedBox(height: 12),
+                _buildHistoryItem(items[i]),
+              ],
+>>>>>>> db08c830 (fix: UI evaluasi)
             ],
           ],
         ),
@@ -1715,6 +1884,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (hasOldValue) ...[
             Text(
               oldValue,
@@ -1738,6 +1908,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
           if (hasOldValue) ...[
             Text(
               oldValue,

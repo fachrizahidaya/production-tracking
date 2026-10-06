@@ -96,6 +96,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 <<<<<<< HEAD
@@ -109,10 +110,15 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 =======
     _status = widget.status.trim();
+=======
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+>>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
@@ -241,6 +247,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
@@ -249,11 +256,19 @@ class _BsListState extends State<BsList> {
         _completedCount = counts['reviewed'];
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        _completedCount = counts['reviewed'];
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -451,8 +466,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 label: 'Direview',
                 status: 'Direview',
 =======
@@ -466,7 +484,14 @@ class _BsListState extends State<BsList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+                label: 'Direview',
+                status: 'Direview',
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -490,8 +515,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     final selected = _status == status;
 =======
     final selected =
@@ -503,7 +531,13 @@ class _BsListState extends State<BsList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    final selected = _status == status;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -654,7 +688,7 @@ class _BsListState extends State<BsList> {
 =======
 =======
                     if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
 >>>>>>> aa02f1b (feat: evaluasi bs)
@@ -667,14 +701,20 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -688,6 +728,12 @@ class _BsListState extends State<BsList> {
 =======
                                 'Tanggal Sortir',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+                                'Tanggal Sortir',
+=======
+                                'Tanggal BS',
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -698,6 +744,7 @@ class _BsListState extends State<BsList> {
                               Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
@@ -705,6 +752,12 @@ class _BsListState extends State<BsList> {
 =======
                                 _formatDateTime(item.startDate),
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+                                _formatDateTime(item.startDate),
+=======
+                                _formatDateTime(date),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
@@ -713,8 +766,11 @@ class _BsListState extends State<BsList> {
                             ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
                           child: Text(
                             _formatDateTime(date),
@@ -728,7 +784,12 @@ class _BsListState extends State<BsList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -770,10 +831,15 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -859,6 +925,7 @@ class _BsListState extends State<BsList> {
           label: 'Qty BS',
           value: '${_qtyBs(item)} PCS',
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
         ),
@@ -866,6 +933,10 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         ),
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
@@ -1045,10 +1116,13 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
   Map<String, dynamic> _materialItem(BsListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1065,10 +1139,15 @@ class _BsListState extends State<BsList> {
       _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 5e38e0f3 (fix:)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   String _bsRateLabel(BsListItem item) {
     final value = item.bsRate?.toString().trim() ?? '';
     if (value.isEmpty) return '';
@@ -1095,6 +1174,7 @@ class _BsListState extends State<BsList> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
@@ -1103,6 +1183,12 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   String _submittedBy(BsListItem item) {
     final submitted = _map(item.submitted);
     return _display(submitted['name'] ??
@@ -1142,8 +1228,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     return normalized == 'direview' ||
         normalized == 'reviewed' ||
         normalized == 'selesai' ||
@@ -1158,7 +1247,15 @@ class _BsListState extends State<BsList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -1364,6 +1461,7 @@ class _BsListState extends State<BsList> {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1375,11 +1473,22 @@ class _BsListState extends State<BsList> {
         return const Color(0xFFF2F7FF);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
+<<<<<<< HEAD
         return const Color(0xFFEBFDF4);
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        return const Color(0xFFF2F7FF);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -1400,6 +1509,7 @@ class _BsListState extends State<BsList> {
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1409,13 +1519,21 @@ class _BsListState extends State<BsList> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+        return const Color(0xFF955B34);
+>>>>>>> db08c830 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }

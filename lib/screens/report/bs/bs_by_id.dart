@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -267,6 +268,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
+<<<<<<< HEAD
   final ReportService _reportService = ReportService();
   bool _saving = false;
 >>>>>>> aa02f1b (feat: evaluasi bs)
@@ -275,7 +277,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+  int _selectedHistoryIndex = 0;
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
 
   @override
   void initState() {
@@ -323,10 +331,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
@@ -338,6 +351,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final message = await Navigator.push<String>(
 =======
     return status == 'selesai' || status == 'completed';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -351,6 +365,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final message = await Navigator.push<String>(
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   }
 
   Future<void> _openEditScreen() async {
@@ -555,8 +573,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               const SizedBox(height: 16),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
@@ -632,7 +653,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+              _buildHistoryCard(),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
             ],
           ),
         ),
@@ -687,8 +714,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
@@ -698,11 +728,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           const SizedBox(height: 12),
           _buildProcessTimeItem(
 <<<<<<< HEAD
+<<<<<<< HEAD
             label: 'Mulai',
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
             label: 'Mulai Sortir',
 >>>>>>> 9b746b6d (fix: UI)
+=======
+            label: 'Mulai',
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
@@ -710,6 +745,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           _buildProcessTimeItem(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
             label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
@@ -784,6 +822,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             value: '${_value('qtyBs')} PCS',
             valueColor: const Color(0xFF234393),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             label: 'Selesai',
 =======
@@ -792,6 +831,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+=======
+            label: 'Selesai',
+            person: _sorting['end_by'],
+            time: _sorting['end_time']?.toString(),
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -810,11 +856,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             children: [
               Expanded(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+<<<<<<< HEAD
                       'Tanggal',
+=======
+                      'Tanggal BS',
+>>>>>>> db08c830 (fix: UI evaluasi)
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,
@@ -832,6 +885,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                       ),
                     ),
                   ],
+<<<<<<< HEAD
 =======
                 child: Text(
                   _formatDateTime(
@@ -842,6 +896,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                     fontSize: 16,
                   ),
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -909,6 +965,56 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       ),
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+    );
+  }
+
+  Widget _buildQtyBsItem() {
+    final rate = _value('bsRate');
+    final hasRate = rate != '-' && rate.trim().isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Qty BS',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            Text(
+              '${_value('qtyBs')} PCS',
+              style: const TextStyle(
+                color: Color(0xFFB42318),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (hasRate) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3F2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$rate %',
+                  style: const TextStyle(
+                    color: Color(0xFFB42318),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
@@ -1386,15 +1492,21 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
               child: Row(
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
                 children: [
-                  for (int i = 0; i < defects.length; i++) ...[
-                    if (i > 0) const SizedBox(width: 10),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: i == 0 ? 12 : 0,
-                        right: i == defects.length - 1 ? 12 : 0,
-                      ),
-                      child: _buildDefectItem(defects[i]),
+                  for (int i = 0; i < defects.length; i += 2) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(child: _buildDefectItem(defects[i])),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: i + 1 < defects.length
+                              ? _buildDefectItem(defects[i + 1])
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
                     ),
                   ],
                 ],
@@ -1489,8 +1601,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Container(
@@ -1523,24 +1638,48 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
               name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Color(0xFF292A2F),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 fontSize: 14,
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
                 fontWeight: FontWeight.w600,
               ),
             ),
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
           ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
           Text(
@@ -1599,17 +1738,22 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
             const SizedBox(height: 8),
             Text(
+=======
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+>>>>>>> d256f82 (fix: UI evaluasi)
               qty,
               style: TextStyle(
                 color: Colors.grey.shade700,
-                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1642,8 +1786,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1664,7 +1811,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+      case 'direview':
+      case 'reviewed':
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFF2F7FF);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1684,8 +1841,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1695,6 +1855,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       case 'direview':
@@ -1712,14 +1873,27 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         return const Color(0xFF955B34);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
+=======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        return const Color(0xFF955B34);
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }
@@ -1728,10 +1902,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   Map<String, dynamic> get _sorting {
     final sorting = widget.data['sorting'];
     return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
@@ -1801,6 +1980,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
@@ -1809,6 +1989,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -2059,8 +2245,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -2100,15 +2289,22 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     });
     return items;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
 =======
   String _historyGroupLabel(Map<String, dynamic> group) {
     final label = group['label']?.toString().trim() ?? '';
     return label.isNotEmpty
         ? label
         : _historyFieldLabel(group['field']?.toString());
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -2118,15 +2314,22 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .whereType<Map>()
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
         .where((item) => item['new_value'] != null)
 =======
         .where(
           (item) => item['old_value'] != null && item['new_value'] != null,
         )
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
         .where((item) => item['new_value'] != null)
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+>>>>>>> db08c830 (fix: UI evaluasi)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
@@ -2134,8 +2337,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -2168,6 +2374,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return value.toString().trim();
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Widget _buildHistoryCard() {
@@ -2185,6 +2392,21 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   Widget _buildHistoryCard() {
     final histories = _histories;
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+  Widget _buildHistoryCard() {
+    final histories = _histories
+        .where((history) => _historyItems(history).isNotEmpty)
+        .toList();
+    final selectedIndex =
+        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
+            ? _selectedHistoryIndex
+            : 0;
+    final items = histories.isEmpty
+        ? <Map<String, dynamic>>[]
+        : _historyItems(histories[selectedIndex]);
+>>>>>>> db08c830 (fix: UI evaluasi)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -2192,6 +2414,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         title: 'Riwayat Perubahan',
         icon: Icons.history_outlined,
         child: Column(
+<<<<<<< HEAD
 <<<<<<< HEAD
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -2227,6 +2450,36 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               if (i > 0) const SizedBox(height: 12),
               _buildHistoryItem(histories[i]),
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (histories.isEmpty)
+              const NoData()
+            else ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < histories.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text(_historyGroupLabel(histories[i])),
+                        selected: i == selectedIndex,
+                        showCheckmark: false,
+                        onSelected: (_) {
+                          setState(() => _selectedHistoryIndex = i);
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              if (items.isNotEmpty) const SizedBox(height: 12),
+              for (int i = 0; i < items.length; i++) ...[
+                if (i > 0) const SizedBox(height: 12),
+                _buildHistoryItem(items[i]),
+              ],
+>>>>>>> db08c830 (fix: UI evaluasi)
             ],
           ],
         ),
@@ -2265,6 +2518,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (hasOldValue) ...[
             Text(
               oldValue,
@@ -2288,6 +2542,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(height: 6),
+=======
+>>>>>>> db08c830 (fix: UI evaluasi)
           if (hasOldValue) ...[
             Text(
               oldValue,

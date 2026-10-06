@@ -42,6 +42,9 @@ class BsListItem {
   final sorting;
   final qtyBs;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   final bsRate;
   final material;
   final item;
@@ -65,6 +68,9 @@ class BsListItem {
       this.sorting,
       this.qtyBs,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
       this.bsRate,
       this.material,
       this.item,
@@ -104,6 +110,9 @@ class BsListItem {
             sorting['qty_bs'] ??
             '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
         material: json['material'] ??
             json['semi_finished_product'] ??

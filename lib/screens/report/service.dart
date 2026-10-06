@@ -1865,22 +1865,11 @@ class ReportService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
       final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
-      final completed = int.tryParse(
-            data?['completed']?.toString() ??
-                data?['complete']?.toString() ??
-                data?['done']?.toString() ??
-                '',
-          ) ??
-          0;
-      final total = int.tryParse(
-            data?['total']?.toString() ??
-                data?['all']?.toString() ??
-                data?['total_count']?.toString() ??
-                '',
-          ) ??
-          pending + completed;
+      final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
+      final total =
+          int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(
@@ -2139,22 +2128,11 @@ class ReportService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
       final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
-      final completed = int.tryParse(
-            data?['completed']?.toString() ??
-                data?['complete']?.toString() ??
-                data?['done']?.toString() ??
-                '',
-          ) ??
-          0;
-      final total = int.tryParse(
-            data?['total']?.toString() ??
-                data?['all']?.toString() ??
-                data?['total_count']?.toString() ??
-                '',
-          ) ??
-          pending + completed;
+      final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
+      final total =
+          int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(
@@ -2202,6 +2180,7 @@ class ReportService {
       'qtyBs': _first(data, ['qty_bs', 'bs_qty', 'qty']) ??
           _first(sorting, ['qty_bs', 'bs_qty', 'qty']) ??
           '-',
+      'bsRate': _first(data, ['bs_rate']) ?? _first(sorting, ['bs_rate']) ?? '',
       'material': _formatBsMaterial(data),
       'topMaterialCode':
           data['top_material_code']?.toString().trim().isNotEmpty == true
@@ -2313,22 +2292,11 @@ class ReportService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body)['data'];
       final pending = int.tryParse(data?['pending']?.toString() ?? '') ?? 0;
-      final completed = int.tryParse(
-            data?['completed']?.toString() ??
-                data?['complete']?.toString() ??
-                data?['done']?.toString() ??
-                '',
-          ) ??
-          0;
-      final total = int.tryParse(
-            data?['total']?.toString() ??
-                data?['all']?.toString() ??
-                data?['total_count']?.toString() ??
-                '',
-          ) ??
-          pending + completed;
+      final reviewed = int.tryParse(data?['reviewed']?.toString() ?? '') ?? 0;
+      final total =
+          int.tryParse(data?['total']?.toString() ?? '') ?? pending + reviewed;
 
-      return {'pending': pending, 'completed': completed, 'all': total};
+      return {'pending': pending, 'reviewed': reviewed, 'all': total};
     }
 
     throw Exception(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -169,11 +170,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
+<<<<<<< HEAD
   final ReportService _reportService = ReportService();
   bool _saving = false;
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+  int _selectedHistoryIndex = 0;
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
 
   @override
   void initState() {
@@ -201,16 +206,22 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
         status == 'completed';
+<<<<<<< HEAD
   }
 
   Future<void> _openEditScreen() async {
     final message = await Navigator.push<String>(
 =======
     return status == 'selesai' || status == 'completed';
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   }
 
   Future<void> _openEditScreen() async {
@@ -320,6 +331,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
+<<<<<<< HEAD
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
@@ -370,6 +382,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 _buildHistoryCard(),
               ],
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+              _buildHistoryCard(),
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
             ],
           ),
         ),
@@ -408,15 +423,23 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
           const SizedBox(height: 12),
 <<<<<<< HEAD
+<<<<<<< HEAD
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
             label: 'Mulai Sortir',
+=======
+          _buildQtyBsItem(),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Mulai',
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
+<<<<<<< HEAD
             label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
@@ -489,6 +512,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             label: 'Qty BS',
             value: '${_value('qtyBs')} PCS',
             valueColor: const Color(0xFF234393),
+=======
+            label: 'Selesai',
+            person: _sorting['end_by'],
+            time: _sorting['end_time']?.toString(),
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -497,14 +525,28 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  _formatDateTime(
-                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanggal BS',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _formatDateTime(
+                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -513,6 +555,56 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ],
       ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
+    );
+  }
+
+  Widget _buildQtyBsItem() {
+    final rate = _value('bsRate');
+    final hasRate = rate != '-' && rate.trim().isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Qty BS',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            Text(
+              '${_value('qtyBs')} PCS',
+              style: const TextStyle(
+                color: Color(0xFFB42318),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (hasRate) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3F2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$rate %',
+                  style: const TextStyle(
+                    color: Color(0xFFB42318),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
@@ -699,6 +791,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               child: Column(
+<<<<<<< HEAD
                 children: [
                   for (int i = 0; i < defects.length; i += 2) ...[
                     if (i > 0) const SizedBox(height: 10),
@@ -837,15 +930,21 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
               child: Row(
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                 children: [
-                  for (int i = 0; i < defects.length; i++) ...[
-                    if (i > 0) const SizedBox(width: 10),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: i == 0 ? 12 : 0,
-                        right: i == defects.length - 1 ? 12 : 0,
-                      ),
-                      child: _buildDefectItem(defects[i]),
+                  for (int i = 0; i < defects.length; i += 2) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(child: _buildDefectItem(defects[i])),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: i + 1 < defects.length
+                              ? _buildDefectItem(defects[i + 1])
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
                     ),
                   ],
                 ],
@@ -923,6 +1022,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final name = defect['defect_name']?.toString() ?? '-';
     final qty = defect['qty']?.toString() ?? '-';
 
+<<<<<<< HEAD
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Container(
@@ -938,15 +1038,30 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           children: [
             Text(
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
               name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Color(0xFF292A2F),
-                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
+<<<<<<< HEAD
 <<<<<<< HEAD
           ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -963,16 +1078,21 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
             const SizedBox(height: 8),
             Text(
+=======
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
               qty,
               style: TextStyle(
                 color: Colors.grey.shade700,
-                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
 >>>>>>> d9ba4836 (fix: detail evaluasi)
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1003,6 +1123,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1013,6 +1134,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       case 'completed':
         return const Color(0xFFEBFDF4);
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+      case 'direview':
+      case 'reviewed':
+      case 'selesai':
+      case 'completed':
+        return const Color(0xFFF2F7FF);
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -1030,6 +1158,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
 <<<<<<< HEAD
+<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -1039,19 +1168,30 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       case 'waiting':
         return const Color(0xFF955B34);
 =======
+=======
+      case 'direview':
+      case 'reviewed':
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
+<<<<<<< HEAD
         return const Color(0xFFA16207);
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+        return const Color(0xFF955B34);
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   Map<String, dynamic> get _sorting {
     final sorting = widget.data['sorting'];
     return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
@@ -1119,8 +1259,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return _formatDateTime(value);
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -1276,6 +1419,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1297,6 +1441,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       return aDate.compareTo(bDate);
     });
     return items;
+=======
+  String _historyGroupLabel(Map<String, dynamic> group) {
+    final label = group['label']?.toString().trim() ?? '';
+    return label.isNotEmpty
+        ? label
+        : _historyFieldLabel(group['field']?.toString());
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -1304,11 +1455,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     if (raw is! List) return [];
     return raw
         .whereType<Map>()
+<<<<<<< HEAD
         .where((item) => item['new_value'] != null)
+=======
+        .where(
+          (item) => item['old_value'] != null && item['new_value'] != null,
+        )
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
+<<<<<<< HEAD
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -1340,8 +1498,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
     return value.toString().trim();
 =======
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   Widget _buildHistoryCard() {
-    final histories = _histories;
+    final histories = _histories
+        .where((history) => _historyItems(history).isNotEmpty)
+        .toList();
+    final selectedIndex =
+        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
+            ? _selectedHistoryIndex
+            : 0;
+    final items = histories.isEmpty
+        ? <Map<String, dynamic>>[]
+        : _historyItems(histories[selectedIndex]);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1349,10 +1518,34 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         title: 'Riwayat Perubahan',
         icon: Icons.history_outlined,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (int i = 0; i < histories.length; i++) ...[
-              if (i > 0) const SizedBox(height: 12),
-              _buildHistoryItem(histories[i]),
+            if (histories.isEmpty)
+              const NoData()
+            else ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < histories.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text(_historyGroupLabel(histories[i])),
+                        selected: i == selectedIndex,
+                        showCheckmark: false,
+                        onSelected: (_) {
+                          setState(() => _selectedHistoryIndex = i);
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              if (items.isNotEmpty) const SizedBox(height: 12),
+              for (int i = 0; i < items.length; i++) ...[
+                if (i > 0) const SizedBox(height: 12),
+                _buildHistoryItem(items[i]),
+              ],
             ],
           ],
         ),
@@ -1380,15 +1573,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _historyFieldLabel(history['field']?.toString()),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 6),
           if (hasOldValue) ...[
             Text(
               oldValue,

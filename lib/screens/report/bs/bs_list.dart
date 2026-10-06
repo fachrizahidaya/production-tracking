@@ -72,10 +72,14 @@ class _BsListState extends State<BsList> {
     _sort = widget.sort;
     _search = widget.search;
 <<<<<<< HEAD
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 =======
     _status = widget.status.trim();
+=======
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> b2b87875 (feat: evaluasi bs)
     _searchController.text = widget.search;
@@ -190,10 +194,14 @@ class _BsListState extends State<BsList> {
       setState(() {
         _pendingCount = counts['pending'];
 <<<<<<< HEAD
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+        _completedCount = counts['reviewed'];
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -389,12 +397,17 @@ class _BsListState extends State<BsList> {
               const SizedBox(width: 8),
               _buildStatusTab(
 <<<<<<< HEAD
+<<<<<<< HEAD
                 label: 'Direview',
                 status: 'Direview',
 =======
                 label: 'Selesai',
                 status: 'Selesai',
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+                label: 'Direview',
+                status: 'Direview',
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -416,11 +429,15 @@ class _BsListState extends State<BsList> {
     int? count,
   }) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final selected = _status == status;
 =======
     final selected =
         _status == status || (status == 'Menunggu' && _status.isEmpty);
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+    final selected = _status == status;
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -529,7 +546,7 @@ class _BsListState extends State<BsList> {
                     ),
 =======
                     if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -539,11 +556,18 @@ class _BsListState extends State<BsList> {
                       children: [
                         Expanded(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
                                 'Tanggal Sortir',
+=======
+                                'Tanggal BS',
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -552,13 +576,18 @@ class _BsListState extends State<BsList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
+=======
+                                _formatDateTime(date),
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
                                 ),
                               ),
                             ],
+<<<<<<< HEAD
 =======
                           child: Text(
                             _formatDateTime(date),
@@ -567,6 +596,8 @@ class _BsListState extends State<BsList> {
                               fontSize: 16,
                             ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -596,6 +627,9 @@ class _BsListState extends State<BsList> {
         ),
         const SizedBox(height: 12),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -626,6 +660,7 @@ class _BsListState extends State<BsList> {
               _buildBsRateBadge(_bsRateLabel(item)),
             ],
           ],
+<<<<<<< HEAD
         ),
         const SizedBox(height: 12),
         _buildMaterialItem(item),
@@ -675,6 +710,8 @@ class _BsListState extends State<BsList> {
         _buildInfoItem(
           label: 'Qty BS',
           value: '${_qtyBs(item)} PCS',
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         ),
 >>>>>>> b2b87875 (feat: evaluasi bs)
       ],
@@ -806,6 +843,7 @@ class _BsListState extends State<BsList> {
   String _qtyBs(BsListItem item) => _display(item.qtyBs);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   Map<String, dynamic> _materialItem(BsListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -821,6 +859,8 @@ class _BsListState extends State<BsList> {
   String _itemName(BsListItem item) =>
       _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   String _bsRateLabel(BsListItem item) {
     final value = item.bsRate?.toString().trim() ?? '';
     if (value.isEmpty) return '';
@@ -845,8 +885,11 @@ class _BsListState extends State<BsList> {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
   String _submittedBy(BsListItem item) {
     final submitted = _map(item.submitted);
     return _display(submitted['name'] ??
@@ -884,12 +927,18 @@ class _BsListState extends State<BsList> {
   bool _isCompleted(String status) {
     final normalized = status.toLowerCase();
 <<<<<<< HEAD
+<<<<<<< HEAD
     return normalized == 'direview' ||
         normalized == 'reviewed' ||
         normalized == 'selesai' ||
 =======
     return normalized == 'selesai' ||
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -1015,10 +1064,16 @@ class _BsListState extends State<BsList> {
 =======
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
+<<<<<<< HEAD
         return const Color(0xFFEBFDF4);
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+        return const Color(0xFFF2F7FF);
+>>>>>>> e7b9ec75 (fix: UI evaluasi)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -1034,12 +1089,14 @@ class _BsListState extends State<BsList> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }

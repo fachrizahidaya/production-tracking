@@ -63,7 +63,7 @@ class _BsListState extends State<BsList> {
     _endDate = widget.endDate ?? DateTime(now.year, now.month, now.day);
     _sort = widget.sort;
     _search = widget.search;
-    _status = widget.status.trim();
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
     _searchController.text = widget.search;
 
@@ -172,7 +172,7 @@ class _BsListState extends State<BsList> {
       if (!mounted) return;
       setState(() {
         _pendingCount = counts['pending'];
-        _completedCount = counts['completed'];
+        _completedCount = counts['reviewed'];
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -367,8 +367,8 @@ class _BsListState extends State<BsList> {
               ),
               const SizedBox(width: 8),
               _buildStatusTab(
-                label: 'Selesai',
-                status: 'Selesai',
+                label: 'Direview',
+                status: 'Direview',
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -389,8 +389,7 @@ class _BsListState extends State<BsList> {
     required String status,
     int? count,
   }) {
-    final selected =
-        _status == status || (status == 'Menunggu' && _status.isEmpty);
+    final selected = _status == status;
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -477,7 +476,7 @@ class _BsListState extends State<BsList> {
                   children: [
                     _buildInfoLine(item),
                     if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
                     const SizedBox(height: 12),
@@ -485,12 +484,26 @@ class _BsListState extends State<BsList> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: Text(
-                            _formatDateTime(date),
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 16,
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal BS',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                _formatDateTime(date),
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -515,9 +528,36 @@ class _BsListState extends State<BsList> {
           valueColor: const Color(0xFF234393),
         ),
         const SizedBox(height: 12),
-        _buildInfoItem(
-          label: 'Qty BS',
-          value: '${_qtyBs(item)} PCS',
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Qty BS',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  '${_qtyBs(item)} PCS',
+                  style: const TextStyle(
+                    color: Color(0xFFB42318),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            if (_bsRateLabel(item).isNotEmpty) ...[
+              const SizedBox(width: 8),
+              _buildBsRateBadge(_bsRateLabel(item)),
+            ],
+          ],
         ),
       ],
     );
@@ -601,6 +641,30 @@ class _BsListState extends State<BsList> {
 
   String _qtyBs(BsListItem item) => _display(item.qtyBs);
 
+  String _bsRateLabel(BsListItem item) {
+    final value = item.bsRate?.toString().trim() ?? '';
+    if (value.isEmpty) return '';
+    return '$value %';
+  }
+
+  Widget _buildBsRateBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFEF3F2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFFB42318),
+        ),
+      ),
+    );
+  }
+
   String _submittedBy(BsListItem item) {
     final submitted = _map(item.submitted);
     return _display(submitted['name'] ??
@@ -637,7 +701,9 @@ class _BsListState extends State<BsList> {
 
   bool _isCompleted(String status) {
     final normalized = status.toLowerCase();
-    return normalized == 'selesai' ||
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -699,9 +765,11 @@ class _BsListState extends State<BsList> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -715,12 +783,14 @@ class _BsListState extends State<BsList> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }

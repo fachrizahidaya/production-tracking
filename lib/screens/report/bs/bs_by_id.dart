@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
@@ -123,6 +124,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
+  int _selectedHistoryIndex = 0;
 
   @override
   void initState() {
@@ -143,7 +145,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'selesai' || status == 'completed';
+    return status == 'direview' ||
+        status == 'reviewed' ||
+        status == 'selesai' ||
+        status == 'completed';
   }
 
   Future<void> _openEditScreen() async {
@@ -202,10 +207,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
               ),
-              if (_histories.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                _buildHistoryCard(),
-              ],
+              const SizedBox(height: 16),
+              _buildHistoryCard(),
             ],
           ),
         ),
@@ -236,10 +239,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             valueColor: const Color(0xFF234393),
           ),
           const SizedBox(height: 12),
-          _buildOverviewItem(
-            label: 'Qty BS',
-            value: '${_value('qtyBs')} PCS',
-            valueColor: const Color(0xFF234393),
+          _buildQtyBsItem(),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Mulai',
+            person: _sorting['start_by'],
+            time: _sorting['start_time']?.toString(),
+          ),
+          const SizedBox(height: 12),
+          _buildProcessTimeItem(
+            label: 'Selesai',
+            person: _sorting['end_by'],
+            time: _sorting['end_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
@@ -248,14 +259,28 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Text(
-                  _formatDateTime(
-                    _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                  ),
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 16,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tanggal BS',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      _formatDateTime(
+                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               _buildStatusBadge(_value('status')),
@@ -263,6 +288,56 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildQtyBsItem() {
+    final rate = _value('bsRate');
+    final hasRate = rate != '-' && rate.trim().isNotEmpty;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Qty BS',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            Text(
+              '${_value('qtyBs')} PCS',
+              style: const TextStyle(
+                color: Color(0xFFB42318),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (hasRate) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3F2),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  '$rate %',
+                  style: const TextStyle(
+                    color: Color(0xFFB42318),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
@@ -399,19 +474,22 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
             )
           else
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Row(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+              child: Column(
                 children: [
-                  for (int i = 0; i < defects.length; i++) ...[
-                    if (i > 0) const SizedBox(width: 10),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: i == 0 ? 12 : 0,
-                        right: i == defects.length - 1 ? 12 : 0,
-                      ),
-                      child: _buildDefectItem(defects[i]),
+                  for (int i = 0; i < defects.length; i += 2) ...[
+                    if (i > 0) const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(child: _buildDefectItem(defects[i])),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: i + 1 < defects.length
+                              ? _buildDefectItem(defects[i + 1])
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
                     ),
                   ],
                 ],
@@ -435,40 +513,39 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final name = defect['defect_name']?.toString() ?? '-';
     final qty = defect['qty']?.toString() ?? '-';
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Container(
-        width: 140,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
               name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Color(0xFF292A2F),
-                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
               qty,
               style: TextStyle(
                 color: Colors.grey.shade700,
-                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -498,9 +575,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -517,15 +596,84 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
       case 'selesai':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }
+  }
+
+  Map<String, dynamic> get _sorting {
+    final sorting = widget.data['sorting'];
+    return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
+  }
+
+  Widget _buildProcessTimeItem({
+    required String label,
+    required dynamic person,
+    required String? time,
+  }) {
+    final name = _personName(person);
+    final formattedTime = _formatProcessTime(time);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            if (name != '-' || formattedTime == null)
+              Text(
+                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (formattedTime != null)
+              Text(
+                formattedTime,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _personName(dynamic person) {
+    if (person is Map) {
+      final name = person['name'] ?? person['full_name'];
+      if (name != null && name.toString().trim().isNotEmpty) {
+        return name.toString();
+      }
+    }
+    return '-';
+  }
+
+  String? _formatProcessTime(String? value) {
+    if (value == null || value.trim().isEmpty || value.trim() == '-') {
+      return null;
+    }
+    return _formatDateTime(value);
   }
 
   String _formatDateTime(String value) {
@@ -615,8 +763,36 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
+  String _historyGroupLabel(Map<String, dynamic> group) {
+    final label = group['label']?.toString().trim() ?? '';
+    return label.isNotEmpty
+        ? label
+        : _historyFieldLabel(group['field']?.toString());
+  }
+
+  List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
+    final raw = group['items'];
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .where(
+          (item) => item['old_value'] != null && item['new_value'] != null,
+        )
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+  }
+
   Widget _buildHistoryCard() {
-    final histories = _histories;
+    final histories = _histories
+        .where((history) => _historyItems(history).isNotEmpty)
+        .toList();
+    final selectedIndex =
+        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
+            ? _selectedHistoryIndex
+            : 0;
+    final items = histories.isEmpty
+        ? <Map<String, dynamic>>[]
+        : _historyItems(histories[selectedIndex]);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -624,10 +800,34 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         title: 'Riwayat Perubahan',
         icon: Icons.history_outlined,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (int i = 0; i < histories.length; i++) ...[
-              if (i > 0) const SizedBox(height: 12),
-              _buildHistoryItem(histories[i]),
+            if (histories.isEmpty)
+              const NoData()
+            else ...[
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < histories.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      ChoiceChip(
+                        label: Text(_historyGroupLabel(histories[i])),
+                        selected: i == selectedIndex,
+                        showCheckmark: false,
+                        onSelected: (_) {
+                          setState(() => _selectedHistoryIndex = i);
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              if (items.isNotEmpty) const SizedBox(height: 12),
+              for (int i = 0; i < items.length; i++) ...[
+                if (i > 0) const SizedBox(height: 12),
+                _buildHistoryItem(items[i]),
+              ],
             ],
           ],
         ),
@@ -655,15 +855,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _historyFieldLabel(history['field']?.toString()),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 6),
           if (hasOldValue) ...[
             Text(
               oldValue,

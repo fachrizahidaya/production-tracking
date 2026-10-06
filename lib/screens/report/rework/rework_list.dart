@@ -63,7 +63,7 @@ class _ReworkListState extends State<ReworkList> {
     _endDate = widget.endDate ?? DateTime(now.year, now.month, now.day);
     _sort = widget.sort;
     _search = widget.search;
-    _status = widget.status.trim();
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
     _searchController.text = widget.search;
 
@@ -172,7 +172,7 @@ class _ReworkListState extends State<ReworkList> {
       if (!mounted) return;
       setState(() {
         _pendingCount = counts['pending'];
-        _completedCount = counts['completed'];
+        _completedCount = counts['reviewed'];
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -494,8 +494,8 @@ class _ReworkListState extends State<ReworkList> {
               ),
               const SizedBox(width: 8),
               _buildStatusTab(
-                label: 'Selesai',
-                status: 'Selesai',
+                label: 'Direview',
+                status: 'Direview',
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -516,8 +516,7 @@ class _ReworkListState extends State<ReworkList> {
     required String status,
     int? count,
   }) {
-    final selected =
-        _status == status || (status == 'Menunggu' && _status.isEmpty);
+    final selected = _status == status;
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -610,7 +609,7 @@ class _ReworkListState extends State<ReworkList> {
                     //   maxLines: 1,
                     // ),
                     if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
                     const SizedBox(height: 12),
@@ -618,12 +617,26 @@ class _ReworkListState extends State<ReworkList> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: Text(
-                            _formatDateTime(date),
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 16,
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Tanggal Rework',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                _formatDateTime(date),
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -829,7 +842,9 @@ class _ReworkListState extends State<ReworkList> {
 
   bool _isCompleted(String status) {
     final normalized = status.toLowerCase();
-    return normalized == 'selesai' ||
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -891,9 +906,9 @@ class _ReworkListState extends State<ReworkList> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'selesai':
+      case 'direview':
       case 'completed':
-        return const Color(0xFFEBFDF4);
+        return const Color(0xFFF2F7FF);
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -908,12 +923,12 @@ class _ReworkListState extends State<ReworkList> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
-      case 'selesai':
+      case 'direview':
       case 'completed':
-        return const Color(0xFF15803D);
+        return const Color(0xFF8697C6);
       case 'menunggu':
       case 'waiting':
-        return const Color(0xFFA16207);
+        return const Color(0xFF955B34);
       default:
         return _getStatusColor(status);
     }

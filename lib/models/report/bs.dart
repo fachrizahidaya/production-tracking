@@ -41,6 +41,7 @@ class BsListItem {
   final submitted;
   final sorting;
   final qtyBs;
+  final bsRate;
   final material;
   final defects;
   final startDate;
@@ -56,6 +57,7 @@ class BsListItem {
       this.submitted,
       this.sorting,
       this.qtyBs,
+      this.bsRate,
       this.material,
       this.defects,
       this.endDate,
@@ -77,6 +79,7 @@ class BsListItem {
             json['qty'] ??
             sorting['qty_bs'] ??
             '',
+        bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
         material: json['material'] ??
             json['semi_finished_product'] ??
             '',

@@ -718,6 +718,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Sortir',
 =======
                                 'Tanggal BS',
@@ -729,11 +730,19 @@ class _BsListState extends State<BsList> {
                                 'Tanggal Sortir',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> bdfa7c36 (fix: edit ui tanggal)
                                 'Tanggal Sortir',
 =======
                                 'Tanggal BS',
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+                                'Tanggal',
+>>>>>>> 66a3186 (fix: edit ui tanggal)
+>>>>>>> bdfa7c36 (fix: edit ui tanggal)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

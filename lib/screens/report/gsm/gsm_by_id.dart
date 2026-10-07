@@ -828,10 +828,14 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                   children: [
                     Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                       'Tanggal',
 =======
                       'Tanggal GSM',
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+                      'Tanggal',
+>>>>>>> bdfa7c36 (fix: edit ui tanggal)
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,

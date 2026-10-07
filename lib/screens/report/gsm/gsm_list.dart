@@ -717,6 +717,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
@@ -728,11 +729,19 @@ class _GsmListState extends State<GsmList> {
                                 'Tanggal Packing',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> bdfa7c36 (fix: edit ui tanggal)
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+                                'Tanggal',
+>>>>>>> 66a3186 (fix: edit ui tanggal)
+>>>>>>> bdfa7c36 (fix: edit ui tanggal)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

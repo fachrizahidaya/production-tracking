@@ -565,10 +565,14 @@ class _GsmListState extends State<GsmList> {
                             children: [
                               Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+                                'Tanggal',
+>>>>>>> 3f1aead0 (fix: edit ui tanggal)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

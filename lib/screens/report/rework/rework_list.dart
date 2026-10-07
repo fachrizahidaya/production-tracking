@@ -1116,7 +1116,7 @@ class _ReworkListState extends State<ReworkList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tanggal Rework',
+                                'Tanggal',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

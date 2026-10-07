@@ -488,7 +488,7 @@ class _BsListState extends State<BsList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tanggal BS',
+                                'Tanggal',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

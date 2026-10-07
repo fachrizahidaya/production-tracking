@@ -263,7 +263,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tanggal BS',
+                      'Tanggal',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,

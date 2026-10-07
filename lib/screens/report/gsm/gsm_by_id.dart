@@ -264,7 +264,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tanggal GSM',
+                      'Tanggal',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,

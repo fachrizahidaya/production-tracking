@@ -121,6 +121,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             "filename": "Icon-App-1024x1024@1x.png"
 =======
             "filename": "ItunesArtwork@2x.png"
@@ -129,11 +130,19 @@
             "filename": "Icon-App-1024x1024@1x.png"
 >>>>>>> dd7da81a (chore: app icon 1024)
 =======
+=======
+>>>>>>> 513df09b (chore: app icon 1024)
             "filename": "Icon-App-1024x1024@1x.png"
 =======
             "filename": "ItunesArtwork@2x.png"
 >>>>>>> 14f70e0 (chore: app icon ios)
+<<<<<<< HEAD
 >>>>>>> 889432a2 (chore: app icon ios)
+=======
+=======
+            "filename": "Icon-App-1024x1024@1x.png"
+>>>>>>> 1229d9b (chore: app icon 1024)
+>>>>>>> 513df09b (chore: app icon 1024)
         }
     ],
     "info": {

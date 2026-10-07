@@ -564,10 +564,14 @@ class _BsListState extends State<BsList> {
                             children: [
                               Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Sortir',
 =======
                                 'Tanggal BS',
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+                                'Tanggal',
+>>>>>>> 66a3186 (fix: edit ui tanggal)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,

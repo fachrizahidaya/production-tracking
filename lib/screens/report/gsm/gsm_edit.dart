@@ -865,7 +865,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Tanggal GSM',
+                      'Tanggal',
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,

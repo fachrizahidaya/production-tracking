@@ -282,6 +282,17 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
   Future<void> _save() async {
     if (_saving || !_canSave) return;
+
+    final warning = _planLengthWarning();
+    if (warning != null) {
+      await showAlertDialog(
+        context: context,
+        title: 'Peringatan',
+        message: warning,
+      );
+      return;
+    }
+
     setState(() => _saving = true);
 
     try {
@@ -377,11 +388,27 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
-    if (_visibleStep == 2) return _actionPlanController.text.trim().isNotEmpty;
+    if (_visibleStep == 2) {
+      return _actionPlanController.text.trim().length >= 5;
+    }
     return false;
   }
 
+<<<<<<< HEAD
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+  String? _planLengthWarning() {
+    final actionOk = _actionPlanController.text.trim().length >= 5;
+    final preventiveOk = _preventivePlanController.text.trim().length >= 5;
+    if (actionOk && preventiveOk) return null;
+    if (!actionOk && !preventiveOk) {
+      return 'Rencana Tindakan dan Rencana Pencegahan minimal 5 karakter.';
+    }
+    if (!actionOk) return 'Rencana Tindakan minimal 5 karakter.';
+    return 'Rencana Pencegahan minimal 5 karakter.';
+  }
+
+>>>>>>> 0e409703 (fix: evaluasi)
   Future<void> _loadReasonOptions() async {
     try {
       final options = await _reportService.getReworkReasonOptions();

@@ -44,9 +44,13 @@ class ReworkListItem {
   final reworkReference;
   final reworkCategories;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final item;
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+  final item;
+>>>>>>> 0e409703 (fix: evaluasi)
   final startDate;
   final endDate;
 
@@ -63,9 +67,13 @@ class ReworkListItem {
       this.reworkReference,
       this.reworkCategories,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.item,
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+      this.item,
+>>>>>>> 0e409703 (fix: evaluasi)
       this.endDate,
       this.startDate});
 
@@ -99,9 +107,13 @@ class ReworkListItem {
             json['dyeing']?['rework_categories'] ??
             [],
 <<<<<<< HEAD
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+        item: json['item'] ?? json['dyeing']?['item'] ?? {},
+>>>>>>> 0e409703 (fix: evaluasi)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

@@ -7,12 +7,15 @@ import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 >>>>>>> 264bcd0f (fix: evaluasi rework)
 =======
 import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 0e409703 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 =======
@@ -282,7 +285,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 >>>>>>> 5ad2d445 (feat: temporarily)
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  int _selectedHistoryIndex = 0;
 
   @override
   void initState() {
@@ -892,6 +894,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
+                historyField: 'action_plan',
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -899,9 +902,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+                historyField: 'preventive_plan',
               ),
-              const SizedBox(height: 16),
-              _buildHistoryCard(),
             ],
           ),
         ),
@@ -933,6 +935,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
           const SizedBox(height: 12),
           _buildDyeingReferenceLine(),
+          const SizedBox(height: 12),
+          _buildMaterialItem(),
+          if (_isCompleted) ...[
+            const SizedBox(height: 12),
+            _buildSubmittedByItem(),
+          ],
           const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1036,6 +1044,89 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildSubmittedByItem() {
+    final name = _value('submittedBy');
+    final time = _formatDateTime(_value('completedAt'));
+    final hasTime = time.trim().isNotEmpty && time != '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Diisi oleh',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildMaterialItem() {
+    final code = _value('topMaterialCode');
+    final name = _value('topMaterialName');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -1563,9 +1654,23 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     String label,
     String value, {
     String? updatedAt,
+    String? historyField,
   }) {
     final hasUpdatedAt =
         updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
+    final current = value.isEmpty ? '-' : value;
+    final historyItems = historyField == null
+        ? const <Map<String, dynamic>>[]
+        : _previousHistoryItems(historyField);
+    final previousItems = historyItems.where((item) {
+      final oldValue = _historyDisplayValue(item['old_value']);
+      return oldValue.isNotEmpty && oldValue != current;
+    }).toList();
+    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
+    final latestMeta = latestItem != null
+        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
+            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+        : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1577,18 +1682,38 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              for (final previous in previousItems) ...[
+                Text(
+                  _historyDisplayValue(previous['old_value']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('base'),
+                    color: Colors.grey.shade500,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Diubah oleh ${_personName(previous['changed_by'])}, '
+                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
               Text(
-                value.isEmpty ? '-' : value,
+                current,
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.grey[800],
                 ),
               ),
-              if (hasUpdatedAt) ...[
+              if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _formatDateTime(updatedAt),
+                  latestMeta,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1624,11 +1749,26 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
-  String _historyGroupLabel(Map<String, dynamic> group) {
-    final label = group['label']?.toString().trim() ?? '';
-    return label.isNotEmpty
-        ? label
-        : _historyFieldLabel(group['field']?.toString());
+  List<Map<String, dynamic>> _previousHistoryItems(String field) {
+    Map<String, dynamic>? group;
+    for (final history in _histories) {
+      final historyField = history['field']?.toString();
+      final label = history['label']?.toString().trim() ?? '';
+      if (historyField == field || label == _historyFieldLabel(field)) {
+        group = history;
+        break;
+      }
+    }
+    if (group == null) return [];
+
+    final items = List<Map<String, dynamic>>.from(_historyItems(group));
+    items.sort((a, b) {
+      final aDate = DateTime.tryParse(a['created_at']?.toString() ?? '');
+      final bDate = DateTime.tryParse(b['created_at']?.toString() ?? '');
+      if (aDate == null || bDate == null) return 0;
+      return aDate.compareTo(bDate);
+    });
+    return items;
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -1643,6 +1783,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
   Widget _buildHistoryCard() {
     final histories = _histories
         .where((history) => _historyItems(history).isNotEmpty)
@@ -1856,6 +1997,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 0e409703 (fix: evaluasi)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {

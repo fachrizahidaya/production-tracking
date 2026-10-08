@@ -151,30 +151,30 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 
   bool get _canGoNext {
-    if (_visibleStep == 1) return _reasonController.text.trim().length >= 5;
+    if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
     if (_visibleStep == 2) {
-      return _actionPlanController.text.trim().length >= 5;
+      return _actionPlanController.text.trim().length >= 8;
     }
     return false;
   }
 
   String? _planLengthWarning() {
     final invalid = <String>[];
-    if (_reasonController.text.trim().length < 5) {
+    if (_reasonController.text.trim().length < 8) {
       invalid.add('Alasan dan Penyebab');
     }
-    if (_actionPlanController.text.trim().length < 5) {
+    if (_actionPlanController.text.trim().length < 8) {
       invalid.add('Rencana Tindakan');
     }
-    if (_preventivePlanController.text.trim().length < 5) {
+    if (_preventivePlanController.text.trim().length < 8) {
       invalid.add('Rencana Pencegahan');
     }
     if (invalid.isEmpty) return null;
-    if (invalid.length == 1) return '${invalid.first} minimal 5 karakter.';
+    if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
     if (invalid.length == 2) {
-      return '${invalid[0]} dan ${invalid[1]} minimal 5 karakter.';
+      return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
     }
-    return '${invalid[0]}, ${invalid[1]}, dan ${invalid[2]} minimal 5 karakter.';
+    return '${invalid[0]}, ${invalid[1]}, dan ${invalid[2]} minimal 8 karakter.';
   }
 
   @override

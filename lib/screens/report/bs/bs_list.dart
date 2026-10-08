@@ -530,6 +530,7 @@ class _BsListState extends State<BsList> {
 
   Widget _buildInfoLine(BsListItem item) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoItem(
           label: 'No. Sortir',
@@ -568,6 +569,50 @@ class _BsListState extends State<BsList> {
             ],
           ],
         ),
+        const SizedBox(height: 12),
+        _buildMaterialItem(item),
+      ],
+    );
+  }
+
+  Widget _buildMaterialItem(BsListItem item) {
+    final code = _itemCode(item);
+    final name = _itemName(item);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -691,6 +736,21 @@ class _BsListState extends State<BsList> {
   }
 
   String _qtyBs(BsListItem item) => _display(item.qtyBs);
+
+  Map<String, dynamic> _materialItem(BsListItem item) {
+    final woItems = _map(item.wo)['items'];
+    if (woItems is List && woItems.isNotEmpty) {
+      return _map(woItems.first);
+    }
+    return _map(item.item);
+  }
+
+  String _itemCode(BsListItem item) => _display(
+        _materialItem(item)['code'] ?? item.topMaterialCode ?? item.material,
+      );
+
+  String _itemName(BsListItem item) =>
+      _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
   String _bsRateLabel(BsListItem item) {
     final value = item.bsRate?.toString().trim() ?? '';

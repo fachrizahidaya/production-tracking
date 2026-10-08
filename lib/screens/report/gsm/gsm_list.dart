@@ -531,6 +531,7 @@ class _GsmListState extends State<GsmList> {
 
   Widget _buildInfoLine(GsmListItem item) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoItem(
           label: 'No Packing',
@@ -547,6 +548,50 @@ class _GsmListState extends State<GsmList> {
           label: 'Material GSM',
           value: _materialGsm(item),
         ),
+        const SizedBox(height: 12),
+        _buildMaterialItem(item),
+      ],
+    );
+  }
+
+  Widget _buildMaterialItem(GsmListItem item) {
+    final code = _itemCode(item);
+    final name = _itemName(item);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -672,6 +717,21 @@ class _GsmListState extends State<GsmList> {
   String _packingGsm(GsmListItem item) => _formatGsmNumber(item.packingGsm);
 
   String _materialGsm(GsmListItem item) => _formatGsmNumber(item.materialGsm);
+
+  Map<String, dynamic> _materialItem(GsmListItem item) {
+    final woItems = _map(item.wo)['items'];
+    if (woItems is List && woItems.isNotEmpty) {
+      return _map(woItems.first);
+    }
+    return _map(item.item);
+  }
+
+  String _itemCode(GsmListItem item) => _display(
+        _materialItem(item)['code'] ?? item.topMaterialCode ?? item.material,
+      );
+
+  String _itemName(GsmListItem item) =>
+      _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
   String _formatGsmNumber(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';

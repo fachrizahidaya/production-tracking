@@ -182,20 +182,20 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
     if (_visibleStep == 2) {
-      return _actionPlanController.text.trim().length >= 5;
+      return _actionPlanController.text.trim().length >= 8;
     }
     return false;
   }
 
   String? _planLengthWarning() {
-    final actionOk = _actionPlanController.text.trim().length >= 5;
-    final preventiveOk = _preventivePlanController.text.trim().length >= 5;
+    final actionOk = _actionPlanController.text.trim().length >= 8;
+    final preventiveOk = _preventivePlanController.text.trim().length >= 8;
     if (actionOk && preventiveOk) return null;
     if (!actionOk && !preventiveOk) {
-      return 'Rencana Tindakan dan Rencana Pencegahan minimal 5 karakter.';
+      return 'Rencana Tindakan dan Rencana Pencegahan minimal 8 karakter.';
     }
-    if (!actionOk) return 'Rencana Tindakan minimal 5 karakter.';
-    return 'Rencana Pencegahan minimal 5 karakter.';
+    if (!actionOk) return 'Rencana Tindakan minimal 8 karakter.';
+    return 'Rencana Pencegahan minimal 8 karakter.';
   }
 
   Future<void> _loadReasonOptions() async {

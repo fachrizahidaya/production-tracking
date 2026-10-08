@@ -43,6 +43,9 @@ class BsListItem {
   final qtyBs;
   final bsRate;
   final material;
+  final item;
+  final topMaterialCode;
+  final topMaterialName;
   final defects;
   final startDate;
   final endDate;
@@ -59,17 +62,23 @@ class BsListItem {
       this.qtyBs,
       this.bsRate,
       this.material,
+      this.item,
+      this.topMaterialCode,
+      this.topMaterialName,
       this.defects,
       this.endDate,
       this.startDate});
 
   factory BsListItem.fromJson(Map<String, dynamic> json) {
     final sorting = json['sorting'] ?? {};
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
-        wo: json['work_order'] ?? {},
+        wo: wo,
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -83,6 +92,9 @@ class BsListItem {
         material: json['material'] ??
             json['semi_finished_product'] ??
             '',
+        item: woItem ?? json['item'] ?? {},
+        topMaterialCode: json['top_material_code'] ?? '',
+        topMaterialName: json['top_material_name'] ?? '',
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

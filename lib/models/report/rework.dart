@@ -79,11 +79,17 @@ class ReworkListItem {
 
   factory ReworkListItem.fromJson(Map<String, dynamic> json) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+>>>>>>> 5e38e0f3 (fix:)
     return ReworkListItem(
         id: json['id'] ?? '',
         reworkNo: json['rework_no'] ??
@@ -94,10 +100,14 @@ class ReworkListItem {
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
 >>>>>>> 41ded02d (fix: rework)
+=======
+        wo: wo,
+>>>>>>> 5e38e0f3 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reasons'] ?? [],
@@ -108,12 +118,16 @@ class ReworkListItem {
             [],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 =======
 >>>>>>> 41ded02d (fix: rework)
 =======
         item: json['item'] ?? json['dyeing']?['item'] ?? {},
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
+>>>>>>> 5e38e0f3 (fix:)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

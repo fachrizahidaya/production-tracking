@@ -46,11 +46,17 @@ class GsmListItem {
   final qtyBs;
   final material;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final item;
   final topMaterialCode;
   final topMaterialName;
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+  final item;
+  final topMaterialCode;
+  final topMaterialName;
+>>>>>>> 5e38e0f3 (fix:)
   final startDate;
   final endDate;
 
@@ -69,31 +75,47 @@ class GsmListItem {
       this.qtyBs,
       this.material,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+      this.item,
+      this.topMaterialCode,
+      this.topMaterialName,
+>>>>>>> 5e38e0f3 (fix:)
       this.endDate,
       this.startDate});
 
   factory GsmListItem.fromJson(Map<String, dynamic> json) {
     final packing = json['packing'] ?? {};
 <<<<<<< HEAD
+<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+>>>>>>> 5e38e0f3 (fix:)
     return GsmListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+        wo: wo,
+>>>>>>> 5e38e0f3 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -110,11 +132,17 @@ class GsmListItem {
             json['semi_finished_product'] ??
             '',
 <<<<<<< HEAD
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+        item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
+        topMaterialCode: json['top_material_code'] ?? '',
+        topMaterialName: json['top_material_name'] ?? '',
+>>>>>>> 5e38e0f3 (fix:)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

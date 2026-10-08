@@ -607,10 +607,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
           decoration: CustomTheme().cardTheme().copyWith(
                 color: _getStatusColor(status),
                 border: Border.all(
@@ -618,6 +623,7 @@ class _GsmListState extends State<GsmList> {
                   width: 1,
                 ),
               ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -630,6 +636,13 @@ class _GsmListState extends State<GsmList> {
           decoration: CustomTheme().cardTheme(),
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+          decoration: CustomTheme().cardTheme(),
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -665,10 +678,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
                     const SizedBox(height: 18),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -678,8 +696,11 @@ class _GsmListState extends State<GsmList> {
                     ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
 =======
                     if (!_isWaitingStatus(status)) ...[
                       const SizedBox(height: 18),
@@ -691,7 +712,12 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -951,10 +977,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Widget _buildSubmittedByItem({
     required String name,
     String? time,
@@ -975,8 +1006,11 @@ class _GsmListState extends State<GsmList> {
         const SizedBox(height: 3),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1020,14 +1054,19 @@ class _GsmListState extends State<GsmList> {
             ),
           ),
         ],
+<<<<<<< HEAD
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
         ),
 >>>>>>> 9b746b6d (fix: UI)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
       ],
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1038,6 +1077,12 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -1287,6 +1332,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final backgroundColor = _getStatusColor(status);
 
@@ -1295,10 +1341,17 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 =======
+>>>>>>> bd0b8f00 (fix: evaluasi)
+=======
     final backgroundColor = _getStatusColor(status);
 
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1308,6 +1361,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
@@ -1316,11 +1370,19 @@ class _GsmListState extends State<GsmList> {
         color: _getStatusBadgeColor(status),
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        color: _getStatusBadgeColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1331,6 +1393,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
@@ -1339,11 +1402,19 @@ class _GsmListState extends State<GsmList> {
           color: _getStatusBadgeTextColor(status),
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+          color: _getStatusBadgeTextColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
         ),
       ),
     );
@@ -1352,10 +1423,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1432,8 +1508,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
 =======
 
   Color _getStatusTextColor(String status) {
@@ -1474,5 +1553,10 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
 }

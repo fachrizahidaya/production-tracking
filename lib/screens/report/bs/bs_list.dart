@@ -606,10 +606,15 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
           decoration: CustomTheme().cardTheme().copyWith(
                 color: _getStatusColor(status),
                 border: Border.all(
@@ -617,6 +622,7 @@ class _BsListState extends State<BsList> {
                   width: 1,
                 ),
               ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -629,6 +635,13 @@ class _BsListState extends State<BsList> {
           decoration: CustomTheme().cardTheme(),
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+          decoration: CustomTheme().cardTheme(),
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -664,10 +677,15 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
                     const SizedBox(height: 12),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -675,6 +693,7 @@ class _BsListState extends State<BsList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -687,12 +706,19 @@ class _BsListState extends State<BsList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 =======
+>>>>>>> bd0b8f00 (fix: evaluasi)
+=======
                     if (!_isWaitingStatus(status)) ...[
                       const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -994,10 +1020,15 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Widget _buildSubmittedByItem({
     required String name,
     String? time,
@@ -1018,8 +1049,11 @@ class _BsListState extends State<BsList> {
         const SizedBox(height: 3),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1063,14 +1097,19 @@ class _BsListState extends State<BsList> {
             ),
           ),
         ],
+<<<<<<< HEAD
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
         ),
 >>>>>>> 9b746b6d (fix: UI)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
       ],
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1081,6 +1120,12 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -1366,6 +1411,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final backgroundColor = _getStatusColor(status);
 
@@ -1374,10 +1420,17 @@ class _BsListState extends State<BsList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 =======
+>>>>>>> bd0b8f00 (fix: evaluasi)
+=======
     final backgroundColor = _getStatusColor(status);
 
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1387,6 +1440,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
@@ -1395,11 +1449,19 @@ class _BsListState extends State<BsList> {
         color: _getStatusBadgeColor(status),
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        color: _getStatusBadgeColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1410,6 +1472,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
@@ -1418,11 +1481,19 @@ class _BsListState extends State<BsList> {
           color: _getStatusBadgeTextColor(status),
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+          color: _getStatusBadgeTextColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
         ),
       ),
     );
@@ -1431,10 +1502,15 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1511,8 +1587,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
 =======
 
   Color _getStatusTextColor(String status) {
@@ -1553,5 +1632,10 @@ class _BsListState extends State<BsList> {
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
 }

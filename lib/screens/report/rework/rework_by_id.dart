@@ -12,6 +12,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/form/multi_select_form.dart';
 >>>>>>> 264bcd0f (fix: evaluasi rework)
@@ -23,6 +24,8 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 =======
 import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> bd0b8f00 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
@@ -310,7 +313,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  int _selectedHistoryIndex = 0;
 
   @override
   void initState() {
@@ -603,7 +605,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
+<<<<<<< HEAD
 >>>>>>> 85966df (fix: detail evaluasi)
+=======
+                historyField: 'action_plan',
+>>>>>>> 991dab5 (fix: evaluasi)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -611,6 +617,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+<<<<<<< HEAD
 <<<<<<< HEAD
                 historyField: 'preventive_plan',
               ),
@@ -631,6 +638,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               const SizedBox(height: 16),
               _buildHistoryCard(),
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+                historyField: 'preventive_plan',
+              ),
+>>>>>>> 991dab5 (fix: evaluasi)
             ],
           ),
         ),
@@ -757,16 +768,22 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           _buildDyeingReferenceLine(),
           const SizedBox(height: 12),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
           _buildMaterialItem(),
           if (_isCompleted) ...[
             const SizedBox(height: 12),
             _buildSubmittedByItem(),
           ],
           const SizedBox(height: 12),
+<<<<<<< HEAD
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
 =======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -883,6 +900,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -900,6 +920,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ),
         const SizedBox(height: 3),
+<<<<<<< HEAD
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -921,6 +942,28 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               ),
           ],
         ),
+=======
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+>>>>>>> 991dab5 (fix: evaluasi)
       ],
     );
   }
@@ -942,7 +985,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 3),
         Text(
+<<<<<<< HEAD
           code == '-' ? _value('material') : code,
+=======
+          code,
+>>>>>>> 991dab5 (fix: evaluasi)
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -967,8 +1014,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   Map<String, dynamic> get _dyeing {
     final dyeing = widget.data['dyeing'];
     return dyeing is Map ? Map<String, dynamic>.from(dyeing) : {};
@@ -2047,6 +2097,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final current = value.isEmpty ? '-' : value;
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
+<<<<<<< HEAD
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -2055,6 +2106,17 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
+=======
+        : _previousHistoryItems(historyField);
+    final previousItems = historyItems.where((item) {
+      final oldValue = _historyDisplayValue(item['old_value']);
+      return oldValue.isNotEmpty && oldValue != current;
+    }).toList();
+    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
+    final latestMeta = latestItem != null
+        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
+            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+>>>>>>> 991dab5 (fix: evaluasi)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
@@ -2067,9 +2129,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
+=======
+              for (final previous in previousItems) ...[
+                Text(
+                  _historyDisplayValue(previous['old_value']),
+>>>>>>> 991dab5 (fix: evaluasi)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -2078,7 +2146,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
+<<<<<<< HEAD
                   _historyActorMeta(previous),
+=======
+                  'Diubah oleh ${_personName(previous['changed_by'])}, '
+                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
+>>>>>>> 991dab5 (fix: evaluasi)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -2134,6 +2207,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -2141,6 +2215,14 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       final historyField = history['field']?.toString();
       final label = history['label']?.toString().trim().toLowerCase() ?? '';
       if (historyField == field || label == expectedLabel) {
+=======
+  List<Map<String, dynamic>> _previousHistoryItems(String field) {
+    Map<String, dynamic>? group;
+    for (final history in _histories) {
+      final historyField = history['field']?.toString();
+      final label = history['label']?.toString().trim() ?? '';
+      if (historyField == field || label == _historyFieldLabel(field)) {
+>>>>>>> 991dab5 (fix: evaluasi)
         group = history;
         break;
       }
@@ -2155,12 +2237,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       return aDate.compareTo(bDate);
     });
     return items;
+<<<<<<< HEAD
 =======
   String _historyGroupLabel(Map<String, dynamic> group) {
     final label = group['label']?.toString().trim() ?? '';
     return label.isNotEmpty
         ? label
         : _historyFieldLabel(group['field']?.toString());
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -2175,6 +2260,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
   Widget _buildHistoryCard() {
     final histories = _histories
         .where((history) => _historyItems(history).isNotEmpty)
@@ -2531,7 +2617,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
+>>>>>>> bd0b8f00 (fix: evaluasi)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {

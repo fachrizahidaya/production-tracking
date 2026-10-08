@@ -1732,6 +1732,9 @@ class _ReworkListState extends State<ReworkList> {
       _display(_map(item.dyeing)['dyeing_no'] ?? _map(item.dyeing)['no']);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aa49533 (fix:)
   Map<String, dynamic> _materialItem(ReworkListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1739,6 +1742,7 @@ class _ReworkListState extends State<ReworkList> {
     }
     return _map(item.item);
   }
+<<<<<<< HEAD
 
   String _itemCode(ReworkListItem item) =>
       _display(_materialItem(item)['code']);
@@ -1750,6 +1754,14 @@ class _ReworkListState extends State<ReworkList> {
 
   String _itemName(ReworkListItem item) => _display(_map(item.item)['name']);
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+
+  String _itemCode(ReworkListItem item) =>
+      _display(_materialItem(item)['code']);
+
+  String _itemName(ReworkListItem item) =>
+      _display(_materialItem(item)['name']);
+>>>>>>> aa49533 (fix:)
 
   String _reworkReferenceNo(ReworkListItem item) {
     final reference = _map(item.reworkReference).isNotEmpty

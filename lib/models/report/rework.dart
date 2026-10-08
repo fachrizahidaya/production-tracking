@@ -120,6 +120,7 @@ class ReworkListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 =======
 >>>>>>> 41ded02d (fix: rework)
@@ -130,11 +131,19 @@ class ReworkListItem {
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 >>>>>>> 5e38e0f3 (fix:)
 =======
+=======
+>>>>>>> 0c3d8444 (fix:)
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 =======
         item: json['item'] ?? json['dyeing']?['item'] ?? {},
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

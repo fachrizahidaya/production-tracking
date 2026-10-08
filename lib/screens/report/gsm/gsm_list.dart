@@ -844,6 +844,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       crossAxisAlignment: CrossAxisAlignment.start,
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
@@ -855,6 +856,14 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
       children: [
         _buildInfoItem(
           label: 'No Packing',
@@ -874,10 +883,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
         const SizedBox(height: 12),
         _buildMaterialItem(item),
       ],
@@ -924,6 +938,7 @@ class _GsmListState extends State<GsmList> {
         ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
@@ -932,6 +947,12 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
       ],
     );
   }
@@ -1128,10 +1149,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
   Map<String, dynamic> _materialItem(GsmListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1149,6 +1175,7 @@ class _GsmListState extends State<GsmList> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
@@ -1157,6 +1184,12 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
   String _formatGsmNumber(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     final parsed = num.tryParse(value.toString().replaceAll(',', '.'));

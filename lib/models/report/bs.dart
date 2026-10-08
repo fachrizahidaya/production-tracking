@@ -60,6 +60,7 @@ class BsListItem {
   final topMaterialName;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   final material;
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -70,6 +71,13 @@ class BsListItem {
   final material;
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+  final material;
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
   final defects;
   final startDate;
   final endDate;
@@ -103,6 +111,7 @@ class BsListItem {
       this.topMaterialName,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       this.material,
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -113,6 +122,13 @@ class BsListItem {
       this.material,
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+      this.material,
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
       this.defects,
       this.endDate,
       this.startDate});
@@ -122,8 +138,11 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 0c3d8444 (fix:)
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
@@ -137,7 +156,15 @@ class BsListItem {
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
@@ -145,6 +172,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
@@ -153,11 +181,19 @@ class BsListItem {
         wo: wo,
 >>>>>>> 5e38e0f3 (fix:)
 =======
+=======
+>>>>>>> 0c3d8444 (fix:)
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        wo: wo,
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -188,8 +224,11 @@ class BsListItem {
         topMaterialName: json['top_material_name'] ?? '',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 0c3d8444 (fix:)
 =======
         material: json['material'] ??
             json['semi_finished_product'] ??
@@ -200,7 +239,12 @@ class BsListItem {
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

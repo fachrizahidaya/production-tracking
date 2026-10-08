@@ -845,6 +845,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       crossAxisAlignment: CrossAxisAlignment.start,
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -856,6 +857,14 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+=======
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
       children: [
         _buildInfoItem(
           label: 'No. Sortir',
@@ -953,8 +962,11 @@ class _BsListState extends State<BsList> {
         ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 0c3d8444 (fix:)
 =======
         _buildInfoItem(
           label: 'Qty BS',
@@ -974,7 +986,12 @@ class _BsListState extends State<BsList> {
 >>>>>>> db08c830 (fix: UI evaluasi)
         ),
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
       ],
     );
   }
@@ -1171,12 +1188,17 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
   Map<String, dynamic> _materialItem(BsListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1194,6 +1216,7 @@ class _BsListState extends State<BsList> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -1202,6 +1225,12 @@ class _BsListState extends State<BsList> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> aa49533 (fix:)
+>>>>>>> 0c3d8444 (fix:)
   String _bsRateLabel(BsListItem item) {
     final value = item.bsRate?.toString().trim() ?? '';
     if (value.isEmpty) return '';

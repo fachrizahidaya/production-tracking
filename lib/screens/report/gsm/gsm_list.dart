@@ -495,6 +495,9 @@ class _GsmListState extends State<GsmList> {
         onTap: () => _openGsmDetail(item),
         child: Container(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
           decoration: CustomTheme().cardTheme().copyWith(
                 color: _getStatusColor(status),
                 border: Border.all(
@@ -502,9 +505,12 @@ class _GsmListState extends State<GsmList> {
                   width: 1,
                 ),
               ),
+<<<<<<< HEAD
 =======
           decoration: CustomTheme().cardTheme(),
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -538,6 +544,9 @@ class _GsmListState extends State<GsmList> {
                   children: [
                     _buildInfoLine(item),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 18),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -545,12 +554,15 @@ class _GsmListState extends State<GsmList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+<<<<<<< HEAD
 =======
                     if (!_isWaitingStatus(status)) ...[
                       const SizedBox(height: 18),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -730,6 +742,9 @@ class _GsmListState extends State<GsmList> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildSubmittedByItem({
     required String name,
     String? time,
@@ -748,6 +763,7 @@ class _GsmListState extends State<GsmList> {
           ),
         ),
         const SizedBox(height: 3),
+<<<<<<< HEAD
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -769,12 +785,37 @@ class _GsmListState extends State<GsmList> {
               ),
           ],
         ),
+=======
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+>>>>>>> 991dab5 (fix: evaluasi)
       ],
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -949,10 +990,13 @@ class _GsmListState extends State<GsmList> {
 
   Widget _buildStatusBadge(String status) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final backgroundColor = _getStatusColor(status);
 
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -960,10 +1004,14 @@ class _GsmListState extends State<GsmList> {
       ),
       decoration: BoxDecoration(
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+        color: _getStatusBadgeColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -972,16 +1020,23 @@ class _GsmListState extends State<GsmList> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+          color: _getStatusBadgeTextColor(status),
+>>>>>>> 991dab5 (fix: evaluasi)
         ),
       ),
     );
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1037,6 +1092,7 @@ class _GsmListState extends State<GsmList> {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
   Color _getStatusTextColor(String status) {
@@ -1054,4 +1110,6 @@ class _GsmListState extends State<GsmList> {
     }
   }
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
 }

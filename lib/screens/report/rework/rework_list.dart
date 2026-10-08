@@ -614,6 +614,9 @@ class _ReworkListState extends State<ReworkList> {
                     //   maxLines: 1,
                     // ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 12),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -621,12 +624,15 @@ class _ReworkListState extends State<ReworkList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+<<<<<<< HEAD
 =======
                     if (!_isWaitingStatus(status)) ...[
                       const SizedBox(height: 12),
                       _buildLabelValue('Diisi oleh:', _submittedBy(item)),
                     ],
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -825,6 +831,48 @@ class _ReworkListState extends State<ReworkList> {
     );
   }
 
+  Widget _buildSubmittedByItem({
+    required String name,
+    String? time,
+  }) {
+    final hasTime = time != null && time.trim().isNotEmpty && time != '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Diisi oleh',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -865,6 +913,7 @@ class _ReworkListState extends State<ReworkList> {
   String _dyeingNo(ReworkListItem item) =>
       _display(_map(item.dyeing)['dyeing_no'] ?? _map(item.dyeing)['no']);
 
+<<<<<<< HEAD
   Map<String, dynamic> _materialItem(ReworkListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -878,6 +927,11 @@ class _ReworkListState extends State<ReworkList> {
 
   String _itemName(ReworkListItem item) =>
       _display(_materialItem(item)['name']);
+=======
+  String _itemCode(ReworkListItem item) => _display(_map(item.item)['code']);
+
+  String _itemName(ReworkListItem item) => _display(_map(item.item)['name']);
+>>>>>>> 991dab5 (fix: evaluasi)
 
   String _reworkReferenceNo(ReworkListItem item) {
     final reference = _map(item.reworkReference).isNotEmpty
@@ -1005,8 +1059,6 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildStatusBadge(String status) {
-    final backgroundColor = _getStatusColor(status);
-
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1031,6 +1083,9 @@ class _ReworkListState extends State<ReworkList> {
     switch (status.toLowerCase()) {
       case 'direview':
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 991dab5 (fix: evaluasi)
       case 'reviewed':
       case 'selesai':
       case 'completed':
@@ -1070,19 +1125,6 @@ class _ReworkListState extends State<ReworkList> {
         return Colors.grey;
       default:
         return Colors.grey;
-    }
-  }
-
-  Color _getStatusTextColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-        return const Color(0xFF955B34);
-      default:
-        return _getStatusColor(status);
     }
   }
 }

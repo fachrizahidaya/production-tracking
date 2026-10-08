@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:math';
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -14,6 +16,12 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_id/android_id.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 >>>>>>> 0f378884 (fix: device id)
+=======
+import 'package:android_id/android_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+=======
+>>>>>>> 500a678 (fix: device id on fcm)
+>>>>>>> 4a4cddd9 (fix: device id on fcm)
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -309,12 +317,16 @@ class FcmService with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('fcm_token');
 <<<<<<< HEAD
+<<<<<<< HEAD
     final deviceId = await _getDeviceId();
 <<<<<<< HEAD
 
     return {'token': token, 'device_id': deviceId};
 =======
     final deviceId = prefs.getString('fcm_device_id') ?? await _getDeviceId();
+=======
+    final deviceId = await _getDeviceId();
+>>>>>>> 500a678 (fix: device id on fcm)
 
     return {'token': token, 'device_id': deviceId};
   }
@@ -326,6 +338,7 @@ class FcmService with WidgetsBindingObserver {
 >>>>>>> 8eae832 (fix: logout)
   }
 
+<<<<<<< HEAD
   Future<void> clearCurrentDeviceData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('fcm_token');
@@ -380,13 +393,22 @@ class FcmService with WidgetsBindingObserver {
 >>>>>>> 16778356 (feat: fcm notification)
       _deviceId = (await info.iosInfo).identifierForVendor ?? 'ios-device';
 =======
+<<<<<<< HEAD
 
 <<<<<<< HEAD
+=======
+  /// Stable per-install id. Avoids Android Build.ID which collides across
+  /// devices sharing the same OS build (common in debug / same Android version).
+  Future<String> _getDeviceId() async {
+    if (_deviceId != null) return _deviceId!;
+
+>>>>>>> 4a4cddd9 (fix: device id on fcm)
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getString('app_device_id');
     if (stored != null && stored.isNotEmpty) {
       _deviceId = stored;
       return _deviceId!;
+<<<<<<< HEAD
 >>>>>>> c650302f (fix: device id on fcm)
 =======
     if (Platform.isAndroid) {
@@ -398,8 +420,26 @@ class FcmService with WidgetsBindingObserver {
       final info = DeviceInfoPlugin();
       _deviceId = (await info.iosInfo).identifierForVendor ?? 'ios-device';
 >>>>>>> 0f378884 (fix: device id)
+=======
+>>>>>>> 500a678 (fix: device id on fcm)
+>>>>>>> 4a4cddd9 (fix: device id on fcm)
     }
+
+    final generated = _generateDeviceId();
+    await prefs.setString('app_device_id', generated);
+    _deviceId = generated;
     return _deviceId!;
+  }
+
+  String _generateDeviceId() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-'
+        '${hex.substring(12, 16)}-${hex.substring(16, 20)}-'
+        '${hex.substring(20, 32)}';
   }
 
   void _handleMessageTap(RemoteMessage message) {

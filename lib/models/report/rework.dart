@@ -43,6 +43,7 @@ class ReworkListItem {
   final dyeing;
   final reworkReference;
   final reworkCategories;
+  final item;
   final startDate;
   final endDate;
 
@@ -58,6 +59,7 @@ class ReworkListItem {
       this.dyeing,
       this.reworkReference,
       this.reworkCategories,
+      this.item,
       this.endDate,
       this.startDate});
 
@@ -80,6 +82,7 @@ class ReworkListItem {
         reworkCategories: json['rework_categories'] ??
             json['dyeing']?['rework_categories'] ??
             [],
+        item: json['item'] ?? json['dyeing']?['item'] ?? {},
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

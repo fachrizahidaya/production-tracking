@@ -443,7 +443,13 @@ class _GsmListState extends State<GsmList> {
       child: InkWell(
         onTap: () => _openGsmDetail(item),
         child: Container(
-          decoration: CustomTheme().cardTheme(),
+          decoration: CustomTheme().cardTheme().copyWith(
+                color: _getStatusColor(status),
+                border: Border.all(
+                  color: _getStatusBadgeColor(status).withOpacity(0.35),
+                  width: 1,
+                ),
+              ),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -476,10 +482,13 @@ class _GsmListState extends State<GsmList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInfoLine(item),
-                    if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 18),
-                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
-                    ],
+                    const SizedBox(height: 18),
+                    _buildSubmittedByItem(
+                      name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
+                      time: _isWaitingStatus(status)
+                          ? null
+                          : _formatDateTime(item.endDate),
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -576,6 +585,48 @@ class _GsmListState extends State<GsmList> {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildSubmittedByItem({
+    required String name,
+    String? time,
+  }) {
+    final hasTime = time != null && time.trim().isNotEmpty && time != '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Diisi oleh',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -705,15 +756,13 @@ class _GsmListState extends State<GsmList> {
   }
 
   Widget _buildStatusBadge(String status) {
-    final backgroundColor = _getStatusColor(status);
-
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 5,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: _getStatusBadgeColor(status),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -721,10 +770,34 @@ class _GsmListState extends State<GsmList> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: _getStatusTextColor(status),
+          color: _getStatusBadgeTextColor(status),
         ),
       ),
     );
+  }
+
+  Color _getStatusBadgeColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
+      case 'selesai':
+      case 'completed':
+        return CustomTheme().colors('primary');
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFFFD54F);
+      default:
+        return Colors.grey.shade600;
+    }
+  }
+
+  Color _getStatusBadgeTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'menunggu':
+      case 'waiting':
+      default:
+        return Colors.white;
+    }
   }
 
   Color _getStatusColor(String status) {
@@ -742,21 +815,6 @@ class _GsmListState extends State<GsmList> {
         return Colors.grey;
       default:
         return Colors.grey;
-    }
-  }
-
-  Color _getStatusTextColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-        return const Color(0xFF955B34);
-      default:
-        return _getStatusColor(status);
     }
   }
 }

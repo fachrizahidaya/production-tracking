@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
@@ -126,7 +125,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
-  int _selectedHistoryIndex = 0;
 
   @override
   void initState() {
@@ -196,6 +194,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
+                historyField: 'action_plan',
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -203,9 +202,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+                historyField: 'preventive_plan',
               ),
-              const SizedBox(height: 16),
-              _buildHistoryCard(),
             ],
           ),
         ),
@@ -255,6 +253,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ),
           const SizedBox(height: 12),
           _buildMaterialItem(),
+          if (_isCompleted) ...[
+            const SizedBox(height: 12),
+            _buildSubmittedByItem(),
+          ],
           const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -319,6 +321,47 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildSubmittedByItem() {
+    final name = _value('submittedBy');
+    final time = _formatDateTime(_value('completedAt'));
+    final hasTime = time.trim().isNotEmpty && time != '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Diisi oleh',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -530,9 +573,23 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     String label,
     String value, {
     String? updatedAt,
+    String? historyField,
   }) {
     final hasUpdatedAt =
         updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
+    final current = value.isEmpty ? '-' : value;
+    final historyItems = historyField == null
+        ? const <Map<String, dynamic>>[]
+        : _previousHistoryItems(historyField);
+    final previousItems = historyItems.where((item) {
+      final oldValue = _historyDisplayValue(item['old_value']);
+      return oldValue.isNotEmpty && oldValue != current;
+    }).toList();
+    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
+    final latestMeta = latestItem != null
+        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
+            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+        : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -544,18 +601,38 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              for (final previous in previousItems) ...[
+                Text(
+                  _historyDisplayValue(previous['old_value']),
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('base'),
+                    color: Colors.grey.shade500,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Diubah oleh ${_personName(previous['changed_by'])}, '
+                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
               Text(
-                value.isEmpty ? '-' : value,
+                current,
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.grey[800],
                 ),
               ),
-              if (hasUpdatedAt) ...[
+              if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  _formatDateTime(updatedAt),
+                  latestMeta,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -591,11 +668,26 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
   }
 
-  String _historyGroupLabel(Map<String, dynamic> group) {
-    final label = group['label']?.toString().trim() ?? '';
-    return label.isNotEmpty
-        ? label
-        : _historyFieldLabel(group['field']?.toString());
+  List<Map<String, dynamic>> _previousHistoryItems(String field) {
+    Map<String, dynamic>? group;
+    for (final history in _histories) {
+      final historyField = history['field']?.toString();
+      final label = history['label']?.toString().trim() ?? '';
+      if (historyField == field || label == _historyFieldLabel(field)) {
+        group = history;
+        break;
+      }
+    }
+    if (group == null) return [];
+
+    final items = List<Map<String, dynamic>>.from(_historyItems(group));
+    items.sort((a, b) {
+      final aDate = DateTime.tryParse(a['created_at']?.toString() ?? '');
+      final bDate = DateTime.tryParse(b['created_at']?.toString() ?? '');
+      if (aDate == null || bDate == null) return 0;
+      return aDate.compareTo(bDate);
+    });
+    return items;
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -608,124 +700,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         )
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
-  }
-
-  Widget _buildHistoryCard() {
-    final histories = _histories
-        .where((history) => _historyItems(history).isNotEmpty)
-        .toList();
-    final selectedIndex =
-        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
-            ? _selectedHistoryIndex
-            : 0;
-    final items = histories.isEmpty
-        ? <Map<String, dynamic>>[]
-        : _historyItems(histories[selectedIndex]);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: 'Riwayat Perubahan',
-        icon: Icons.history_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (histories.isEmpty)
-              const NoData()
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < histories.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text(_historyGroupLabel(histories[i])),
-                        selected: i == selectedIndex,
-                        showCheckmark: false,
-                        onSelected: (_) {
-                          setState(() => _selectedHistoryIndex = i);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty) const SizedBox(height: 12),
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 12),
-                _buildHistoryItem(items[i]),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final oldValue = _historyDisplayValue(history['old_value']);
-    final newValue = _historyDisplayValue(history['new_value']);
-    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
-    final changedBy = history['changed_by'];
-    final changedByName =
-        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
-    final createdAt = history['created_at']?.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasOldValue) ...[
-            Text(
-              oldValue,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('base'),
-                color: Colors.grey.shade500,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
-          Text(
-            newValue.isEmpty ? '-' : newValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('base'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'oleh $changedByName, ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              Text(
-                createdAt == null || createdAt.isEmpty
-                    ? '-'
-                    : _formatDateTime(createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 
   String _historyDisplayValue(dynamic value) {

@@ -430,6 +430,9 @@ class ReportService {
         : Map<String, dynamic>.from(decoded as Map);
     final workOrder = _asMap(data['work_order']);
     final dyeing = _asMap(data['dyeing']);
+    final item = _asMap(data['item']).isNotEmpty
+        ? _asMap(data['item'])
+        : _asMap(dyeing['item']);
     final categories = data['rework_categories'] ??
         dyeing['rework_categories'] ??
         data['rework_category'] ??
@@ -449,6 +452,8 @@ class ReportService {
       'status': _first(data, ['status']) ?? '-',
       'woNo': _first(workOrder, ['wo_no', 'number', 'no']) ?? '-',
       'dyeingProcessNo': _first(dyeing, ['dyeing_no', 'no']) ?? '-',
+      'topMaterialCode': _first(item, ['code']) ?? '-',
+      'topMaterialName': _first(item, ['name']) ?? '-',
       'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
       'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
       'qty': _first(data, ['qty', 'quantity']) ??

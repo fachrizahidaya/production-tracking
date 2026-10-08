@@ -104,6 +104,17 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
   Future<void> _save() async {
     if (_saving || !_canSave) return;
+
+    final warning = _planLengthWarning();
+    if (warning != null) {
+      await showAlertDialog(
+        context: context,
+        title: 'Peringatan',
+        message: warning,
+      );
+      return;
+    }
+
     setState(() => _saving = true);
 
     try {
@@ -139,9 +150,30 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 
   bool get _canGoNext {
-    if (_visibleStep == 1) return _reasonController.text.trim().isNotEmpty;
-    if (_visibleStep == 2) return _actionPlanController.text.trim().isNotEmpty;
+    if (_visibleStep == 1) return _reasonController.text.trim().length >= 5;
+    if (_visibleStep == 2) {
+      return _actionPlanController.text.trim().length >= 5;
+    }
     return false;
+  }
+
+  String? _planLengthWarning() {
+    final invalid = <String>[];
+    if (_reasonController.text.trim().length < 5) {
+      invalid.add('Alasan dan Penyebab');
+    }
+    if (_actionPlanController.text.trim().length < 5) {
+      invalid.add('Rencana Tindakan');
+    }
+    if (_preventivePlanController.text.trim().length < 5) {
+      invalid.add('Rencana Pencegahan');
+    }
+    if (invalid.isEmpty) return null;
+    if (invalid.length == 1) return '${invalid.first} minimal 5 karakter.';
+    if (invalid.length == 2) {
+      return '${invalid[0]} dan ${invalid[1]} minimal 5 karakter.';
+    }
+    return '${invalid[0]}, ${invalid[1]}, dan ${invalid[2]} minimal 5 karakter.';
   }
 
   @override

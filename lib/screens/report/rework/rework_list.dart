@@ -569,7 +569,13 @@ class _ReworkListState extends State<ReworkList> {
       child: InkWell(
         onTap: () => _openReworkDetail(item),
         child: Container(
-          decoration: CustomTheme().cardTheme(),
+          decoration: CustomTheme().cardTheme().copyWith(
+                color: _getStatusColor(status),
+                border: Border.all(
+                  color: _getStatusBadgeColor(status).withOpacity(0.35),
+                  width: 1,
+                ),
+              ),
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -608,10 +614,13 @@ class _ReworkListState extends State<ReworkList> {
                     //   _categories(item),
                     //   maxLines: 1,
                     // ),
-                    if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 12),
-                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
-                    ],
+                    const SizedBox(height: 12),
+                    _buildSubmittedByItem(
+                      name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
+                      time: _isWaitingStatus(status)
+                          ? null
+                          : _formatDateTime(item.endDate),
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -654,6 +663,7 @@ class _ReworkListState extends State<ReworkList> {
 
   Widget _buildReferenceLine(ReworkListItem item) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildReferenceItem(
           icon: Icons.replay_outlined,
@@ -667,6 +677,50 @@ class _ReworkListState extends State<ReworkList> {
           label: 'Referensi Dyeing',
           value: _reworkReferenceNo(item),
         ),
+        const SizedBox(height: 12),
+        _buildMaterialItem(item),
+      ],
+    );
+  }
+
+  Widget _buildMaterialItem(ReworkListItem item) {
+    final code = _itemCode(item);
+    final name = _itemName(item);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -716,6 +770,48 @@ class _ReworkListState extends State<ReworkList> {
     );
   }
 
+  Widget _buildSubmittedByItem({
+    required String name,
+    String? time,
+  }) {
+    final hasTime = time != null && time.trim().isNotEmpty && time != '-';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Diisi oleh',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (hasTime) ...[
+          const SizedBox(height: 2),
+          Text(
+            time,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -755,6 +851,10 @@ class _ReworkListState extends State<ReworkList> {
 
   String _dyeingNo(ReworkListItem item) =>
       _display(_map(item.dyeing)['dyeing_no'] ?? _map(item.dyeing)['no']);
+
+  String _itemCode(ReworkListItem item) => _display(_map(item.item)['code']);
+
+  String _itemName(ReworkListItem item) => _display(_map(item.item)['name']);
 
   String _reworkReferenceNo(ReworkListItem item) {
     final reference = _map(item.reworkReference).isNotEmpty
@@ -882,15 +982,13 @@ class _ReworkListState extends State<ReworkList> {
   }
 
   Widget _buildStatusBadge(String status) {
-    final backgroundColor = _getStatusColor(status);
-
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
         vertical: 5,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: _getStatusBadgeColor(status),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -898,39 +996,51 @@ class _ReworkListState extends State<ReworkList> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: _getStatusTextColor(status),
+          color: _getStatusBadgeTextColor(status),
         ),
       ),
     );
   }
 
+  Color _getStatusBadgeColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'direview':
+      case 'reviewed':
+      case 'selesai':
+      case 'completed':
+        return CustomTheme().colors('primary');
+      case 'menunggu':
+      case 'waiting':
+        return const Color(0xFFFFD54F);
+      default:
+        return Colors.grey.shade600;
+    }
+  }
+
+  Color _getStatusBadgeTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'menunggu':
+      case 'waiting':
+      default:
+        return Colors.white;
+    }
+  }
+
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
+      case 'reviewed':
+      case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
-
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
       default:
         return Colors.grey;
-    }
-  }
-
-  Color _getStatusTextColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-        return const Color(0xFF955B34);
-      default:
-        return _getStatusColor(status);
     }
   }
 }

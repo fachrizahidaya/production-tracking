@@ -50,9 +50,12 @@ class BsListItem {
   final item;
   final topMaterialCode;
   final topMaterialName;
+<<<<<<< HEAD
 =======
   final material;
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
   final defects;
   final startDate;
   final endDate;
@@ -76,9 +79,12 @@ class BsListItem {
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
+<<<<<<< HEAD
 =======
       this.material,
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
       this.defects,
       this.endDate,
       this.startDate});
@@ -86,20 +92,30 @@ class BsListItem {
   factory BsListItem.fromJson(Map<String, dynamic> json) {
     final sorting = json['sorting'] ?? {};
 <<<<<<< HEAD
+<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+>>>>>>> aa49533 (fix:)
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
 <<<<<<< HEAD
+<<<<<<< HEAD
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+        wo: wo,
+>>>>>>> aa49533 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -120,11 +136,14 @@ class BsListItem {
         item: woItem ?? json['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
+<<<<<<< HEAD
 =======
         material: json['material'] ??
             json['semi_finished_product'] ??
             '',
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

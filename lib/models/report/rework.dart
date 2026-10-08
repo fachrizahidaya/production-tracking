@@ -86,10 +86,14 @@ class ReworkListItem {
             json['dyeing']?['rework_categories'] ??
             [],
 <<<<<<< HEAD
+<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
 =======
         item: json['item'] ?? json['dyeing']?['item'] ?? {},
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
+>>>>>>> aa49533 (fix:)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

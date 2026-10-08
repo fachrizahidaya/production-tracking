@@ -633,9 +633,13 @@ class _GsmListState extends State<GsmList> {
   Widget _buildInfoLine(GsmListItem item) {
     return Column(
 <<<<<<< HEAD
+<<<<<<< HEAD
       crossAxisAlignment: CrossAxisAlignment.start,
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> aa49533 (fix:)
       children: [
         _buildInfoItem(
           label: 'No Packing',
@@ -653,6 +657,9 @@ class _GsmListState extends State<GsmList> {
           value: _materialGsm(item),
         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aa49533 (fix:)
         const SizedBox(height: 12),
         _buildMaterialItem(item),
       ],
@@ -697,8 +704,11 @@ class _GsmListState extends State<GsmList> {
             ),
           ),
         ],
+<<<<<<< HEAD
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> aa49533 (fix:)
       ],
     );
   }
@@ -859,6 +869,9 @@ class _GsmListState extends State<GsmList> {
   String _materialGsm(GsmListItem item) => _formatGsmNumber(item.materialGsm);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aa49533 (fix:)
   Map<String, dynamic> _materialItem(GsmListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -874,8 +887,11 @@ class _GsmListState extends State<GsmList> {
   String _itemName(GsmListItem item) =>
       _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
+<<<<<<< HEAD
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> aa49533 (fix:)
   String _formatGsmNumber(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     final parsed = num.tryParse(value.toString().replaceAll(',', '.'));

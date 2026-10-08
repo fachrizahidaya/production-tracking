@@ -632,9 +632,13 @@ class _BsListState extends State<BsList> {
   Widget _buildInfoLine(BsListItem item) {
     return Column(
 <<<<<<< HEAD
+<<<<<<< HEAD
       crossAxisAlignment: CrossAxisAlignment.start,
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> aa49533 (fix:)
       children: [
         _buildInfoItem(
           label: 'No. Sortir',
@@ -722,6 +726,7 @@ class _BsListState extends State<BsList> {
             ),
           ),
         ],
+<<<<<<< HEAD
 =======
         _buildInfoItem(
           label: 'Qty BS',
@@ -730,6 +735,8 @@ class _BsListState extends State<BsList> {
 >>>>>>> d256f82 (fix: UI evaluasi)
         ),
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> aa49533 (fix:)
       ],
     );
   }
@@ -889,6 +896,9 @@ class _BsListState extends State<BsList> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aa49533 (fix:)
   Map<String, dynamic> _materialItem(BsListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -904,8 +914,11 @@ class _BsListState extends State<BsList> {
   String _itemName(BsListItem item) =>
       _display(_materialItem(item)['name'] ?? item.topMaterialName);
 
+<<<<<<< HEAD
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> aa49533 (fix:)
   String _bsRateLabel(BsListItem item) {
     final value = item.bsRate?.toString().trim() ?? '';
     if (value.isEmpty) return '';

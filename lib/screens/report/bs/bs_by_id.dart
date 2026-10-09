@@ -751,6 +751,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           _buildProcessTimeItem(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             label: 'Mulai',
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -760,6 +761,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             label: 'Mulai',
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+            label: 'Mulai',
+>>>>>>> d256f82 (fix: UI evaluasi)
+=======
+            label: 'Mulai Sortir',
+>>>>>>> cfa5498 (fix: UI)
+>>>>>>> c3018adf (fix: UI)
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
@@ -768,8 +776,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> c3018adf (fix: UI)
             label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
@@ -856,6 +867,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 =======
             label: 'Selesai',
+=======
+            label: 'Selesai Sortir',
+>>>>>>> cfa5498 (fix: UI)
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
 >>>>>>> d256f82 (fix: UI evaluasi)
@@ -1029,7 +1043,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF3F2),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '$rate %',
@@ -1110,10 +1124,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> cfa5498 (fix: UI)
+>>>>>>> c3018adf (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1164,7 +1183,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> 9b746b6d (fix: UI)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+        ),
+>>>>>>> cfa5498 (fix: UI)
+>>>>>>> c3018adf (fix: UI)
       ],
     );
   }

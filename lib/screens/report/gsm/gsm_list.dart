@@ -1028,10 +1028,15 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> cfa5498 (fix: UI)
+>>>>>>> c3018adf (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1082,7 +1087,13 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 9b746b6d (fix: UI)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+        ),
+>>>>>>> cfa5498 (fix: UI)
+>>>>>>> c3018adf (fix: UI)
       ],
     );
   }

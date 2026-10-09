@@ -833,20 +833,28 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         const SizedBox(height: 12),
         _buildProcessTimeItem(
 <<<<<<< HEAD
+<<<<<<< HEAD
           label: 'Mulai Rework',
 =======
           label: 'Mulai',
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+          label: 'Mulai Rework',
+>>>>>>> cfa5498 (fix: UI)
           person: _dyeing['start_by'],
           time: _dyeing['start_time']?.toString(),
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
 <<<<<<< HEAD
+<<<<<<< HEAD
           label: 'Selesai Rework',
 =======
           label: 'Selesai',
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+          label: 'Selesai Rework',
+>>>>>>> cfa5498 (fix: UI)
           person: _dyeing['end_by'],
           time: _dyeing['end_time']?.toString(),
         ),
@@ -921,6 +929,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 3),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cfa5498 (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -941,6 +952,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
               ),
           ],
+<<<<<<< HEAD
         ),
 =======
         Text(
@@ -964,6 +976,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ],
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+        ),
+>>>>>>> cfa5498 (fix: UI)
       ],
     );
   }

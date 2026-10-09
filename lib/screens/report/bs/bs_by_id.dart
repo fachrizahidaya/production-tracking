@@ -443,13 +443,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
+<<<<<<< HEAD
             label: 'Mulai',
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+            label: 'Mulai Sortir',
+>>>>>>> 9b746b6d (fix: UI)
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
+<<<<<<< HEAD
 <<<<<<< HEAD
             label: 'Selesai Sortir',
             person: _sorting['end_by'],
@@ -525,6 +530,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             valueColor: const Color(0xFF234393),
 =======
             label: 'Selesai',
+=======
+            label: 'Selesai Sortir',
+>>>>>>> 9b746b6d (fix: UI)
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -605,7 +613,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF3F2),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '$rate %',
@@ -676,6 +684,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ),
         const SizedBox(height: 3),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9b746b6d (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -696,6 +707,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ),
               ),
           ],
+<<<<<<< HEAD
         ),
 =======
         Text(
@@ -719,6 +731,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
         ],
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+        ),
+>>>>>>> 9b746b6d (fix: UI)
       ],
     );
   }

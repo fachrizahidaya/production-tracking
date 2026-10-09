@@ -1456,6 +1456,7 @@ class _ReworkListState extends State<ReworkList> {
                 ),
               ),
           ],
+<<<<<<< HEAD
 =======
   Widget _buildInfoItem(String label, String value) {
     return Row(
@@ -1620,17 +1621,9 @@ class _ReworkListState extends State<ReworkList> {
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
+=======
+>>>>>>> 9b746b6d (fix: UI)
         ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ],
     );
   }

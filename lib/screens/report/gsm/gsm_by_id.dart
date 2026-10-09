@@ -441,6 +441,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           const SizedBox(height: 12),
           _buildProcessTimeItem(
             label: 'Mulai Packing',
+<<<<<<< HEAD
             person: _packing['start_by'],
             time: _packing['start_time']?.toString(),
           ),
@@ -478,12 +479,14 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           const SizedBox(height: 12),
           _buildProcessTimeItem(
             label: 'Mulai',
+=======
+>>>>>>> 9b746b6d (fix: UI)
             person: _packing['start_by'],
             time: _packing['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Selesai',
+            label: 'Selesai Packing',
             person: _packing['end_by'],
             time: _packing['end_time']?.toString(),
           ),
@@ -584,6 +587,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         ),
         const SizedBox(height: 3),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9b746b6d (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -604,6 +610,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
               ),
           ],
+<<<<<<< HEAD
         ),
 =======
         Text(
@@ -627,6 +634,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ),
         ],
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+        ),
+>>>>>>> 9b746b6d (fix: UI)
       ],
     );
   }

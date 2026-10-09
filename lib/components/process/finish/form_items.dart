@@ -1827,6 +1827,7 @@ class _FormItemsState extends State<FormItems>
                           ],
                         ),
                       ),
+<<<<<<< HEAD
                       Builder(
                         builder: (context) {
                           final tabController =
@@ -1836,6 +1837,13 @@ class _FormItemsState extends State<FormItems>
                             builder: (context, _) {
                               final item = safeItems[tabController.index];
                               final itemId = item['id'];
+=======
+                      SizedBox(
+                        height: 520,
+                        child: TabBarView(
+                          children: (safeItems).map<Widget>((item) {
+                            final itemId = item['id'];
+>>>>>>> ccc6b638 (fix: warning selesai packing)
 
                               _packingQtyControllers.putIfAbsent(
                                 itemId,
@@ -2110,6 +2118,7 @@ class _FormItemsState extends State<FormItems>
                                           ),
                                       ],
                                     ),
+<<<<<<< HEAD
                                     Row(
                                       children: [
                                         Expanded(
@@ -2143,6 +2152,98 @@ class _FormItemsState extends State<FormItems>
                                     PackingGradeASourceSection(
                                     key: ValueKey(
                                       'packing-grade-a-${widget.form['wo_id']}-$itemId',
+=======
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: PackingNumberForm(
+                                              label: 'Total Packing (PCS)',
+                                              controller:
+                                                  _packingQtyControllers[
+                                                      itemId]!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  item['qty'] = value;
+
+                                                  calculateBeratA(item);
+                                                  calculateTotalBerat(
+                                                    item,
+                                                    widget.processData,
+                                                  );
+
+                                                  _validateAllPackingQty();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: PackingNumberForm(
+                                              label: 'Berat per Lusin (KG)',
+                                              controller:
+                                                  _weightPerDozenControllers[
+                                                      itemId]!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  item['weight_per_dozen'] =
+                                                      value;
+
+                                                  calculateGsm(item);
+                                                  calculateBeratA(item);
+                                                  calculateTotalBerat(
+                                                    item,
+                                                    widget.processData,
+                                                  );
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ].separatedBy(
+                                          CustomTheme().hGap('xl'),
+                                        ),
+                                      ),
+                                      if (_packingQtyWarnings[itemId] != null)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8),
+                                          child: _buildPackingQtyWarning(
+                                            _packingQtyWarnings[itemId]!,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextForm(
+                                          label: 'Gramasi (GSM)',
+                                          isDisabled: true,
+                                          controller: _gsmControllers[itemId],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextForm(
+                                          label: 'Berat Grade A (KG)',
+                                          isDisabled: true,
+                                          controller:
+                                              _weightGradeAControllers[itemId],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextForm(
+                                          label: 'Total Berat (KG)',
+                                          isDisabled: true,
+                                          controller:
+                                              _totalWeightControllers[itemId],
+                                        ),
+                                      ),
+                                    ].separatedBy(
+                                      CustomTheme().hGap('xl'),
+>>>>>>> ccc6b638 (fix: warning selesai packing)
                                     ),
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)

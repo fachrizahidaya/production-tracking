@@ -139,6 +139,7 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
+  final Map<dynamic, String?> _packingQtyWarnings = {};
 
   @override
   bool get wantKeepAlive => true;
@@ -196,6 +197,10 @@ class _FormItemsState extends State<FormItems>
           item,
           widget.processData,
         );
+      }
+
+      if (widget.label == 'Packing') {
+        _validateAllPackingQty();
       }
     });
 
@@ -585,6 +590,82 @@ class _FormItemsState extends State<FormItems>
         _initializeSemiFinishedTab();
       });
     }
+  }
+
+  String? _validatePackingQty(Map<String, dynamic> item) {
+    final sortingQty = getSortingGradeQty(
+      item,
+      widget.processData,
+    );
+
+    final gradeA = parseInput(sortingQty['grade_a']);
+    final packingQty = parseInput(item['qty']);
+
+    if (gradeA <= 0) {
+      return null;
+    }
+
+    final lowerLimit = gradeA * 0.90;
+    final upperLimit = gradeA * 1.10;
+
+    if (packingQty < lowerLimit || packingQty > upperLimit) {
+      final differencePercent = ((packingQty - gradeA) / gradeA) * 100;
+
+      return 'Qty packing ${packingQty < gradeA ? 'kurang' : 'lebih'} '
+          '${differencePercent.abs().toStringAsFixed(2)}% dari Grade A sortir '
+          '(Batas: ${formatNumber(lowerLimit)} – '
+          '${formatNumber(upperLimit)})';
+    }
+
+    return null;
+  }
+
+  void _validateAllPackingQty() {
+    bool hasWarning = false;
+
+    for (final item in safeItems) {
+      final warning = _validatePackingQty(item);
+      _packingQtyWarnings[item['id']] = warning;
+
+      if (warning != null) {
+        hasWarning = true;
+      }
+    }
+
+    widget.handleItemQtyWarning?.call(hasWarning);
+  }
+
+  Widget _buildPackingQtyWarning(String warning) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Map<String, dynamic> getSortingGradeQty(
@@ -1664,7 +1745,7 @@ class _FormItemsState extends State<FormItems>
                         ),
                       ),
                       SizedBox(
-                        height: 500,
+                        height: 520,
                         child: TabBarView(
                           children: (safeItems).map<Widget>((item) {
                             final itemId = item['id'];
@@ -1874,49 +1955,67 @@ class _FormItemsState extends State<FormItems>
                                       ],
                                     ),
                                   ),
-                                  Row(
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        child: PackingNumberForm(
-                                          label: 'Total Packing (PCS)',
-                                          controller:
-                                              _packingQtyControllers[itemId]!,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              item['qty'] = value;
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: PackingNumberForm(
+                                              label: 'Total Packing (PCS)',
+                                              controller:
+                                                  _packingQtyControllers[
+                                                      itemId]!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  item['qty'] = value;
 
-                                              calculateBeratA(item);
-                                              calculateTotalBerat(
-                                                item,
-                                                widget.processData,
-                                              );
-                                            });
-                                          },
+                                                  calculateBeratA(item);
+                                                  calculateTotalBerat(
+                                                    item,
+                                                    widget.processData,
+                                                  );
+
+                                                  _validateAllPackingQty();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: PackingNumberForm(
+                                              label: 'Berat per Lusin (KG)',
+                                              controller:
+                                                  _weightPerDozenControllers[
+                                                      itemId]!,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  item['weight_per_dozen'] =
+                                                      value;
+
+                                                  calculateGsm(item);
+                                                  calculateBeratA(item);
+                                                  calculateTotalBerat(
+                                                    item,
+                                                    widget.processData,
+                                                  );
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ].separatedBy(
+                                          CustomTheme().hGap('xl'),
                                         ),
                                       ),
-                                      Expanded(
-                                        child: PackingNumberForm(
-                                          label: 'Berat per Lusin (KG)',
-                                          controller:
-                                              _weightPerDozenControllers[
-                                                  itemId]!,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              item['weight_per_dozen'] = value;
-
-                                              calculateGsm(item);
-                                              calculateBeratA(item);
-                                              calculateTotalBerat(
-                                                item,
-                                                widget.processData,
-                                              );
-                                            });
-                                          },
+                                      if (_packingQtyWarnings[itemId] != null)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8),
+                                          child: _buildPackingQtyWarning(
+                                            _packingQtyWarnings[itemId]!,
+                                          ),
                                         ),
-                                      ),
-                                    ].separatedBy(
-                                      CustomTheme().hGap('xl'),
-                                    ),
+                                    ],
                                   ),
                                   Row(
                                     children: [

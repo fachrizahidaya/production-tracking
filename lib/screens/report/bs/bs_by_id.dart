@@ -240,13 +240,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Mulai',
+            label: 'Mulai Sortir',
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Selesai',
+            label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
           ),
@@ -325,7 +325,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF3F2),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '$rate %',
@@ -391,26 +391,27 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ),
         ),
         const SizedBox(height: 3),
-        Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          children: [
+            if (name != '-' || !hasTime)
+              Text(
+                name == '-' ? '-' : '$name${hasTime ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (hasTime)
+              Text(
+                time,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
         ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ],
     );
   }

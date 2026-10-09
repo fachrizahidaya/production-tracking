@@ -744,13 +744,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-          label: 'Mulai',
+          label: 'Mulai Rework',
           person: _dyeing['start_by'],
           time: _dyeing['start_time']?.toString(),
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-          label: 'Selesai',
+          label: 'Selesai Rework',
           person: _dyeing['end_by'],
           time: _dyeing['end_time']?.toString(),
         ),

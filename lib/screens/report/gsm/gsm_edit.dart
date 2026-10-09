@@ -369,13 +369,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Mulai',
+            label: 'Mulai Packing',
             person: _packing['start_by'],
             time: _packing['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Selesai',
+            label: 'Selesai Packing',
             person: _packing['end_by'],
             time: _packing['end_time']?.toString(),
           ),

@@ -288,13 +288,13 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-          label: 'Mulai',
+          label: 'Mulai Rework',
           person: _dyeing['start_by'],
           time: _dyeing['start_time']?.toString(),
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-          label: 'Selesai',
+          label: 'Selesai Rework',
           person: _dyeing['end_by'],
           time: _dyeing['end_time']?.toString(),
         ),
@@ -364,26 +364,27 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ),
         const SizedBox(height: 3),
-        Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          children: [
+            if (name != '-' || !hasTime)
+              Text(
+                name == '-' ? '-' : '$name${hasTime ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (hasTime)
+              Text(
+                time,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
         ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ],
     );
   }

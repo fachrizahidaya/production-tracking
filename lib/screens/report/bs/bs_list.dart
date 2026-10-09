@@ -802,6 +802,9 @@ class _BsListState extends State<BsList> {
         ),
         const SizedBox(height: 3),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cfa5498 (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -822,6 +825,7 @@ class _BsListState extends State<BsList> {
                 ),
               ),
           ],
+<<<<<<< HEAD
         ),
 =======
         Text(
@@ -845,6 +849,9 @@ class _BsListState extends State<BsList> {
           ),
         ],
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+        ),
+>>>>>>> cfa5498 (fix: UI)
       ],
     );
   }

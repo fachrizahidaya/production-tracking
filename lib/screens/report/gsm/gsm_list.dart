@@ -774,6 +774,9 @@ class _GsmListState extends State<GsmList> {
         ),
         const SizedBox(height: 3),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> cfa5498 (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -794,6 +797,7 @@ class _GsmListState extends State<GsmList> {
                 ),
               ),
           ],
+<<<<<<< HEAD
         ),
 =======
         Text(
@@ -817,6 +821,9 @@ class _GsmListState extends State<GsmList> {
           ),
         ],
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+        ),
+>>>>>>> cfa5498 (fix: UI)
       ],
     );
   }

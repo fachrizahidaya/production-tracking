@@ -358,13 +358,13 @@ class _BsEditScreenState extends State<BsEditScreen> {
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Mulai',
+            label: 'Mulai Sortir',
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
-            label: 'Selesai',
+            label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
           ),
@@ -439,7 +439,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF3F2),
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   '$rate %',

@@ -788,26 +788,27 @@ class _ReworkListState extends State<ReworkList> {
           ),
         ),
         const SizedBox(height: 3),
-        Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        Row(
+          children: [
+            if (name != '-' || !hasTime)
+              Text(
+                name == '-' ? '-' : '$name${hasTime ? ', ' : ''}',
+                style: const TextStyle(
+                  color: Color(0xFF3E3F49),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            if (hasTime)
+              Text(
+                time,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                ),
+              ),
+          ],
         ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
       ],
     );
   }

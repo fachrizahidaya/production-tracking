@@ -13,6 +13,7 @@ class ListForm extends StatefulWidget {
   final selectMachine;
   final selectReworkCategory;
   final reworkCategoryOption;
+  final onFormChanged;
 
   const ListForm(
       {super.key,
@@ -22,7 +23,8 @@ class ListForm extends StatefulWidget {
       this.selectWorkOrder,
       this.selectMachine,
       this.reworkCategoryOption,
-      this.selectReworkCategory});
+      this.selectReworkCategory,
+      this.onFormChanged});
 
   @override
   State<ListForm> createState() => _ListFormState();

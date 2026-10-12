@@ -20,7 +20,6 @@ class BsEditScreen extends StatefulWidget {
 class _BsEditScreenState extends State<BsEditScreen> {
   final ReportService _reportService = ReportService();
   final TextEditingController _reasonController = TextEditingController();
-  final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -32,11 +31,9 @@ class _BsEditScreenState extends State<BsEditScreen> {
   void initState() {
     super.initState();
     _reasonController.text = _textValue(widget.data['reason']);
-    _actionPlanController.text = _textValue(widget.data['actionPlan']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _visibleStep = _stepFromValues();
     _reasonController.addListener(_persistDraft);
-    _actionPlanController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
   }
@@ -44,10 +41,8 @@ class _BsEditScreenState extends State<BsEditScreen> {
   @override
   void dispose() {
     _reasonController.removeListener(_persistDraft);
-    _actionPlanController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _reasonController.dispose();
-    _actionPlanController.dispose();
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -58,8 +53,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 
   int _stepFromValues() {
-    if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
-    if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
     return 1;
   }
 
@@ -71,17 +65,16 @@ class _BsEditScreenState extends State<BsEditScreen> {
       if (draft.containsKey('reason')) {
         _reasonController.text = draft['reason']?.toString() ?? '';
       }
-      if (draft.containsKey('actionPlan')) {
-        _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
-      }
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
       final savedStep = draft['visibleStep'];
+      final parsedStep =
+          savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
-        savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
+        parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
       );
     });
   }
@@ -89,7 +82,6 @@ class _BsEditScreenState extends State<BsEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reason': _reasonController.text,
-      'actionPlan': _actionPlanController.text,
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
     });
@@ -97,7 +89,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 
   void _goNext() {
-    if (_visibleStep >= 3 || !_canGoNext) return;
+    if (_visibleStep >= 2 || !_canGoNext) return;
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -121,7 +113,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
       await _reportService.updateBsDetail(
         id: widget.data['id'],
         reason: _reasonController.text,
-        actionPlan: _actionPlanController.text,
+        actionPlan: '',
         preventivePlan: _preventivePlanController.text,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
@@ -145,15 +137,11 @@ class _BsEditScreenState extends State<BsEditScreen> {
 
   bool get _canSave {
     return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
         _preventivePlanController.text.trim().isNotEmpty;
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
-    if (_visibleStep == 2) {
-      return _actionPlanController.text.trim().length >= 8;
-    }
     return false;
   }
 
@@ -162,18 +150,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
     if (_reasonController.text.trim().length < 8) {
       invalid.add('Alasan dan Penyebab');
     }
-    if (_actionPlanController.text.trim().length < 8) {
-      invalid.add('Rencana Tindakan');
-    }
     if (_preventivePlanController.text.trim().length < 8) {
       invalid.add('Rencana Pencegahan');
     }
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
-    if (invalid.length == 2) {
-      return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
-    }
-    return '${invalid[0]}, ${invalid[1]}, dan ${invalid[2]} minimal 8 karakter.';
+    return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
   }
 
   @override
@@ -211,22 +193,12 @@ class _BsEditScreenState extends State<BsEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
-                    label: 'Rencana Tindakan',
-                    controller: _actionPlanController,
-                  ),
-                ),
-              ],
-              if (_visibleStep >= 3) ...[
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildEditorForm(
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
                 ),
               ],
-              if (_visibleStep < 3) ...[
+              if (_visibleStep < 2) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

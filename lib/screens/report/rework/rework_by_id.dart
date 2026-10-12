@@ -122,7 +122,6 @@ class ReworkDetailScreen extends StatefulWidget {
 
 class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
-  final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
 
@@ -130,7 +129,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -138,7 +136,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   @override
   void dispose() {
     _reasonController.dispose();
-    _actionPlanController.dispose();
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -193,13 +190,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-                'Rencana Tindakan',
-                _actionPlanController.text,
-                updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                historyField: 'action_plan',
+                historyField: 'reason',
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -406,7 +397,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 3),
         Text(
-          code,
+          code == '-' ? _value('material') : code,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

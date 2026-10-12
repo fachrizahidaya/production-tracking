@@ -122,7 +122,6 @@ class GsmDetailScreen extends StatefulWidget {
 
 class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
-  final TextEditingController _actionPlanController = TextEditingController();
   final TextEditingController _preventivePlanController =
       TextEditingController();
 
@@ -130,7 +129,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -138,7 +136,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   @override
   void dispose() {
     _reasonController.dispose();
-    _actionPlanController.dispose();
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -188,13 +185,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-                'Rencana Tindakan',
-                _actionPlanController.text,
-                updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                historyField: 'action_plan',
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(

@@ -430,9 +430,13 @@ class ReportService {
         : Map<String, dynamic>.from(decoded as Map);
     final workOrder = _asMap(data['work_order']);
     final dyeing = _asMap(data['dyeing']);
-    final item = _asMap(data['item']).isNotEmpty
-        ? _asMap(data['item'])
-        : _asMap(dyeing['item']);
+    final item = _resolveMaterialItem(
+      data: data,
+      workOrder: workOrder,
+      fallbackItem: _asMap(data['item']).isNotEmpty
+          ? _asMap(data['item'])
+          : _asMap(dyeing['item']),
+    );
     final categories = data['rework_categories'] ??
         dyeing['rework_categories'] ??
         data['rework_category'] ??
@@ -452,8 +456,10 @@ class ReportService {
       'status': _first(data, ['status']) ?? '-',
       'woNo': _first(workOrder, ['wo_no', 'number', 'no']) ?? '-',
       'dyeingProcessNo': _first(dyeing, ['dyeing_no', 'no']) ?? '-',
-      'topMaterialCode': _first(item, ['code']) ?? '-',
-      'topMaterialName': _first(item, ['name']) ?? '-',
+      'topMaterialCode':
+          _first(item, ['code']) ?? _first(data, ['top_material_code']) ?? '-',
+      'topMaterialName':
+          _first(item, ['name']) ?? _first(data, ['top_material_name']) ?? '-',
       'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
       'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
       'qty': _first(data, ['qty', 'quantity']) ??
@@ -555,13 +561,7 @@ class ReportService {
 
     return items
         .whereType<Map>()
-        .map(
-          (item) => {
-            'value': item['value']?.toString() ?? '',
-            'label':
-                item['label']?.toString() ?? item['value']?.toString() ?? '',
-          },
-        )
+        .map(_mapReworkReasonOption)
         .where((item) => item['value']!.toString().isNotEmpty)
         .toList();
   }
@@ -569,6 +569,9 @@ class ReportService {
   Future<Map<String, dynamic>> createReworkReasonOption(String label) async {
     final trimmedLabel = label.trim();
     if (trimmedLabel.isEmpty) throw Exception('Alasan tidak boleh kosong');
+    if (trimmedLabel.length < 8) {
+      throw Exception('Alasan minimal 8 karakter');
+    }
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -578,24 +581,73 @@ class ReportService {
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode({'label': trimmedLabel}),
     );
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(
-        'Failed to create rework reason option: '
-        '${response.statusCode} ${response.body}',
+        _apiErrorMessage(response.body, 'Gagal menambah alasan'),
       );
     }
 
-    final decoded = jsonDecode(response.body);
-    final data = decoded is Map && decoded['data'] is Map
-        ? Map<String, dynamic>.from(decoded['data'])
-        : <String, dynamic>{};
+    Map<String, dynamic> data = {};
+    final body = response.body.trim();
+    if (body.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(body);
+        if (decoded is Map && decoded['data'] is Map) {
+          data = Map<String, dynamic>.from(decoded['data']);
+        } else if (decoded is Map) {
+          data = Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {}
+    }
+
+    if (data['label']?.toString().trim().isEmpty ?? true) {
+      data['label'] = trimmedLabel;
+    }
+    if (data['value']?.toString().trim().isEmpty ?? true) {
+      data['value'] = trimmedLabel;
+    }
+    return _mapReworkReasonOption(data);
+  }
+
+  Future<void> deleteReworkReasonOption(dynamic id) async {
+    if (id == null || id.toString().trim().isEmpty) {
+      throw Exception('ID alasan tidak ditemukan');
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final uri = Uri.parse('$baseUrl/dyeing-rework-reason-options/$id');
+    final response = await http.delete(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception(
+        _apiErrorMessage(response.body, 'Gagal menghapus alasan'),
+      );
+    }
+  }
+
+  Map<String, dynamic> _mapReworkReasonOption(Map item) {
+    final id = item['id']?.toString().trim() ?? '';
+    final value = item['value']?.toString().trim() ?? '';
+    final label = item['label']?.toString().trim() ??
+        item['name']?.toString().trim() ??
+        value;
+
     return {
-      'value': data['value']?.toString() ?? trimmedLabel,
-      'label': data['label']?.toString() ?? trimmedLabel,
+      'id': id.isNotEmpty ? id : value,
+      'value': value.isNotEmpty ? value : (id.isNotEmpty ? id : label),
+      'label': label.isNotEmpty ? label : value,
     };
   }
 
@@ -698,6 +750,16 @@ class ReportService {
         : Map<String, dynamic>.from(decoded as Map);
     final workOrder = _asMap(data['work_order']);
     final sorting = _asMap(data['sorting']);
+    final materialItem = _resolveMaterialItem(
+      data: data,
+      workOrder: workOrder,
+    );
+    final topMaterialCode = _first(materialItem, ['code']) ??
+        _first(data, ['top_material_code']) ??
+        '-';
+    final topMaterialName = _first(materialItem, ['name']) ??
+        _first(data, ['top_material_name']) ??
+        '-';
 
     return {
       ...data,
@@ -711,15 +773,13 @@ class ReportService {
           _first(sorting, ['qty_bs', 'bs_qty', 'qty']) ??
           '-',
       'bsRate': _first(data, ['bs_rate']) ?? _first(sorting, ['bs_rate']) ?? '',
-      'material': _formatBsMaterial(data),
-      'topMaterialCode':
-          data['top_material_code']?.toString().trim().isNotEmpty == true
-              ? data['top_material_code'].toString()
-              : '-',
-      'topMaterialName':
-          data['top_material_name']?.toString().trim().isNotEmpty == true
-              ? data['top_material_name'].toString()
-              : '-',
+      'material': topMaterialCode != '-'
+          ? (topMaterialName != '-'
+              ? '$topMaterialCode - $topMaterialName'
+              : topMaterialCode)
+          : _formatBsMaterial(data),
+      'topMaterialCode': topMaterialCode,
+      'topMaterialName': topMaterialName,
       'defects': data['defects'] is List ? data['defects'] : [],
       'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
       'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
@@ -864,6 +924,17 @@ class ReportService {
     final packing = _asMap(data['packing']);
     final packingItem = _asMap(data['packing_item']);
     final packingItemMaterial = _asMap(packingItem['item']);
+    final materialItem = _resolveMaterialItem(
+      data: data,
+      workOrder: workOrder,
+      fallbackItem: packingItemMaterial,
+    );
+    final topMaterialCode = _first(materialItem, ['code']) ??
+        _first(data, ['top_material_code']) ??
+        '-';
+    final topMaterialName = _first(materialItem, ['name']) ??
+        _first(data, ['top_material_name']) ??
+        '-';
 
     return {
       ...data,
@@ -882,19 +953,9 @@ class ReportService {
           '-',
       'qtyBs': _first(data, ['qty_bs', 'bs_qty', 'qty']) ?? '-',
       'material':
-          _first(packingItemMaterial, ['code']) ?? _formatBsMaterial(data),
-      'topMaterialCode':
-          packingItemMaterial['code']?.toString().trim().isNotEmpty == true
-              ? packingItemMaterial['code'].toString()
-              : (data['top_material_code']?.toString().trim().isNotEmpty == true
-                  ? data['top_material_code'].toString()
-                  : '-'),
-      'topMaterialName':
-          packingItemMaterial['name']?.toString().trim().isNotEmpty == true
-              ? packingItemMaterial['name'].toString()
-              : (data['top_material_name']?.toString().trim().isNotEmpty == true
-                  ? data['top_material_name'].toString()
-                  : '-'),
+          topMaterialCode != '-' ? topMaterialCode : _formatBsMaterial(data),
+      'topMaterialCode': topMaterialCode,
+      'topMaterialName': topMaterialName,
       'startedAt': _first(data, ['started_at', 'created_at']) ?? '-',
       'completedAt': _first(data, ['completed_at', 'finished_at']) ?? '-',
       'submittedBy': _formatSubmittedBy(data['submitted_by']),
@@ -950,6 +1011,21 @@ class ReportService {
 
   Map<String, dynamic> _asMap(dynamic value) {
     return value is Map ? Map<String, dynamic>.from(value) : {};
+  }
+
+  Map<String, dynamic> _resolveMaterialItem({
+    required Map<String, dynamic> data,
+    required Map<String, dynamic> workOrder,
+    Map<String, dynamic>? fallbackItem,
+  }) {
+    final woItems = workOrder['items'];
+    if (woItems is List && woItems.isNotEmpty) {
+      return _asMap(woItems.first);
+    }
+    if (fallbackItem != null && fallbackItem.isNotEmpty) {
+      return fallbackItem;
+    }
+    return _asMap(data['item']);
   }
 
   dynamic _first(Map<String, dynamic> data, List<String> keys) {

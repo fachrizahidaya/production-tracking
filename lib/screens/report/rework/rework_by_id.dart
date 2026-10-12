@@ -131,7 +131,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -325,6 +324,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 historyField: 'reason',
 =======
               ),
@@ -338,6 +338,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 =======
                 historyField: 'action_plan',
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+                historyField: 'reason',
+>>>>>>> c675884 (fix: remove rencana tindakan)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -729,10 +732,14 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         const SizedBox(height: 3),
         Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
           code == '-' ? _value('material') : code,
 =======
           code,
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+          code == '-' ? _value('material') : code,
+>>>>>>> c675884 (fix: remove rencana tindakan)
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(

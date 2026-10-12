@@ -165,10 +165,13 @@ class GsmDetailScreen extends StatefulWidget {
 class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
 <<<<<<< HEAD
+<<<<<<< HEAD
   final TextEditingController _preventivePlanController =
       TextEditingController();
 =======
   final TextEditingController _actionPlanController = TextEditingController();
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
@@ -190,9 +193,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -201,9 +207,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   void dispose() {
     _reasonController.dispose();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.dispose();
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -316,6 +325,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
+<<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
@@ -327,6 +337,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
                 'Rencana Pencegahan',
                 _preventivePlanController.text,
                 updatedAt:

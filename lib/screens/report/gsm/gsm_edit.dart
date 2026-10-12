@@ -41,6 +41,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   final ReportService _reportService = ReportService();
   final TextEditingController _reasonController = TextEditingController();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
@@ -81,11 +84,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
     _reasonController.text = _textValue(widget.data['reason']);
-    _actionPlanController.text = _textValue(widget.data['actionPlan']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _visibleStep = _stepFromValues();
     _reasonController.addListener(_persistDraft);
-    _actionPlanController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -101,12 +102,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 =======
     _reasonController.removeListener(_persistDraft);
-    _actionPlanController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
     _reasonController.dispose();
+<<<<<<< HEAD
     _actionPlanController.dispose();
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -122,11 +125,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   int _stepFromValues() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 =======
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
     if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
     return 1;
   }
 
@@ -139,11 +146,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         _reasonController.text = draft['reason']?.toString() ?? '';
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       if (draft.containsKey('actionPlan')) {
         _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
       }
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
@@ -161,10 +171,16 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         parsedStep.clamp(1, 2),
 =======
       final savedStep = draft['visibleStep'];
+      final parsedStep =
+          savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
         savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+        parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
       );
     });
   }
@@ -173,11 +189,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reason': _reasonController.text,
 <<<<<<< HEAD
+<<<<<<< HEAD
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
 =======
       'actionPlan': _actionPlanController.text,
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -187,10 +206,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   void _goNext() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -245,7 +268,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       await _reportService.updateGsmDetail(
         id: widget.data['id'],
         reason: _reasonController.text,
-        actionPlan: _actionPlanController.text,
+        actionPlan: '',
         preventivePlan: _preventivePlanController.text,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
@@ -292,16 +315,12 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
 =======
     return _reasonController.text.trim().isNotEmpty &&
-        _actionPlanController.text.trim().isNotEmpty &&
         _preventivePlanController.text.trim().isNotEmpty;
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
-    if (_visibleStep == 2) {
-      return _actionPlanController.text.trim().length >= 8;
-    }
     return false;
   }
 
@@ -310,18 +329,12 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (_reasonController.text.trim().length < 8) {
       invalid.add('Alasan dan Penyebab');
     }
-    if (_actionPlanController.text.trim().length < 8) {
-      invalid.add('Rencana Tindakan');
-    }
     if (_preventivePlanController.text.trim().length < 8) {
       invalid.add('Rencana Pencegahan');
     }
     if (invalid.isEmpty) return null;
     if (invalid.length == 1) return '${invalid.first} minimal 8 karakter.';
-    if (invalid.length == 2) {
-      return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
-    }
-    return '${invalid[0]}, ${invalid[1]}, dan ${invalid[2]} minimal 8 karakter.';
+    return '${invalid[0]} dan ${invalid[1]} minimal 8 karakter.';
   }
 
   @override
@@ -356,6 +369,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
+<<<<<<< HEAD
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
@@ -418,12 +432,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
+=======
+>>>>>>> 4ec508fc (fix: remove rencana tindakan)
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
                 ),
               ],
-              if (_visibleStep < 3) ...[
+              if (_visibleStep < 2) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

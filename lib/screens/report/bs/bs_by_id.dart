@@ -239,12 +239,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 =======
   final TextEditingController _actionPlanController = TextEditingController();
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
@@ -264,6 +268,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
@@ -297,6 +305,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -307,6 +316,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -317,6 +333,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.dispose();
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -327,6 +344,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     _actionPlanController.dispose();
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    _actionPlanController.dispose();
+>>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -542,6 +566,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
+<<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
@@ -558,6 +583,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               const SizedBox(height: 16),
               _buildReadOnlyCard(
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
@@ -571,6 +597,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               _buildReadOnlyCard(
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
                 'Rencana Pencegahan',
                 _preventivePlanController.text,
                 updatedAt:

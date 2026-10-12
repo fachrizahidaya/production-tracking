@@ -153,6 +153,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
           .where((reason) => reason.toString().trim().isNotEmpty)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
           .map(
             (reason) => <String, dynamic>{
               'id': reason.toString(),
@@ -172,13 +175,17 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 'value': reason.toString(),
                 'label': reason.toString(),
               })
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
           .toList();
     }
-    _actionPlanController.text = _textValue(widget.data['actionPlan']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _visibleStep = _stepFromValues();
+<<<<<<< HEAD
     _actionPlanController.addListener(_persistDraft);
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
 =======
@@ -218,6 +225,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     _preventivePlanController.removeListener(_persistDraft);
 =======
 =======
@@ -230,13 +238,21 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     _preventivePlanController.removeListener(_persistDraft);
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.removeListener(_persistDraft);
 =======
     _actionPlanController.removeListener(_persistDraft);
     _preventivePlanController.removeListener(_persistDraft);
     _actionPlanController.dispose();
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+    _preventivePlanController.removeListener(_persistDraft);
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -254,8 +270,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 =======
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
@@ -267,7 +286,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     return 1;
   }
 
@@ -281,10 +306,15 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
         _selectedReasons = List<Map<String, dynamic>>.from(
           reasons
               .whereType<Map>()
@@ -292,8 +322,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         );
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
 =======
         _selectedReasons = reasons
             .whereType<Map>()
@@ -308,7 +341,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
       }
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
@@ -346,6 +384,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
       final savedStep = draft['visibleStep'];
 <<<<<<< HEAD
+<<<<<<< HEAD
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
@@ -363,11 +402,22 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         parsedStep.clamp(1, 2),
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+      final parsedStep =
+          savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
         savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+        parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
       );
     });
   }
@@ -375,6 +425,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reasons': _selectedReasons,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -392,11 +443,15 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
 =======
       'actionPlan': _actionPlanController.text,
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
 >>>>>>> d256f82 (fix: UI evaluasi)
@@ -406,6 +461,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   void _goNext() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -425,11 +481,19 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -550,6 +614,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
+<<<<<<< HEAD
         _preventivePlanController.text.trim().length >= 8;
   }
 
@@ -561,6 +626,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   String? _planLengthWarning() {
     if (_preventivePlanController.text.trim().length >= 8) return null;
     return 'Rencana Pencegahan minimal 8 karakter.';
+=======
+        _preventivePlanController.text.trim().isNotEmpty;
+>>>>>>> c675884 (fix: remove rencana tindakan)
   }
 
 <<<<<<< HEAD
@@ -594,9 +662,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
-    if (_visibleStep == 2) {
-      return _actionPlanController.text.trim().length >= 8;
-    }
     return false;
   }
 
@@ -604,13 +669,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
   String? _planLengthWarning() {
-    final actionOk = _actionPlanController.text.trim().length >= 8;
-    final preventiveOk = _preventivePlanController.text.trim().length >= 8;
-    if (actionOk && preventiveOk) return null;
-    if (!actionOk && !preventiveOk) {
-      return 'Rencana Tindakan dan Rencana Pencegahan minimal 8 karakter.';
-    }
-    if (!actionOk) return 'Rencana Tindakan minimal 8 karakter.';
+    if (_preventivePlanController.text.trim().length >= 8) return null;
     return 'Rencana Pencegahan minimal 8 karakter.';
   }
 
@@ -652,8 +711,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _selectReason() async {
     if (_loadingReasons) return;
 
-    final selectedValues =
-        _selectedReasons.map((reason) => reason['value'].toString()).toSet();
+    final selectedValues = _selectedReasons
+        .map((reason) => reason['value'].toString())
+        .toSet();
     final availableOptions = _reasonOptions
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -666,6 +726,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
     if (selected == null || !mounted) return;
     setState(() {
+<<<<<<< HEAD
       final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
 <<<<<<< HEAD
       for (final value in selected) {
@@ -678,6 +739,20 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 'label': valueKey,
               },
             );
+=======
+      final nextSelected =
+          List<Map<String, dynamic>>.from(_selectedReasons);
+      for (final value in selected) {
+        final valueKey = value.toString();
+        final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
+          (item) => item['value'].toString() == valueKey,
+          orElse: () => <String, dynamic>{
+            'id': valueKey,
+            'value': valueKey,
+            'label': valueKey,
+          },
+        );
+>>>>>>> c675884 (fix: remove rencana tindakan)
         if (!nextSelected.any(
           (item) => item['value'].toString() == option['value'].toString(),
         )) {
@@ -751,7 +826,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                     (option) =>
                         option['id'].toString() == optionId ||
                         option['value'].toString() == optionId ||
+<<<<<<< HEAD
                         option['value'].toString() == item['value'].toString(),
+=======
+                        option['value'].toString() ==
+                            item['value'].toString(),
+>>>>>>> c675884 (fix: remove rencana tindakan)
                   );
                   selectedIds.remove(item['value'].toString());
                   applyFilter();
@@ -902,6 +982,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
 
     final normalized = trimmed.toLowerCase();
+<<<<<<< HEAD
     Map<String, dynamic>? existingOption;
     for (final option in _reasonOptions) {
       if (option['label'].toString().trim().toLowerCase() == normalized ||
@@ -956,6 +1037,35 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       );
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+    final alreadyExists = _reasonOptions.any(
+      (option) =>
+          option['label'].toString().trim().toLowerCase() == normalized ||
+          option['value'].toString().trim().toLowerCase() == normalized,
+    );
+    if (alreadyExists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Alasan sudah ada di daftar')),
+      );
+      return;
+    }
+
+    try {
+      final option = await _reportService.createReworkReasonOption(trimmed);
+      if (!mounted) return;
+      setState(() {
+        final nextOptions = List<Map<String, dynamic>>.from(_reasonOptions);
+        if (!nextOptions.any(
+          (item) => item['value'].toString() == option['value'].toString(),
+        )) {
+          nextOptions.add(Map<String, dynamic>.from(option));
+        }
+        _reasonOptions = nextOptions;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Alasan berhasil ditambahkan')),
+      );
+>>>>>>> c675884 (fix: remove rencana tindakan)
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1356,6 +1466,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     label: 'Rencana Tindakan',
                     controller: _actionPlanController,
@@ -1368,6 +1479,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
@@ -1382,8 +1495,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               if (_visibleStep < 2) ...[
 =======
               ],
+<<<<<<< HEAD
               if (_visibleStep < 3) ...[
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+              if (_visibleStep < 2) ...[
+>>>>>>> c675884 (fix: remove rencana tindakan)
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -2195,6 +2312,16 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
     super.dispose();
   }
 
+  void _submit() {
+    final value = _controller.text.trim();
+    if (value.length < 8) {
+      setState(() => _errorMessage = 'Minimal 8 karakter');
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    Navigator.pop(context, value);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
@@ -2219,14 +2346,15 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                 autofocus: true,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
-                  hintText: 'Masukkan alasan rework',
+                  hintText: 'Masukkan alasan rework (min. 8 karakter)',
                   border: OutlineInputBorder(),
                 ).copyWith(errorText: _errorMessage),
                 onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
+                  setState(() {
+                    if (_errorMessage != null) _errorMessage = null;
+                  });
                 },
+                onSubmitted: (_) => _submit(),
               ),
               const SizedBox(height: 16),
               Row(
@@ -2241,16 +2369,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        final value = _controller.text.trim();
-                        if (value.length < 3) {
-                          setState(
-                            () => _errorMessage = 'Minimal 3 karakter',
-                          );
-                          return;
-                        }
-                        Navigator.pop(context, value);
-                      },
+                      onPressed: _submit,
                       style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),

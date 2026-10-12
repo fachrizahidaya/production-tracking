@@ -243,12 +243,16 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 =======
   final TextEditingController _actionPlanController = TextEditingController();
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
@@ -268,6 +272,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 <<<<<<< HEAD
@@ -301,6 +309,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
@@ -311,6 +320,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -321,6 +337,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.dispose();
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
@@ -331,6 +348,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     _actionPlanController.dispose();
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    _actionPlanController.dispose();
+>>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -541,6 +565,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
+<<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
@@ -557,6 +582,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               const SizedBox(height: 16),
               _buildReadOnlyCard(
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
                 updatedAt: widget.data['action_plan_updated_at']?.toString(),
@@ -570,6 +596,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               _buildReadOnlyCard(
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+=======
+>>>>>>> c675884 (fix: remove rencana tindakan)
+>>>>>>> 754b7cda (fix: remove rencana tindakan)
                 'Rencana Pencegahan',
                 _preventivePlanController.text,
                 updatedAt:

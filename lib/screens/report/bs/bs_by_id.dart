@@ -322,8 +322,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 historyField: 'reason',
 =======
+=======
+                historyField: 'reason',
+>>>>>>> d39c264 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -482,6 +486,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
+<<<<<<< HEAD
           ),
         ],
       ),
@@ -586,6 +591,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
               _buildStatusBadge(_value('status')),
             ],
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -1121,7 +1128,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
             child: Text(
 >>>>>>> d256f82 (fix: UI evaluasi)
               name,
@@ -1152,6 +1158,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
           ),
           const SizedBox(width: 8),
+<<<<<<< HEAD
           Expanded(
             child: Text(
 >>>>>>> d256f82 (fix: UI evaluasi)
@@ -1161,6 +1168,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 fontWeight: FontWeight.w700,
               ),
 >>>>>>> 85966df (fix: detail evaluasi)
+=======
+          Text(
+            qty,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w700,
+>>>>>>> d39c264 (fix: bs dan gsm)
             ),
           ),
         ],
@@ -1390,6 +1404,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -1398,6 +1415,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
+<<<<<<< HEAD
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 =======
   }) {
@@ -1414,6 +1432,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final latestMeta = latestItem != null
         ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
             '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 991dab5 (fix: evaluasi)
 
@@ -1429,6 +1449,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             children: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -1437,6 +1458,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 Text(
                   _historyDisplayValue(previous['old_value']),
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -1446,11 +1472,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 const SizedBox(height: 4),
                 Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                   _historyActorMeta(previous),
 =======
                   'Diubah oleh ${_personName(previous['changed_by'])}, '
                   '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+                  _historyActorMeta(previous),
+>>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1531,6 +1561,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1540,12 +1571,21 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
+=======
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
+>>>>>>> d39c264 (fix: bs dan gsm)
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
+<<<<<<< HEAD
       final label = history['label']?.toString().trim() ?? '';
       if (historyField == field || label == _historyFieldLabel(field)) {
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
+>>>>>>> d39c264 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -1578,18 +1618,25 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return raw
         .whereType<Map>()
 <<<<<<< HEAD
+<<<<<<< HEAD
         .where((item) => item['new_value'] != null)
 =======
         .where(
           (item) => item['old_value'] != null && item['new_value'] != null,
         )
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+        .where((item) => item['new_value'] != null)
+>>>>>>> d39c264 (fix: bs dan gsm)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {

@@ -188,6 +188,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
+                historyField: 'reason',
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -247,36 +248,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             _buildSubmittedByItem(),
           ],
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanggal',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _formatDateTime(
-                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(_value('status')),
-            ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
           ),
         ],
       ),
@@ -558,7 +532,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
             child: Text(
               name,
               maxLines: 1,
@@ -570,13 +543,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              qty,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontWeight: FontWeight.w700,
-              ),
+          Text(
+            qty,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -743,15 +714,14 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final current = value.isEmpty ? '-' : value;
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
-        : _previousHistoryItems(historyField);
-    final previousItems = historyItems.where((item) {
-      final oldValue = _historyDisplayValue(item['old_value']);
-      return oldValue.isNotEmpty && oldValue != current;
-    }).toList();
-    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
-    final latestMeta = latestItem != null
-        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
-            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+        : _fieldHistoryItems(historyField);
+    final versions = _historyVersions(historyItems);
+    final previousVersions = versions.length > 1
+        ? versions.sublist(0, versions.length - 1)
+        : const <Map<String, dynamic>>[];
+    final latestVersion = versions.isNotEmpty ? versions.last : null;
+    final latestMeta = latestVersion != null
+        ? _historyActorMeta(latestVersion)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
@@ -764,9 +734,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final previous in previousItems) ...[
+              for (final previous in previousVersions) ...[
                 Text(
-                  _historyDisplayValue(previous['old_value']),
+                  previous['value'].toString(),
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -775,8 +745,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Diubah oleh ${_personName(previous['changed_by'])}, '
-                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
+                  _historyActorMeta(previous),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -831,12 +800,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     }
   }
 
-  List<Map<String, dynamic>> _previousHistoryItems(String field) {
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
-      final label = history['label']?.toString().trim() ?? '';
-      if (historyField == field || label == _historyFieldLabel(field)) {
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
         group = history;
         break;
       }
@@ -858,11 +828,33 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     if (raw is! List) return [];
     return raw
         .whereType<Map>()
-        .where(
-          (item) => item['old_value'] != null && item['new_value'] != null,
-        )
+        .where((item) => item['new_value'] != null)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
+  }
+
+  List<Map<String, dynamic>> _historyVersions(
+    List<Map<String, dynamic>> historyItems,
+  ) {
+    final versions = <Map<String, dynamic>>[];
+    for (final item in historyItems) {
+      final text = _historyDisplayValue(item['new_value']);
+      if (text.isEmpty) continue;
+      versions.add({
+        'value': text,
+        'isInitial': item['old_value'] == null,
+        'changed_by': item['changed_by'],
+        'created_at': item['created_at'],
+      });
+    }
+    return versions;
+  }
+
+  String _historyActorMeta(Map<String, dynamic> version) {
+    final isInitial = version['isInitial'] == true;
+    final prefix = isInitial ? 'Diisi oleh' : 'Diubah oleh';
+    return '$prefix ${_personName(version['changed_by'])}, '
+        '${_formatDateTime(version['created_at']?.toString() ?? '-')}';
   }
 
   String _historyDisplayValue(dynamic value) {

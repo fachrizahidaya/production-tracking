@@ -781,6 +781,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ],
           const SizedBox(height: 12),
 <<<<<<< HEAD
+<<<<<<< HEAD
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
@@ -818,6 +819,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               _buildStatusBadge(_value('status')),
             ],
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
+>>>>>>> d39c264 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -2120,6 +2126,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -2128,6 +2137,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
+<<<<<<< HEAD
 =======
         : _previousHistoryItems(historyField);
     final previousItems = historyItems.where((item) {
@@ -2139,6 +2149,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
             '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
@@ -2152,6 +2164,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -2160,6 +2173,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 Text(
                   _historyDisplayValue(previous['old_value']),
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -2169,11 +2187,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 const SizedBox(height: 4),
                 Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                   _historyActorMeta(previous),
 =======
                   'Diubah oleh ${_personName(previous['changed_by'])}, '
                   '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+                  _historyActorMeta(previous),
+>>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -2230,6 +2252,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -2239,12 +2262,21 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
+=======
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
+>>>>>>> d39c264 (fix: bs dan gsm)
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
+<<<<<<< HEAD
       final label = history['label']?.toString().trim() ?? '';
       if (historyField == field || label == _historyFieldLabel(field)) {
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
+>>>>>>> d39c264 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -2275,13 +2307,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     if (raw is! List) return [];
     return raw
         .whereType<Map>()
-        .where(
-          (item) => item['old_value'] != null && item['new_value'] != null,
-        )
+        .where((item) => item['new_value'] != null)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildHistoryCard() {
     final histories = _histories
@@ -2348,6 +2379,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   Widget _buildHistoryCard() {
@@ -2539,6 +2571,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -2565,6 +2601,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
@@ -2572,6 +2609,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
 =======
   Widget _buildHistoryItem(Map<String, dynamic> history) {
     final oldValue = _historyDisplayValue(history['old_value']);
@@ -2644,7 +2683,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 =======
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {

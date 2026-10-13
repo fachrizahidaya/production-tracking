@@ -554,14 +554,20 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 historyField: 'reason',
 =======
 =======
                 historyField: 'reason',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                 historyField: 'reason',
 =======
+=======
+                historyField: 'reason',
+>>>>>>> d39c264 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -872,7 +878,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             _buildSubmittedByItem(),
           ],
           const SizedBox(height: 12),
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+<<<<<<< HEAD
+>>>>>>> a087f712 (fix: bs dan gsm)
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -937,7 +947,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -1533,10 +1551,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -1582,6 +1605,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final latestMeta = latestItem != null
         ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
             '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
@@ -1601,10 +1626,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -1621,7 +1649,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -1633,8 +1669,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                   _historyActorMeta(previous),
 =======
                   'Diubah oleh ${_personName(previous['changed_by'])}, '
@@ -1646,7 +1685,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+                  _historyActorMeta(previous),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1761,12 +1806,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1776,6 +1824,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
@@ -1793,13 +1842,27 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+=======
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
+<<<<<<< HEAD
       final label = history['label']?.toString().trim() ?? '';
       if (historyField == field || label == _historyFieldLabel(field)) {
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -1849,8 +1912,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
         .where((item) => item['new_value'] != null)
 =======
         .where(
@@ -1863,11 +1929,18 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+        .where((item) => item['new_value'] != null)
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1879,6 +1952,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {

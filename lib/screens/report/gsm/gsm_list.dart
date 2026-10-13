@@ -586,6 +586,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final completed = _isCompleted(status);
     final date = completed ? item.endDate : item.startDate;
@@ -594,10 +595,17 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 =======
+>>>>>>> a087f712 (fix: bs dan gsm)
+=======
     final completed = _isCompleted(status);
     final date = completed ? item.endDate : item.startDate;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
@@ -744,6 +752,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
@@ -757,6 +766,8 @@ class _GsmListState extends State<GsmList> {
 =======
 =======
 >>>>>>> bdfa7c36 (fix: edit ui tanggal)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
@@ -767,7 +778,13 @@ class _GsmListState extends State<GsmList> {
 =======
                                 'Tanggal',
 >>>>>>> 66a3186 (fix: edit ui tanggal)
+<<<<<<< HEAD
 >>>>>>> bdfa7c36 (fix: edit ui tanggal)
+=======
+=======
+                                'Tanggal Packing',
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -779,6 +796,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
@@ -787,11 +805,19 @@ class _GsmListState extends State<GsmList> {
                                 _formatDateTime(item.startDate),
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+                                _formatDateTime(item.startDate),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

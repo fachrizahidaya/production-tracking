@@ -555,14 +555,20 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 historyField: 'reason',
 =======
 =======
                 historyField: 'reason',
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                 historyField: 'reason',
 =======
+=======
+                historyField: 'reason',
+>>>>>>> d39c264 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -976,6 +982,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               _buildStatusBadge(_value('status')),
             ],
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
           ),
@@ -1033,6 +1040,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ),
       ],
 =======
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -1756,7 +1767,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
             child: Text(
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
@@ -1844,6 +1854,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
           ),
           const SizedBox(width: 8),
+<<<<<<< HEAD
           Expanded(
             child: Text(
 >>>>>>> d256f82 (fix: UI evaluasi)
@@ -1853,7 +1864,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 fontWeight: FontWeight.w700,
               ),
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+          Text(
+            qty,
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w700,
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
             ),
           ),
         ],
@@ -2178,10 +2199,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -2227,6 +2253,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final latestMeta = latestItem != null
         ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
             '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
@@ -2246,10 +2274,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -2266,7 +2297,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -2278,8 +2317,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
                   _historyActorMeta(previous),
 =======
                   'Diubah oleh ${_personName(previous['changed_by'])}, '
@@ -2291,7 +2333,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+                  _historyActorMeta(previous),
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -2406,12 +2454,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -2421,6 +2472,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
@@ -2438,13 +2490,27 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
+=======
+=======
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
+<<<<<<< HEAD
       final label = history['label']?.toString().trim() ?? '';
       if (historyField == field || label == _historyFieldLabel(field)) {
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -2494,8 +2560,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> a087f712 (fix: bs dan gsm)
         .where((item) => item['new_value'] != null)
 =======
         .where(
@@ -2508,11 +2577,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> 8eee7be2 (fix: bs dan gsm)
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+        .where((item) => item['new_value'] != null)
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2524,6 +2600,10 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> d39c264 (fix: bs dan gsm)
+>>>>>>> a087f712 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {

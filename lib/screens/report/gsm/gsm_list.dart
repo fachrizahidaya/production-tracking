@@ -484,10 +484,13 @@ class _GsmListState extends State<GsmList> {
   Widget _buildGsmListCard(GsmListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final completed = _isCompleted(status);
     final date = completed ? item.endDate : item.startDate;
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
@@ -578,6 +581,7 @@ class _GsmListState extends State<GsmList> {
                               Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Packing',
 =======
                                 'Tanggal GSM',
@@ -585,6 +589,9 @@ class _GsmListState extends State<GsmList> {
 =======
                                 'Tanggal',
 >>>>>>> 3f1aead0 (fix: edit ui tanggal)
+=======
+                                'Tanggal Packing',
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -594,10 +601,14 @@ class _GsmListState extends State<GsmList> {
                               const SizedBox(height: 3),
                               Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+                                _formatDateTime(item.startDate),
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

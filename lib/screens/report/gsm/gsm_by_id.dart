@@ -320,8 +320,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 historyField: 'reason',
 =======
+=======
+                historyField: 'reason',
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -509,6 +513,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             _buildSubmittedByItem(),
           ],
           const SizedBox(height: 12),
+<<<<<<< HEAD
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -540,6 +545,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               _buildStatusBadge(_value('status')),
             ],
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -987,6 +997,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -995,6 +1008,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
+<<<<<<< HEAD
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 =======
   }) {
@@ -1011,6 +1025,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final latestMeta = latestItem != null
         ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
             '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
+=======
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 0e409703 (fix: evaluasi)
 
@@ -1026,6 +1042,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
             children: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
@@ -1034,6 +1051,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 Text(
                   _historyDisplayValue(previous['old_value']),
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -1043,11 +1065,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 const SizedBox(height: 4),
                 Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                   _historyActorMeta(previous),
 =======
                   'Diubah oleh ${_personName(previous['changed_by'])}, '
                   '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+                  _historyActorMeta(previous),
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1128,6 +1154,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1137,12 +1164,21 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
+=======
+  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
     Map<String, dynamic>? group;
+    final expectedLabel = _historyFieldLabel(field).toLowerCase();
     for (final history in _histories) {
       final historyField = history['field']?.toString();
+<<<<<<< HEAD
       final label = history['label']?.toString().trim() ?? '';
       if (historyField == field || label == _historyFieldLabel(field)) {
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+      final label = history['label']?.toString().trim().toLowerCase() ?? '';
+      if (historyField == field || label == expectedLabel) {
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -1175,18 +1211,25 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return raw
         .whereType<Map>()
 <<<<<<< HEAD
+<<<<<<< HEAD
         .where((item) => item['new_value'] != null)
 =======
         .where(
           (item) => item['old_value'] != null && item['new_value'] != null,
         )
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+        .where((item) => item['new_value'] != null)
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {

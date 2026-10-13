@@ -483,10 +483,13 @@ class _BsListState extends State<BsList> {
   Widget _buildBsListCard(BsListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final completed = _isCompleted(status);
     final date = completed ? item.endDate : item.startDate;
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
@@ -577,6 +580,7 @@ class _BsListState extends State<BsList> {
                               Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'Tanggal Sortir',
 =======
                                 'Tanggal BS',
@@ -584,6 +588,9 @@ class _BsListState extends State<BsList> {
 =======
                                 'Tanggal',
 >>>>>>> 3f1aead0 (fix: edit ui tanggal)
+=======
+                                'Tanggal Sortir',
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -593,10 +600,14 @@ class _BsListState extends State<BsList> {
                               const SizedBox(height: 3),
                               Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+                                _formatDateTime(item.startDate),
+>>>>>>> 8eee7be2 (fix: bs dan gsm)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

@@ -1312,7 +1312,7 @@ class _ReworkListState extends State<ReworkList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tanggal',
+                                'Tanggal Rework',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -1322,10 +1322,14 @@ class _ReworkListState extends State<ReworkList> {
                               const SizedBox(height: 3),
                               Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
 =======
                                 _formatDateTime(date),
 >>>>>>> d256f82 (fix: UI evaluasi)
+=======
+                                _formatDateTime(item.startDate),
+>>>>>>> 59853dc (fix: alasan penyebab rework)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

@@ -561,8 +561,6 @@ class _ReworkListState extends State<ReworkList> {
 
   Widget _buildReworkListCard(ReworkListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
-    final completed = _isCompleted(status);
-    final date = completed ? item.endDate : item.startDate;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
@@ -630,7 +628,7 @@ class _ReworkListState extends State<ReworkList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tanggal',
+                                'Tanggal Rework',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -639,7 +637,7 @@ class _ReworkListState extends State<ReworkList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                _formatDateTime(date),
+                                _formatDateTime(item.startDate),
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

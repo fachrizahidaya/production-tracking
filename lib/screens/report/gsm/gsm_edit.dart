@@ -290,14 +290,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     );
   }
 
-  bool get _isCompleted {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'direview' ||
-        status == 'reviewed' ||
-        status == 'selesai' ||
-        status == 'completed';
-  }
-
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
   dynamic _raw(String key) => widget.data[key];
@@ -354,36 +346,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
           const SizedBox(height: 12),
           _buildMaterialItem(),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanggal',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _formatDateTime(
-                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(_value('status')),
-            ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
           ),
         ],
       ),

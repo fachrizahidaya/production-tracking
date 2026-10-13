@@ -435,8 +435,6 @@ class _GsmListState extends State<GsmList> {
 
   Widget _buildGsmListCard(GsmListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
-    final completed = _isCompleted(status);
-    final date = completed ? item.endDate : item.startDate;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
@@ -498,7 +496,7 @@ class _GsmListState extends State<GsmList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Tanggal',
+                                'Tanggal Packing',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -507,7 +505,7 @@ class _GsmListState extends State<GsmList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
-                                _formatDateTime(date),
+                                _formatDateTime(item.startDate),
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,

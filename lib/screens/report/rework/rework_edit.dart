@@ -474,9 +474,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _selectReason() async {
     if (_loadingReasons) return;
 
-    final selectedValues = _selectedReasons
-        .map((reason) => reason['value'].toString())
-        .toSet();
+    final selectedValues =
+        _selectedReasons.map((reason) => reason['value'].toString()).toSet();
     final availableOptions = _reasonOptions
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -490,6 +489,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     if (selected == null || !mounted) return;
     setState(() {
       final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
+<<<<<<< HEAD
       for (final value in selected) {
         final valueKey = value.toString();
         final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
@@ -794,16 +794,18 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     setState(() {
       final nextSelected =
           List<Map<String, dynamic>>.from(_selectedReasons);
+=======
+>>>>>>> dd9415e7 (fix: alasan penyebab rework)
       for (final value in selected) {
         final valueKey = value.toString();
         final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
-          (item) => item['value'].toString() == valueKey,
-          orElse: () => <String, dynamic>{
-            'id': valueKey,
-            'value': valueKey,
-            'label': valueKey,
-          },
-        );
+              (item) => item['value'].toString() == valueKey,
+              orElse: () => <String, dynamic>{
+                'id': valueKey,
+                'value': valueKey,
+                'label': valueKey,
+              },
+            );
         if (!nextSelected.any(
           (item) => item['value'].toString() == option['value'].toString(),
         )) {
@@ -877,8 +879,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                     (option) =>
                         option['id'].toString() == optionId ||
                         option['value'].toString() == optionId ||
-                        option['value'].toString() ==
-                            item['value'].toString(),
+                        option['value'].toString() == item['value'].toString(),
                   );
                   selectedIds.remove(item['value'].toString());
                   applyFilter();
@@ -1029,14 +1030,29 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
 
     final normalized = trimmed.toLowerCase();
-    final alreadyExists = _reasonOptions.any(
-      (option) =>
-          option['label'].toString().trim().toLowerCase() == normalized ||
-          option['value'].toString().trim().toLowerCase() == normalized,
-    );
-    if (alreadyExists) {
+    Map<String, dynamic>? existingOption;
+    for (final option in _reasonOptions) {
+      if (option['label'].toString().trim().toLowerCase() == normalized ||
+          option['value'].toString().trim().toLowerCase() == normalized) {
+        existingOption = option;
+        break;
+      }
+    }
+
+    if (existingOption != null) {
+      final existing = existingOption;
+      setState(() {
+        final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
+        if (!nextSelected.any(
+          (item) => item['value'].toString() == existing['value'].toString(),
+        )) {
+          nextSelected.add(Map<String, dynamic>.from(existing));
+          _selectedReasons = nextSelected;
+        }
+      });
+      _persistDraft();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Alasan sudah ada di daftar')),
+        const SnackBar(content: Text('Alasan sudah ada dan dipilih')),
       );
       return;
     }
@@ -1045,14 +1061,23 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       final option = await _reportService.createReworkReasonOption(trimmed);
       if (!mounted) return;
       setState(() {
+        final mapped = Map<String, dynamic>.from(option);
         final nextOptions = List<Map<String, dynamic>>.from(_reasonOptions);
+        final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
         if (!nextOptions.any(
-          (item) => item['value'].toString() == option['value'].toString(),
+          (item) => item['value'].toString() == mapped['value'].toString(),
         )) {
-          nextOptions.add(Map<String, dynamic>.from(option));
+          nextOptions.add(mapped);
+        }
+        if (!nextSelected.any(
+          (item) => item['value'].toString() == mapped['value'].toString(),
+        )) {
+          nextSelected.add(Map<String, dynamic>.from(mapped));
         }
         _reasonOptions = nextOptions;
+        _selectedReasons = nextSelected;
       });
+      _persistDraft();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan berhasil ditambahkan')),
       );
@@ -1545,14 +1570,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     );
   }
 
-  bool get _isCompleted {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'direview' ||
-        status == 'reviewed' ||
-        status == 'selesai' ||
-        status == 'completed';
-  }
-
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
   Map<String, dynamic> get _dyeing {
@@ -1641,39 +1658,56 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           const SizedBox(height: 12),
           _buildDyeingReferenceLine(),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanggal',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _formatDateTime(
-                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(_value('status')),
-            ],
+          _buildMaterialItem(),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerRight,
+            child: _buildStatusBadge(_value('status')),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMaterialItem() {
+    final code = _value('topMaterialCode');
+    final name = _value('topMaterialName');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Material',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          code == '-' ? _value('material') : code,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Color(0xFF3E3F49),
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (name != '-') ...[
+          const SizedBox(height: 2),
+          Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ],
     );
   }
 

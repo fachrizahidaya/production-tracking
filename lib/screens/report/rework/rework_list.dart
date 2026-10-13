@@ -980,8 +980,6 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> fcd6e08b (fix: rework)
   Widget _buildReworkListCard(ReworkListItem item, {bool isFirst = false}) {
     final status = _display(item.status);
-    final completed = _isCompleted(status);
-    final date = completed ? item.endDate : item.startDate;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),

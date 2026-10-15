@@ -3,89 +3,59 @@
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/content/card_content.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/process/card_header.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
-class ItemProcess extends StatefulWidget {
+class ItemProcess extends StatelessWidget {
   final dynamic item;
   final VoidCallback? onTap;
   final bool showTimeline;
-  final ValueChanged<bool>? onExpandChanged;
-  final bool isExpanded;
+  final bool isMobile;
 
-  const ItemProcess(
-      {super.key,
-      required this.item,
-      this.onTap,
-      this.showTimeline = true,
-      this.onExpandChanged,
-      this.isExpanded = false});
+  const ItemProcess({
+    super.key,
+    required this.item,
+    this.onTap,
+    this.showTimeline = true,
+    this.isMobile = true,
+  });
 
-  @override
-  State<ItemProcess> createState() => _ItemProcessState();
-}
+  void _navigateToDetail(BuildContext context) {
+    final id = item['id']?.toString();
+    if (id == null || id.isEmpty) return;
 
-class _ItemProcessState extends State<ItemProcess> {
-  bool _showAllTimeline = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _showAllTimeline = widget.isExpanded;
-  }
-
-  String capitalizeFirst(String text) {
-    if (text.isEmpty) return text;
-    return text[0].toUpperCase() + text.substring(1);
-  }
-
-  @override
-  void didUpdateWidget(covariant ItemProcess oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.isExpanded != widget.isExpanded) {
-      _showAllTimeline = widget.isExpanded;
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkOrderDetail(id: id),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isTablet = constraints.maxWidth > 600;
+    final isTablet = !isMobile;
 
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: Offset(0, 2),
-                ),
-              ],
+    return GestureDetector(
+      onTap: onTap ?? () => _navigateToDetail(context),
+      child: Container(
+        width: double.infinity,
+        decoration: CustomTheme().cardTheme(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CardHeader(
+              item: item,
+              isTablet: isTablet,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                CardHeader(
-                  item: widget.item,
-                  isTablet: isTablet,
-                ),
-
-                // Process Timeline / Grid
-                CardContent(
-                  item: widget.item,
-                  isTablet: isTablet,
-                  showAllTimeline: _showAllTimeline,
-                  showTimeline: widget.showTimeline,
-                  onExpandChanged: widget.onExpandChanged,
-                ),
-              ],
+            CardContent(
+              item: item,
+              isTablet: isTablet,
+              showTimeline: showTimeline,
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
@@ -122,13 +92,12 @@ class CompactItemProcess extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
                   blurRadius: 8,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
             child: Row(
               children: [
-                // Item Info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,16 +112,13 @@ class CompactItemProcess extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 6),
-                      // Process Status Dots
+                      const SizedBox(height: 6),
                       Row(
                         children: _buildProcessDots(processes, isTablet),
                       ),
                     ],
                   ),
                 ),
-
-                // Arrow
                 Icon(
                   Icons.chevron_right,
                   size: isTablet ? 24 : 20,
@@ -174,7 +140,7 @@ class CompactItemProcess extends StatelessWidget {
       final color = _getStatusColor(status);
 
       return Container(
-        margin: EdgeInsets.only(right: 6),
+        margin: const EdgeInsets.only(right: 6),
         child: Tooltip(
           message:
               '${_capitalizeFirst(entry.key)}: ${_capitalizeFirst(status)}',

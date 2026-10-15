@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/card_content.dart';
-import 'package:textile_tracking/components/home/dashboard/work-order/summary/card_dialog.dart';
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/card_header.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -45,22 +44,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-  void _showWorkOrdersByStatusDialog({
-    required String title,
-    required List<dynamic> woList,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return CardDialog(
-          title: title,
-          woList: woList,
-          isGreige: widget.isGreige,
-        );
-      },
-    );
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
@@ -91,86 +74,37 @@ class _SummaryCardState extends State<SummaryCard>
   }
 
   Widget _buildCard(bool isTablet) {
-    final Map<String, dynamic> summary =
-        (widget.data['summary'] as Map<String, dynamic>?) ??
-            {
-              'completed': 0,
-              'in_progress': 0,
-              'waiting': 0,
-              'skipped': 0,
-            };
-
-    final statusColor = _getSummaryColor(summary);
-
-    return AnimatedContainer(
+    return Container(
       width: double.infinity,
-      duration: Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: widget.isSelected
-              ? CustomTheme().buttonColor('primary')
-              : Colors.grey[200]!,
-          width: widget.isSelected ? 2 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: widget.isSelected
-                ? CustomTheme().buttonColor('primary').withOpacity(0.15)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: widget.isSelected ? 12 : 10,
-            offset: Offset(0, 2),
+      decoration: CustomTheme().cardTheme().copyWith(
+            border: Border.all(
+              color: widget.isSelected
+                  ? CustomTheme().buttonColor('primary')
+                  : Colors.grey[200]!,
+              width: widget.isSelected ? 2 : 1,
+            ),
+          ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CardHeader(
+            data: widget.data,
+            isTablet: isTablet,
+            filter: widget.filter,
+            getTotalCount: _getTotalCount,
+          ),
+          const SizedBox(height: 10),
+          CardContent(
+            data: widget.data,
+            filter: widget.filter,
+            isTablet: isTablet,
+            showProgress: widget.showProgress,
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CardHeader(
-              data: widget.data,
-              isTablet: isTablet,
-              statusColor: statusColor,
-              filter: widget.filter,
-              getTotalCount: _getTotalCount,
-            ),
-            CardContent(
-              data: widget.data,
-              filter: widget.filter,
-              isTablet: isTablet,
-              showProgress: widget.showProgress,
-              showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
-            ),
-          ],
-        ),
-      ),
     );
-  }
-
-  Color _getSummaryColor(Map<String, dynamic> summary) {
-    final completed = summary['completed'] ?? 0;
-    final skipped = summary['skipped'] ?? 0;
-    final inProgress = summary['in_progress'] ?? 0;
-    final waiting = summary['waiting'] ?? 0;
-
-    if (inProgress > 0) {
-      return CustomTheme().colors('Diproses');
-    }
-
-    if (skipped > 0) {
-      return CustomTheme().colors('primary');
-    }
-    if (waiting > 0) {
-      return CustomTheme().colors('secondary');
-    }
-
-    if (completed > 0) {
-      return CustomTheme().colors('Selesai');
-    }
-
-    return Colors.grey;
   }
 
   int _getTotalCount(Map<String, dynamic> summary) {

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/process_card.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/machine_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class MachineSection extends StatelessWidget {
   final String title;
@@ -13,6 +10,8 @@ class MachineSection extends StatelessWidget {
   final bool isPortrait;
   final dynamic status;
   final bool isMobile;
+  final bool showStatus;
+  final bool compact;
 
   const MachineSection({
     super.key,
@@ -23,29 +22,35 @@ class MachineSection extends StatelessWidget {
     required this.isPortrait,
     this.status,
     this.isMobile = false,
+    this.showStatus = true,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final listHeight =
+        compact ? (isMobile ? 52.0 : 68.0) : (isMobile ? 88.0 : 112.0);
+    final cardWidth = isMobile ? 180.0 : 220.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        ProcessCard(
-          forMachine: true,
-          status: headerColor,
+        Padding(
+          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Row(
             children: [
               Icon(
                 icon,
                 color: status,
-                size: isMobile ? 20 : null,
+                size: isMobile ? 18 : 22,
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   '$title (${data.length})',
                   style: TextStyle(
-                    fontSize: isMobile ? 14 : null,
+                    fontSize: isMobile ? 13 : 16,
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
@@ -55,34 +60,40 @@ class MachineSection extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: isMobile ? 10 : 16),
+        const SizedBox(height: 6),
         if (data.isEmpty)
           SizedBox(
-            height: isMobile ? 120 : 200,
-            child: NoData(),
+            height: isMobile ? 72 : 88,
+            child: const NoData(),
           )
         else
-          isMobile
-              ? Column(
-                  children: data.map<Widget>((machine) {
-                    return MachineCard(
-                      data: machine,
-                      isPortrait: true,
-                    );
-                  }).toList(),
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    physics: const ClampingScrollPhysics(),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return MachineCard(
+          SizedBox(
+            height: listHeight,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: data.length,
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              itemBuilder: (context, index) {
+                final isLast = index == data.length - 1;
+
+                return SizedBox(
+                  width: cardWidth,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: isLast ? 0 : 10),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: MachineCard(
                         data: data[index],
                         isPortrait: isPortrait,
-                      );
-                    },
+                        showStatus: showStatus,
+                      ),
+                    ),
                   ),
-                ),
+                );
+              },
+            ),
+          ),
       ],
     );
   }

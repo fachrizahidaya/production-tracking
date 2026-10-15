@@ -16,6 +16,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
 import 'package:textile_tracking/helpers/layout/app_layout.dart';
 import 'package:textile_tracking/screens/dashboard/index.dart';
 import 'package:textile_tracking/services/fcm_service.dart';
@@ -1102,6 +1105,7 @@ class _HomeState extends State<Home> {
                 ),
 =======
 
+<<<<<<< HEAD
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, result) {
@@ -1132,6 +1136,42 @@ class _HomeState extends State<Home> {
               child: Dashboard(
                 onRefreshReworkNotifications: _refreshEvaluationNotifications,
 >>>>>>> 99705a2c (fix: home, dashboard)
+=======
+        final isMobile = AppLayout.resolveIsMobile(context);
+
+        return AppLayout(
+          isMobile: isMobile,
+          child: PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop) {
+                SystemNavigator.pop();
+              }
+            },
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: 'TexTrack',
+                isWithNotification: _hasEvaluationAccess,
+                notificationCount: _evaluationNotificationCount,
+                notificationTooltip: _singleEvaluationTooltip,
+                onNotifications: _onEvaluationNotificationsTap,
+                handleLogout: () => _handleLogout(context),
+                isWithAccount: true,
+                user: user,
+                name: name,
+                showAvatar: !isMobile,
+                showNameWithAvatar: !isMobile,
+              ),
+              drawer: AppDrawer(
+                handleLogout: () => _handleLogout(context),
+                handleFetchMenu: () => _handleFetchMenu(),
+              ),
+              body: SafeArea(
+                child: Dashboard(
+                  isMobile: isMobile,
+                  onRefreshReworkNotifications: _refreshEvaluationNotifications,
+                ),
+>>>>>>> 025659bb (fix: dashboard mobile)
               ),
 =======
           return Scaffold(

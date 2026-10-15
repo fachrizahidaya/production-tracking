@@ -25,12 +25,16 @@ class ItemProcess extends StatelessWidget {
     if (id == null || id.isEmpty) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WorkOrderDetail(id: id),
       ),
     );
+<<<<<<< HEAD
 =======
 class _ItemProcessState extends State<ItemProcess> {
   bool _showAllTimeline = false;
@@ -53,6 +57,8 @@ class _ItemProcessState extends State<ItemProcess> {
       _showAllTimeline = widget.isExpanded;
     }
 >>>>>>> bb29b60 (fix: clear warning)
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
   }
 
   @override

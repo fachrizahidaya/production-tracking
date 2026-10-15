@@ -23,6 +23,7 @@ class MachineCard extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
     final usedBy = data['used_by'];
+<<<<<<< HEAD
     final currentJob = usedBy is List && usedBy.isNotEmpty ? usedBy[0] : null;
     final bool isUsed = currentJob != null;
     final woNo = currentJob?['wo_no']?.toString();
@@ -108,15 +109,17 @@ class MachineCard extends StatelessWidget {
     final usedBy = data['used_by'];
 >>>>>>> 260d45ce (fix: dashboard)
 
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
     final currentJob = usedBy is List && usedBy.isNotEmpty ? usedBy[0] : null;
-
     final bool isUsed = currentJob != null;
+    final woNo = currentJob?['wo_no']?.toString();
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(14),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -134,79 +137,55 @@ class MachineCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _buildMachineHeader(context),
-            const SizedBox(height: 12),
-            _buildStatus(context, currentJob),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMachineHeader(BuildContext context) {
-    final type = data['process_type']?.toString().toLowerCase() ?? '';
-
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(9),
-          decoration: BoxDecoration(
-            color: CustomTheme().buttonColor('primary').withOpacity(0.08),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            _getMachineIcon(type),
-            size: 22,
-            color: CustomTheme().buttonColor('primary'),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            Text(
+              data['name']?.toString() ?? 'Mesin',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                height: 1.2,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (data['code'] != null) ...[
+              const SizedBox(height: 2),
               Text(
-                data['name']?.toString() ?? 'Mesin',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+                data['code'].toString(),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey[600],
+                  height: 1.2,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 3),
-              Row(
-                children: [
-                  if (data['code'] != null)
-                    Flexible(
-                      child: Text(
-                        data['code'].toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  if (data['type'] != null) ...[
-                    const SizedBox(width: 6),
-                    Flexible(
-                      child: Text(
-                        '• ${data['type']}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[500],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ],
+            ],
+            if (showStatus && woNo != null && woNo.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                'WO Diproses',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                woNo,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  height: 1.2,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
+<<<<<<< HEAD
           ),
         ),
       ],
@@ -316,62 +295,12 @@ class MachineCard extends StatelessWidget {
               size: 20,
               color: Colors.grey[500],
             ),
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
           ],
         ),
       ),
 >>>>>>> 260d45ce (fix: dashboard)
     );
-  }
-
-  IconData _getMachineIcon(String type) {
-    if (type.contains('dyeing')) {
-      return Icons.invert_colors_on_outlined;
-    }
-
-    if (type.contains('press')) {
-      return Icons.layers_outlined;
-    }
-
-    if (type.contains('tumbler')) {
-      return Icons.dry_cleaning_outlined;
-    }
-
-    if (type.contains('stenter')) {
-      return Icons.air;
-    }
-
-    if (type.contains('long slitting')) {
-      return Icons.content_paste_outlined;
-    }
-
-    if (type.contains('long hemming')) {
-      return Icons.cut_outlined;
-    }
-
-    if (type.contains('cross cutting')) {
-      return Icons.cut_outlined;
-    }
-
-    if (type.contains('sewing')) {
-      return Icons.link_outlined;
-    }
-
-    if (type.contains('embroidery')) {
-      return Icons.color_lens_outlined;
-    }
-
-    if (type.contains('printing')) {
-      return Icons.print_outlined;
-    }
-
-    if (type.contains('sorting')) {
-      return Icons.sort_outlined;
-    }
-
-    if (type.contains('packing')) {
-      return Icons.inventory_2_outlined;
-    }
-
-    return Icons.precision_manufacturing_outlined;
   }
 }

@@ -139,6 +139,7 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
 =======
 =======
@@ -185,11 +186,15 @@ class CardContent extends StatelessWidget {
   Widget _buildStatusGrid(Map<String, dynamic> summary, bool isTablet) {
     final bool hasOverdueWaiting = data['hasOverdueWaiting'] == true;
 >>>>>>> b167f1b0 (fix: filter summary)
+=======
+  List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
+>>>>>>> 025659bb (fix: dashboard mobile)
     final allItems = [
       _StatusItem(label: 'Selesai', value: summary['completed'] ?? 0),
       _StatusItem(label: 'Dilewati', value: summary['skipped'] ?? 0),
       _StatusItem(label: 'Diproses', value: summary['in_progress'] ?? 0),
       _StatusItem(
+<<<<<<< HEAD
 <<<<<<< HEAD
         label: 'Menunggu',
         value: summary['waiting'] ?? 0,
@@ -222,6 +227,10 @@ class CardContent extends StatelessWidget {
         iconColor: Color.fromRGBO(113, 113, 123, 1),
         showPulse: hasOverdueWaiting,
 >>>>>>> d86a31e7 (fix: UI mobile dashboard)
+=======
+        label: 'Menunggu',
+        value: summary['waiting'] ?? 0,
+>>>>>>> 025659bb (fix: dashboard mobile)
       ),
     ];
 
@@ -239,6 +248,7 @@ class CardContent extends StatelessWidget {
           return true;
       }
     }).toList();
+<<<<<<< HEAD
 <<<<<<< HEAD
   }
 
@@ -271,32 +281,24 @@ class CardContent extends StatelessWidget {
         children: filteredItems
             .map((item) => _buildStatusItem(item, isTablet))
             .toList());
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
   }
 
-  Color _getProgressColor(double progress) {
-    return Colors.green;
-  }
-
-  Widget _buildStatusItem(_StatusItem item, bool isTablet) {
-    final woList = _getWOListByStatus(item.label);
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () {
-        showWorkOrdersByStatusDialog(
-          title: item.label,
-          woList: woList,
-        );
-      },
-      child: Container(
-        padding: CustomTheme().padding('badge'),
-        decoration: BoxDecoration(
-          color: item.color,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Colors.grey.withOpacity(0.3),
+  Widget _buildInfo(String label, int value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.grey.shade600,
+            height: 1.2,
           ),
         ),
+<<<<<<< HEAD
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -375,6 +377,16 @@ class CardContent extends StatelessWidget {
 =======
           ].separatedBy(CustomTheme().hGap('lg')),
 >>>>>>> b167f1b0 (fix: filter summary)
+=======
+        const SizedBox(height: 2),
+        Text(
+          formatNumber(value),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
+>>>>>>> 025659bb (fix: dashboard mobile)
         ),
       ],
     );

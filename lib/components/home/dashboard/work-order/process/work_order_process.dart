@@ -6,9 +6,13 @@ import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.d
 import 'package:textile_tracking/components/home/dashboard/work-order/process/process_list.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 =======
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
+=======
+import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
+>>>>>>> 025659bb (fix: dashboard mobile)
 
 class WorkOrderProcessScreen extends StatefulWidget {
   final dynamic data;
@@ -26,9 +30,13 @@ class WorkOrderProcessScreen extends StatefulWidget {
   final bool isFiltered;
   final bool isLoadMore;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final bool isMobile;
 =======
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
+=======
+  final bool isMobile;
+>>>>>>> 025659bb (fix: dashboard mobile)
 
   const WorkOrderProcessScreen({
     super.key,
@@ -45,9 +53,13 @@ class WorkOrderProcessScreen extends StatefulWidget {
     this.isFiltered = false,
     this.isLoadMore = false,
 <<<<<<< HEAD
+<<<<<<< HEAD
     this.isMobile = true,
 =======
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
+=======
+    this.isMobile = true,
+>>>>>>> 025659bb (fix: dashboard mobile)
   });
 
   @override
@@ -56,6 +68,9 @@ class WorkOrderProcessScreen extends StatefulWidget {
 
 class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
   void _openFilter() {
     if (widget.filterWidget == null) return;
 
@@ -73,8 +88,11 @@ class _WorkOrderProcessScreenState extends State<WorkOrderProcessScreen> {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 83d26bbb (fix: UI mobile dashboard)
+=======
+>>>>>>> 025659bb (fix: dashboard mobile)
   @override
   Widget build(BuildContext context) {
     return Column(

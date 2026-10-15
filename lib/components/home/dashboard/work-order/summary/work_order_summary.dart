@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/home/dashboard/card/dashboard_card.d
 import 'package:textile_tracking/components/home/dashboard/work-order/summary/summary_card.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/util/separated_column.dart';
 
 class WorkOrderSummary extends StatefulWidget {
   final data;
@@ -12,16 +13,21 @@ class WorkOrderSummary extends StatefulWidget {
   final sampaiTanggal;
   final filterWidget;
   final isFetching;
+  final bool isMobile;
+  final void Function(String startDate, String endDate)? onDateRangeSelected;
 
-  const WorkOrderSummary(
-      {super.key,
-      this.data,
-      this.greigeData,
-      this.handleRefetch,
-      this.dariTanggal,
-      this.filterWidget,
-      this.sampaiTanggal,
-      this.isFetching});
+  const WorkOrderSummary({
+    super.key,
+    this.data,
+    this.greigeData,
+    this.handleRefetch,
+    this.dariTanggal,
+    this.filterWidget,
+    this.sampaiTanggal,
+    this.isFetching,
+    this.isMobile = true,
+    this.onDateRangeSelected,
+  });
 
   @override
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();
@@ -32,7 +38,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   String selectedProcess = 'All';
   late TabController _tabController;
   int selectedIndex = 0;
-  int selectedSummaryIndex = 0;
+  String selectedCategory = 'production';
 
   @override
   void initState() {
@@ -88,21 +94,100 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     'Menunggu Diproses',
   ];
 
-  void _openFilter() {
-    if (widget.filterWidget != null) {
-      showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        enableDrag: true,
-        isDismissible: true,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return widget.filterWidget!;
-        },
-      );
+  Future<void> _selectDateRange(BuildContext sheetContext) async {
+    final now = DateTime.now();
+    final start =
+        _parseDate(widget.dariTanggal) ?? DateTime(now.year, now.month, 1);
+    final end = _parseDate(widget.sampaiTanggal) ?? now;
+
+    final picked = await showDateRangePicker(
+      context: sheetContext,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+      initialDateRange: DateTimeRange(start: start, end: end),
+    );
+
+    if (picked == null) return;
+
+    widget.onDateRangeSelected?.call(
+      _toApiDate(picked.start),
+      _toApiDate(picked.end),
+    );
+
+    if (sheetContext.mounted) {
+      Navigator.pop(sheetContext);
     }
+  }
+
+  void _openDateFilterSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      enableDrag: true,
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 16.0, 0, 64.0),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: CustomTheme().padding('card-detail'),
+                  child: Text(
+                    'Filter Proses Produksi',
+                    style: TextStyle(
+                      height: 1,
+                      fontSize: CustomTheme().fontSize('xl'),
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                    ),
+                  ),
+                ),
+                const Divider(),
+                Container(
+                  padding: CustomTheme().padding('card-detail'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tanggal',
+                        style: TextStyle(
+                          fontSize: CustomTheme().fontSize('md'),
+                          fontWeight: CustomTheme().fontWeight('semibold'),
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      InkWell(
+                        onTap: () => _selectDateRange(sheetContext),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: CustomTheme().cardTheme(),
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            '${_formatDate(widget.dariTanggal)} - '
+                            '${_formatDate(widget.sampaiTanggal)}',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ].separatedBy(CustomTheme().vGap('xl')),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -111,17 +196,46 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     super.dispose();
   }
 
-  bool get _hasProductionData => widget.data is List && widget.data.isNotEmpty;
+  bool get _isGreigeActive => selectedCategory == 'greige';
 
-  bool get _hasGreigeData =>
-      widget.greigeData is List && widget.greigeData.isNotEmpty;
+  bool get _isDateFiltered {
+    final now = DateTime.now();
+    final defaultStart = DateTime(now.year, now.month, 1);
+    final start = _parseDate(widget.dariTanggal);
+    final end = _parseDate(widget.sampaiTanggal);
 
-  bool get _isGreigeActive =>
-      !_hasProductionData || (_hasGreigeData && selectedSummaryIndex == 1);
+    if (start == null || end == null) return false;
+
+    final sameStart = start.year == defaultStart.year &&
+        start.month == defaultStart.month &&
+        start.day == defaultStart.day;
+    final sameEnd =
+        end.year == now.year && end.month == now.month && end.day == now.day;
+
+    return !(sameStart && sameEnd);
+  }
 
   List<dynamic> get _activeData {
     final data = _isGreigeActive ? widget.greigeData : widget.data;
     return data is List ? data : [];
+  }
+
+  Widget _buildHeaderIconButton({
+    required Widget icon,
+    required VoidCallback? onPressed,
+    required bool isMobile,
+  }) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: icon,
+      iconSize: isMobile ? 20 : 24,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(
+        minWidth: 32,
+        minHeight: 32,
+      ),
+      visualDensity: VisualDensity.compact,
+    );
   }
 
   bool get _showProgress {
@@ -151,17 +265,44 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     };
   }
 
+  String? _processRoute(String? name) {
+    if (name == null || name.isEmpty) return null;
+
+    final key = name.trim().toLowerCase();
+
+    const routes = {
+      'dyeing': '/dyeings',
+      'press': '/press',
+      'tumbler': '/tumblers',
+      'stenter': '/stenters',
+      'long slitting': '/long-slittings',
+      'long sitting': '/long-slittings',
+      'long hemming': '/long-hemmings',
+      'cross cutting': '/cross-cuttings',
+      'sewing': '/sewings',
+      'embroidery': '/embroideries',
+      'sorting': '/sortings',
+      'packing': '/packings',
+      'printing': '/printings',
+      'weaving': '/weavings',
+      'sizing': '/sizings',
+      'warping': '/warpings',
+      'shearing': '/shearings',
+      'dyeing preparation': '/dyeing-preparations',
+      'persiapan dyeing': '/dyeing-preparations',
+    };
+
+    return routes[key];
+  }
+
+  void _navigateToProcess(BuildContext context, String? name) {
+    final route = _processRoute(name);
+    if (route == null) return;
+    Navigator.pushNamed(context, route);
+  }
+
   bool _hasOverdueWaiting(List waiting) {
     return waiting.any((wo) => wo['overdue'] == true);
-  }
-
-  bool _isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < 600;
-  }
-
-  bool _isTablet(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return width >= 600 && width < 1024;
   }
 
   String _formatDate(dynamic date) {
@@ -184,52 +325,40 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       'Feb',
       'Mar',
       'Apr',
-      'May',
+      'Mei',
       'Jun',
       'Jul',
-      'Aug',
+      'Agu',
       'Sep',
-      'Oct',
+      'Okt',
       'Nov',
-      'Dec',
+      'Des',
     ];
 
-    return '${parsedDate.day} '
-        '${months[parsedDate.month - 1]} '
-        '${parsedDate.year}';
+    return '${parsedDate.day} ${months[parsedDate.month - 1]} ${parsedDate.year}';
   }
 
-  Widget _buildDateRange() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.calendar_month_outlined,
-          size: 30,
-          color: CustomTheme().colors('text-secondary'),
-        ),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            '${_formatDate(widget.dariTanggal)} - '
-            '${_formatDate(widget.sampaiTanggal)}',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: CustomTheme().colors('text-primary'),
-            ),
-          ),
-        ),
-      ],
-    );
+  String _toApiDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
+  DateTime? _parseDate(dynamic date) {
+    if (date == null) return null;
+    if (date is DateTime) return date;
+    return DateTime.tryParse(date.toString());
   }
 
   Widget _buildSwipeContent() {
+    final isTablet = !widget.isMobile;
+    final listHeight = isTablet
+        ? (_showProgress ? 220.0 : 150.0)
+        : (_showProgress ? 170.0 : 140.0);
+
     if (widget.isFetching == true) {
       return SizedBox(
-        height: 300,
+        height: 120,
         child: Center(
           child: Padding(
             padding: CustomTheme().padding('content'),
@@ -240,231 +369,235 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     }
 
     if (_activeData.isEmpty) {
-      return NoData();
+      return const SizedBox(
+        height: 120,
+        child: NoData(),
+      );
     }
 
-    final isSingleItem = _activeData.length == 1;
-    final screenWidth = MediaQuery.of(context).size.width * 0.95;
+    return SizedBox(
+      height: listHeight,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cardWidth = (constraints.maxWidth * (isTablet ? 0.55 : 0.68))
+              .clamp(
+                isTablet ? 360.0 : 220.0,
+                isTablet ? 440.0 : 260.0,
+              )
+              .toDouble();
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: isSingleItem
-          ? NeverScrollableScrollPhysics()
-          : BouncingScrollPhysics(),
-      child: Row(
-        children: _activeData.map<Widget>((item) {
-          final mappedItem = _mapApiToSummaryCard(item);
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: _activeData.length,
+            itemBuilder: (context, index) {
+              final mappedItem = _mapApiToSummaryCard(_activeData[index]);
+              final isLast = index == _activeData.length - 1;
 
-          return Padding(
-            padding: CustomTheme().padding('card'),
-            child: SizedBox(
-              width: isSingleItem ? screenWidth : 500,
-              child: SummaryCard(
-                data: mappedItem,
-                showProgress: _showProgress,
-                filter: processFilters[selectedIndex],
-                isGreige: _isGreigeActive,
-              ),
-            ),
+              return SizedBox(
+                width: cardWidth,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 0, isLast ? 16 : 0, 0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SummaryCard(
+                      data: mappedItem,
+                      showProgress: _showProgress,
+                      filter: processFilters[selectedIndex],
+                      isGreige: _isGreigeActive,
+                      onTap: () => _navigateToProcess(
+                        context,
+                        mappedItem['name']?.toString(),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           );
-        }).toList(),
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    final isMobile = screenWidth < 600;
-    final isTablet = screenWidth >= 600 && screenWidth < 1024;
-
     return Column(
       children: [
-        DashboardCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(
-                context,
-                isMobile: isMobile,
-                isTablet: isTablet,
-              ),
-              if (_hasProductionData && _hasGreigeData) _buildSummaryTabs(),
-              const Divider(),
-              _buildSwipeContent(),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(isMobile: widget.isMobile),
+            _buildCategoryTabs(),
+          ],
         ),
+        const SizedBox(height: 12),
+        _buildSwipeContent(),
       ],
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context, {
-    required bool isMobile,
-    required bool isTablet,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
+  void _openFilter() {
+    if (widget.filterWidget == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      enableDrag: true,
+      isDismissible: true,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return widget.filterWidget!;
+      },
+    );
+  }
+
+  Widget _buildHeader({required bool isMobile}) {
+    if (!isMobile) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Perkembangan Proses Produksi',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: CustomTheme().fontWeight('bold'),
+                      color: CustomTheme().colors('text-primary'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                _buildTabletActionButtons(),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              !_isGreigeActive
+                  ? 'Status tahapan work order'
+                  : 'Status tahapan order greige',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                color: CustomTheme().colors('text-secondary'),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // =========================
-          // TITLE
-          // =========================
-          Text(
-            'Perkembangan Proses Produksi',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: isMobile
-                  ? 16
-                  : isTablet
-                      ? 18
-                      : 24,
-              fontWeight: CustomTheme().fontWeight('bold'),
-              color: CustomTheme().colors('text-primary'),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Perkembangan Proses Produksi',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: CustomTheme().fontWeight('bold'),
+                  color: CustomTheme().colors('text-primary'),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                !_isGreigeActive
+                    ? 'Status tahapan work order'
+                    : 'Status tahapan order greige',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: CustomTheme().colors('text-secondary'),
+                ),
+              ),
+            ],
           ),
-
-          const SizedBox(height: 4),
-
-          // =========================
-          // SUBTITLE
-          // =========================
-          Text(
-            !_isGreigeActive
-                ? 'Status tahapan work order'
-                : 'Status tahapan order greige',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: isMobile
-                  ? 12
-                  : isTablet
-                      ? 16
-                      : 14,
-              color: CustomTheme().colors('text-secondary'),
-            ),
-          ),
-
-          SizedBox(
-            height: isMobile ? 24 : 28,
-          ),
-
-          // =========================
-          // DATE RANGE
-          // =========================
-          // Center(
-          //   child: _buildDateRange(),
-          // ),
-
-          SizedBox(
-            height: isMobile ? 20 : 24,
-          ),
-
-          // =========================
-          // FILTER + REFRESH
-          // =========================
-          Center(
-            child: _buildActionButtons(
-              isMobile: isMobile,
-              isTablet: isTablet,
-            ),
+          Row(
+            children: [
+              _buildHeaderIconButton(
+                isMobile: true,
+                onPressed: _openDateFilterSheet,
+                icon: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const Icon(Icons.tune_outlined),
+                    if (_isDateFiltered)
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: CustomTheme().buttonColor('danger'),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              _buildHeaderIconButton(
+                isMobile: true,
+                onPressed: widget.handleRefetch,
+                icon: const Icon(Icons.refresh_outlined),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSummaryTabs() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: DefaultTabController(
-        length: 2,
-        initialIndex: selectedSummaryIndex,
-        child: TabBar(
-          onTap: (index) {
-            setState(() {
-              selectedSummaryIndex = index;
-            });
-          },
-          tabs: const [
-            Tab(text: 'Produksi'),
-            Tab(text: 'Greige'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons({
-    required bool isMobile,
-    required bool isTablet,
-  }) {
-    final buttonWidth = isMobile
-        ? 130.0
-        : isTablet
-            ? 140.0
-            : 150.0;
-
+  Widget _buildTabletActionButtons() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: buttonWidth,
-          height: 44,
+          height: 40,
           child: OutlinedButton.icon(
             onPressed: _openFilter,
-            icon: const Icon(
-              Icons.tune_outlined,
-              size: 20,
-            ),
-            label: const Text(
-              'Filter',
-            ),
+            icon: const Icon(Icons.tune_outlined, size: 20),
+            label: const Text('Filter', style: TextStyle(fontSize: 14)),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              side: BorderSide(
-                color: Colors.grey.shade300,
-              ),
+              side: BorderSide(color: Colors.grey.shade300),
             ),
           ),
         ),
         const SizedBox(width: 10),
         SizedBox(
-          width: buttonWidth,
-          height: 44,
+          height: 40,
           child: OutlinedButton.icon(
             onPressed: widget.handleRefetch,
-            icon: const Icon(
-              Icons.refresh_outlined,
-              size: 20,
-            ),
-            label: const Text(
-              'Refresh',
-            ),
+            icon: const Icon(Icons.refresh_outlined, size: 20),
+            label: const Text('Refresh', style: TextStyle(fontSize: 14)),
             style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              side: BorderSide(
-                color: Colors.grey.shade300,
-              ),
+              side: BorderSide(color: Colors.grey.shade300),
             ),
           ),
         ),
@@ -472,108 +605,59 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     );
   }
 
-  Widget _buildMobileHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // =========================
-          // TITLE
-          // =========================
-          Text(
-            'Status Proses Produksi',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: CustomTheme().fontWeight('bold'),
-              color: CustomTheme().colors('text-primary'),
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            'Tracking progres setiap tahap work order',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 16,
-              color: CustomTheme().colors('text-secondary'),
-            ),
-          ),
-
-          const SizedBox(height: 28),
-
-          // =========================
-          // DATE
-          // =========================
-          // Center(
-          //   child: _buildDateRange(),
-          // ),
-
-          const SizedBox(height: 20),
-
-          // =========================
-          // FILTER + REFRESH
-          // =========================
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildCategoryTabs() {
+    return SizedBox(
+      width: double.infinity,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: Row(
             children: [
-              _buildFilterButton(),
-              const SizedBox(width: 10),
-              _buildRefreshButton(),
+              _buildCategoryTab(
+                label: 'Produksi',
+                value: 'production',
+              ),
+              const SizedBox(width: 8),
+              _buildCategoryTab(
+                label: 'Greige',
+                value: 'greige',
+              ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton() {
-    return OutlinedButton.icon(
-      onPressed: _openFilter,
-      icon: const Icon(
-        Icons.tune_outlined,
-        size: 20,
-      ),
-      label: const Text('Filter'),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(120, 44),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        side: BorderSide(
-          color: Colors.grey.shade300,
         ),
       ),
     );
   }
 
-  Widget _buildRefreshButton() {
-    return OutlinedButton.icon(
-      onPressed: widget.handleRefetch,
-      icon: const Icon(
-        Icons.refresh_outlined,
-        size: 20,
-      ),
-      label: const Text('Refresh'),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(120, 44),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
+  Widget _buildCategoryTab({
+    required String label,
+    required String value,
+  }) {
+    final selected = selectedCategory == value;
+    final color = CustomTheme().colors('primary');
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: selected
+          ? null
+          : () {
+              setState(() {
+                selectedCategory = value;
+              });
+            },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected ? color : Colors.white,
+          borderRadius: BorderRadius.circular(24),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        side: BorderSide(
-          color: Colors.grey.shade300,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? Colors.white : Colors.grey.shade700,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );

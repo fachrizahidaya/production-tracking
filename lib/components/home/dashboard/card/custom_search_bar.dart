@@ -8,13 +8,14 @@ class CustomSearchBar extends StatefulWidget {
   final withRefresh;
   final handleRefetch;
 
-  const CustomSearchBar(
-      {super.key,
-      required this.handleSearchChange,
-      required this.showFilter,
-      this.isFiltered,
-      this.withRefresh = false,
-      this.handleRefetch});
+  const CustomSearchBar({
+    super.key,
+    required this.handleSearchChange,
+    required this.showFilter,
+    this.isFiltered,
+    this.withRefresh = false,
+    this.handleRefetch,
+  });
 
   @override
   State<CustomSearchBar> createState() => _CustomSearchBarState();
@@ -29,8 +30,28 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     super.dispose();
   }
 
+  Widget _buildIconButton({
+    required Widget icon,
+    required VoidCallback? onPressed,
+    required bool isMobile,
+  }) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: icon,
+      iconSize: isMobile ? 20 : 24,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(
+        minWidth: 32,
+        minHeight: 32,
+      ),
+      visualDensity: VisualDensity.compact,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
     return Row(
       children: [
         Expanded(
@@ -38,7 +59,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             controller: _controller,
             decoration: InputDecoration(
               hintText: 'Cari',
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               suffixIcon: _controller.text.isNotEmpty
                   ? IconButton(
                       onPressed: () {
@@ -46,9 +67,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                         widget.handleSearchChange('');
                         setState(() {});
                       },
-                      icon: Icon(Icons.close))
+                      icon: const Icon(Icons.close),
+                    )
                   : null,
-              border: OutlineInputBorder(borderSide: BorderSide.none),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
             ),
             onChanged: (value) {
               widget.handleSearchChange(value);
@@ -56,49 +80,35 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             },
           ),
         ),
-        Row(
-          children: [
-            if (!widget.withRefresh)
-              SizedBox()
-            else
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8)),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.refresh_outlined,
+        _buildIconButton(
+          isMobile: isMobile,
+          onPressed: widget.showFilter,
+          icon: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              const Icon(Icons.tune_outlined),
+              if (widget.isFiltered == true)
+                Positioned(
+                  right: -2,
+                  top: -2,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: CustomTheme().buttonColor('danger'),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                  onPressed: () {
-                    widget.handleRefetch();
-                  },
                 ),
-              ),
-            IconButton(
-              icon: Stack(
-                children: [
-                  Icon(
-                    Icons.tune,
-                  ),
-                  if (widget.isFiltered)
-                    Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          width: 10,
-                          height: 10,
-                          decoration: BoxDecoration(
-                              color: CustomTheme().buttonColor('danger'),
-                              shape: BoxShape.circle),
-                        ))
-                ],
-              ),
-              onPressed: () {
-                widget.showFilter();
-              },
-            ),
-          ],
-        )
+            ],
+          ),
+        ),
+        if (widget.withRefresh)
+          _buildIconButton(
+            isMobile: isMobile,
+            onPressed: widget.handleRefetch,
+            icon: const Icon(Icons.refresh_outlined),
+          ),
       ],
     );
   }

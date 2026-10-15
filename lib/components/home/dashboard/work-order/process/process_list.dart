@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:textile_tracking/components/home/dashboard/card/custom_search_bar.dart';
 import 'package:textile_tracking/components/master/card/item_process.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
 import 'package:textile_tracking/components/master/theme.dart';
@@ -23,19 +22,15 @@ class ProcessList<T> extends StatefulWidget {
     Map<String, String> params,
   ) fetchData;
 
-  final Widget? filterWidget;
-
   final dynamic dataList;
 
-  final VoidCallback? handleRefetch;
   final VoidCallback? handleLoadMore;
-  final handleSearch;
 
   final bool firstLoading;
   final bool hasMore;
-  final bool isFiltered;
   final bool isFetching;
   final bool isLoadMore;
+  final bool isMobile;
 
   const ProcessList({
     super.key,
@@ -44,16 +39,13 @@ class ProcessList<T> extends StatefulWidget {
     required this.fetchData,
     this.onForm,
     this.onItemTap,
-    this.filterWidget,
     this.dataList,
-    this.handleRefetch,
     this.handleLoadMore,
-    this.handleSearch,
     this.firstLoading = false,
     this.hasMore = false,
-    this.isFiltered = false,
     this.isFetching = false,
     this.isLoadMore = false,
+    this.isMobile = true,
   });
 
   @override
@@ -61,129 +53,122 @@ class ProcessList<T> extends StatefulWidget {
 }
 
 class _ProcessListState<T> extends State<ProcessList<T>> {
-  int? _expandedIndex;
+  final ScrollController _scrollController = ScrollController();
 
-  void _openFilter() {
-    if (widget.filterWidget == null) return;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      enableDrag: true,
-      isDismissible: true,
-      isScrollControlled: true,
-      builder: (context) {
-        return widget.filterWidget!;
-      },
-    );
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    if (!widget.hasMore || widget.isLoadMore) return;
+    if (widget.handleLoadMore == null) return;
+
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 80) {
+      widget.handleLoadMore!();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final List<dynamic> data =
         widget.dataList is List ? List<dynamic>.from(widget.dataList) : [];
+    final isTablet = !widget.isMobile;
+    final listHeight = isTablet ? 340.0 : 300.0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        /// SEARCH + FILTER
-        Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomSearchBar(
-                handleSearchChange: widget.handleSearch,
-                showFilter: _openFilter,
-                isFiltered: widget.isFiltered,
-                withRefresh: true,
-                handleRefetch: widget.handleRefetch,
-              ),
-              const Divider(height: 1),
-            ],
+    if (widget.firstLoading) {
+      return SizedBox(
+        height: 120,
+        child: Padding(
+          padding: CustomTheme().padding('content'),
+          child: const Center(
+            child: CircularProgressIndicator(),
           ),
         ),
+      );
+    }
 
-        /// LOADING
-        if (widget.firstLoading)
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          )
+    if (data.isEmpty) {
+      return SizedBox(
+        height: 120,
+        child: Padding(
+          padding: CustomTheme().padding('content'),
+          child: const NoData(),
+        ),
+      );
+    }
 
-        /// EMPTY
-        else if (data.isEmpty)
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: const NoData(),
-          )
+    return SizedBox(
+      height: listHeight,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cardWidth = (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
+              .clamp(
+                isTablet ? 440.0 : 260.0,
+                isTablet ? 520.0 : 300.0,
+              )
+              .toDouble();
 
-        /// DATA
-        else
-          Padding(
-            padding: CustomTheme().padding('content'),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: data.asMap().entries.map<Widget>((entry) {
-                final index = entry.key;
-                final item = entry.value;
+          return ListView.builder(
+            controller: _scrollController,
+            scrollDirection: Axis.horizontal,
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: data.length + (widget.hasMore ? 1 : 0),
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+            itemBuilder: (context, index) {
+              if (index >= data.length) {
+                if (!widget.isLoadMore && widget.handleLoadMore != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) return;
+                    if (!widget.hasMore || widget.isLoadMore) return;
+                    widget.handleLoadMore!();
+                  });
+                }
 
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: index == data.length - 1 ? 0 : 24,
-                  ),
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    alignment: Alignment.topCenter,
-                    child: ItemProcess(
-                      item: item,
-                      showTimeline: true,
-                      isExpanded: _expandedIndex == index,
-                      onExpandChanged: (expanded) {
-                        if (!mounted) return;
-
-                        setState(() {
-                          _expandedIndex = expanded ? index : null;
-                        });
-                      },
-                    ),
+                return SizedBox(
+                  width: cardWidth,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
                   ),
                 );
-              }).toList(),
-            ),
-          ),
+              }
 
-        /// LOAD MORE
-        if (widget.isLoadMore)
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
+              final isLast = index == data.length - 1 && !widget.hasMore;
 
-        if (widget.hasMore && !widget.firstLoading)
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              bottom: 16,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: widget.isLoadMore ? null : widget.handleLoadMore,
-                child: const Text('Muat Lebih Banyak'),
-              ),
-            ),
-          ),
-      ],
+              return SizedBox(
+                width: cardWidth,
+                child: Padding(
+                  padding: EdgeInsets.only(right: isLast ? 0 : 10),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: ItemProcess(
+                      item: data[index],
+                      showTimeline: true,
+                      isMobile: widget.isMobile,
+                      onTap: widget.onItemTap == null
+                          ? null
+                          : () => widget.onItemTap!(
+                                context,
+                                data[index],
+                              ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:textile_tracking/helpers/layout/app_layout.dart';
 import 'package:textile_tracking/screens/dashboard/index.dart';
 import 'package:textile_tracking/services/fcm_service.dart';
 
@@ -434,35 +435,40 @@ class _HomeState extends State<Home> {
           return Center(child: Text('Error fetch token'));
         }
 
-        return PopScope(
-          canPop: false,
-          onPopInvokedWithResult: (didPop, result) {
-            if (!didPop) {
-              SystemNavigator.pop();
-            }
-          },
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title: 'TexTrack',
-              isWithNotification: _hasEvaluationAccess,
-              notificationCount: _evaluationNotificationCount,
-              notificationTooltip: _singleEvaluationTooltip,
-              onNotifications: _onEvaluationNotificationsTap,
-              handleLogout: () => _handleLogout(context),
-              isWithAccount: true,
-              user: user,
-              name: name,
-              showAvatar: MediaQuery.sizeOf(context).shortestSide >= 600,
-              showNameWithAvatar:
-                  MediaQuery.sizeOf(context).shortestSide >= 600,
-            ),
-            drawer: AppDrawer(
-              handleLogout: () => _handleLogout(context),
-              handleFetchMenu: () => _handleFetchMenu(),
-            ),
-            body: SafeArea(
-              child: Dashboard(
-                onRefreshReworkNotifications: _refreshEvaluationNotifications,
+        final isMobile = AppLayout.resolveIsMobile(context);
+
+        return AppLayout(
+          isMobile: isMobile,
+          child: PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop) {
+                SystemNavigator.pop();
+              }
+            },
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title: 'TexTrack',
+                isWithNotification: _hasEvaluationAccess,
+                notificationCount: _evaluationNotificationCount,
+                notificationTooltip: _singleEvaluationTooltip,
+                onNotifications: _onEvaluationNotificationsTap,
+                handleLogout: () => _handleLogout(context),
+                isWithAccount: true,
+                user: user,
+                name: name,
+                showAvatar: !isMobile,
+                showNameWithAvatar: !isMobile,
+              ),
+              drawer: AppDrawer(
+                handleLogout: () => _handleLogout(context),
+                handleFetchMenu: () => _handleFetchMenu(),
+              ),
+              body: SafeArea(
+                child: Dashboard(
+                  isMobile: isMobile,
+                  onRefreshReworkNotifications: _refreshEvaluationNotifications,
+                ),
               ),
             ),
           ),

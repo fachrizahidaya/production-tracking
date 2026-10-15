@@ -142,8 +142,11 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d5a67e50 (fix: filter summary)
+=======
+>>>>>>> 727a4ffa (fix: dashboard mobile)
   List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
 =======
 =======
@@ -209,7 +212,13 @@ class CardContent extends StatelessWidget {
   Widget _buildStatusGrid(Map<String, dynamic> summary, bool isTablet) {
     final bool hasOverdueWaiting = data['hasOverdueWaiting'] == true;
 >>>>>>> 887d25a (fix: filter summary)
+<<<<<<< HEAD
 >>>>>>> d5a67e50 (fix: filter summary)
+=======
+=======
+  List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
     final allItems = [
       _StatusItem(label: 'Selesai', value: summary['completed'] ?? 0),
       _StatusItem(label: 'Dilewati', value: summary['skipped'] ?? 0),
@@ -218,8 +227,11 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+>>>>>>> 727a4ffa (fix: dashboard mobile)
         label: 'Menunggu',
         value: summary['waiting'] ?? 0,
 =======
@@ -294,7 +306,14 @@ class CardContent extends StatelessWidget {
 >>>>>>> d5a67e50 (fix: filter summary)
         showPulse: hasOverdueWaiting,
 >>>>>>> e61620e (fix: UI mobile dashboard)
+<<<<<<< HEAD
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+=======
+        label: 'Menunggu',
+        value: summary['waiting'] ?? 0,
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
       ),
     ];
 
@@ -315,8 +334,11 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+>>>>>>> 727a4ffa (fix: dashboard mobile)
   }
 
   Widget _buildInfo(String label, int value) {
@@ -420,32 +442,24 @@ class CardContent extends StatelessWidget {
         children: filteredItems
             .map((item) => _buildStatusItem(item, isTablet))
             .toList());
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
   }
 
-  Color _getProgressColor(double progress) {
-    return Colors.green;
-  }
-
-  Widget _buildStatusItem(_StatusItem item, bool isTablet) {
-    final woList = _getWOListByStatus(item.label);
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () {
-        showWorkOrdersByStatusDialog(
-          title: item.label,
-          woList: woList,
-        );
-      },
-      child: Container(
-        padding: CustomTheme().padding('badge'),
-        decoration: BoxDecoration(
-          color: item.color,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Colors.grey.withOpacity(0.3),
+  Widget _buildInfo(String label, int value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.grey.shade600,
+            height: 1.2,
           ),
         ),
+<<<<<<< HEAD
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -560,7 +574,20 @@ class CardContent extends StatelessWidget {
 =======
           ].separatedBy(CustomTheme().hGap('lg')),
 >>>>>>> 887d25a (fix: filter summary)
+<<<<<<< HEAD
 >>>>>>> d5a67e50 (fix: filter summary)
+=======
+=======
+        const SizedBox(height: 2),
+        Text(
+          formatNumber(value),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            height: 1.2,
+          ),
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
         ),
       ],
     );

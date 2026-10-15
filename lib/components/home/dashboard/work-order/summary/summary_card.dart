@@ -227,6 +227,7 @@ class _SummaryCardState extends State<SummaryCard>
     return AnimatedContainer(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
       width: double.infinity,
@@ -283,9 +284,40 @@ class _SummaryCardState extends State<SummaryCard>
                 : Colors.black.withOpacity(0.05),
             blurRadius: widget.isSelected ? 12 : 10,
             offset: Offset(0, 2),
+=======
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
+      width: double.infinity,
+      decoration: CustomTheme().cardTheme().copyWith(
+            border: Border.all(
+              color: widget.isSelected
+                  ? CustomTheme().buttonColor('primary')
+                  : Colors.grey[200]!,
+              width: widget.isSelected ? 2 : 1,
+            ),
+          ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CardHeader(
+            data: widget.data,
+            isTablet: isTablet,
+            filter: widget.filter,
+            getTotalCount: _getTotalCount,
+          ),
+          const SizedBox(height: 10),
+          CardContent(
+            data: widget.data,
+            filter: widget.filter,
+            isTablet: isTablet,
+            showProgress: widget.showProgress,
+>>>>>>> 727a4ffa (fix: dashboard mobile)
           ),
         ],
       ),
+<<<<<<< HEAD
       child: ClipRRect(
 <<<<<<< HEAD
         borderRadius: BorderRadius.circular(10),
@@ -335,7 +367,12 @@ class _SummaryCardState extends State<SummaryCard>
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
 >>>>>>> e61620e (fix: UI mobile dashboard)
+<<<<<<< HEAD
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
+=======
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
     );
   }
 

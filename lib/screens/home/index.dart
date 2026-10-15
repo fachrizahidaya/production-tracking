@@ -1215,6 +1215,7 @@ class _HomeState extends State<Home> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
@@ -1318,6 +1319,10 @@ class _HomeState extends State<Home> {
 =======
 =======
 >>>>>>> e16df531 (fix: home, dashboard)
+=======
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
         final isMobile = AppLayout.resolveIsMobile(context);
 
         return AppLayout(
@@ -1334,12 +1339,16 @@ class _HomeState extends State<Home> {
                 title: 'TexTrack',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
                 isWithNotification: _hasEvaluationAccess,
                 notificationCount: _evaluationNotificationCount,
                 notificationTooltip: _singleEvaluationTooltip,
                 onNotifications: _onEvaluationNotificationsTap,
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                 isWithNotification: _canViewReworkEvaluation,
@@ -1355,6 +1364,8 @@ class _HomeState extends State<Home> {
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 =======
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,
@@ -1368,6 +1379,7 @@ class _HomeState extends State<Home> {
               ),
               body: SafeArea(
                 child: Dashboard(
+<<<<<<< HEAD
 <<<<<<< HEAD
                   isMobile: isMobile,
 =======
@@ -1408,7 +1420,15 @@ class _HomeState extends State<Home> {
               child: Dashboard(
                 onRefreshReworkNotifications: _refreshEvaluationNotifications,
 >>>>>>> 2dccfd5 (fix: home, dashboard)
+<<<<<<< HEAD
 >>>>>>> e16df531 (fix: home, dashboard)
+=======
+=======
+                  isMobile: isMobile,
+                  onRefreshReworkNotifications: _refreshEvaluationNotifications,
+                ),
+>>>>>>> ecdad3e (fix: dashboard mobile)
+>>>>>>> 727a4ffa (fix: dashboard mobile)
               ),
 =======
           return Scaffold(

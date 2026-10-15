@@ -77,6 +77,7 @@ class _SummaryCardState extends State<SummaryCard>
 <<<<<<< HEAD
   Widget _buildCard(bool isTablet) {
     return Container(
+<<<<<<< HEAD
       width: double.infinity,
       decoration: CustomTheme().cardTheme().copyWith(
             border: Border.all(
@@ -123,27 +124,38 @@ class _SummaryCardState extends State<SummaryCard>
     final statusColor = _getSummaryColor(summary);
 
     return AnimatedContainer(
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
       width: double.infinity,
-      duration: Duration(milliseconds: 200),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: widget.isSelected
-              ? CustomTheme().buttonColor('primary')
-              : Colors.grey[200]!,
-          width: widget.isSelected ? 2 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: widget.isSelected
-                ? CustomTheme().buttonColor('primary').withOpacity(0.15)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: widget.isSelected ? 12 : 10,
-            offset: Offset(0, 2),
+      decoration: CustomTheme().cardTheme().copyWith(
+            border: Border.all(
+              color: widget.isSelected
+                  ? CustomTheme().buttonColor('primary')
+                  : Colors.grey[200]!,
+              width: widget.isSelected ? 2 : 1,
+            ),
+          ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CardHeader(
+            data: widget.data,
+            isTablet: isTablet,
+            filter: widget.filter,
+            getTotalCount: _getTotalCount,
+          ),
+          const SizedBox(height: 10),
+          CardContent(
+            data: widget.data,
+            filter: widget.filter,
+            isTablet: isTablet,
+            showProgress: widget.showProgress,
           ),
         ],
       ),
+<<<<<<< HEAD
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: Column(
@@ -167,6 +179,8 @@ class _SummaryCardState extends State<SummaryCard>
         ),
       ),
 >>>>>>> e61620e (fix: UI mobile dashboard)
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
     );
   }
 

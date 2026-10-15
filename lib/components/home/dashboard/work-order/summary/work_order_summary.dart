@@ -387,6 +387,9 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               .toDouble();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -394,6 +397,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             itemBuilder: (context, index) {
               final mappedItem = _mapApiToSummaryCard(_activeData[index]);
               final isLast = index == _activeData.length - 1;
+<<<<<<< HEAD
 
               return SizedBox(
                 width: cardWidth,
@@ -437,6 +441,29 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               ),
             ),
 >>>>>>> e61620e (fix: UI mobile dashboard)
+=======
+
+              return SizedBox(
+                width: cardWidth,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 0, isLast ? 16 : 0, 0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SummaryCard(
+                      data: mappedItem,
+                      showProgress: _showProgress,
+                      filter: processFilters[selectedIndex],
+                      isGreige: _isGreigeActive,
+                      onTap: () => _navigateToProcess(
+                        context,
+                        mappedItem['name']?.toString(),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+>>>>>>> ecdad3e (fix: dashboard mobile)
           );
         },
       ),
@@ -445,11 +472,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    final isMobile = screenWidth < 600;
-    final isTablet = screenWidth >= 600 && screenWidth < 1024;
-
     return Column(
       children: [
         Column(

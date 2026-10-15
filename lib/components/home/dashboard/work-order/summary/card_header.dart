@@ -36,6 +36,9 @@ class CardHeader extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
     return Row(
       children: [
         Expanded(
@@ -44,6 +47,7 @@ class CardHeader extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,
+<<<<<<< HEAD
 =======
     if (!isTablet) {
       return _buildMobileHeader(
@@ -111,11 +115,14 @@ class CardHeader extends StatelessWidget {
               color: statusColor.withOpacity(0.2),
               width: 1,
 >>>>>>> e61620e (fix: UI mobile dashboard)
+=======
+>>>>>>> ecdad3e (fix: dashboard mobile)
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (!isMobile) ...[
 =======
@@ -228,6 +235,9 @@ class CardHeader extends StatelessWidget {
             color: color,
           ),
 >>>>>>> e61620e (fix: UI mobile dashboard)
+=======
+        if (!isMobile) ...[
+>>>>>>> ecdad3e (fix: dashboard mobile)
           Text(
             formatNumber(total),
             style: TextStyle(

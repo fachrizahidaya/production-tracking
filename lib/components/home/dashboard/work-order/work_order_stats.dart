@@ -19,8 +19,6 @@ class WorkOrderStats extends StatefulWidget {
 }
 
 class _WorkOrderStatsState extends State<WorkOrderStats> {
-  static const double tabletBreakpoint = 600;
-
   Color getBorderColor(int i) {
     switch (i) {
       case 0:
@@ -51,6 +49,7 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
   Widget build(BuildContext context) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.data?.length == 0) return const SizedBox();
 =======
     if (widget.data == null || widget.data.isEmpty) {
@@ -60,6 +59,9 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 =======
     if (widget.data?.length == 0) return SizedBox();
 >>>>>>> 6330259 (fix: UI dashboard)
+=======
+    if (widget.data?.length == 0) return const SizedBox();
+>>>>>>> ecdad3e (fix: dashboard mobile)
 
     if (widget.isFetching) {
       return Padding(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
@@ -18,9 +21,12 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> 0e409703 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/components/master/theme.dart';
 >>>>>>> d9ba4836 (fix: detail evaluasi)
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';

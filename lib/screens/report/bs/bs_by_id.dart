@@ -6,12 +6,15 @@ import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
@@ -355,12 +358,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
               const SizedBox(height: 16),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
                   attachments: widget.data['attachments'],
                 ),
               ),
+<<<<<<< HEAD
 =======
               if (_useEditScreen) ...[
                 _buildReadOnlyCard(
@@ -412,6 +419,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 historyField: 'preventive_plan',
               ),
 >>>>>>> 0e409703 (fix: evaluasi)
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),

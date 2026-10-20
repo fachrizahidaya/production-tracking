@@ -17,11 +17,14 @@ import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class BsEditScreen extends StatefulWidget {
@@ -45,6 +48,10 @@ class _BsEditScreenState extends State<BsEditScreen> {
   bool _saving = false;
   int _visibleStep = 1;
   List<Map<String, dynamic>> _attachments = [];
+<<<<<<< HEAD
+=======
+  bool _attachmentsDirty = false;
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 
   String get _draftType => 'bs';
 =======
@@ -81,6 +88,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _attachments = parseEvaluationAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
@@ -155,15 +163,26 @@ class _BsEditScreenState extends State<BsEditScreen> {
             draft['preventivePlan']?.toString() ?? '';
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
       if (draft.containsKey('attachments')) {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
+=======
+      if (draft.containsKey('attachments')) {
+        final parsed = parseEvaluationAttachments(draft['attachments']);
+        _attachments = parsed;
+        _attachmentsDirty = !sameEvaluationAttachments(
+          parsed,
+          parseEvaluationAttachments(widget.data['attachments']),
+        );
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
         parsedStep.clamp(1, 2),
 =======
       final savedStep = draft['visibleStep'];
@@ -177,6 +196,9 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
         parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+        parsedStep.clamp(1, 3),
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
       );
     });
   }
@@ -189,6 +211,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
+<<<<<<< HEAD
 =======
       'actionPlan': _actionPlanController.text,
 =======
@@ -196,11 +219,14 @@ class _BsEditScreenState extends State<BsEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
@@ -210,6 +236,9 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -266,6 +295,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
         reason: _reasonController.text,
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
+        attachments: _attachmentsDirty ? _attachments : null,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -325,13 +355,19 @@ class _BsEditScreenState extends State<BsEditScreen> {
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
   bool get _canSave {
+<<<<<<< HEAD
     return _reasonController.text.trim().isNotEmpty &&
         _preventivePlanController.text.trim().isNotEmpty;
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+    return _reasonController.text.trim().length >= 8 &&
+        _preventivePlanController.text.trim().length >= 8;
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
+    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -460,7 +496,23 @@ class _BsEditScreenState extends State<BsEditScreen> {
                   ),
                 ),
               ],
-              if (_visibleStep < 2) ...[
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: EvaluationAttachmentEditor(
+                    attachments: _attachments,
+                    onChanged: (attachments) {
+                      setState(() {
+                        _attachments = attachments;
+                        _attachmentsDirty = true;
+                      });
+                      _persistDraft();
+                    },
+                  ),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -553,13 +605,21 @@ class _BsEditScreenState extends State<BsEditScreen> {
     return SizedBox(
       width: double.infinity,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle.copyWith(
           minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
         ),
+<<<<<<< HEAD
         child: const Text(
           'Selanjutnya',
+=======
+        child: Text(
+          _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+>>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
           textAlign: TextAlign.center,
         ),
       ),

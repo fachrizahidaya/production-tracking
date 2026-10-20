@@ -28,6 +28,7 @@ import 'package:textile_tracking/components/master/text/no_data.dart';
 >>>>>>> bd0b8f00 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -39,7 +40,13 @@ import 'package:textile_tracking/components/master/theme.dart';
 =======
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
+<<<<<<< HEAD
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+=======
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -629,6 +636,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildAttachmentCard(),
               ),
+<<<<<<< HEAD
 =======
               ),
 <<<<<<< HEAD
@@ -645,6 +653,8 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 historyField: 'preventive_plan',
               ),
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),

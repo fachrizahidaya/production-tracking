@@ -59,6 +59,7 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
 <<<<<<< HEAD
@@ -67,7 +68,12 @@ import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 =======
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 7c2cdb6 (fix:)
+<<<<<<< HEAD
 >>>>>>> 566eb72e (fix:)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class GsmEditScreen extends StatefulWidget {
@@ -101,11 +107,17 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   List<Map<String, dynamic>> _attachments = [];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   bool _attachmentsDirty = false;
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+=======
+  bool _attachmentsDirty = false;
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 
   String get _draftType => 'gsm';
 =======
@@ -176,6 +188,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _attachments = parseEvaluationAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
@@ -317,8 +330,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       if (draft.containsKey('attachments')) {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
@@ -327,13 +343,20 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         _attachmentsDirty = !sameEvaluationAttachments(
           parsed,
           parseEvaluationAttachments(widget.data['attachments']),
         );
+<<<<<<< HEAD
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
@@ -342,6 +365,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         _stepFromValues(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         parsedStep.clamp(1, 2),
 =======
       final savedStep = draft['visibleStep'];
@@ -379,7 +405,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
         parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
 >>>>>>> c675884 (fix: remove rencana tindakan)
+<<<<<<< HEAD
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+=======
+        parsedStep.clamp(1, 3),
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       );
     });
   }
@@ -410,6 +442,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
+<<<<<<< HEAD
 =======
       'actionPlan': _actionPlanController.text,
 =======
@@ -417,12 +450,18 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -445,6 +484,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 =======
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
@@ -455,7 +496,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> c675884 (fix: remove rencana tindakan)
+<<<<<<< HEAD
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -551,6 +598,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         reason: _reasonController.text,
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
+        attachments: _attachmentsDirty ? _attachments : null,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -577,8 +625,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     return _reasonController.text.trim().length >= 8 &&
         _preventivePlanController.text.trim().length >= 8;
   }
@@ -633,10 +684,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     return _reasonController.text.trim().isNotEmpty &&
         _preventivePlanController.text.trim().isNotEmpty;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+    return _reasonController.text.trim().length >= 8 &&
+        _preventivePlanController.text.trim().length >= 8;
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
+    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -832,7 +888,23 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                   ),
                 ),
               ],
-              if (_visibleStep < 2) ...[
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: EvaluationAttachmentEditor(
+                    attachments: _attachments,
+                    onChanged: (attachments) {
+                      setState(() {
+                        _attachments = attachments;
+                        _attachmentsDirty = true;
+                      });
+                      _persistDraft();
+                    },
+                  ),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -936,10 +1008,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle.copyWith(
@@ -947,16 +1024,23 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         child: const Text(
           'Selanjutnya',
 =======
         child: Text(
           _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+<<<<<<< HEAD
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
         child: const Text(
           'Selanjutnya',
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
           textAlign: TextAlign.center,
         ),
       ),

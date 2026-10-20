@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:io';
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -13,6 +14,14 @@ import 'dart:io';
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+import 'dart:io';
+=======
+>>>>>>> d256f82 (fix: UI evaluasi)
+=======
+import 'dart:io';
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -103,12 +112,17 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   List<Map<String, dynamic>> _attachments = [];
 =======
   int _editStep = 0;
 >>>>>>> 9d9abd1e (fix: rework)
 =======
 >>>>>>> 190e34fd (fix: evaluasi rework)
+=======
+  List<Map<String, dynamic>> _attachments = [];
+  bool _attachmentsDirty = false;
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 
   String get _draftType => 'rework';
 <<<<<<< HEAD
@@ -180,6 +194,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           .toList();
     }
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _attachments = _parseAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
 <<<<<<< HEAD
     _actionPlanController.addListener(_persistDraft);
@@ -355,8 +370,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       if (draft.containsKey('attachments')) {
         final parsed = _parseAttachments(draft['attachments']);
         _attachments = parsed;
@@ -365,13 +383,20 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         final parsed = _parseAttachments(draft['attachments']);
         _attachments = parsed;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         _attachmentsDirty = !_sameAttachments(
           parsed,
           _parseAttachments(widget.data['attachments']),
         );
+<<<<<<< HEAD
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
@@ -380,6 +405,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         _stepFromValues(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         parsedStep.clamp(1, 2),
 =======
       final savedStep = draft['visibleStep'];
@@ -417,7 +445,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
         parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
 >>>>>>> c675884 (fix: remove rencana tindakan)
+<<<<<<< HEAD
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+=======
+        parsedStep.clamp(1, 3),
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
       );
     });
   }
@@ -448,6 +482,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
+<<<<<<< HEAD
 =======
       'actionPlan': _actionPlanController.text,
 =======
@@ -455,12 +490,18 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
 >>>>>>> d256f82 (fix: UI evaluasi)
+<<<<<<< HEAD
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -483,6 +524,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 =======
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
@@ -493,7 +536,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> c675884 (fix: remove rencana tindakan)
+<<<<<<< HEAD
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+=======
+    if (_visibleStep >= 3 || !_canGoNext) return;
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -551,7 +600,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         preventivePlan: _preventivePlanController.text,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
         attachments: _attachments,
+=======
+        attachments: _attachmentsDirty ? _attachments : null,
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -615,6 +670,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
 <<<<<<< HEAD
+<<<<<<< HEAD
         _preventivePlanController.text.trim().length >= 8;
   }
 
@@ -629,6 +685,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
         _preventivePlanController.text.trim().isNotEmpty;
 >>>>>>> c675884 (fix: remove rencana tindakan)
+=======
+        _preventivePlanController.text.trim().length >= 8;
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
   }
 
 <<<<<<< HEAD
@@ -647,6 +706,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
+    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -1524,6 +1584,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                   child: _buildAttachmentCard(),
                 ),
               ],
+<<<<<<< HEAD
               if (_visibleStep < 2) ...[
 =======
               ],
@@ -1533,6 +1594,16 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
               if (_visibleStep < 2) ...[
 >>>>>>> c675884 (fix: remove rencana tindakan)
+=======
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: _buildAttachmentCard(),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1932,14 +2003,437 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     );
   }
 
+  bool _sameAttachments(
+    List<Map<String, dynamic>> left,
+    List<Map<String, dynamic>> right,
+  ) {
+    if (left.length != right.length) return false;
+    for (var i = 0; i < left.length; i++) {
+      if (left[i]['id']?.toString() != right[i]['id']?.toString()) {
+        return false;
+      }
+      if (left[i]['path']?.toString() != right[i]['path']?.toString()) {
+        return false;
+      }
+      if ((left[i]['isNew'] == true) != (right[i]['isNew'] == true)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  List<Map<String, dynamic>> _parseAttachments(dynamic raw) {
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .where((item) => _attachmentSource(item) != null)
+        .toList();
+  }
+
+  bool _isLocalAttachment(Map<String, dynamic> item) => item['isNew'] == true;
+
+  String? _attachmentSource(Map<String, dynamic> item) {
+    if (_isLocalAttachment(item)) {
+      final path = item['path']?.toString().trim() ?? '';
+      return path.isEmpty ? null : path;
+    }
+
+    for (final key in ['file_path', 'file_url', 'url', 'path']) {
+      final value = item[key]?.toString().trim() ?? '';
+      if (value.isNotEmpty) return value;
+    }
+    return null;
+  }
+
+  String? _attachmentUrl(Map<String, dynamic> item) {
+    final source = _attachmentSource(item);
+    if (source == null || _isLocalAttachment(item)) return source;
+    if (source.startsWith('http://') || source.startsWith('https://')) {
+      return source;
+    }
+
+    final base = dotenv.env['IMAGE_URL'] ?? '';
+    if (base.isEmpty) return source;
+    if (base.endsWith('/') && source.startsWith('/')) {
+      return '$base${source.substring(1)}';
+    }
+    if (!base.endsWith('/') && !source.startsWith('/')) return '$base/$source';
+    return '$base$source';
+  }
+
+  Widget _attachmentImage(
+    Map<String, dynamic> item, {
+    BoxFit fit = BoxFit.cover,
+  }) {
+    final source = _attachmentUrl(item);
+    if (source == null) {
+      return const Icon(Icons.broken_image_outlined, color: Colors.white70);
+    }
+
+    if (_isLocalAttachment(item)) {
+      return Image.file(
+        File(source),
+        fit: fit,
+        errorBuilder: (_, __, ___) =>
+            const Icon(Icons.broken_image_outlined, color: Colors.white70),
+      );
+    }
+
+    return Image.network(
+      source,
+      fit: fit,
+      errorBuilder: (_, __, ___) =>
+          const Icon(Icons.broken_image_outlined, color: Colors.white70),
+    );
+  }
+
+  Future<File?> _compressImage(String path) async {
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+    if (result != null) return File(result.path);
+    return File(path);
+  }
+
+  Future<ImageSource?> _showImageSourceSheet({required String title}) {
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ImageSourceButton(
+                        icon: Icons.photo_camera_outlined,
+                        label: 'Ambil gambar',
+                        onTap: () =>
+                            Navigator.pop(sheetContext, ImageSource.camera),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _ImageSourceButton(
+                        icon: Icons.photo_library_outlined,
+                        label: 'Dari galeri',
+                        onTap: () =>
+                            Navigator.pop(sheetContext, ImageSource.gallery),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<Map<String, dynamic>?> _pickPhoto(ImageSource source) async {
+    final image = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 70,
+      maxWidth: 1600,
+    );
+    if (image == null) return null;
+
+    final file = await _compressImage(image.path);
+    if (file == null) return null;
+
+    return {
+      'name': file.path.split('/').last,
+      'path': file.path,
+      'extension': 'jpg',
+      'isNew': true,
+    };
+  }
+
+  Future<void> _addAttachment() async {
+    try {
+      final source = await _showImageSourceSheet(title: 'Tambah Foto');
+      if (source == null || !mounted) return;
+      final photo = await _pickPhoto(source);
+      if (photo == null || !mounted) return;
+      setState(() {
+        _attachments = [..._attachments, photo];
+        _attachmentsDirty = true;
+      });
+      _persistDraft();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_errorMessage(e))),
+      );
+    }
+  }
+
+  Future<void> _replaceAttachment(int index) async {
+    if (index < 0 || index >= _attachments.length) return;
+    try {
+      final source = await _showImageSourceSheet(title: 'Ganti Foto');
+      if (source == null || !mounted) return;
+      final photo = await _pickPhoto(source);
+      if (photo == null || !mounted) return;
+      setState(() {
+        final next = List<Map<String, dynamic>>.from(_attachments);
+        next[index] = photo;
+        _attachments = next;
+        _attachmentsDirty = true;
+      });
+      _persistDraft();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(_errorMessage(e))),
+      );
+    }
+  }
+
+  Future<void> _deleteAttachment(int index) async {
+    if (index < 0 || index >= _attachments.length) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Hapus Foto'),
+        content: const Text('Hapus lampiran foto ini?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() {
+      final next = List<Map<String, dynamic>>.from(_attachments);
+      next.removeAt(index);
+      _attachments = next;
+      _attachmentsDirty = true;
+    });
+    _persistDraft();
+  }
+
+  Future<void> _viewAttachment(int index) async {
+    if (index < 0 || index >= _attachments.length) return;
+    await showDialog<void>(
+      context: context,
+      barrierColor: Colors.black,
+      builder: (dialogContext) {
+        return Dialog.fullscreen(
+          backgroundColor: Colors.black,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    icon: const Icon(Icons.close, color: Colors.white),
+                  ),
+                ),
+                Expanded(
+                  child: InteractiveViewer(
+                    minScale: 1,
+                    maxScale: 4,
+                    child: Center(
+                      child: _attachmentImage(
+                        _attachments[index],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            Navigator.pop(dialogContext);
+                            await _deleteAttachment(index);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFD32F2F),
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size.fromHeight(48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          icon: const Icon(Icons.delete_outline),
+                          label: const Text('Hapus'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showAttachmentActions(int index) async {
+    if (index < 0 || index >= _attachments.length) return;
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: ColoredBox(
+                      color: Colors.black,
+                      child: _attachmentImage(
+                        _attachments[index],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.visibility_outlined),
+                title: const Text('Lihat gambar'),
+                onTap: () => Navigator.pop(sheetContext, 'view'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: Colors.red),
+                title: const Text(
+                  'Hapus gambar',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () => Navigator.pop(sheetContext, 'delete'),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!mounted || action == null) return;
+    if (action == 'view') await _viewAttachment(index);
+    if (action == 'edit') await _replaceAttachment(index);
+    if (action == 'delete') await _deleteAttachment(index);
+  }
+
+  Widget _buildAttachmentCard() {
+    return TemplateCard(
+      title: 'Lampiran',
+      icon: Icons.photo_library_outlined,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = 8.0;
+          final columns = constraints.maxWidth < 280 ? 2 : 3;
+          final tileSize =
+              (constraints.maxWidth - spacing * (columns - 1)) / columns;
+          final itemCount = _attachments.length + 1;
+
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: itemCount,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: columns,
+              crossAxisSpacing: spacing,
+              mainAxisSpacing: spacing,
+            ),
+            itemBuilder: (context, index) {
+              if (index == _attachments.length) {
+                return _AddPhotoTile(
+                  size: tileSize,
+                  onTap: _addAttachment,
+                );
+              }
+
+              return GestureDetector(
+                onTap: () => _showAttachmentActions(index),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ColoredBox(
+                        color: Colors.grey.shade200,
+                        child: _attachmentImage(_attachments[index]),
+                      ),
+                      Positioned(
+                        right: 6,
+                        bottom: 6,
+                        child: Container(
+                          width: 28,
+                          height: 28,
+                          decoration: const BoxDecoration(
+                            color: Colors.black54,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.more_horiz,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildNextButton() {
     return SizedBox(
       width: double.infinity,
-      height: 48,
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
-        style: _primaryActionButtonStyle,
-        child: const Text('Selanjutnya'),
+        style: _primaryActionButtonStyle.copyWith(
+          minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
+        ),
+        child: Text(
+          _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
@@ -2333,6 +2827,89 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     ];
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
+  }
+}
+
+class _ImageSourceButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _ImageSourceButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFF4F6FB),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          height: 96,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 28, color: const Color(0xFF4561DB)),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddPhotoTile extends StatelessWidget {
+  final double size;
+  final VoidCallback onTap;
+
+  const _AddPhotoTile({required this.size, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.grey.shade100,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade400),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.add_a_photo_outlined, color: Colors.grey.shade700),
+              const SizedBox(height: 6),
+              Text(
+                'Tambah\nfoto',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.2,
+                  color: Colors.grey.shade700,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

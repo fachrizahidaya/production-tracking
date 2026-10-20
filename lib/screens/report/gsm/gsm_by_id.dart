@@ -22,13 +22,19 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> b25dc8bc (fix: detail evaluasi)
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -624,10 +630,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
@@ -636,8 +647,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
               if (_useEditScreen) ...[
                 _buildReadOnlyCard(
@@ -716,7 +730,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 historyField: 'preventive_plan',
               ),
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),

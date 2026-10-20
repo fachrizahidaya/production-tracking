@@ -22,13 +22,19 @@ import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 >>>>>>> b25dc8bc (fix: detail evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
@@ -625,10 +631,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
@@ -637,8 +648,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
               ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
               if (_useEditScreen) ...[
                 _buildReadOnlyCard(
@@ -717,7 +731,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 historyField: 'preventive_plan',
               ),
 >>>>>>> 991dab5 (fix: evaluasi)
+<<<<<<< HEAD
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+>>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),

@@ -6,12 +6,15 @@ import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+<<<<<<< HEAD
 =======
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 import 'package:textile_tracking/helpers/util/format_number.dart';
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -353,12 +356,16 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
               ),
               const SizedBox(height: 16),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
                   attachments: widget.data['attachments'],
                 ),
               ),
+<<<<<<< HEAD
 =======
               if (_useEditScreen) ...[
                 _buildReadOnlyCard(
@@ -410,6 +417,8 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 historyField: 'preventive_plan',
               ),
 >>>>>>> 991dab5 (fix: evaluasi)
+=======
+>>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),

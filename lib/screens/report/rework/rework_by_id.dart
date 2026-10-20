@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -200,10 +202,114 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                     widget.data['preventive_plan_updated_at']?.toString(),
                 historyField: 'preventive_plan',
               ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: _buildAttachmentCard(),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  List<Map<String, dynamic>> get _attachments {
+    final raw = widget.data['attachments'];
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .where((item) => _attachmentUrl(item) != null)
+        .toList();
+  }
+
+  String? _attachmentUrl(Map<String, dynamic> item) {
+    String? source;
+    for (final key in ['file_path', 'file_url', 'url', 'path']) {
+      final value = item[key]?.toString().trim() ?? '';
+      if (value.isNotEmpty) {
+        source = value;
+        break;
+      }
+    }
+    if (source == null) return null;
+    if (source.startsWith('http://') || source.startsWith('https://')) {
+      return source;
+    }
+
+    final base = dotenv.env['IMAGE_URL'] ?? '';
+    if (base.isEmpty) return source;
+    if (base.endsWith('/') && source.startsWith('/')) {
+      return '$base${source.substring(1)}';
+    }
+    if (!base.endsWith('/') && !source.startsWith('/')) return '$base/$source';
+    return '$base$source';
+  }
+
+  void _viewAttachment(Map<String, dynamic> item) {
+    final url = _attachmentUrl(item);
+    if (url == null) return;
+    showImageDialog(context: context, isNew: false, filePath: url);
+  }
+
+  Widget _buildAttachmentCard() {
+    final attachments = _attachments;
+
+    return TemplateCard(
+      title: 'Lampiran',
+      icon: Icons.photo_library_outlined,
+      child: attachments.isEmpty
+          ? Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Tidak ada lampiran',
+                style: TextStyle(
+                  fontSize: CustomTheme().fontSize('base'),
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            )
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                const spacing = 8.0;
+                final columns = constraints.maxWidth < 280 ? 2 : 3;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: attachments.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: spacing,
+                    mainAxisSpacing: spacing,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = attachments[index];
+                    final url = _attachmentUrl(item);
+
+                    return GestureDetector(
+                      onTap: () => _viewAttachment(item),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: ColoredBox(
+                          color: Colors.grey.shade200,
+                          child: url == null
+                              ? const Icon(Icons.broken_image_outlined)
+                              : Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(
+                                    Icons.broken_image_outlined,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 

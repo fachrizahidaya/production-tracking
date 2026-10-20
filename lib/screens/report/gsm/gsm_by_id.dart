@@ -3,6 +3,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -194,6 +195,13 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
                 historyField: 'preventive_plan',
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: EvaluationAttachmentGallery(
+                  attachments: widget.data['attachments'],
+                ),
               ),
             ],
           ),

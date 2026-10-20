@@ -483,6 +483,7 @@ class ReportService {
     required List<String> reasons,
     required String actionPlan,
     required String preventivePlan,
+    List<Map<String, dynamic>>? attachments,
   }) async {
     if (id == null || id.toString().trim().isEmpty) {
       throw Exception('ID rework tidak ditemukan');
@@ -491,18 +492,61 @@ class ReportService {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
     final uri = Uri.parse('$baseUrl/dyeing-rework-evaluations/$id');
-    final response = await http.patch(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
+    final keptIds = (attachments ?? const <Map<String, dynamic>>[])
+        .where((item) => item['isNew'] != true && item['id'] != null)
+        .map((item) => item['id'])
+        .toList();
+    final newFiles = (attachments ?? const <Map<String, dynamic>>[])
+        .where(
+          (item) =>
+              item['isNew'] == true &&
+              item['path']?.toString().trim().isNotEmpty == true,
+        )
+        .toList();
+
+    late final http.Response response;
+    if (newFiles.isEmpty) {
+      final body = <String, dynamic>{
         'reasons': reasons,
         'action_plan': actionPlan,
         'preventive_plan': preventivePlan,
-      }),
-    );
+      };
+      if (attachments != null) body['attachment_ids'] = keptIds;
+      response = await http.patch(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+    } else {
+      final request = http.MultipartRequest('POST', uri);
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+      request.fields['_method'] = 'PATCH';
+      request.fields['action_plan'] = actionPlan;
+      request.fields['preventive_plan'] = preventivePlan;
+      for (var i = 0; i < reasons.length; i++) {
+        request.fields['reasons[$i]'] = reasons[i];
+      }
+      for (var i = 0; i < keptIds.length; i++) {
+        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      }
+      for (final file in newFiles) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'attachments[]',
+            file['path'].toString(),
+            filename: file['name']?.toString() ?? 'foto.jpg',
+          ),
+        );
+      }
+      final streamed = await request.send();
+      response = await http.Response.fromStream(streamed);
+    }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(
@@ -795,32 +839,20 @@ class ReportService {
     required String reason,
     required String actionPlan,
     required String preventivePlan,
+    List<Map<String, dynamic>>? attachments,
   }) async {
-    if (id == null || id.toString().trim().isEmpty) {
-      throw Exception('ID BS tidak ditemukan');
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-    final uri = Uri.parse('$baseUrl/bs-evaluations/$id');
-    final response = await http.patch(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
+    await _patchEvaluation(
+      id: id,
+      missingIdMessage: 'ID BS tidak ditemukan',
+      path: 'bs-evaluations',
+      body: {
         'reason': reason,
         'action_plan': actionPlan,
         'preventive_plan': preventivePlan,
-      }),
+      },
+      attachments: attachments,
+      fallbackMessage: 'Gagal memperbarui evaluasi BS',
     );
-
-    if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi BS'),
-      );
-    }
   }
 
   Future<GsmList> getGsmList({
@@ -970,31 +1002,96 @@ class ReportService {
     required String reason,
     required String actionPlan,
     required String preventivePlan,
+    List<Map<String, dynamic>>? attachments,
+  }) async {
+    await _patchEvaluation(
+      id: id,
+      missingIdMessage: 'ID GSM tidak ditemukan',
+      path: 'gsm-evaluations',
+      body: {
+        'reason': reason,
+        'action_plan': actionPlan,
+        'preventive_plan': preventivePlan,
+      },
+      attachments: attachments,
+      fallbackMessage: 'Gagal memperbarui evaluasi GSM',
+    );
+  }
+
+  Future<void> _patchEvaluation({
+    required dynamic id,
+    required String missingIdMessage,
+    required String path,
+    required Map<String, dynamic> body,
+    List<Map<String, dynamic>>? attachments,
+    required String fallbackMessage,
   }) async {
     if (id == null || id.toString().trim().isEmpty) {
-      throw Exception('ID GSM tidak ditemukan');
+      throw Exception(missingIdMessage);
     }
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
-    final uri = Uri.parse('$baseUrl/gsm-evaluations/$id');
-    final response = await http.patch(
-      uri,
-      headers: {
+    final uri = Uri.parse('$baseUrl/$path/$id');
+    final keptIds = (attachments ?? const <Map<String, dynamic>>[])
+        .where((item) => item['isNew'] != true && item['id'] != null)
+        .map((item) => item['id'])
+        .toList();
+    final newFiles = (attachments ?? const <Map<String, dynamic>>[])
+        .where(
+          (item) =>
+              item['isNew'] == true &&
+              item['path']?.toString().trim().isNotEmpty == true,
+        )
+        .toList();
+
+    late final http.Response response;
+    if (newFiles.isEmpty) {
+      final payload = Map<String, dynamic>.from(body);
+      if (attachments != null) payload['attachment_ids'] = keptIds;
+      response = await http.patch(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(payload),
+      );
+    } else {
+      final request = http.MultipartRequest('POST', uri);
+      request.headers.addAll({
         'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'reason': reason,
-        'action_plan': actionPlan,
-        'preventive_plan': preventivePlan,
-      }),
-    );
+        'Accept': 'application/json',
+      });
+      request.fields['_method'] = 'PATCH';
+      body.forEach((key, value) {
+        if (value == null) return;
+        if (value is List) {
+          for (var i = 0; i < value.length; i++) {
+            request.fields['$key[$i]'] = value[i].toString();
+          }
+          return;
+        }
+        request.fields[key] = value.toString();
+      });
+      for (var i = 0; i < keptIds.length; i++) {
+        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      }
+      for (final file in newFiles) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'attachments[]',
+            file['path'].toString(),
+            filename: file['name']?.toString() ?? 'foto.jpg',
+          ),
+        );
+      }
+      final streamed = await request.send();
+      response = await http.Response.fromStream(streamed);
+    }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception(
-        _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi GSM'),
-      );
+      throw Exception(_apiErrorMessage(response.body, fallbackMessage));
     }
   }
 

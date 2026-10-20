@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
 class BsEditScreen extends StatefulWidget {
@@ -24,6 +25,8 @@ class _BsEditScreenState extends State<BsEditScreen> {
       TextEditingController();
   bool _saving = false;
   int _visibleStep = 1;
+  List<Map<String, dynamic>> _attachments = [];
+  bool _attachmentsDirty = false;
 
   String get _draftType => 'bs';
 
@@ -32,6 +35,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
     super.initState();
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
+    _attachments = parseEvaluationAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
@@ -69,12 +73,20 @@ class _BsEditScreenState extends State<BsEditScreen> {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
+      if (draft.containsKey('attachments')) {
+        final parsed = parseEvaluationAttachments(draft['attachments']);
+        _attachments = parsed;
+        _attachmentsDirty = !sameEvaluationAttachments(
+          parsed,
+          parseEvaluationAttachments(widget.data['attachments']),
+        );
+      }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
-        parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
+        parsedStep.clamp(1, 3),
       );
     });
   }
@@ -84,12 +96,13 @@ class _BsEditScreenState extends State<BsEditScreen> {
       'reason': _reasonController.text,
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
+      'attachments': _attachments,
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
-    if (_visibleStep >= 2 || !_canGoNext) return;
+    if (_visibleStep >= 3 || !_canGoNext) return;
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -115,6 +128,7 @@ class _BsEditScreenState extends State<BsEditScreen> {
         reason: _reasonController.text,
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
+        attachments: _attachmentsDirty ? _attachments : null,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -136,12 +150,13 @@ class _BsEditScreenState extends State<BsEditScreen> {
   }
 
   bool get _canSave {
-    return _reasonController.text.trim().isNotEmpty &&
-        _preventivePlanController.text.trim().isNotEmpty;
+    return _reasonController.text.trim().length >= 8 &&
+        _preventivePlanController.text.trim().length >= 8;
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
+    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -198,7 +213,23 @@ class _BsEditScreenState extends State<BsEditScreen> {
                   ),
                 ),
               ],
-              if (_visibleStep < 2) ...[
+              if (_visibleStep >= 3) ...[
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: EvaluationAttachmentEditor(
+                    attachments: _attachments,
+                    onChanged: (attachments) {
+                      setState(() {
+                        _attachments = attachments;
+                        _attachmentsDirty = true;
+                      });
+                      _persistDraft();
+                    },
+                  ),
+                ),
+              ],
+              if (_visibleStep < 3) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -285,11 +316,15 @@ class _BsEditScreenState extends State<BsEditScreen> {
   Widget _buildNextButton() {
     return SizedBox(
       width: double.infinity,
-      height: 48,
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
-        style: _primaryActionButtonStyle,
-        child: const Text('Selanjutnya'),
+        style: _primaryActionButtonStyle.copyWith(
+          minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
+        ),
+        child: Text(
+          _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

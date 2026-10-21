@@ -100,6 +100,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     if (itemIndex < 0 || itemIndex >= items.length) return 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final item = items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -127,6 +130,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     for (final grade in grades) {
       if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
         total += num.tryParse(grade['qty'].toString()) ?? 0;
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
     final item = items[itemIndex];
@@ -151,6 +155,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       if (transfer is Map) {
         total += parseSafe(transfer['qty']);
 >>>>>>> d176fb50 (fix: warning for qty grade A diambil)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       }
     }
     return total;
@@ -158,8 +165,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   num? _maxGradeASourceQty(int itemIndex) {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return null;
@@ -185,10 +195,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   dynamic get _currentWoId {
     final workOrder = widget.data['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -404,6 +419,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'qty': item['qty'] ?? 0,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 =======
@@ -412,6 +428,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+          'qty_in': item['qty_in'] ?? 0,
+          'qty_out': item['qty_out'] ?? 0,
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
           'source_qty': item['qty'] ?? 0,
           'available_qty': item['available_qty'],
           'notes': grade['notes'],
@@ -770,8 +792,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   _buildGlobalSummary(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                   SizedBox(
                     height: 16,
                   ),
@@ -860,7 +885,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                       ].separatedBy(CustomTheme().vGap('xl')),
                     ),
                   ),
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                 ],
               );
             },
@@ -934,12 +963,18 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   gradeAInput: _gradeAInput(itemIndex),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   maxTakenQty: _maxGradeASourceQty(itemIndex),
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
                   maxTakenQty: _maxGradeASourceQty(itemIndex),
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+                  maxTakenQty: _maxGradeASourceQty(itemIndex),
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                   onTotalChanged: (total) {
                     setState(() => _absorbedQty[itemIndex] = total);
                   },
@@ -1121,6 +1156,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
 =======
                     _getGradeController(
                       itemIndex,
@@ -1128,9 +1166,13 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                       parsed,
                     ).text = value;
 
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                     setState(() {});
 
                     widget.updateTotalSorting();
@@ -1166,8 +1208,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   Widget? _transferOutNote(Map item, Map grade) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final transferInRows = item['absorbed_work_orders'] is List
         ? item['absorbed_work_orders']
         : item['transfers_in'];
@@ -1208,6 +1253,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 =======
     final rows = item['transfers_out'];
     if (rows is! List) return null;
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 
@@ -1248,6 +1294,23 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
     final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+
+    final transfers = rows.whereType<Map>().toList();
+    if (transfers.isEmpty) return null;
+
+    var total = 0.0;
+    final woNos = <String>[];
+    for (final row in transfers) {
+      total += parseSafe(row['qty']);
+      final woNo = row['to_wo_no']?.toString() ?? '';
+      if (woNo.isNotEmpty) woNos.add(woNo);
+    }
+
+    final target = woNos.join(', ');
+    final remaining = parseSafe(grade['qty']) - total;
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     const black = TextStyle(color: Colors.black);
     const blackBold = TextStyle(
       color: Colors.black,
@@ -1266,6 +1329,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
             children: [
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
               if (totalIn > 0) ...[
                 const TextSpan(
                   text: 'Qty ',
@@ -1326,6 +1392,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                 ),
               ),
               if (target.isNotEmpty) ...[
+<<<<<<< HEAD
 =======
               if (totalIn > 0) ...[
 >>>>>>> 1d6d2ab6 (fix: sortir)
@@ -1379,12 +1446,25 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   style: black,
                 ),
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+                const TextSpan(
+                  text: ' untuk ',
+                  style: black,
+                ),
+                TextSpan(
+                  text: target,
+                  style: black,
+                ),
+              ],
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
             ],
           ),
           textAlign: TextAlign.right,
         ),
         const SizedBox(height: 4),
         Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           'Total akumulasi: ${formatNumber(accumulatedTotal)}',
@@ -1394,6 +1474,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 =======
           'Total akumulasi: ${formatNumber(accumulatedTotal)}',
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
+=======
+          'Total: ${formatNumber(remaining)}',
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
           textAlign: TextAlign.right,
           style: blackBold,
         ),
@@ -1974,6 +2060,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         gradeA += _summaryGradeA(item, grade, itemIndex);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(grade);
 =======
@@ -1982,6 +2069,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(grade);
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
+        gradeATaken += _gradeATaken(grade);
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -2047,6 +2140,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   double _summaryGradeA(Map item, Map grade, int itemIndex) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     return parseSafe(grade['qty']) +
         _gradeAAdditional(item, grade, itemIndex) -
         _gradeATaken(grade);
@@ -2075,6 +2171,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         parseSafe(grade['source_qty']) +
         absorbed -
         savedTransferIn;
+<<<<<<< HEAD
 =======
     return parseSafe(grade['qty']) +
         _gradeAAdditional(item, grade, itemIndex) -
@@ -2097,6 +2194,20 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   double _gradeATaken(Map grade) {
     return parseSafe(grade['qty_out']);
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+  }
+
+  double _savedTransferInQty(Map item) {
+    final rows = item['transfers_in'];
+    if (rows is! List) return 0;
+
+    var total = 0.0;
+    for (final row in rows) {
+      if (row is Map) total += parseSafe(row['qty']);
+    }
+    return total;
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   }
 
   Widget _summaryBox(
@@ -2168,16 +2279,23 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
           totalGradeAAdditional +=
               _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(grade);
 =======
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
           totalGradeAAdditional +=
               _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(grade);
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {

@@ -761,8 +761,11 @@ class _UpdateProcessState extends State<UpdateProcess>
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
@@ -770,10 +773,15 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1475,6 +1483,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       );
                                     },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1518,6 +1527,8 @@ class _UpdateProcessState extends State<UpdateProcess>
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1557,6 +1568,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
                                       ],
                                     ),
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -2140,12 +2153,19 @@ class _UpdateProcessState extends State<UpdateProcess>
                           label: 'Simpan',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
 =======
                           isDisabled: widget.label == 'Sorting' &&
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                               _gradeASourceInvalid,
 =======
                           isDisabled:

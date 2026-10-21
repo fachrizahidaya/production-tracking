@@ -19,6 +19,9 @@ class SortingGradeASourceSection extends StatefulWidget {
   final dynamic sortingId;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   final dynamic packingId;
   final bool isPacking;
   final num gradeAInput;
@@ -47,6 +50,7 @@ class SortingGradeASourceSection extends StatefulWidget {
       this.showQtyWarning = true,
       this.label});
 =======
+<<<<<<< HEAD
 =======
   final dynamic packingId;
   final bool isPacking;
@@ -61,6 +65,13 @@ class SortingGradeASourceSection extends StatefulWidget {
   final label;
 
 <<<<<<< HEAD
+=======
+  final num gradeAInput;
+  final ValueChanged<num>? onTotalChanged;
+  final ValueChanged<List<Map<String, dynamic>>>? onRowsChanged;
+  final ValueChanged<bool>? onExceededChanged;
+
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   const SortingGradeASourceSection({
     super.key,
     this.initialTransfers = const [],
@@ -68,11 +79,15 @@ class SortingGradeASourceSection extends StatefulWidget {
     this.excludeWoId,
     this.sortingId,
     this.gradeAInput = 0,
+<<<<<<< HEAD
     this.maxTakenQty,
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     this.onTotalChanged,
     this.onRowsChanged,
     this.onExceededChanged,
   });
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
   const SortingGradeASourceSection(
@@ -92,6 +107,9 @@ class SortingGradeASourceSection extends StatefulWidget {
       this.showQtyWarning = true,
       this.label});
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
 
   @override
   State<SortingGradeASourceSection> createState() =>
@@ -105,12 +123,18 @@ class _SourceRow {
   dynamic fromSortingId;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   dynamic fromPackingItemId;
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
   dynamic fromPackingItemId;
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+  dynamic fromPackingItemId;
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   dynamic itemId;
   String woNo = '';
   String sortingNo = '';
@@ -155,6 +179,9 @@ class _SortingGradeASourceSectionState
         oldWidget.excludeWoId == widget.excludeWoId &&
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
         oldWidget.sortingId == widget.sortingId &&
         oldWidget.packingId == widget.packingId &&
         oldWidget.isPacking == widget.isPacking &&
@@ -181,6 +208,7 @@ class _SortingGradeASourceSectionState
     _options = null;
     _loading = true;
     _fetchOptions();
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
         oldWidget.sortingId == widget.sortingId &&
@@ -203,6 +231,9 @@ class _SortingGradeASourceSectionState
       });
     }
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   }
 
   @override
@@ -219,6 +250,9 @@ class _SortingGradeASourceSectionState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   bool get _qtyExceeded =>
       _rows.any(
         (row) => row.woId != null && row.takenQty > row.availableQty,
@@ -241,6 +275,7 @@ class _SortingGradeASourceSectionState
 
   void _notify() {
     widget.onSourceQtyInvalid?.call(_qtyExceeded);
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   bool get _qtyExceeded => _rows.any(
@@ -270,6 +305,15 @@ class _SortingGradeASourceSectionState
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+=======
+  bool get _qtyExceeded => _rows.any(
+        (row) => row.woId != null && row.takenQty > row.availableQty,
+      );
+
+  void _notify() {
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     widget.onExceededChanged?.call(_qtyExceeded);
     widget.onTotalChanged?.call(_totalTaken);
     widget.onRowsChanged?.call(
@@ -284,12 +328,18 @@ class _SortingGradeASourceSectionState
               'from_sorting_id': row.fromSortingId,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               'from_packing_item_id': row.fromPackingItemId,
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
               'from_packing_item_id': row.fromPackingItemId,
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+              'from_packing_item_id': row.fromPackingItemId,
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
               'item_id': row.itemId ?? widget.itemId,
               'wo_no': row.woNo,
               'sorting_no': row.sortingNo,
@@ -332,12 +382,18 @@ class _SortingGradeASourceSectionState
     row.fromSortingId = raw['sorting_id'] ?? raw['from_sorting_id'];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     row.fromPackingItemId = raw['from_packing_item_id'];
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
     row.fromPackingItemId = raw['from_packing_item_id'];
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+    row.fromPackingItemId = raw['from_packing_item_id'];
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     row.itemId = raw['item_id'];
     row.woNo = (raw['from_wo_no'] ?? raw['wo_no'] ?? '').toString();
     row.sortingNo =
@@ -373,12 +429,18 @@ class _SortingGradeASourceSectionState
       row.fromSortingId ??= match['sorting_id'] ?? match['from_sorting_id'];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       row.fromPackingItemId ??= match['from_packing_item_id'];
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
       row.fromPackingItemId ??= match['from_packing_item_id'];
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+      row.fromPackingItemId ??= match['from_packing_item_id'];
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       row.itemId ??= match['item_id'] ?? widget.itemId;
       if (row.woNo.isEmpty) {
         row.woNo = match['wo_no']?.toString() ?? '';
@@ -396,6 +458,9 @@ class _SortingGradeASourceSectionState
     final sortingId = widget.sortingId?.toString().trim() ?? '';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final packingId = widget.packingId?.toString().trim() ?? '';
     if (itemId.isNotEmpty) query['item_id'] = itemId;
     if (excludeWoId.isNotEmpty) query['exclude_wo_id'] = excludeWoId;
@@ -409,6 +474,7 @@ class _SortingGradeASourceSectionState
             ? '${EnvConfig.apiUrl}/packings/grade-a-stock-sources'
             : '${EnvConfig.apiUrl}/sortings/grade-a-sources')
 =======
+<<<<<<< HEAD
 =======
     final packingId = widget.packingId?.toString().trim() ?? '';
 >>>>>>> ead5d4b9 (fix: stok di packing)
@@ -428,6 +494,14 @@ class _SortingGradeASourceSectionState
             ? '${EnvConfig.apiUrl}/packings/grade-a-stock-sources'
             : '${EnvConfig.apiUrl}/sortings/grade-a-sources')
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+    if (itemId.isNotEmpty) query['item_id'] = itemId;
+    if (excludeWoId.isNotEmpty) query['exclude_wo_id'] = excludeWoId;
+    if (sortingId.isNotEmpty) query['sorting_id'] = sortingId;
+
+    final uri = Uri.parse('${EnvConfig.apiUrl}/sortings/grade-a-sources')
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
         .replace(queryParameters: query);
     final response = await HttpClient.get(uri);
     if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -473,6 +547,9 @@ class _SortingGradeASourceSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final fromPackingItemId = item['from_packing_item_id'];
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
@@ -485,12 +562,19 @@ class _SortingGradeASourceSectionState
             '')
         .toString();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final sortingNo =
         (item['from_sorting_no'] ?? sorting['sorting_no'] ?? '').toString();
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+=======
+    final sortingNo =
+        (item['from_sorting_no'] ?? sorting['sorting_no'] ?? '').toString();
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final lot = (item['lot'] ??
             item['lot_no'] ??
             item['spk_no'] ??
@@ -509,16 +593,23 @@ class _SortingGradeASourceSectionState
       'from_sorting_id': fromSortingId,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       'from_packing_item_id': fromPackingItemId,
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
       'from_packing_item_id': fromPackingItemId,
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+      'from_packing_item_id': fromPackingItemId,
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       'item_id': sourceItemId,
       'wo_no': woNo,
       'sorting_no': sortingNo,
       'lot': lot,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       'label': woNo,
@@ -528,6 +619,12 @@ class _SortingGradeASourceSectionState
 =======
       'label': woNo,
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+      'label': woNo,
+=======
+      'label': sortingNo.isEmpty ? woNo : '$woNo ($sortingNo)',
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       'code': woNo,
       'qty': available is num
           ? available
@@ -583,12 +680,18 @@ class _SortingGradeASourceSectionState
                     value['sorting_id'] ?? value['from_sorting_id'];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 row.fromPackingItemId = value['from_packing_item_id'];
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
                 row.fromPackingItemId = value['from_packing_item_id'];
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+                row.fromPackingItemId = value['from_packing_item_id'];
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                 row.itemId = value['item_id'] ?? widget.itemId;
                 row.woNo = value['wo_no']?.toString() ?? '';
                 row.sortingNo = value['sorting_no']?.toString() ?? '';
@@ -621,8 +724,11 @@ class _SortingGradeASourceSectionState
     final sourceCount = _options?.length ?? 0;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final maxReached =
         widget.maxTakenQty != null && _totalTaken >= widget.maxTakenQty!;
 
@@ -631,11 +737,17 @@ class _SortingGradeASourceSectionState
         sourceCount >= 1 &&
         _rows.length < sourceCount;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     return !_loading && sourceCount >= 1 && _rows.length < sourceCount;
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+=======
+    return !_loading && sourceCount >= 1 && _rows.length < sourceCount;
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
   }
 
   void _addRow() {
@@ -672,12 +784,18 @@ class _SortingGradeASourceSectionState
     final sortingId = widget.sortingId;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (widget.packingId != null) return;
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
     if (widget.packingId != null) return;
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+    if (widget.packingId != null) return;
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
     final transferId = row.transferId;
     if (sortingId == null || transferId == null) return;
 
@@ -725,6 +843,7 @@ class _SortingGradeASourceSectionState
     return TemplateCard(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       title: 'Ambil Stok Grade A',
 =======
       title: 'Ambil Qty Grade A',
@@ -732,6 +851,12 @@ class _SortingGradeASourceSectionState
 =======
       title: 'Ambil Stok Grade A',
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+      title: 'Ambil Stok Grade A',
+=======
+      title: 'Ambil Qty Grade A',
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
       icon: Icons.move_down_outlined,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -740,6 +865,9 @@ class _SortingGradeASourceSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
           if (widget.showQtyWarning &&
               _qtyWarning != null &&
               widget.label == 'Sorting')
@@ -769,10 +897,15 @@ class _SortingGradeASourceSectionState
               ),
             ),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton.icon(
@@ -833,6 +966,7 @@ class _SortingGradeASourceSectionState
           Row(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             crossAxisAlignment: CrossAxisAlignment.start,
 =======
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -840,6 +974,12 @@ class _SortingGradeASourceSectionState
 =======
             crossAxisAlignment: CrossAxisAlignment.start,
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+            crossAxisAlignment: CrossAxisAlignment.start,
+=======
+            crossAxisAlignment: CrossAxisAlignment.end,
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
             children: [
               Expanded(
                 flex: 3,
@@ -849,6 +989,9 @@ class _SortingGradeASourceSectionState
                   isDisabled: _loading,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                   isWithCode: true,
                   selectedCode: row.woNo,
                   selectedLabel: row.sortingNo,
@@ -856,12 +999,16 @@ class _SortingGradeASourceSectionState
                   selectedLabel: row.sortingNo.isEmpty
                       ? row.woNo
                       : '${row.woNo} (${row.sortingNo})',
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
                   isWithCode: true,
                   selectedCode: row.woNo,
                   selectedLabel: row.sortingNo,
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                   selectedValue: row.id?.toString() ?? '',
                   onTap: () => _pick(index),
                 ),
@@ -885,16 +1032,23 @@ class _SortingGradeASourceSectionState
                   handleChange: (value) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                     // TextForm already updates the controller.  Only update
                     // the model here; assigning controller.text again while
                     // typing can reset the current edit/caret.
 =======
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
                     // TextForm already updates the controller.  Only update
                     // the model here; assigning controller.text again while
                     // typing can reset the current edit/caret.
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                     setState(() => row.takenQty = _parseQty(value));
                     _notify();
                   },
@@ -913,6 +1067,7 @@ class _SortingGradeASourceSectionState
           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (widget.showQtyWarning && exceeded)
 =======
           if (exceeded)
@@ -920,12 +1075,21 @@ class _SortingGradeASourceSectionState
 =======
           if (widget.showQtyWarning && exceeded)
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+          if (widget.showQtyWarning && exceeded)
+=======
+          if (exceeded)
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                   'Qty yang diambil, melebihi dari Sisa Qty',
                   style: TextStyle(color: Colors.red),
                 ),
@@ -937,6 +1101,7 @@ class _SortingGradeASourceSectionState
                 ),
                 SizedBox(
                   width: 150,
+<<<<<<< HEAD
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
                   'Qty yang diambil, melebihi dari Sisa Qty',
@@ -945,6 +1110,9 @@ class _SortingGradeASourceSectionState
                 SizedBox(
                   width: 50,
 >>>>>>> d176fb50 (fix: warning for qty grade A diambil)
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+>>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
                 )
               ],
             ),

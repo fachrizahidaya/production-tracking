@@ -90,30 +90,12 @@ class _FinishSortingState extends State<FinishSorting> {
         finishedItemOptionGrb: finishedItemOptionGrb,
       ),
       handleSubmitToService: (context, id, form, isLoading) async {
-        final sorting = Sorting(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          weight_unit_id:
-              int.tryParse(form['weight_unit_id']?.toString() ?? ''),
-          notes: form['notes'],
-          start_time: form['start_time'],
-          end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-          attachments: form['attachments'],
-          grades: form['grades'],
-          defects: form['defects'],
-          combing: form['combing'],
-          spraying: form['spraying'],
-          rework_long_hemming: form['rework_long_hemming'],
-        );
-
         final message =
             await Provider.of<SortingService>(context, listen: false)
                 .finishSortingItem(
           context,
           id,
-          sorting.toJson(),
+          Map<String, dynamic>.from(form),
           isLoading,
         );
 

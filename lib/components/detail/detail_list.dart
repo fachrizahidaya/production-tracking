@@ -613,7 +613,7 @@ Ringkasan Sorting
 
       for (final item in items) {
         final int qty = parseSafe(
-          item['qty'],
+          code == 'A' ? (item['available_qty'] ?? item['qty']) : item['qty'],
         ).toInt();
 
         if (code == 'A') {

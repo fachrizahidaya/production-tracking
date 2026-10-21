@@ -7,6 +7,7 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/form/text_form_grade.dart';
+import 'package:textile_tracking/screens/update/process/sorting_grade_a_source.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
@@ -22,6 +23,7 @@ class SortingEditSection extends StatefulWidget {
   final List? itemTypeOption;
 
   final Function() updateTotalSorting;
+  final ValueChanged<bool>? onSourceQtyInvalid;
 
   const SortingEditSection({
     super.key,
@@ -30,6 +32,7 @@ class SortingEditSection extends StatefulWidget {
     required this.itemGradeOption,
     required this.itemTypeOption,
     required this.updateTotalSorting,
+    this.onSourceQtyInvalid,
   });
 
   @override
@@ -37,6 +40,81 @@ class SortingEditSection extends StatefulWidget {
 }
 
 class _SortingEditSectionState extends State<SortingEditSection> {
+  final Map<int, bool> _sourceQtyExceeded = {};
+
+  void _setSourceQtyExceeded(int itemIndex, bool exceeded) {
+    _sourceQtyExceeded[itemIndex] = exceeded;
+    widget.onSourceQtyInvalid?.call(
+      _sourceQtyExceeded.values.any((value) => value),
+    );
+  }
+
+  void _setAbsorbedRows(int itemIndex, List<Map<String, dynamic>> rows) {
+    final items = widget.form['items'];
+    if (items is! List || itemIndex < 0 || itemIndex >= items.length) return;
+    setState(() {
+      items[itemIndex]['absorbed_work_orders'] = rows;
+    });
+  }
+
+  List<Map<String, dynamic>> _gradeATransfers(int itemIndex) {
+    final items = widget.form['items'] ?? [];
+    if (itemIndex < 0 || itemIndex >= items.length) return [];
+    final item = items[itemIndex];
+    if (item.containsKey('absorbed_work_orders')) {
+      final saved = item['absorbed_work_orders'];
+      if (saved is List) {
+        return saved
+            .whereType<Map>()
+            .map((row) => Map<String, dynamic>.from(row))
+            .toList();
+      }
+    }
+    final transfers = item['transfers_in'];
+    if (transfers is! List) return [];
+    return transfers
+        .whereType<Map>()
+        .map((row) => Map<String, dynamic>.from(row))
+        .toList();
+  }
+
+  dynamic _gradeAItemId(int itemIndex) {
+    final items = widget.form['items'] ?? [];
+    if (itemIndex < 0 || itemIndex >= items.length) return null;
+    final item = items[itemIndex];
+    final grades = item['grades'];
+    if (grades is List) {
+      for (final grade in grades) {
+        if (grade is! Map) continue;
+        if ((grade['code'] ?? '').toString().toUpperCase() != 'A') continue;
+        return item['item_id'] ??
+            grade['item_id'] ??
+            grade['semifinished_product_id'];
+      }
+    }
+    return item['item_id'];
+  }
+
+  num _gradeAInput(int itemIndex) {
+    final items = widget.form['items'] ?? [];
+    if (itemIndex < 0 || itemIndex >= items.length) return 0;
+    final grades = items[itemIndex]['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += num.tryParse(grade['qty'].toString()) ?? 0;
+      }
+    }
+    return total;
+  }
+
+  dynamic get _currentWoId {
+    final workOrder = widget.data['work_orders'];
+    if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
+    return widget.form['wo_id'] ?? widget.data['wo_id'];
+  }
+
+  final Map<int, num> _absorbedQty = {};
   final Map<String, TextEditingController> _gradeControllers = {};
   final Map<String, TextEditingController> _repairControllers = {};
   List itemGradeOption = [];
@@ -196,12 +274,31 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           };
         }
 
+        if ((itemGrade?['code'] ?? '').toString().toUpperCase() == 'A') {
+          final transfers = item['transfers_in'];
+          if (transfers is List) {
+            groupedItems[itemKey]!['transfers_in'] = transfers
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+          final transfersOut = item['transfers_out'];
+          if (transfersOut is List) {
+            groupedItems[itemKey]!['transfers_out'] = transfersOut
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+        }
+
         groupedItems[itemKey]!['grades'].add({
           'item_grade_id': itemGrade['id'],
           'name': itemGrade['name'],
           'code': itemGrade['code'],
           'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
+          'source_qty': item['qty'] ?? 0,
+          'available_qty': item['available_qty'],
           'notes': grade['notes'],
           'semifinished_product_id': item['semifinished_product_id'],
           'semifinished_product': item['semifinished_product'],
@@ -537,66 +634,68 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
     return DefaultTabController(
       length: items.length,
-      child: Column(
-        children: [
-          /*
-|--------------------------------------------------------------------------
-| TAB HEADER
-|--------------------------------------------------------------------------
-*/
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: [
-                  for (int i = 0; i < items.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      child: Tab(
-                        text: 'Item ${i + 1}',
-                      ),
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              final itemIndex = tabController.index;
+              final sortingWarning = _firstSortingWarning();
+              return Column(
+                children: [
+                  if (sortingWarning != null) ...[
+                    _buildQtyWarning(sortingWarning),
+                    CustomTheme().vGap('xl'),
+                  ],
+                  _buildGlobalSummary(),
+                  KeyedSubtree(
+                    key: const ValueKey('sorting-edit-body'),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: TabBar(
+                              isScrollable: true,
+                              dividerColor: Colors.transparent,
+                              labelColor: Colors.white,
+                              unselectedLabelColor: Colors.black,
+                              indicatorColor: Colors.white,
+                              indicator: BoxDecoration(
+                                color: Colors.blue[800],
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              tabAlignment: TabAlignment.start,
+                              tabs: [
+                                for (int i = 0; i < items.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                      horizontal: 8,
+                                    ),
+                                    child: Tab(
+                                      text: 'Item ${i + 1}',
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildItemCard(itemIndex),
+                      ].separatedBy(CustomTheme().vGap('xl')),
                     ),
-                ],
-              ),
-            ),
-          ),
-
-          /*
-|--------------------------------------------------------------------------
-| TAB BODY
-|--------------------------------------------------------------------------
-*/
-          SizedBox(
-            height: 1100,
-            child: TabBarView(
-              children: [
-                for (int itemIndex = 0; itemIndex < items.length; itemIndex++)
-                  _buildItemCard(
-                    itemIndex,
                   ),
-              ],
-            ),
-          ),
-          _buildGlobalSummary(),
-        ].separatedBy(CustomTheme().vGap('xl')),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -613,6 +712,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final item = widget.form['items'][itemIndex];
 
     final grades = item['grades'] ?? [];
+    final qtyWarning = _validateSortingQty(itemIndex);
 
     return Container(
       padding: EdgeInsets.all(12),
@@ -622,82 +722,107 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       ),
       child: Column(
         children: [
-          /*
+          if (qtyWarning != null) ...[
+            _buildQtyWarning(qtyWarning),
+            const SizedBox(height: 16),
+          ],
+          KeyedSubtree(
+            key: ValueKey('sorting-item-fields-$itemIndex'),
+            child: Column(
+              children: [
+                /*
       |--------------------------------------------------------------------------
       | GRADES
       |--------------------------------------------------------------------------
       */
 
-          TemplateCard(
-            title: 'Grade',
-            icon: Icons.grade_outlined,
-            child: Column(
-              children: [
-                for (int i = 0; i < grades.length; i++)
-                  _buildGradeCard(
-                    itemIndex,
-                    i,
+                TemplateCard(
+                  title: 'Grade',
+                  icon: Icons.grade_outlined,
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < grades.length; i++)
+                        _buildGradeCard(
+                          itemIndex,
+                          i,
+                        ),
+                    ].separatedBy(
+                      SizedBox(height: 12),
+                    ),
                   ),
-              ].separatedBy(
-                SizedBox(height: 12),
-              ),
-            ),
-          ),
+                ),
+                SortingGradeASourceSection(
+                  key: ValueKey('grade-a-source-$itemIndex'),
+                  initialTransfers: _gradeATransfers(itemIndex),
+                  itemId: _gradeAItemId(itemIndex),
+                  excludeWoId: _currentWoId,
+                  sortingId: widget.data['id'],
+                  gradeAInput: _gradeAInput(itemIndex),
+                  onTotalChanged: (total) {
+                    setState(() => _absorbedQty[itemIndex] = total);
+                  },
+                  onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
+                  onExceededChanged: (exceeded) =>
+                      _setSourceQtyExceeded(itemIndex, exceeded),
+                ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | PERBAIKAN
       |--------------------------------------------------------------------------
       */
 
-          TemplateCard(
-            title: 'Perbaikan',
-            icon: Icons.build_outlined,
-            child: Row(
-              children: [
-                _buildRepairInput(
-                  itemIndex,
-                  'spraying',
-                  'Semprotan',
+                TemplateCard(
+                  title: 'Perbaikan',
+                  icon: Icons.build_outlined,
+                  child: Row(
+                    children: [
+                      _buildRepairInput(
+                        itemIndex,
+                        'spraying',
+                        'Semprotan',
+                      ),
+                      _buildRepairInput(
+                        itemIndex,
+                        'rework_long_hemming',
+                        'Permak Long Hemming',
+                      ),
+                      _buildRepairInput(
+                        itemIndex,
+                        'combing',
+                        'Sisiran',
+                      ),
+                    ].separatedBy(
+                      SizedBox(width: 12),
+                    ),
+                  ),
                 ),
-                _buildRepairInput(
-                  itemIndex,
-                  'rework_long_hemming',
-                  'Permak Long Hemming',
-                ),
-                _buildRepairInput(
-                  itemIndex,
-                  'combing',
-                  'Sisiran',
-                ),
-              ].separatedBy(
-                SizedBox(width: 12),
-              ),
-            ),
-          ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | DEFECTS
       |--------------------------------------------------------------------------
       */
 
-          _buildDefectsCard(
-            itemIndex,
-          ),
+                _buildDefectsCard(
+                  itemIndex,
+                ),
 
-          /*
+                /*
       |--------------------------------------------------------------------------
       | SUMMARY
       |--------------------------------------------------------------------------
       */
 
-          _buildSummary(
-            itemIndex,
+                _buildSummary(
+                  itemIndex,
+                ),
+              ].separatedBy(
+                const SizedBox(height: 16),
+              ),
+            ),
           ),
-        ].separatedBy(
-          SizedBox(height: 16),
-        ),
+        ],
       ),
     );
   }
@@ -727,7 +852,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       );
     }
 
-    return Container(
+    final transferOutNote = _transferOutNote(item, grade);
+
+    final card = Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(
@@ -737,96 +864,182 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           12,
         ),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              grade['code'] ?? '-',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (grade['code'] == 'A')
-                  Text(
-                    getSpkNo(item),
-                    style: const TextStyle(
-                      color: Colors.blue,
-                    ),
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  grade['code'] ?? '-',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: grade['code'] == 'BS'
-                  ? [
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (grade['code'] == 'A')
                       Text(
-                        'Perhitungan otomatis dari total Tipe BS',
-                        style: TextStyle(color: Colors.grey),
+                        getSpkNo(item),
+                        style: const TextStyle(
+                          color: Colors.blue,
+                        ),
                       ),
-                    ]
-                  : grade['code'] == 'B' &&
-                          grade['semifinished_product']?['code'] == null
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: grade['code'] == 'BS'
                       ? [
                           Text(
-                            'Material code belum tersedia',
+                            'Perhitungan otomatis dari total Tipe BS',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ]
-                      : [
-                          Text(
-                            grade['semifinished_product']?['code'] ??
-                                grade['finished_product']?['code'] ??
-                                '-',
-                          ),
-                          Text(
-                            grade['semifinished_product']?['name'] ??
-                                grade['finished_product']?['name'] ??
-                                '-',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: TextFormGrade(
-              label: 'Qty',
-              isDisabled: grade['code'] == 'BS',
-              initialValue: '${grade['qty'] ?? 0}',
-              onChanged: (value) {
-                final parsed = parseSafe(value);
-
-                grade['qty'] = parsed;
-
-                _getGradeController(
-                  itemIndex,
-                  gradeIndex,
-                  parsed,
-                ).text = value;
-
-                setState(() {});
-
-                widget.updateTotalSorting();
-              },
-              controller: _getGradeController(
-                itemIndex,
-                gradeIndex,
-                grade['qty'] ?? 0,
+                      : grade['code'] == 'B' &&
+                              grade['semifinished_product']?['code'] == null
+                          ? [
+                              Text(
+                                'Material code belum tersedia',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ]
+                          : [
+                              Text(
+                                grade['semifinished_product']?['code'] ??
+                                    grade['finished_product']?['code'] ??
+                                    '-',
+                              ),
+                              Text(
+                                grade['semifinished_product']?['name'] ??
+                                    grade['finished_product']?['name'] ??
+                                    '-',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                ),
               ),
+              Expanded(
+                flex: 2,
+                child: TextFormGrade(
+                  label: 'Qty',
+                  isDisabled: grade['code'] == 'BS',
+                  initialValue: '${grade['qty'] ?? 0}',
+                  onChanged: (value) {
+                    final parsed = parseSafe(value);
+
+                    grade['qty'] = parsed;
+
+                    _getGradeController(
+                      itemIndex,
+                      gradeIndex,
+                      parsed,
+                    ).text = value;
+
+                    setState(() {});
+
+                    widget.updateTotalSorting();
+                  },
+                  controller: _getGradeController(
+                    itemIndex,
+                    gradeIndex,
+                    grade['qty'] ?? 0,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (grade['code'] == 'A' && transferOutNote != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Spacer(flex: 4),
+                Expanded(
+                  flex: 2,
+                  child: transferOutNote,
+                ),
+              ],
             ),
-          )
+          ],
         ],
       ),
+    );
+
+    return card;
+  }
+
+  Widget? _transferOutNote(Map item, Map grade) {
+    final rows = item['transfers_out'];
+    if (rows is! List) return null;
+
+    final transfers = rows.whereType<Map>().toList();
+    if (transfers.isEmpty) return null;
+
+    var total = 0.0;
+    final woNos = <String>[];
+    for (final row in transfers) {
+      total += parseSafe(row['qty']);
+      final woNo = row['to_wo_no']?.toString() ?? '';
+      if (woNo.isNotEmpty) woNos.add(woNo);
+    }
+
+    final target = woNos.join(', ');
+    final remaining = parseSafe(grade['qty']) - total;
+    const black = TextStyle(color: Colors.black);
+    const blackBold = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text.rich(
+          TextSpan(
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+            ),
+            children: [
+              const TextSpan(
+                text: 'Qty diambil ',
+                style: black,
+              ),
+              TextSpan(
+                text: '-${formatNumber(total)}',
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (target.isNotEmpty) ...[
+                const TextSpan(
+                  text: ' untuk ',
+                  style: black,
+                ),
+                TextSpan(
+                  text: target,
+                  style: black,
+                ),
+              ],
+            ],
+          ),
+          textAlign: TextAlign.right,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Total: ${formatNumber(remaining)}',
+          textAlign: TextAlign.right,
+          style: blackBold,
+        ),
+      ],
     );
   }
 
@@ -1281,6 +1494,110 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 |--------------------------------------------------------------------------
 */
 
+  String? _firstSortingWarning() {
+    final items = widget.form['items'] ?? [];
+    for (var i = 0; i < items.length; i++) {
+      final warning = _validateSortingQty(i);
+      if (warning != null) return warning;
+    }
+    return null;
+  }
+
+  String? _validateSortingQty(int itemIndex) {
+    final items = widget.form['items'] ?? [];
+    if (itemIndex < 0 || itemIndex >= items.length) return null;
+
+    final item = items[itemIndex];
+    final woItems = widget.data['work_orders']?['items'];
+    if (woItems is! List || woItems.isEmpty) return null;
+
+    Map<String, dynamic>? woItem;
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+      if (raw['id'].toString() == item['wo_item_id']?.toString()) {
+        woItem = Map<String, dynamic>.from(raw);
+        break;
+      }
+    }
+    if (woItem == null) return null;
+
+    final referenceQty = parseSafe(woItem['qty']);
+    if (referenceQty <= 0) return null;
+
+    final grades = item['grades'] ?? [];
+    var gradeA = 0.0;
+    var gradeB = 0.0;
+    var gradeBS = 0.0;
+
+    for (final grade in grades) {
+      if (grade is! Map) continue;
+      final code = (grade['code'] ?? '').toString().toUpperCase();
+      final qty = parseSafe(grade['qty']);
+
+      if (code == 'A') {
+        gradeA += _summaryGradeA(item, grade, itemIndex);
+      } else if (code == 'B') {
+        gradeB += qty;
+      } else if (code == 'BS') {
+        gradeBS += qty;
+      }
+    }
+
+    final repair = grades.isEmpty
+        ? 0.0
+        : parseSafe(grades[0]['spraying']) +
+            parseSafe(grades[0]['rework_long_hemming']) +
+            parseSafe(grades[0]['combing']);
+    final totalSorting = gradeA + gradeB + gradeBS + repair;
+    final lowerLimit = referenceQty * 0.90;
+    final upperLimit = referenceQty * 1.10;
+
+    if (totalSorting < lowerLimit || totalSorting > upperLimit) {
+      final differencePercent =
+          ((totalSorting - referenceQty) / referenceQty) * 100;
+
+      return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
+          '${differencePercent.abs().toStringAsFixed(2)}% '
+          '(Batas: ${formatNumber(lowerLimit)} – '
+          '${formatNumber(upperLimit)})';
+    }
+
+    return null;
+  }
+
+  Widget _buildQtyWarning(String warning) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSummary(
     int itemIndex,
   ) {
@@ -1300,7 +1617,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       );
 
       if (code == 'A') {
-        gradeA += qty;
+        gradeA += _summaryGradeA(item, grade, itemIndex);
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -1352,6 +1669,32 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     );
   }
 
+  double _summaryGradeA(Map item, Map grade, int itemIndex) {
+    final input = parseSafe(grade['qty']);
+    final absorbed = _absorbedQty[itemIndex] ?? 0;
+    if (grade['available_qty'] == null) {
+      return input + absorbed;
+    }
+
+    final savedTransferIn = _savedTransferInQty(item);
+    return parseSafe(grade['available_qty']) +
+        input -
+        parseSafe(grade['source_qty']) +
+        absorbed -
+        savedTransferIn;
+  }
+
+  double _savedTransferInQty(Map item) {
+    final rows = item['transfers_in'];
+    if (rows is! List) return 0;
+
+    var total = 0.0;
+    for (final row in rows) {
+      if (row is Map) total += parseSafe(row['qty']);
+    }
+    return total;
+  }
+
   Widget _summaryBox(
     String title,
     dynamic value,
@@ -1393,7 +1736,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
     double totalRepair = 0;
 
-    for (final item in items) {
+    for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+      final item = items[itemIndex];
       final grades = item['grades'] ?? [];
 
       for (final grade in grades) {
@@ -1404,7 +1748,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         );
 
         if (code == 'A') {
-          totalGradeA += qty;
+          totalGradeA += _summaryGradeA(item, grade, itemIndex);
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {

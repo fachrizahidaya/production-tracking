@@ -704,12 +704,15 @@ class _UpdateProcessState extends State<UpdateProcess>
     return int.tryParse(value?.toString() ?? '') ?? value;
   }
 
+<<<<<<< HEAD
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1406,6 +1409,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         () => _gradeASourceInvalid = invalid,
                                       );
                                     },
+<<<<<<< HEAD
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1445,6 +1449,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
                                       ],
                                     ),
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1972,9 +1978,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
+<<<<<<< HEAD
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
+=======
+                          isDisabled: widget.label == 'Sorting' &&
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
                               _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);

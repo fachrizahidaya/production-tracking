@@ -1,5 +1,6 @@
 PODS:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   - connectivity_plus (0.0.1):
     - FlutterMacOS
@@ -34,10 +35,19 @@ EXTERNAL SOURCES:
   flutter_image_compress_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_image_compress_macos/macos
 >>>>>>> 6fcd942e (fix: tambah ambil foto dari galeri)
+=======
+  - FlutterMacOS (1.0.0)
+
+DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+EXTERNAL SOURCES:
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
   FlutterMacOS:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
+<<<<<<< HEAD
 <<<<<<< HEAD
   FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
 =======
@@ -53,6 +63,9 @@ SPEC CHECKSUMS:
   url_launcher_macos: c82c93949963e55b228a30115bd219499a6fe404
   webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 >>>>>>> 6fcd942e (fix: tambah ambil foto dari galeri)
+=======
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 
 PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
 

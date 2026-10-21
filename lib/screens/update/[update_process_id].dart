@@ -749,12 +749,15 @@ class _UpdateProcessState extends State<UpdateProcess>
     return int.tryParse(value?.toString() ?? '') ?? value;
   }
 
+<<<<<<< HEAD
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1444,6 +1447,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                                     onSourceQtyInvalid: (invalid) {
                                       if (_gradeASourceInvalid == invalid) {
                                         return;
@@ -1452,6 +1458,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         () => _gradeASourceInvalid = invalid,
                                       );
                                     },
+<<<<<<< HEAD
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1493,6 +1500,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     ),
 =======
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -2020,9 +2029,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
+<<<<<<< HEAD
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
+=======
+                          isDisabled: widget.label == 'Sorting' &&
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                               _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);

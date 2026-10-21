@@ -47,6 +47,7 @@ class SortingSection extends StatefulWidget {
 class _SortingSectionState extends State<SortingSection> {
   num _gradeAInput(int itemIndex) {
     if (itemIndex < 0 || itemIndex >= _items.length) return 0;
+<<<<<<< HEAD
     final item = _items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -68,11 +69,19 @@ class _SortingSectionState extends State<SortingSection> {
     for (final transfer in transfers) {
       if (transfer is Map) {
         total += parseSafe(transfer['qty']);
+=======
+    final grades = _items[itemIndex]['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += num.tryParse(grade['qty'].toString()) ?? 0;
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       }
     }
     return total;
   }
 
+<<<<<<< HEAD
   num? _maxGradeASourceQty(int itemIndex) {
     if (itemIndex < 0 || itemIndex >= _items.length) return null;
 
@@ -93,6 +102,8 @@ class _SortingSectionState extends State<SortingSection> {
     return null;
   }
 
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
   dynamic get _currentWoId {
     final workOrder = widget.processData?['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -901,6 +912,7 @@ class _SortingSectionState extends State<SortingSection> {
     double gradeBS = 0;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (final grade in grades) {
       if (grade is! Map) continue;
       final code = (grade['code'] ?? '').toString().toUpperCase();
@@ -913,19 +925,26 @@ class _SortingSectionState extends State<SortingSection> {
     double combing = 0;
     double reworkLongHemming = 0;
 
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
     for (final grade in grades) {
+      if (grade is! Map) continue;
       final code = (grade['code'] ?? '').toString().toUpperCase();
-
       final qty = _parseQty(grade['qty']);
 
       if (code == 'A') {
+<<<<<<< HEAD
         gradeA += qty;
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+        gradeA += _summaryGradeA(item, grade, itemIndex);
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
         gradeBS += qty;
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
     }
 
@@ -945,6 +964,16 @@ class _SortingSectionState extends State<SortingSection> {
     final totalSorting =
         gradeA + gradeB + gradeBS + spraying + combing + reworkLongHemming;
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+    }
+
+    final repair = grades.isEmpty
+        ? 0.0
+        : _parseQty(grades[0]['spraying']) +
+            _parseQty(grades[0]['rework_long_hemming']) +
+            _parseQty(grades[0]['combing']);
+    final totalSorting = gradeA + gradeB + gradeBS + repair;
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 
     final lowerLimit = referenceQty * 0.90;
     final upperLimit = referenceQty * 1.10;
@@ -985,6 +1014,7 @@ class _SortingSectionState extends State<SortingSection> {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
 
     widget.onQtyWarning?.call(
@@ -993,6 +1023,12 @@ class _SortingSectionState extends State<SortingSection> {
     widget.onQtyWarning?.call(
       warning != null,
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+    final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
+
+    widget.onQtyWarning?.call(
+      warning != null || sourceExceeded,
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
     );
   }
 
@@ -1034,6 +1070,9 @@ class _SortingSectionState extends State<SortingSection> {
     return DefaultTabController(
       length: items.length,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -1053,9 +1092,14 @@ class _SortingSectionState extends State<SortingSection> {
                     CustomTheme().vGap('xl'),
                   ],
                   _buildGlobalSummary(),
+<<<<<<< HEAD
                   const SizedBox(height: 16),
                   KeyedSubtree(
                     key: const ValueKey('sorting-edit-body'),
+=======
+                  KeyedSubtree(
+                    key: const ValueKey('sorting-finish-body'),
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                     child: Column(
                       children: [
                         Container(
@@ -1094,6 +1138,7 @@ class _SortingSectionState extends State<SortingSection> {
                         ),
                         _buildItemCard(itemIndex),
                       ].separatedBy(CustomTheme().vGap('xl')),
+<<<<<<< HEAD
 =======
       child: Column(
         children: [
@@ -1137,6 +1182,8 @@ class _SortingSectionState extends State<SortingSection> {
                     child: Tab(
                       text: 'Item ${index + 1}',
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                     ),
                   ),
                 ],
@@ -1165,16 +1212,23 @@ class _SortingSectionState extends State<SortingSection> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
+<<<<<<< HEAD
         color: Colors.white,
         border: Border.all(
           width: 0.5,
           color: CustomTheme().colors('text-primary').withOpacity(0.2),
         ),
+=======
+        color: Colors.grey[100],
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
           if (qtyWarning != null) ...[
             _buildQtyWarning(qtyWarning),
             const SizedBox(height: 16),
@@ -1183,9 +1237,12 @@ class _SortingSectionState extends State<SortingSection> {
             key: ValueKey('sorting-item-fields-$itemIndex'),
             child: Column(
               children: [
+<<<<<<< HEAD
 =======
           if (qtyWarning != null) _buildQtyWarning(qtyWarning),
 >>>>>>> 87510740 (fix: finish proses)
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
           /*
       |--------------------------------------------------------------------------
       | GRADES
@@ -1214,9 +1271,14 @@ class _SortingSectionState extends State<SortingSection> {
             excludeWoId: _currentWoId,
             sortingId: widget.processData?['id'],
             gradeAInput: _gradeAInput(itemIndex),
+<<<<<<< HEAD
             maxTakenQty: _maxGradeASourceQty(itemIndex),
             onTotalChanged: (total) {
               setState(() => _absorbedQty[itemIndex] = total);
+=======
+            onTotalChanged: (total) {
+              _absorbedQty[itemIndex] = total;
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
             },
             onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
             onExceededChanged: (exceeded) =>
@@ -2023,8 +2085,11 @@ class _SortingSectionState extends State<SortingSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
+<<<<<<< HEAD
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(item, grade);
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -2115,6 +2180,7 @@ class _SortingSectionState extends State<SortingSection> {
     return total;
   }
 
+<<<<<<< HEAD
   double _gradeAAdditional(Map item, Map grade, int itemIndex) {
     if (_absorbedQty.containsKey(itemIndex)) {
       return (_absorbedQty[itemIndex] ?? 0).toDouble();
@@ -2136,6 +2202,8 @@ class _SortingSectionState extends State<SortingSection> {
     return parseSafe(grade['qty_out']);
   }
 
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
   Widget _summaryBox(
     String title,
     dynamic value,
@@ -2199,9 +2267,12 @@ class _SortingSectionState extends State<SortingSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
+<<<<<<< HEAD
           totalGradeAAdditional +=
               _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(item, grade);
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -2324,6 +2395,7 @@ class _SortingSectionState extends State<SortingSection> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 16aa2dc3 (chore)
@@ -2383,4 +2455,6 @@ class _SortingSectionState extends State<SortingSection> {
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
 >>>>>>> 16aa2dc3 (chore)
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 }

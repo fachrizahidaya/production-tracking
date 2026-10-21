@@ -1454,6 +1454,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
           );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           /*
         |--------------------------------------------------------------------------
@@ -1462,6 +1463,8 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
         */
 
 >>>>>>> a758f4e3 (fix: service)
+=======
+>>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
           addField('grades[$i][items][$j][qty]', (item['qty'] ?? 0).toInt());
 
           addField(

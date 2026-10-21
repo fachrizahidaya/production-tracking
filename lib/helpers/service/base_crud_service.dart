@@ -1150,12 +1150,6 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
             item['semifinished_product_id'],
           );
 
-          /*
-        |--------------------------------------------------------------------------
-        | FORCE INTEGER
-        |--------------------------------------------------------------------------
-        */
-
           addField('grades[$i][items][$j][qty]', (item['qty'] ?? 0).toInt());
 
           addField(
@@ -1188,6 +1182,28 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
               (defect['qty'] ?? 0).toInt(),
             );
           }
+        }
+      }
+
+      final transfers = data['grade_a_transfers'] ?? [];
+
+      if (transfers is List) {
+        for (int i = 0; i < transfers.length; i++) {
+          final transfer = transfers[i];
+          if (transfer is! Map) continue;
+
+          addField(
+            'grade_a_transfers[$i][from_sorting_id]',
+            transfer['from_sorting_id'],
+          );
+          addField(
+            'grade_a_transfers[$i][item_id]',
+            transfer['item_id'],
+          );
+          addField(
+            'grade_a_transfers[$i][qty]',
+            transfer['qty'] ?? 0,
+          );
         }
       }
 

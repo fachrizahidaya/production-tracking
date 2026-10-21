@@ -64,7 +64,8 @@ class _SortingDetailState extends State<SortingDetail> {
           spraying: form['spraying'] ?? data['spraying'],
           rework_long_hemming:
               form['rework_long_hemming'] ?? data['rework_long_hemming'],
-          items: form['items'] ?? data['items']),
+          items: form['items'] ?? data['items'],
+          grade_a_transfers: form['grade_a_transfers']),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
       openUpdateOnStart: widget.openUpdateOnStart,
@@ -80,29 +81,14 @@ class _SortingDetailState extends State<SortingDetail> {
       getItemGradeOptions: (service) => service.dataListOption,
       getWorkOrderOptions: (service) => service.dataListOption,
       handleSubmitToService: (context, id, form, isLoading) async {
-        final sorting = Sorting(
-            wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-            machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-            weight_unit_id:
-                int.tryParse(form['weight_unit_id']?.toString() ?? '2'),
-            notes: form['notes'],
-            start_time: form['start_time'],
-            end_time: form['end_time'],
-            start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-            end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
-            attachments: form['attachments'],
-            grades: form['grades'],
-            defects: form['defects'],
-            rework_long_hemming: form['rework_long_hemming'],
-            spraying: form['spraying'],
-            combing: form['combing'],
-            greige_item_id:
-                int.tryParse(form['greige_item_id']?.toString() ?? ''),
-            items: form['items']);
-
         final message =
             await Provider.of<SortingService>(context, listen: false)
-                .finishItem(context, id, sorting, isLoading);
+                .finishSortingItem(
+          context,
+          id,
+          Map<String, dynamic>.from(form),
+          isLoading,
+        );
 
         Navigator.pushNamedAndRemoveUntil(context, '/sortings', (_) => false);
 

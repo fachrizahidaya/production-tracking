@@ -153,6 +153,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   @override
   void initState() {
     super.initState();
+    if (widget.label == 'Sorting') {
+      _hasItemQtyWarning = true;
+    }
 
     spkDocuments = List<Map<String, dynamic>>.from(
       widget.form?['spk_documents'] ?? [],
@@ -823,6 +826,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         );
 
         widget.form?['grades'] = buildGradesPayload();
+        widget.form?['grade_a_transfers'] = _buildGradeATransfers();
       }
 
       widget.form?['attachments'] ??= [];
@@ -1507,6 +1511,31 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     return _buildSortingGradesFallbackPayload();
+  }
+
+  List<Map<String, dynamic>> _buildGradeATransfers() {
+    final items = widget.form?['items'] ?? [];
+    final transfers = <Map<String, dynamic>>[];
+
+    for (final item in items) {
+      if (item is! Map) continue;
+      final rows = item['absorbed_work_orders'];
+      if (rows is! List) continue;
+
+      for (final row in rows) {
+        if (row is! Map) continue;
+        final fromSortingId = row['sorting_id'] ?? row['from_sorting_id'];
+        if (fromSortingId == null) continue;
+
+        transfers.add({
+          'from_sorting_id': fromSortingId,
+          'item_id': row['item_id'],
+          'qty': row['qty'] ?? 0,
+        });
+      }
+    }
+
+    return transfers;
   }
 
   @override

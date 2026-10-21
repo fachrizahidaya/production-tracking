@@ -135,6 +135,7 @@ class _UpdateProcessState extends State<UpdateProcess>
   late List<Map<String, dynamic>> _allAttachments;
 
   List<Map<String, dynamic>> _newMachines = [];
+  bool _gradeASourceInvalid = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -677,6 +678,37 @@ class _UpdateProcessState extends State<UpdateProcess>
     return groupedGrades.values.toList();
   }
 
+  List<Map<String, dynamic>> _buildGradeATransfers() {
+    final items = widget.form['items'] ?? [];
+    final transfers = <Map<String, dynamic>>[];
+
+    for (final item in items) {
+      if (item is! Map) continue;
+      final rows = item['absorbed_work_orders'];
+      if (rows is! List) continue;
+
+      for (final row in rows) {
+        if (row is! Map) continue;
+        final fromSortingId = row['sorting_id'] ?? row['from_sorting_id'];
+        if (fromSortingId == null) continue;
+
+        transfers.add({
+          'from_sorting_id': _transferId(fromSortingId),
+          'item_id': _transferId(row['item_id']),
+          'qty': row['qty'] ?? 0,
+        });
+      }
+    }
+
+    return transfers;
+  }
+
+  dynamic _transferId(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? value;
+  }
+
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ??
         widget.data?['sorting']?['grades'] ??
@@ -847,6 +879,7 @@ class _UpdateProcessState extends State<UpdateProcess>
               widget.form['combing'] = toDouble(widget.form['combing']);
 
               widget.form['grades'] = buildGradesPayload();
+              widget.form['grade_a_transfers'] = _buildGradeATransfers();
             }
 
             /// 🔥 MAKLON
@@ -1352,6 +1385,14 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     updateTotalSorting: _updateTotalSorting,
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
+                                    onSourceQtyInvalid: (invalid) {
+                                      if (_gradeASourceInvalid == invalid) {
+                                        return;
+                                      }
+                                      setState(
+                                        () => _gradeASourceInvalid = invalid,
+                                      );
+                                    },
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1841,6 +1882,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
+                          isDisabled: widget.label == 'Sorting' &&
+                              _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);
                           },

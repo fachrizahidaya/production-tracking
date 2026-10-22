@@ -27,7 +27,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   bool _saving = false;
   int _visibleStep = 1;
   List<Map<String, dynamic>> _attachments = [];
-  bool _attachmentsDirty = false;
 
   String get _draftType => 'gsm';
 
@@ -77,17 +76,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       if (draft.containsKey('attachments')) {
         final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
-        _attachmentsDirty = !sameEvaluationAttachments(
-          parsed,
-          parseEvaluationAttachments(widget.data['attachments']),
-        );
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
-        parsedStep.clamp(1, 3),
+        parsedStep.clamp(1, 2),
       );
     });
   }
@@ -103,7 +98,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 
   void _goNext() {
-    if (_visibleStep >= 3 || !_canGoNext) return;
+    if (_visibleStep >= 2 || !_canGoNext) return;
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -124,17 +119,17 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     setState(() => _saving = true);
 
     try {
-      await _reportService.updateGsmDetail(
+      final message = await _reportService.updateGsmDetail(
         id: widget.data['id'],
         reason: _reasonController.text,
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
-        attachments: _attachmentsDirty ? _attachments : null,
+        attachments: _attachments,
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
       if (!mounted) return;
-      Navigator.pop(context, true);
+      Navigator.pop(context, message);
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -157,7 +152,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
-    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -208,8 +202,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                     controller: _preventivePlanController,
                   ),
                 ),
-              ],
-              if (_visibleStep >= 3) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -218,14 +210,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                     onChanged: (attachments) {
                       setState(() {
                         _attachments = attachments;
-                        _attachmentsDirty = true;
                       });
                       _persistDraft();
                     },
                   ),
                 ),
               ],
-              if (_visibleStep < 3) ...[
+              if (_visibleStep < 2) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -317,8 +308,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         style: _primaryActionButtonStyle.copyWith(
           minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
         ),
-        child: Text(
-          _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+        child: const Text(
+          'Selanjutnya',
           textAlign: TextAlign.center,
         ),
       ),

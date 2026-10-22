@@ -18,23 +18,6 @@ List<Map<String, dynamic>> parseEvaluationAttachments(dynamic raw) {
       .toList();
 }
 
-bool sameEvaluationAttachments(
-  List<Map<String, dynamic>> left,
-  List<Map<String, dynamic>> right,
-) {
-  if (left.length != right.length) return false;
-  for (var i = 0; i < left.length; i++) {
-    if (left[i]['id']?.toString() != right[i]['id']?.toString()) return false;
-    if (left[i]['path']?.toString() != right[i]['path']?.toString()) {
-      return false;
-    }
-    if ((left[i]['isNew'] == true) != (right[i]['isNew'] == true)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 bool evaluationAttachmentIsLocal(Map<String, dynamic> item) =>
     item['isNew'] == true;
 
@@ -180,13 +163,30 @@ class _EvaluationAttachmentEditorState
     );
     if (image == null) return null;
 
-    final file = await _compressImage(image.path);
-    if (file == null) return null;
+    final fileExtension = image.path.split('.').last.toLowerCase();
+    const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
+    if (!allowed.contains(fileExtension)) {
+      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
+    }
 
+    final File file;
+    if (fileExtension == 'gif' || fileExtension == 'webp') {
+      file = File(image.path);
+    } else {
+      final compressed = await _compressImage(image.path);
+      if (compressed == null) return null;
+      file = compressed;
+    }
+
+    if (await file.length() > 10 * 1024 * 1024) {
+      throw Exception('Ukuran foto maksimal 10MB.');
+    }
+
+    final name = file.path.split('/').last;
     return {
-      'name': file.path.split('/').last,
+      'name': name,
       'path': file.path,
-      'extension': 'jpg',
+      'extension': name.split('.').last.toLowerCase(),
       'isNew': true,
     };
   }
@@ -207,21 +207,6 @@ class _EvaluationAttachmentEditorState
       final photo = await _pickPhoto(source);
       if (photo == null || !mounted) return;
       widget.onChanged([...widget.attachments, photo]);
-    } catch (e) {
-      _showError(e);
-    }
-  }
-
-  Future<void> _replaceAttachment(int index) async {
-    if (index < 0 || index >= widget.attachments.length) return;
-    try {
-      final source = await _showImageSourceSheet(title: 'Ganti Foto');
-      if (source == null || !mounted) return;
-      final photo = await _pickPhoto(source);
-      if (photo == null || !mounted) return;
-      final next = List<Map<String, dynamic>>.from(widget.attachments);
-      next[index] = photo;
-      widget.onChanged(next);
     } catch (e) {
       _showError(e);
     }
@@ -287,25 +272,6 @@ class _EvaluationAttachmentEditorState
                   child: Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () async {
-                            Navigator.pop(dialogContext);
-                            await _replaceAttachment(index);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white70),
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.edit_outlined),
-                          label: const Text('Ganti'),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () async {
                             Navigator.pop(dialogContext);
@@ -346,29 +312,22 @@ class _EvaluationAttachmentEditorState
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: _attachmentImage(
-                        widget.attachments[index],
-                        fit: BoxFit.contain,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(sheetContext, 'view'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: ColoredBox(
+                        color: Colors.black,
+                        child: _attachmentImage(
+                          widget.attachments[index],
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.visibility_outlined),
-                title: const Text('Lihat gambar'),
-                onTap: () => Navigator.pop(sheetContext, 'view'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.edit_outlined),
-                title: const Text('Ganti gambar'),
-                onTap: () => Navigator.pop(sheetContext, 'edit'),
               ),
               ListTile(
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
@@ -387,7 +346,6 @@ class _EvaluationAttachmentEditorState
 
     if (!mounted || action == null) return;
     if (action == 'view') await _viewAttachment(index);
-    if (action == 'edit') await _replaceAttachment(index);
     if (action == 'delete') await _deleteAttachment(index);
   }
 
@@ -418,7 +376,7 @@ class _EvaluationAttachmentEditorState
               }
 
               return GestureDetector(
-                onTap: () => _showAttachmentActions(index),
+                onTap: () => _viewAttachment(index),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Stack(
@@ -428,21 +386,24 @@ class _EvaluationAttachmentEditorState
                         color: Colors.grey.shade200,
                         child: _attachmentImage(widget.attachments[index]),
                       ),
-                      const Positioned(
+                      Positioned(
                         right: 6,
                         bottom: 6,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                          ),
-                          child: SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: Icon(
-                              Icons.more_horiz,
-                              color: Colors.white,
-                              size: 16,
+                        child: GestureDetector(
+                          onTap: () => _showAttachmentActions(index),
+                          child: const DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: Icon(
+                                Icons.more_horiz,
+                                color: Colors.white,
+                                size: 16,
+                              ),
                             ),
                           ),
                         ),

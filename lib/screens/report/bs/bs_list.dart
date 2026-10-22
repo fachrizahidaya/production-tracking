@@ -15,7 +15,7 @@ class BsList extends StatefulWidget {
   final String sort;
   final String search;
   final String status;
-  final String? savedWoNo;
+  final String? savedMessage;
 
   const BsList(
       {super.key,
@@ -24,7 +24,7 @@ class BsList extends StatefulWidget {
       this.sort = 'created_at',
       this.search = '',
       this.status = '',
-      this.savedWoNo});
+      this.savedMessage});
 
   @override
   State<BsList> createState() => _BsListState();
@@ -64,7 +64,7 @@ class _BsListState extends State<BsList> {
     _sort = widget.sort;
     _search = widget.search;
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
-    _showSavedDialogAfterLoad = widget.savedWoNo != null;
+    _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -142,7 +142,7 @@ class _BsListState extends State<BsList> {
       if (_showSavedDialogAfterLoad) {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showSavedDialog(widget.savedWoNo!);
+          if (mounted) _showSavedDialog(widget.savedMessage!);
         });
       }
     } catch (e) {
@@ -826,27 +826,27 @@ class _BsListState extends State<BsList> {
   Future<void> _openBsDetail(BsListItem item) async {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
-    final updated = await Navigator.push<bool>(
+    final message = await Navigator.push<String>(
       context,
       MaterialPageRoute(
         builder: (context) => BsDetailLoadingScreen(id: item.id),
       ),
     );
 
-    if (updated == true && mounted) {
+    if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadBsList();
       await _loadPendingCount();
       if (mounted) {
-        await _showSavedDialog(_workOrderNo(item));
+        await _showSavedDialog(message);
       }
     }
   }
 
-  Future<void> _showSavedDialog(String woNo) {
+  Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
       title: 'Perubahan Tersimpan',
-      message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
+      message: message,
     );
   }
 

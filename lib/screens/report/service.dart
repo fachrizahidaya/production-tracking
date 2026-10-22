@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -478,7 +479,7 @@ class ReportService {
     };
   }
 
-  Future<void> updateReworkDetail({
+  Future<String> updateReworkDetail({
     required dynamic id,
     required List<String> reasons,
     required String actionPlan,
@@ -532,14 +533,21 @@ class ReportService {
       for (var i = 0; i < reasons.length; i++) {
         request.fields['reasons[$i]'] = reasons[i];
       }
-      for (var i = 0; i < keptIds.length; i++) {
-        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      for (final keptId in keptIds) {
+        request.files.add(
+          http.MultipartFile.fromString(
+            'attachment_ids[]',
+            keptId.toString(),
+          ),
+        );
       }
       for (final file in newFiles) {
+        final path = file['path'].toString();
+        await _ensurePhotoAttachment(path);
         request.files.add(
           await http.MultipartFile.fromPath(
             'attachments[]',
-            file['path'].toString(),
+            path,
             filename: file['name']?.toString() ?? 'foto.jpg',
           ),
         );
@@ -553,6 +561,11 @@ class ReportService {
         _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi rework'),
       );
     }
+
+    return _apiSuccessMessage(
+      response.body,
+      'Perubahan evaluasi rework sudah tersimpan.',
+    );
   }
 
   Future<void> updateReworkReasons({
@@ -834,14 +847,14 @@ class ReportService {
     };
   }
 
-  Future<void> updateBsDetail({
+  Future<String> updateBsDetail({
     required dynamic id,
     required String reason,
     required String actionPlan,
     required String preventivePlan,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    await _patchEvaluation(
+    return _patchEvaluation(
       id: id,
       missingIdMessage: 'ID BS tidak ditemukan',
       path: 'bs-evaluations',
@@ -852,6 +865,7 @@ class ReportService {
       },
       attachments: attachments,
       fallbackMessage: 'Gagal memperbarui evaluasi BS',
+      successMessage: 'Perubahan evaluasi BS sudah tersimpan.',
     );
   }
 
@@ -997,14 +1011,14 @@ class ReportService {
     };
   }
 
-  Future<void> updateGsmDetail({
+  Future<String> updateGsmDetail({
     required dynamic id,
     required String reason,
     required String actionPlan,
     required String preventivePlan,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    await _patchEvaluation(
+    return _patchEvaluation(
       id: id,
       missingIdMessage: 'ID GSM tidak ditemukan',
       path: 'gsm-evaluations',
@@ -1015,16 +1029,18 @@ class ReportService {
       },
       attachments: attachments,
       fallbackMessage: 'Gagal memperbarui evaluasi GSM',
+      successMessage: 'Perubahan evaluasi GSM sudah tersimpan.',
     );
   }
 
-  Future<void> _patchEvaluation({
+  Future<String> _patchEvaluation({
     required dynamic id,
     required String missingIdMessage,
     required String path,
     required Map<String, dynamic> body,
     List<Map<String, dynamic>>? attachments,
     required String fallbackMessage,
+    required String successMessage,
   }) async {
     if (id == null || id.toString().trim().isEmpty) {
       throw Exception(missingIdMessage);
@@ -1074,14 +1090,21 @@ class ReportService {
         }
         request.fields[key] = value.toString();
       });
-      for (var i = 0; i < keptIds.length; i++) {
-        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      for (final keptId in keptIds) {
+        request.files.add(
+          http.MultipartFile.fromString(
+            'attachment_ids[]',
+            keptId.toString(),
+          ),
+        );
       }
       for (final file in newFiles) {
+        final path = file['path'].toString();
+        await _ensurePhotoAttachment(path);
         request.files.add(
           await http.MultipartFile.fromPath(
             'attachments[]',
-            file['path'].toString(),
+            path,
             filename: file['name']?.toString() ?? 'foto.jpg',
           ),
         );
@@ -1093,6 +1116,32 @@ class ReportService {
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(_apiErrorMessage(response.body, fallbackMessage));
     }
+
+    return _apiSuccessMessage(response.body, successMessage);
+  }
+
+  static const _photoExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
+  static const _maxPhotoBytes = 10 * 1024 * 1024;
+
+  Future<void> _ensurePhotoAttachment(String path) async {
+    final fileExtension = path.split('.').last.toLowerCase();
+    if (!_photoExtensions.contains(fileExtension)) {
+      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
+    }
+    if (await File(path).length() > _maxPhotoBytes) {
+      throw Exception('Ukuran foto maksimal 10MB.');
+    }
+  }
+
+  String _apiSuccessMessage(String body, String fallback) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map) {
+        final message = decoded['message']?.toString().trim();
+        if (message != null && message.isNotEmpty) return message;
+      }
+    } catch (_) {}
+    return fallback;
   }
 
   String _apiErrorMessage(String body, String fallback) {

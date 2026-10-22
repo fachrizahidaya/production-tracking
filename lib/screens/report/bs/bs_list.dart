@@ -18,6 +18,7 @@ class BsList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? savedMessage;
 =======
   final String? savedWoNo;
@@ -26,11 +27,19 @@ class BsList extends StatefulWidget {
   final String? savedMessage;
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   final String? savedMessage;
 =======
   final String? savedWoNo;
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+  final String? savedMessage;
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
 
   const BsList(
       {super.key,
@@ -42,6 +51,7 @@ class BsList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.savedMessage});
 =======
       this.savedWoNo});
@@ -50,11 +60,19 @@ class BsList extends StatefulWidget {
       this.savedMessage});
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       this.savedMessage});
 =======
       this.savedWoNo});
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+      this.savedMessage});
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
 
   @override
   State<BsList> createState() => _BsListState();
@@ -114,6 +132,7 @@ class _BsListState extends State<BsList> {
 >>>>>>> db08c830 (fix: UI evaluasi)
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 =======
     _status = widget.status.trim();
 =======
@@ -121,7 +140,12 @@ class _BsListState extends State<BsList> {
 >>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -202,6 +226,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
@@ -210,11 +235,19 @@ class _BsListState extends State<BsList> {
           if (mounted) _showSavedDialog(widget.savedMessage!);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         });
       }
     } catch (e) {
@@ -1391,6 +1424,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
@@ -1399,11 +1433,19 @@ class _BsListState extends State<BsList> {
     final message = await Navigator.push<String>(
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => BsDetailLoadingScreen(id: item.id),
@@ -1413,8 +1455,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadBsList();
       await _loadPendingCount();
@@ -1437,7 +1482,17 @@ class _BsListState extends State<BsList> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      await _loadBsList();
+      await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       }
     }
   }
@@ -1445,8 +1500,11 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
@@ -1469,7 +1527,17 @@ class _BsListState extends State<BsList> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+  Future<void> _showSavedDialog(String message) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     );
   }
 

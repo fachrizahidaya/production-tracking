@@ -19,6 +19,7 @@ class GsmList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? savedMessage;
 =======
   final String? savedWoNo;
@@ -27,11 +28,19 @@ class GsmList extends StatefulWidget {
   final String? savedMessage;
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   final String? savedMessage;
 =======
   final String? savedWoNo;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+  final String? savedMessage;
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
 
   const GsmList(
       {super.key,
@@ -43,6 +52,7 @@ class GsmList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.savedMessage});
 =======
       this.savedWoNo});
@@ -51,11 +61,19 @@ class GsmList extends StatefulWidget {
       this.savedMessage});
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       this.savedMessage});
 =======
       this.savedWoNo});
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+      this.savedMessage});
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
 
   @override
   State<GsmList> createState() => _GsmListState();
@@ -115,6 +133,7 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> db08c830 (fix: UI evaluasi)
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 =======
     _status = widget.status.trim();
 =======
@@ -122,7 +141,12 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -203,6 +227,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
@@ -211,11 +236,19 @@ class _GsmListState extends State<GsmList> {
           if (mounted) _showSavedDialog(widget.savedMessage!);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         });
       }
     } catch (e) {
@@ -1316,6 +1349,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
@@ -1324,11 +1358,19 @@ class _GsmListState extends State<GsmList> {
     final message = await Navigator.push<String>(
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => GsmDetailLoadingScreen(id: item.id),
@@ -1338,8 +1380,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadGsmList();
       await _loadPendingCount();
@@ -1362,7 +1407,17 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      await _loadGsmList();
+      await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       }
     }
   }
@@ -1370,8 +1425,11 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
@@ -1394,7 +1452,17 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+  Future<void> _showSavedDialog(String message) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     );
   }
 

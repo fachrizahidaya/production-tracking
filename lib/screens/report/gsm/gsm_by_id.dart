@@ -114,7 +114,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -130,8 +130,11 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         _replaceWithGsmList(message: message);
       } else {
         Navigator.pop(context, message);
@@ -151,7 +154,15 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+        _replaceWithGsmList(message: message);
+      } else {
+        Navigator.pop(context, message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       }
     } catch (error) {
       if (!mounted) return;
@@ -162,6 +173,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithGsmList({String? message}) {
 =======
   void _replaceWithGsmList({bool saved = false, String? woNo}) {
@@ -170,11 +182,19 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
   void _replaceWithGsmList({String? message}) {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   void _replaceWithGsmList({String? message}) {
 =======
   void _replaceWithGsmList({bool saved = false, String? woNo}) {
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+  void _replaceWithGsmList({String? message}) {
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -182,6 +202,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
@@ -190,11 +211,19 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
           savedMessage: message,
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+          savedMessage: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         ),
       ),
     );
@@ -411,9 +440,16 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
+<<<<<<< HEAD
     final updated = await Navigator.push<bool>(
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+<<<<<<< HEAD
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => GsmEditScreen(data: widget.data),
@@ -423,19 +459,29 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     }
   }
 

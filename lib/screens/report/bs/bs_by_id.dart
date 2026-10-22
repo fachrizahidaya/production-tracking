@@ -111,7 +111,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) =>
@@ -126,8 +126,11 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         _replaceWithBsList(message: message);
       } else {
         Navigator.pop(context, message);
@@ -147,7 +150,15 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+        _replaceWithBsList(message: message);
+      } else {
+        Navigator.pop(context, message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       }
     } catch (error) {
       if (!mounted) return;
@@ -158,6 +169,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithBsList({String? message}) {
 =======
   void _replaceWithBsList({bool saved = false, String? woNo}) {
@@ -166,11 +178,19 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
   void _replaceWithBsList({String? message}) {
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
   void _replaceWithBsList({String? message}) {
 =======
   void _replaceWithBsList({bool saved = false, String? woNo}) {
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+  void _replaceWithBsList({String? message}) {
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -178,6 +198,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
@@ -186,11 +207,19 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
           savedMessage: message,
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+          savedMessage: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
         ),
       ),
     );
@@ -407,9 +436,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
+<<<<<<< HEAD
     final updated = await Navigator.push<bool>(
 >>>>>>> aa02f1b (feat: evaluasi bs)
+<<<<<<< HEAD
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => BsEditScreen(data: widget.data),
@@ -419,19 +455,29 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
+=======
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
+>>>>>>> 6f3012ab (fix: attachment evaluation)
     }
   }
 

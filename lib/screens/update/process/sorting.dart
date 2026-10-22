@@ -198,6 +198,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   List<Map<String, dynamic>> mapSemiFinishedByBaseColor({
     required List<dynamic> baseCodes,
     required List<dynamic> colorCodes,
+    List<dynamic> variantCodes = const [],
     required List<Map<String, dynamic>> options,
   }) {
     final List<Map<String, dynamic>> result = [];
@@ -206,6 +207,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       final baseCode = baseCodes[i].toString();
 
       final colorCode = i < colorCodes.length ? colorCodes[i].toString() : '';
+
+      final variantCode =
+          i < variantCodes.length ? variantCodes[i].toString() : '';
 
       Map<String, dynamic>? matched;
 
@@ -218,7 +222,14 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
         final optionColorCode = parts.isNotEmpty ? parts.last : '';
 
-        if (optionBaseCode == baseCode && optionColorCode == colorCode) {
+        final optionVariantCode = extractVariantCode(code);
+
+        final sameVariant =
+            variantCode.isEmpty || optionVariantCode == variantCode;
+
+        if (optionBaseCode == baseCode &&
+            optionColorCode == colorCode &&
+            sameVariant) {
           matched = option;
           break;
         }
@@ -342,6 +353,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         process: 'packing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final List<Map<String, dynamic>> semiFinishedItemsGradeA =
@@ -354,6 +366,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       final mappedGradeAItems = mapSemiFinishedByBaseColor(
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
         options: semiFinishedItemsGradeA,
       );
 
@@ -363,6 +376,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         process: 'sorting',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: ['GRB'],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final List<Map<String, dynamic>> semiFinishedItemsGradeB =
@@ -378,6 +392,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           (params['base_codes'] ?? []).length,
           (_) => 'GRB',
         ),
+        variantCodes: params['variant_codes'] ?? [],
         options: semiFinishedItemsGradeB,
       );
 

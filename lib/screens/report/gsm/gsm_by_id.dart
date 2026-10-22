@@ -42,7 +42,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -53,12 +53,9 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
 
       if (!mounted) return;
       if (widget.returnToList) {
-        _replaceWithGsmList(
-          saved: updated == true,
-          woNo: data['woNo']?.toString(),
-        );
+        _replaceWithGsmList(message: message);
       } else {
-        Navigator.pop(context, updated);
+        Navigator.pop(context, message);
       }
     } catch (error) {
       if (!mounted) return;
@@ -66,12 +63,12 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
     }
   }
 
-  void _replaceWithGsmList({bool saved = false, String? woNo}) {
+  void _replaceWithGsmList({String? message}) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => GsmList(
-          savedWoNo: saved ? woNo : null,
+          savedMessage: message,
         ),
       ),
     );
@@ -150,15 +147,15 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
-    final updated = await Navigator.push<bool>(
+    final message = await Navigator.push<String>(
       context,
       MaterialPageRoute(
         builder: (context) => GsmEditScreen(data: widget.data),
       ),
     );
 
-    if (updated == true && mounted) {
-      Navigator.pop(context, true);
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
     }
   }
 

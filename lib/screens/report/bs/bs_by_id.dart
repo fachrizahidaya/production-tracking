@@ -41,7 +41,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) =>
@@ -51,12 +51,9 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 
       if (!mounted) return;
       if (widget.returnToList) {
-        _replaceWithBsList(
-          saved: updated == true,
-          woNo: data['woNo']?.toString(),
-        );
+        _replaceWithBsList(message: message);
       } else {
-        Navigator.pop(context, updated);
+        Navigator.pop(context, message);
       }
     } catch (error) {
       if (!mounted) return;
@@ -64,12 +61,12 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
     }
   }
 
-  void _replaceWithBsList({bool saved = false, String? woNo}) {
+  void _replaceWithBsList({String? message}) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => BsList(
-          savedWoNo: saved ? woNo : null,
+          savedMessage: message,
         ),
       ),
     );
@@ -148,15 +145,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
-    final updated = await Navigator.push<bool>(
+    final message = await Navigator.push<String>(
       context,
       MaterialPageRoute(
         builder: (context) => BsEditScreen(data: widget.data),
       ),
     );
 
-    if (updated == true && mounted) {
-      Navigator.pop(context, true);
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
     }
   }
 

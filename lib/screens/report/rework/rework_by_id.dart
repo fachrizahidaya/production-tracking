@@ -204,7 +204,7 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -215,12 +215,9 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
 
       if (!mounted) return;
       if (widget.returnToList) {
-        _replaceWithReworkList(
-          saved: updated == true,
-          woNo: data['woNo']?.toString(),
-        );
+        _replaceWithReworkList(message: message);
       } else {
-        Navigator.pop(context, updated);
+        Navigator.pop(context, message);
       }
     } catch (error) {
       if (!mounted) return;
@@ -228,12 +225,12 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
     }
   }
 
-  void _replaceWithReworkList({bool saved = false, String? woNo}) {
+  void _replaceWithReworkList({String? message}) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => ReworkList(
-          savedWoNo: saved ? woNo : null,
+          savedMessage: message,
         ),
       ),
     );
@@ -349,14 +346,19 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
+<<<<<<< HEAD
     final updated = await Navigator.push<bool>(
 >>>>>>> 41ded02d (fix: rework)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => ReworkEditScreen(data: widget.data),
       ),
     );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
@@ -368,6 +370,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     }
   }
 

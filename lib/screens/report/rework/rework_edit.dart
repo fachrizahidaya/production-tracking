@@ -108,8 +108,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 >>>>>>> 264bcd0f (fix: evaluasi rework)
 =======
   List<Map<String, dynamic>> _attachments = [];
+<<<<<<< HEAD
   bool _attachmentsDirty = false;
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 01aa2117 (fix: attachment evaluation)
 
   String get _draftType => 'rework';
 
@@ -254,17 +257,21 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       if (draft.containsKey('attachments')) {
         final parsed = _parseAttachments(draft['attachments']);
         _attachments = parsed;
+<<<<<<< HEAD
         _attachmentsDirty = !_sameAttachments(
           parsed,
           _parseAttachments(widget.data['attachments']),
         );
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
 <<<<<<< HEAD
         parsedStep.clamp(1, 2),
 =======
@@ -282,6 +289,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
         parsedStep.clamp(1, 3),
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+        parsedStep.clamp(1, 2),
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       );
     });
   }
@@ -312,6 +322,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
@@ -322,6 +333,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -363,8 +377,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     setState(() => _saving = true);
 
     try {
+<<<<<<< HEAD
       await _reportService.updateReworkDetail(
 >>>>>>> 41ded02d (fix: rework)
+=======
+      final message = await _reportService.updateReworkDetail(
+>>>>>>> 01aa2117 (fix: attachment evaluation)
         id: widget.data['id'],
         reasons: _selectedReasons
             .map((reason) => reason['value'].toString())
@@ -373,6 +391,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
+<<<<<<< HEAD
 <<<<<<< HEAD
         attachments: _attachments,
       );
@@ -396,11 +415,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
         attachments: _attachmentsDirty ? _attachments : null,
 >>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
+=======
+        attachments: _attachments,
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
       if (!mounted) return;
-      Navigator.pop(context, true);
+      Navigator.pop(context, message);
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -439,7 +461,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
-    if (_visibleStep == 2) return true;
     return false;
   }
 
@@ -1265,15 +1286,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                     controller: _preventivePlanController,
                   ),
                 ),
-              ],
-              if (_visibleStep >= 3) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildAttachmentCard(),
                 ),
               ],
-              if (_visibleStep < 3) ...[
+              if (_visibleStep < 2) ...[
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1525,10 +1544,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           const SizedBox(height: 8),
           Wrap(
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             spacing: 8,
             runSpacing: 8,
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> 01aa2117 (fix: attachment evaluation)
             children: _selectedReasons
                 .map(
                   (item) => InputChip(
@@ -1601,25 +1623,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
       ),
     );
-  }
-
-  bool _sameAttachments(
-    List<Map<String, dynamic>> left,
-    List<Map<String, dynamic>> right,
-  ) {
-    if (left.length != right.length) return false;
-    for (var i = 0; i < left.length; i++) {
-      if (left[i]['id']?.toString() != right[i]['id']?.toString()) {
-        return false;
-      }
-      if (left[i]['path']?.toString() != right[i]['path']?.toString()) {
-        return false;
-      }
-      if ((left[i]['isNew'] == true) != (right[i]['isNew'] == true)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   List<Map<String, dynamic>> _parseAttachments(dynamic raw) {
@@ -1758,13 +1761,30 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     );
     if (image == null) return null;
 
-    final file = await _compressImage(image.path);
-    if (file == null) return null;
+    final fileExtension = image.path.split('.').last.toLowerCase();
+    const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
+    if (!allowed.contains(fileExtension)) {
+      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
+    }
 
+    final File file;
+    if (fileExtension == 'gif' || fileExtension == 'webp') {
+      file = File(image.path);
+    } else {
+      final compressed = await _compressImage(image.path);
+      if (compressed == null) return null;
+      file = compressed;
+    }
+
+    if (await file.length() > 10 * 1024 * 1024) {
+      throw Exception('Ukuran foto maksimal 10MB.');
+    }
+
+    final name = file.path.split('/').last;
     return {
-      'name': file.path.split('/').last,
+      'name': name,
       'path': file.path,
-      'extension': 'jpg',
+      'extension': name.split('.').last.toLowerCase(),
       'isNew': true,
     };
   }
@@ -1777,7 +1797,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       if (photo == null || !mounted) return;
       setState(() {
         _attachments = [..._attachments, photo];
-        _attachmentsDirty = true;
       });
       _persistDraft();
     } catch (e) {
@@ -1799,7 +1818,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         final next = List<Map<String, dynamic>>.from(_attachments);
         next[index] = photo;
         _attachments = next;
-        _attachmentsDirty = true;
       });
       _persistDraft();
     } catch (e) {
@@ -1834,7 +1852,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       final next = List<Map<String, dynamic>>.from(_attachments);
       next.removeAt(index);
       _attachments = next;
-      _attachmentsDirty = true;
     });
     _persistDraft();
   }
@@ -1914,24 +1931,22 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: _attachmentImage(
-                        _attachments[index],
-                        fit: BoxFit.contain,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(sheetContext, 'view'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: ColoredBox(
+                        color: Colors.black,
+                        child: _attachmentImage(
+                          _attachments[index],
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.visibility_outlined),
-                title: const Text('Lihat gambar'),
-                onTap: () => Navigator.pop(sheetContext, 'view'),
               ),
               ListTile(
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
@@ -1984,7 +1999,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               }
 
               return GestureDetector(
-                onTap: () => _showAttachmentActions(index),
+                onTap: () => _viewAttachment(index),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Stack(
@@ -1997,17 +2012,20 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                       Positioned(
                         right: 6,
                         bottom: 6,
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: const BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.more_horiz,
-                            color: Colors.white,
-                            size: 16,
+                        child: GestureDetector(
+                          onTap: () => _showAttachmentActions(index),
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: const BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.more_horiz,
+                              color: Colors.white,
+                              size: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -2030,8 +2048,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         style: _primaryActionButtonStyle.copyWith(
           minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
         ),
-        child: Text(
-          _visibleStep == 2 ? 'Tambah lampiran (opsional)' : 'Selanjutnya',
+        child: const Text(
+          'Selanjutnya',
           textAlign: TextAlign.center,
         ),
       ),
@@ -2543,6 +2561,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final canAdd = _controller.text.trim().length >= 8;
 
     return AnimatedPadding(
       duration: const Duration(milliseconds: 200),
@@ -2587,7 +2606,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: _submit,
+                      onPressed: canAdd ? _submit : null,
                       style: _primarySheetButtonStyle(),
                       child: const Text('Tambah'),
                     ),

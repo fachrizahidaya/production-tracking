@@ -19,6 +19,7 @@ class ReworkList extends StatefulWidget {
   final String search;
   final String status;
   final String? savedMessage;
+<<<<<<< HEAD
 
   const ReworkList(
       {super.key,
@@ -54,6 +55,8 @@ class ReworkList extends StatefulWidget {
   final String search;
   final String status;
   final String? savedWoNo;
+=======
+>>>>>>> 01aa2117 (fix: attachment evaluation)
 
   const ReworkList(
       {super.key,
@@ -70,8 +73,12 @@ class ReworkList extends StatefulWidget {
 >>>>>>> fcd6e08b (fix: rework)
 =======
       this.status = '',
+<<<<<<< HEAD
       this.savedWoNo});
 >>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
+=======
+      this.savedMessage});
+>>>>>>> 01aa2117 (fix: attachment evaluation)
 
   @override
   State<ReworkList> createState() => _ReworkListState();
@@ -138,6 +145,7 @@ class _ReworkListState extends State<ReworkList> {
 <<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 =======
     _status = widget.status;
 >>>>>>> 41ded02d (fix: rework)
@@ -151,6 +159,8 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
+=======
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -240,6 +250,7 @@ class _ReworkListState extends State<ReworkList> {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
         });
       }
@@ -247,6 +258,9 @@ class _ReworkListState extends State<ReworkList> {
 >>>>>>> 41ded02d (fix: rework)
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
         });
       }
 >>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
@@ -1956,27 +1970,27 @@ class _ReworkListState extends State<ReworkList> {
   Future<void> _openReworkDetail(ReworkListItem item) async {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
-    final updated = await Navigator.push<bool>(
+    final message = await Navigator.push<String>(
       context,
       MaterialPageRoute(
         builder: (context) => ReworkDetailLoadingScreen(id: item.id),
       ),
     );
 
-    if (updated == true && mounted) {
+    if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadReworkList();
       await _loadPendingCount();
       if (mounted) {
-        await _showSavedDialog(_workOrderNo(item));
+        await _showSavedDialog(message);
       }
     }
   }
 
-  Future<void> _showSavedDialog(String woNo) {
+  Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
       title: 'Perubahan Tersimpan',
-      message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
+      message: message,
     );
   }
 

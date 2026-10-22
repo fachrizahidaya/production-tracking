@@ -71,7 +71,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -84,6 +84,7 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       if (!mounted) return;
       if (widget.returnToList) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         _replaceWithGsmList(message: message);
       } else {
         Navigator.pop(context, message);
@@ -95,6 +96,11 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       } else {
         Navigator.pop(context, updated);
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+        _replaceWithGsmList(message: message);
+      } else {
+        Navigator.pop(context, message);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       }
     } catch (error) {
       if (!mounted) return;
@@ -103,19 +109,27 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithGsmList({String? message}) {
 =======
   void _replaceWithGsmList({bool saved = false, String? woNo}) {
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+  void _replaceWithGsmList({String? message}) {
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => GsmList(
 <<<<<<< HEAD
+<<<<<<< HEAD
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+          savedMessage: message,
+>>>>>>> 01aa2117 (fix: attachment evaluation)
         ),
       ),
     );
@@ -242,8 +256,12 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
+<<<<<<< HEAD
     final updated = await Navigator.push<bool>(
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => GsmEditScreen(data: widget.data),
@@ -251,11 +269,16 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     }
   }
 

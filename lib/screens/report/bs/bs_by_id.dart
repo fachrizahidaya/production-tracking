@@ -69,7 +69,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-      final updated = await Navigator.push<bool>(
+      final message = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (context) =>
@@ -80,6 +80,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 
       if (!mounted) return;
       if (widget.returnToList) {
+<<<<<<< HEAD
 <<<<<<< HEAD
         _replaceWithBsList(message: message);
       } else {
@@ -92,6 +93,11 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
       } else {
         Navigator.pop(context, updated);
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+        _replaceWithBsList(message: message);
+      } else {
+        Navigator.pop(context, message);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       }
     } catch (error) {
       if (!mounted) return;
@@ -100,19 +106,27 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithBsList({String? message}) {
 =======
   void _replaceWithBsList({bool saved = false, String? woNo}) {
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+  void _replaceWithBsList({String? message}) {
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => BsList(
 <<<<<<< HEAD
+<<<<<<< HEAD
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+          savedMessage: message,
+>>>>>>> 01aa2117 (fix: attachment evaluation)
         ),
       ),
     );
@@ -239,8 +253,12 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
   }
 
   Future<void> _openEditScreen() async {
+<<<<<<< HEAD
     final updated = await Navigator.push<bool>(
 >>>>>>> b2b87875 (feat: evaluasi bs)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> 01aa2117 (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => BsEditScreen(data: widget.data),
@@ -248,11 +266,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
 =======
     if (updated == true && mounted) {
       Navigator.pop(context, true);
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+>>>>>>> 01aa2117 (fix: attachment evaluation)
     }
   }
 

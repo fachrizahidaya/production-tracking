@@ -16,10 +16,14 @@ class BsList extends StatefulWidget {
   final String search;
   final String status;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? savedMessage;
 =======
   final String? savedWoNo;
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+  final String? savedMessage;
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 
   const BsList(
       {super.key,
@@ -29,10 +33,14 @@ class BsList extends StatefulWidget {
       this.search = '',
       this.status = '',
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.savedMessage});
 =======
       this.savedWoNo});
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+      this.savedMessage});
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 
   @override
   State<BsList> createState() => _BsListState();
@@ -75,6 +83,7 @@ class _BsListState extends State<BsList> {
 <<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 =======
     _status = widget.status.trim();
 =======
@@ -82,6 +91,8 @@ class _BsListState extends State<BsList> {
 >>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -160,10 +171,14 @@ class _BsListState extends State<BsList> {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
         });
       }
     } catch (e) {
@@ -1028,16 +1043,21 @@ class _BsListState extends State<BsList> {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => BsDetailLoadingScreen(id: item.id),
       ),
     );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadBsList();
@@ -1051,10 +1071,18 @@ class _BsListState extends State<BsList> {
       if (mounted) {
         await _showSavedDialog(_workOrderNo(item));
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      await _loadBsList();
+      await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
       }
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
@@ -1068,6 +1096,13 @@ class _BsListState extends State<BsList> {
       title: 'Perubahan Tersimpan',
       message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
 >>>>>>> aa02f1b (feat: evaluasi bs)
+=======
+  Future<void> _showSavedDialog(String message) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     );
   }
 

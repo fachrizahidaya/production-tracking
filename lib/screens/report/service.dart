@@ -478,6 +478,7 @@ import 'package:textile_tracking/models/report/wo_list.dart';
   }
 
   Future<String> updateReworkDetail({
+<<<<<<< HEAD
     required dynamic id,
     required List<String> reasons,
     required String actionPlan,
@@ -1533,6 +1534,8 @@ import 'package:textile_tracking/models/report/wo_list.dart';
   }
 
   Future<void> updateReworkDetail({
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     required dynamic id,
     required List<String> reasons,
     required String actionPlan,
@@ -1586,14 +1589,21 @@ import 'package:textile_tracking/models/report/wo_list.dart';
       for (var i = 0; i < reasons.length; i++) {
         request.fields['reasons[$i]'] = reasons[i];
       }
-      for (var i = 0; i < keptIds.length; i++) {
-        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      for (final keptId in keptIds) {
+        request.files.add(
+          http.MultipartFile.fromString(
+            'attachment_ids[]',
+            keptId.toString(),
+          ),
+        );
       }
       for (final file in newFiles) {
+        final path = file['path'].toString();
+        await _ensurePhotoAttachment(path);
         request.files.add(
           await http.MultipartFile.fromPath(
             'attachments[]',
-            file['path'].toString(),
+            path,
             filename: file['name']?.toString() ?? 'foto.jpg',
           ),
         );
@@ -1607,6 +1617,11 @@ import 'package:textile_tracking/models/report/wo_list.dart';
         _apiErrorMessage(response.body, 'Gagal memperbarui evaluasi rework'),
       );
     }
+
+    return _apiSuccessMessage(
+      response.body,
+      'Perubahan evaluasi rework sudah tersimpan.',
+    );
   }
 
   Future<void> updateReworkReasons({
@@ -1888,14 +1903,14 @@ import 'package:textile_tracking/models/report/wo_list.dart';
     };
   }
 
-  Future<void> updateBsDetail({
+  Future<String> updateBsDetail({
     required dynamic id,
     required String reason,
     required String actionPlan,
     required String preventivePlan,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    await _patchEvaluation(
+    return _patchEvaluation(
       id: id,
       missingIdMessage: 'ID BS tidak ditemukan',
       path: 'bs-evaluations',
@@ -1906,6 +1921,7 @@ import 'package:textile_tracking/models/report/wo_list.dart';
       },
       attachments: attachments,
       fallbackMessage: 'Gagal memperbarui evaluasi BS',
+      successMessage: 'Perubahan evaluasi BS sudah tersimpan.',
     );
   }
 
@@ -2051,14 +2067,14 @@ import 'package:textile_tracking/models/report/wo_list.dart';
     };
   }
 
-  Future<void> updateGsmDetail({
+  Future<String> updateGsmDetail({
     required dynamic id,
     required String reason,
     required String actionPlan,
     required String preventivePlan,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    await _patchEvaluation(
+    return _patchEvaluation(
       id: id,
       missingIdMessage: 'ID GSM tidak ditemukan',
       path: 'gsm-evaluations',
@@ -2069,16 +2085,18 @@ import 'package:textile_tracking/models/report/wo_list.dart';
       },
       attachments: attachments,
       fallbackMessage: 'Gagal memperbarui evaluasi GSM',
+      successMessage: 'Perubahan evaluasi GSM sudah tersimpan.',
     );
   }
 
-  Future<void> _patchEvaluation({
+  Future<String> _patchEvaluation({
     required dynamic id,
     required String missingIdMessage,
     required String path,
     required Map<String, dynamic> body,
     List<Map<String, dynamic>>? attachments,
     required String fallbackMessage,
+    required String successMessage,
   }) async {
     if (id == null || id.toString().trim().isEmpty) {
       throw Exception(missingIdMessage);
@@ -2128,14 +2146,21 @@ import 'package:textile_tracking/models/report/wo_list.dart';
         }
         request.fields[key] = value.toString();
       });
-      for (var i = 0; i < keptIds.length; i++) {
-        request.fields['attachment_ids[$i]'] = keptIds[i].toString();
+      for (final keptId in keptIds) {
+        request.files.add(
+          http.MultipartFile.fromString(
+            'attachment_ids[]',
+            keptId.toString(),
+          ),
+        );
       }
       for (final file in newFiles) {
+        final path = file['path'].toString();
+        await _ensurePhotoAttachment(path);
         request.files.add(
           await http.MultipartFile.fromPath(
             'attachments[]',
-            file['path'].toString(),
+            path,
             filename: file['name']?.toString() ?? 'foto.jpg',
           ),
         );
@@ -2147,6 +2172,32 @@ import 'package:textile_tracking/models/report/wo_list.dart';
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception(_apiErrorMessage(response.body, fallbackMessage));
     }
+
+    return _apiSuccessMessage(response.body, successMessage);
+  }
+
+  static const _photoExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
+  static const _maxPhotoBytes = 10 * 1024 * 1024;
+
+  Future<void> _ensurePhotoAttachment(String path) async {
+    final fileExtension = path.split('.').last.toLowerCase();
+    if (!_photoExtensions.contains(fileExtension)) {
+      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
+    }
+    if (await File(path).length() > _maxPhotoBytes) {
+      throw Exception('Ukuran foto maksimal 10MB.');
+    }
+  }
+
+  String _apiSuccessMessage(String body, String fallback) {
+    try {
+      final decoded = jsonDecode(body);
+      if (decoded is Map) {
+        final message = decoded['message']?.toString().trim();
+        if (message != null && message.isNotEmpty) return message;
+      }
+    } catch (_) {}
+    return fallback;
   }
 
   String _apiErrorMessage(String body, String fallback) {

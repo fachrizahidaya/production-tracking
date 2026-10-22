@@ -51,10 +51,14 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       final message = await Navigator.push<String>(
 =======
       final updated = await Navigator.push<bool>(
 >>>>>>> 85966df (fix: detail evaluasi)
+=======
+      final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting

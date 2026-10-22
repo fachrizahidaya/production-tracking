@@ -17,10 +17,14 @@ class GsmList extends StatefulWidget {
   final String search;
   final String status;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? savedMessage;
 =======
   final String? savedWoNo;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+  final String? savedMessage;
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 
   const GsmList(
       {super.key,
@@ -30,10 +34,14 @@ class GsmList extends StatefulWidget {
       this.search = '',
       this.status = '',
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.savedMessage});
 =======
       this.savedWoNo});
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+      this.savedMessage});
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 
   @override
   State<GsmList> createState() => _GsmListState();
@@ -76,6 +84,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 =======
     _status = widget.status.trim();
 =======
@@ -83,6 +92,8 @@ class _GsmListState extends State<GsmList> {
 >>>>>>> d256f82 (fix: UI evaluasi)
     _showSavedDialogAfterLoad = widget.savedWoNo != null;
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -161,10 +172,14 @@ class _GsmListState extends State<GsmList> {
         _showSavedDialogAfterLoad = false;
         WidgetsBinding.instance.addPostFrameCallback((_) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
         });
       }
     } catch (e) {
@@ -979,16 +994,21 @@ class _GsmListState extends State<GsmList> {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     final message = await Navigator.push<String>(
 =======
     final updated = await Navigator.push<bool>(
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> dc5b5fe (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => GsmDetailLoadingScreen(id: item.id),
       ),
     );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadGsmList();
@@ -1002,10 +1022,18 @@ class _GsmListState extends State<GsmList> {
       if (mounted) {
         await _showSavedDialog(_workOrderNo(item));
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      await _loadGsmList();
+      await _loadPendingCount();
+      if (mounted) {
+        await _showSavedDialog(message);
+>>>>>>> dc5b5fe (fix: attachment evaluation)
       }
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
@@ -1019,6 +1047,13 @@ class _GsmListState extends State<GsmList> {
       title: 'Perubahan Tersimpan',
       message: 'Perubahan untuk WO No $woNo sudah tersimpan.',
 >>>>>>> 53bbc04 (fix: bs, gsm, rework)
+=======
+  Future<void> _showSavedDialog(String message) {
+    return showAlertDialog(
+      context: context,
+      title: 'Perubahan Tersimpan',
+      message: message,
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     );
   }
 

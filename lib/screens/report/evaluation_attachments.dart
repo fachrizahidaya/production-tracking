@@ -19,6 +19,7 @@ List<Map<String, dynamic>> parseEvaluationAttachments(dynamic raw) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 bool sameEvaluationAttachments(
   List<Map<String, dynamic>> left,
@@ -38,6 +39,8 @@ bool sameEvaluationAttachments(
 }
 
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 bool evaluationAttachmentIsLocal(Map<String, dynamic> item) =>
     item['isNew'] == true;
 
@@ -184,11 +187,15 @@ class _EvaluationAttachmentEditorState
     if (image == null) return null;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     final fileExtension = image.path.split('.').last.toLowerCase();
     const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
     if (!allowed.contains(fileExtension)) {
       throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
     }
+<<<<<<< HEAD
 
     final File file;
     if (fileExtension == 'gif' || fileExtension == 'webp') {
@@ -211,12 +218,32 @@ class _EvaluationAttachmentEditorState
 =======
     final file = await _compressImage(image.path);
     if (file == null) return null;
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
 
+    final File file;
+    if (fileExtension == 'gif' || fileExtension == 'webp') {
+      file = File(image.path);
+    } else {
+      final compressed = await _compressImage(image.path);
+      if (compressed == null) return null;
+      file = compressed;
+    }
+
+    if (await file.length() > 10 * 1024 * 1024) {
+      throw Exception('Ukuran foto maksimal 10MB.');
+    }
+
+    final name = file.path.split('/').last;
     return {
-      'name': file.path.split('/').last,
+      'name': name,
       'path': file.path,
+<<<<<<< HEAD
       'extension': 'jpg',
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+      'extension': name.split('.').last.toLowerCase(),
+>>>>>>> dc5b5fe (fix: attachment evaluation)
       'isNew': true,
     };
   }
@@ -243,6 +270,7 @@ class _EvaluationAttachmentEditorState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   Future<void> _replaceAttachment(int index) async {
     if (index < 0 || index >= widget.attachments.length) return;
@@ -260,6 +288,8 @@ class _EvaluationAttachmentEditorState
   }
 
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
   Future<void> _deleteAttachment(int index) async {
     if (index < 0 || index >= widget.attachments.length) return;
     final confirmed = await showDialog<bool>(
@@ -321,6 +351,7 @@ class _EvaluationAttachmentEditorState
                     children: [
                       Expanded(
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         child: OutlinedButton.icon(
                           onPressed: () async {
@@ -342,6 +373,8 @@ class _EvaluationAttachmentEditorState
                       const SizedBox(width: 12),
                       Expanded(
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                         child: ElevatedButton.icon(
                           onPressed: () async {
                             Navigator.pop(dialogContext);
@@ -383,6 +416,9 @@ class _EvaluationAttachmentEditorState
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                 child: GestureDetector(
                   onTap: () => Navigator.pop(sheetContext, 'view'),
                   child: ClipRRect(
@@ -395,6 +431,7 @@ class _EvaluationAttachmentEditorState
                           widget.attachments[index],
                           fit: BoxFit.contain,
                         ),
+<<<<<<< HEAD
 =======
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
@@ -406,12 +443,15 @@ class _EvaluationAttachmentEditorState
                         widget.attachments[index],
                         fit: BoxFit.contain,
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                       ),
                     ),
                   ),
                 ),
               ),
               ListTile(
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                 leading: const Icon(Icons.visibility_outlined),
@@ -425,6 +465,8 @@ class _EvaluationAttachmentEditorState
               ),
               ListTile(
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
                 title: const Text(
                   'Hapus gambar',
@@ -442,9 +484,12 @@ class _EvaluationAttachmentEditorState
     if (!mounted || action == null) return;
     if (action == 'view') await _viewAttachment(index);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     if (action == 'edit') await _replaceAttachment(index);
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> dc5b5fe (fix: attachment evaluation)
     if (action == 'delete') await _deleteAttachment(index);
   }
 
@@ -476,10 +521,14 @@ class _EvaluationAttachmentEditorState
 
               return GestureDetector(
 <<<<<<< HEAD
+<<<<<<< HEAD
                 onTap: () => _viewAttachment(index),
 =======
                 onTap: () => _showAttachmentActions(index),
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+                onTap: () => _viewAttachment(index),
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Stack(
@@ -489,6 +538,7 @@ class _EvaluationAttachmentEditorState
                         color: Colors.grey.shade200,
                         child: _attachmentImage(widget.attachments[index]),
                       ),
+<<<<<<< HEAD
 <<<<<<< HEAD
                       Positioned(
                         right: 6,
@@ -525,6 +575,26 @@ class _EvaluationAttachmentEditorState
                               color: Colors.white,
                               size: 16,
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
+=======
+                      Positioned(
+                        right: 6,
+                        bottom: 6,
+                        child: GestureDetector(
+                          onTap: () => _showAttachmentActions(index),
+                          child: const DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: Icon(
+                                Icons.more_horiz,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+>>>>>>> dc5b5fe (fix: attachment evaluation)
                             ),
                           ),
                         ),

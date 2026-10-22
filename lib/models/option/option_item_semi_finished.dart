@@ -77,6 +77,7 @@ class OptionItemSemiFinishedService
     String? process,
     List<String>? baseCodes,
     List<String>? colorCodes,
+    List<String>? variantCodes,
     String searchQuery = '',
   }) async {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
@@ -110,6 +111,10 @@ class OptionItemSemiFinishedService
           // LBU,LBU
           if (colorCodes != null && colorCodes.isNotEmpty)
             'color_code': colorCodes.join(','),
+
+          // 30,30
+          if (variantCodes != null && variantCodes.isNotEmpty)
+            'variant_code': variantCodes.join(','),
 
           if (searchQuery.isNotEmpty) 'search': searchQuery,
         },
@@ -147,12 +152,14 @@ class OptionItemSemiFinishedService
     String process = 'dyeing',
     List<String> baseCodes = const [],
     List<String> colorCodes = const [],
+    List<String> variantCodes = const [],
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
       process: process,
       baseCodes: baseCodes,
       colorCodes: colorCodes,
+      variantCodes: variantCodes,
       searchQuery: searchQuery,
     );
   }

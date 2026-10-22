@@ -210,6 +210,7 @@ class _CreateProcessState extends State<CreateProcess> {
             widget.label.toString().trim().toLowerCase().replaceAll(' ', '_'),
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final semiFinishedItems = semiFinishedService.dataListOption;

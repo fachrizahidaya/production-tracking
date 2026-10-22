@@ -273,6 +273,7 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                     .replaceAll(' ', '_'),
                 baseCodes: params['base_codes'] ?? [],
                 colorCodes: params['color_codes'] ?? [],
+                variantCodes: params['variant_codes'] ?? [],
               );
 
               final semiFinishedItems = semiFinishedService.dataListOption;

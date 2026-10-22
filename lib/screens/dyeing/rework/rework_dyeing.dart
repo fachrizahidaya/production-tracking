@@ -147,6 +147,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         process: 'dyeing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final semiFinishedItems = semiFinishedService.dataListOption;

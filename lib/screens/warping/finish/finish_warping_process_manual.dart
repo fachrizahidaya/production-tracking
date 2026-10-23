@@ -266,6 +266,10 @@ class _FinishWarpingProcessManualState
 
     setState(() {
       woData = data;
+      final warpingType = _readWarpingType(data);
+      if (warpingType != null) {
+        widget.form?['warping_type'] = warpingType;
+      }
     });
   }
 
@@ -288,7 +292,10 @@ class _FinishWarpingProcessManualState
           data['machines'] ?? [],
         );
         widget.form?['machine_id'] = data['machine']?['id'];
-        widget.form?['warping_type'] = data['warping_type'];
+        widget.form?['warping_type'] = _readWarpingType(data) ??
+            _readWarpingType(data['order_greige']) ??
+            _readWarpingType(woData) ??
+            _readWarpingType(widget.form?['warping_type']);
         widget.form?['yarn_qty'] = data['yarn_qty'];
         widget.form?['beam_qty'] = data['beam_qty'];
         widget.form?['section'] = data['section'];
@@ -319,12 +326,52 @@ class _FinishWarpingProcessManualState
     }
   }
 
+  dynamic _readWarpingType(dynamic source, [int depth = 0]) {
+    if (source == null) return null;
+
+    if (source is! Map) {
+      final text = source.toString().trim();
+      return text.isEmpty ? null : source;
+    }
+
+    final direct = source['warping_type'];
+    if (direct != null &&
+        direct is! Map &&
+        direct.toString().trim().isNotEmpty) {
+      return direct;
+    }
+
+    if (depth >= 3) return null;
+
+    for (final value in source.values) {
+      if (value is Map) {
+        final found = _readWarpingType(value, depth + 1);
+        if (found != null) return found;
+      }
+    }
+
+    return null;
+  }
+
+  String _formatWarpingType(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    return value
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
   void _selectWorkOrder() {
     showSelectDialog(
       context: context,
       title: 'Work Order',
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
+      badgeKey: 'warping_type',
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -333,6 +380,7 @@ class _FinishWarpingProcessManualState
         setState(() {
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
+          widget.form?['warping_type'] = _readWarpingType(selected);
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -634,6 +682,11 @@ class _FinishWarpingProcessManualState
                                   selectedValue: widget.form?['order_greige_id']
                                           ?.toString() ??
                                       '',
+                                  badge: _formatWarpingType(
+                                    _readWarpingType(widget.form?['warping_type']) ??
+                                        _readWarpingType(woData) ??
+                                        _readWarpingType(processData),
+                                  ),
                                   required: true,
                                 ),
                               ),
@@ -647,6 +700,8 @@ class _FinishWarpingProcessManualState
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+                                    wrapCrossAxisAlignment:
+                                        WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),

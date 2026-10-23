@@ -8,7 +8,8 @@ Future<List<dynamic>?> showSelectDialog(
     isLoading,
     selected,
     handleChangeValue,
-    isFetching}) async {
+    isFetching,
+    String? badgeKey}) async {
   return showDialog<List<dynamic>>(
     context: context,
     builder: (context) {
@@ -20,6 +21,7 @@ Future<List<dynamic>?> showSelectDialog(
               label: title,
               options: option,
               selected: selected,
+              badgeKey: badgeKey,
               handleChangeValue: handleChangeValue,
             );
     },

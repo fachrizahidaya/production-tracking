@@ -41,6 +41,7 @@ class _WeavingSectionState extends State<WeavingSection> {
     int index,
   ) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(

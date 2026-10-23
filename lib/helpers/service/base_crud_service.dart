@@ -975,7 +975,7 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       if (response.statusCode == 200) {
         await refetchItems(context);
 
-        return '${jsonDecode(responseBody)['message']}. Proses dapat dilanjutkan atau WO sudah selesai.';
+        return '${jsonDecode(responseBody)['message']}. Proses dapat dilanjutkan.';
       }
 
       final error = jsonDecode(responseBody);

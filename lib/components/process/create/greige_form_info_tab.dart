@@ -109,12 +109,6 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     return '${formatNumber(value)} $unit';
   }
 
-  String _orderQtyUnit(Map<String, dynamic> data) {
-    final spkItem = _mapValue(_mapValue(data['work_order_item'])['spk_item']);
-    final weightUnit = _mapValue(spkItem['weight_unit']);
-    return _display(weightUnit['code'], fallback: 'KG');
-  }
-
   String _pasangText(Map<String, dynamic> data) {
     final pasangQty = data['pasang_qty'];
     final sectionQty = data['section_qty'];
@@ -203,12 +197,12 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
         TemplateCard(
           title: 'Kebutuhan Benang',
           icon: Icons.layers_outlined,
-          child: _buildYarnTable(yarnItems),
+          child: _buildYarnTable(yarnItems, data),
         ),
         TemplateCard(
           title: 'Kebutuhan Loom Beam',
           icon: Icons.inventory_2_outlined,
-          child: _buildLoomBeamTable(loomBeams),
+          child: _buildLoomBeamTable(loomBeams, data),
         ),
         TemplateCard(
           title: 'Catatan',
@@ -299,29 +293,29 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
           Expanded(
             child: _buildQuickInfoItem(
               icon: Icons.scale_outlined,
-              label: 'Jumlah Order',
-              value: _withUnit(data['order_qty'], _orderQtyUnit(data)),
+              label: 'Qty Order',
+              value: _withUnit(data['order_qty'], 'PCS'),
               isTablet: isTablet,
             ),
           ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.view_week_outlined,
-              label: 'Warping Type',
-              value: _formatType(data['warping_type']),
-              isTablet: isTablet,
-            ),
-          ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.view_agenda_outlined,
-              label: 'Pasang',
-              value: _pasangText(data),
-              isTablet: isTablet,
-            ),
-          ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.view_week_outlined,
+          //     label: 'Warping Type',
+          //     value: _formatType(data['warping_type']),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.view_agenda_outlined,
+          //     label: 'Pasang',
+          //     value: _pasangText(data),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -374,10 +368,60 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     );
   }
 
-  Widget _buildYarnTable(List<Map<String, dynamic>> items) {
+  String _formatYarnLot(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '-';
+    return formatNumber(value);
+  }
+
+  String _formatWarpingType(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    final text = value.toString().toLowerCase();
+    if (text.contains('double')) return 'Double';
+    if (text.contains('single')) return 'Single';
+
+    return value
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  Widget _buildWarpingTypeBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.18),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: CustomTheme().buttonColor('primary'),
+          fontSize: CustomTheme().fontSize('xs'),
+          fontWeight: CustomTheme().fontWeight('bold'),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildYarnTable(
+    List<Map<String, dynamic>> items,
+    Map<String, dynamic> data,
+  ) {
     if (items.isEmpty) {
       return NoData();
     }
+
+    final design = _mapValue(data['design']);
+    final warpingTypeLabel = _formatWarpingType(
+      design['warping_type'] ?? data['warping_type'],
+    );
 
     return _buildDataTable(
       columns: const [
@@ -385,13 +429,13 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
           label: Text('Kode Warna'),
         ),
         DataColumn(
-          label: Text('Jumlah Benang'),
+          label: Text('Jml. Bng'),
         ),
         DataColumn(
           label: Text('NE'),
         ),
         DataColumn(
-          label: Text('Lot'),
+          label: Text('Lot Benang'),
         ),
       ],
       rows: items
@@ -406,17 +450,24 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 DataCell(
                   _richUnit(
                     item['yarn_qty'],
-                    'PCS',
+                    'Helai',
+                  ),
+                ),
+                DataCell(
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _display(item['ne']),
+                      ),
+                      if (warpingTypeLabel.isNotEmpty)
+                        _buildWarpingTypeBadge(warpingTypeLabel),
+                    ].separatedBy(CustomTheme().hGap('sm')),
                   ),
                 ),
                 DataCell(
                   Text(
-                    _display(item['ne']),
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    _display(item['lot']),
+                    _formatYarnLot(design['yarn_lot'] ?? item['yarn_lot']),
                   ),
                 ),
               ],
@@ -426,8 +477,13 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     );
   }
 
-  Widget _buildLoomBeamTable(List<Map<String, dynamic>> items) {
+  Widget _buildLoomBeamTable(
+    List<Map<String, dynamic>> items,
+    Map<String, dynamic> data,
+  ) {
     if (items.isEmpty) return NoData();
+
+    final design = _mapValue(data['design']);
 
     return _buildDataTable(
       columns: const [
@@ -443,9 +499,15 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
               cells: [
                 DataCell(_richUnit(item['yarn_qty'], 'PCS')),
                 DataCell(_richUnit(item['length'], 'M')),
-                DataCell(_richUnit(item['beam_width'], 'M')),
-                DataCell(Text(_display(item['machine_no']))),
-                DataCell(Text(_display(item['beam_ab']))),
+                DataCell(
+                  _richUnit(design['beam_width'] ?? item['beam_width'], 'M'),
+                ),
+                DataCell(
+                  Text(_display(design['machine_no'] ?? item['machine_no'])),
+                ),
+                DataCell(
+                  Text(_display(design['beam_ab'] ?? item['beam_ab'])),
+                ),
               ],
             ),
           )

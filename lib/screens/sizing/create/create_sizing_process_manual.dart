@@ -34,6 +34,7 @@ class CreateSizingProcessManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchGreigeOrder: (service) => service.fetchSizingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
+      optionBadgeKey: 'warping_type',
       fetchMachine: (service) => service.fetchOptionsSizing(),
       getMachineOptions: (service) => service.dataListOption,
     );

@@ -275,7 +275,7 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
           if (withBrokenYarns)
             _buildSectionCard(
-              title: 'Catatan Benang Putus',
+              title: 'Benang Putus',
               icon: Icons.content_cut_outlined,
               child: _buildBrokenYarns(false),
             ),
@@ -337,7 +337,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
               if (withBrokenYarns)
                 _buildSectionCard(
-                  title: 'Catatan Benang Putus',
+                  title: 'Benang Putus',
                   icon: Icons.content_cut_outlined,
                   child: _buildBrokenYarns(true),
                 ),
@@ -775,7 +775,13 @@ class GreigeProcessDetailList extends StatelessWidget {
       return NoData();
     }
 
-    return _buildInfoGrid(rows, isTablet);
+    return _buildInfoGrid(
+      rows,
+      isTablet,
+      crossAxisAlignment: processName == 'Warping'
+          ? WrapCrossAlignment.start
+          : WrapCrossAlignment.center,
+    );
   }
 
   Widget _buildBrokenYarns(bool isTablet) {
@@ -805,6 +811,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     List<Map<String, dynamic>> items,
     bool isTablet, {
     bool showIcon = true,
+    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.center,
   }) {
     if (items.isEmpty) {
       return NoData();
@@ -813,6 +820,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     return Wrap(
       spacing: 16,
       runSpacing: 16,
+      crossAxisAlignment: crossAxisAlignment,
       children: items.map((item) {
         final width = isTablet ? 220.0 : double.infinity;
 
@@ -988,6 +996,10 @@ class GreigeProcessDetailList extends StatelessWidget {
       return NoData();
     }
 
+    final warpingTypeLabel = _formatWarpingType(
+      design['warping_type'] ?? orderGreige['warping_type'],
+    );
+
     return Column(
       children: yarnItems
           .map((item) {
@@ -995,10 +1007,19 @@ class GreigeProcessDetailList extends StatelessWidget {
               children: [
                 _buildInfoLine('Kode Warna', _display(item['color_code'])),
                 _buildInfoLine(
-                    'Jumlah Benang', _withUnit(item['yarn_qty'], 'PCS')),
+                    'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
                 if (item['ne'] != null)
-                  _buildInfoLine('Ne', _display(item['ne'])),
-                _buildInfoLine('Lot Benang', _display(design['yarn_lot'])),
+                  _buildInfoLine(
+                    'Ne',
+                    _display(item['ne']),
+                    trailing: warpingTypeLabel.isEmpty
+                        ? null
+                        : _buildWarpingTypeBadge(warpingTypeLabel),
+                  ),
+                _buildInfoLine(
+                  'Lot Benang',
+                  _formatYarnLot(design['yarn_lot']),
+                ),
               ],
             );
           })
@@ -1021,15 +1042,15 @@ class GreigeProcessDetailList extends StatelessWidget {
           .map((item) {
             return _buildDataBox(
               children: [
-                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
+                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
+                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine(
                     'Lebar Beam', _withUnit(design['beam_width'], 'M')),
-                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
-                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine('No. MC', _display(design['machine_no'])),
-                _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
-                _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
-                _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
+                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
+                // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
+                // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
+                // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
               ],
             );
           })
@@ -1054,7 +1075,28 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoLine(String label, String value) {
+  Widget _buildInfoLine(String label, String value, {Widget? trailing}) {
+    final valueChildren = <Widget>[
+      Flexible(
+        child: Text(
+          value,
+          textAlign: TextAlign.right,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: CustomTheme().fontSize('sm'),
+            color: Colors.grey[800],
+            fontWeight: CustomTheme().fontWeight('bold'),
+          ),
+        ),
+      ),
+    ];
+
+    if (trailing != null) {
+      valueChildren.add(const SizedBox(width: 8));
+      valueChildren.add(trailing);
+    }
+
     return Row(
       children: [
         Expanded(
@@ -1068,19 +1110,55 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
         ),
         Flexible(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('sm'),
-              color: Colors.grey[800],
-              fontWeight: CustomTheme().fontWeight('bold'),
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: valueChildren,
           ),
         ),
       ].separatedBy(CustomTheme().hGap('md')),
+    );
+  }
+
+  String _formatYarnLot(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '-';
+    return formatNumber(value);
+  }
+
+  String _formatWarpingType(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    final text = value.toString().toLowerCase();
+    if (text.contains('double')) return 'Double';
+    if (text.contains('single')) return 'Single';
+
+    return value
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  Widget _buildWarpingTypeBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.18),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: CustomTheme().buttonColor('primary'),
+          fontSize: CustomTheme().fontSize('xs'),
+          fontWeight: CustomTheme().fontWeight('bold'),
+        ),
+      ),
     );
   }
 

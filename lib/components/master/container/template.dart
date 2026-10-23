@@ -22,6 +22,7 @@ class TemplateCard extends StatelessWidget {
       decoration: CustomTheme().cardTheme(),
       clipBehavior: Clip.antiAlias,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           /// Header
           Container(

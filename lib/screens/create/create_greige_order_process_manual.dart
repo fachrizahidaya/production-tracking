@@ -28,6 +28,7 @@ class CreateGreigeOrderProcessManual extends StatefulWidget {
   final processService;
   final processId;
   final idProcess;
+  final String? optionBadgeKey;
 
   const CreateGreigeOrderProcessManual({
     super.key,
@@ -49,6 +50,7 @@ class CreateGreigeOrderProcessManual extends StatefulWidget {
     this.processId,
     this.idProcess,
     this.isMaklon,
+    this.optionBadgeKey,
   });
 
   @override
@@ -175,6 +177,33 @@ class _CreateGreigeOrderProcessManualState
     });
   }
 
+  dynamic _readWarpingType(dynamic source, [int depth = 0]) {
+    if (source == null) return null;
+
+    if (source is! Map) {
+      final text = source.toString().trim();
+      return text.isEmpty ? null : source;
+    }
+
+    final direct = source['warping_type'];
+    if (direct != null &&
+        direct is! Map &&
+        direct.toString().trim().isNotEmpty) {
+      return direct;
+    }
+
+    if (depth >= 3) return null;
+
+    for (final value in source.values) {
+      if (value is Map) {
+        final found = _readWarpingType(value, depth + 1);
+        if (found != null) return found;
+      }
+    }
+
+    return null;
+  }
+
   void _applyWarpingInitialData(Map<String, dynamic> source) {
     if (widget.label != 'Warping') return;
 
@@ -254,7 +283,8 @@ class _CreateGreigeOrderProcessManualState
       setState(() {
         greigeOrderData = detailData;
         widget.form?['no_greige_order'] = detailData['wo_no']?.toString();
-        widget.form?['warping_type'] = detailData['warping_type'];
+        widget.form?['warping_type'] =
+            _readWarpingType(detailData) ?? _readWarpingType(selectedData);
         _applyWarpingInitialData(detailData);
       });
     } catch (_) {
@@ -288,6 +318,7 @@ class _CreateGreigeOrderProcessManualState
         return SelectDialog(
           label: 'Order Greige',
           options: greigeOrderOption,
+          badgeKey: widget.optionBadgeKey,
           selected: widget.form?['order_greige_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
             final greigeOrderId = selected['value']?.toString();
@@ -300,7 +331,7 @@ class _CreateGreigeOrderProcessManualState
               widget.form?['order_greige_id'] = greigeOrderId;
               widget.form?['no_greige_order'] =
                   selectedData['wo_no']?.toString();
-              widget.form?['warping_type'] = selectedData['warping_type'];
+              widget.form?['warping_type'] = _readWarpingType(selectedData);
               greigeOrderData = selectedData;
               _applyWarpingInitialData(selectedData);
             });

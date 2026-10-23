@@ -11,6 +11,7 @@ class SelectDialog extends StatefulWidget {
   final bool isManyOption;
   final bool isLoading;
   final bool hasMoreData;
+  final String? badgeKey;
 
   final Function(String)? onSearch;
   final Function()? onLoadMore;
@@ -25,6 +26,7 @@ class SelectDialog extends StatefulWidget {
       this.isManyOption = false,
       this.hasMoreData = false,
       this.isLoading = false,
+      this.badgeKey,
       this.onLoadMore,
       this.onSearch});
 
@@ -49,14 +51,50 @@ class _SelectDialogState extends State<SelectDialog> {
   }
 
   _searchDataOption(value) {
+    final query = value.toString().toLowerCase();
+
     setState(() {
-      _dataList = widget.options
-          .where((element) => element['label']
-              .toString()
-              .toLowerCase()
-              .contains(value.toLowerCase()))
-          .toList();
+      _dataList = widget.options.where((element) {
+        final label = element['label'].toString().toLowerCase();
+        final badge = _badgeText(element)?.toLowerCase() ?? '';
+
+        return label.contains(query) || badge.contains(query);
+      }).toList();
     });
+  }
+
+  String? _badgeText(dynamic item) {
+    final key = widget.badgeKey;
+    if (key == null || item is! Map) return null;
+
+    final raw = _badgeValue(item, key);
+    if (raw == null || raw.toString().trim().isEmpty) return null;
+
+    return raw
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
+  }
+
+  dynamic _badgeValue(Map item, String key, [int depth = 0]) {
+    final direct = item[key];
+    if (direct != null && direct is! Map && direct.toString().trim().isNotEmpty) {
+      return direct;
+    }
+
+    if (depth >= 3) return null;
+
+    for (final value in item.values) {
+      if (value is Map) {
+        final found = _badgeValue(value, key, depth + 1);
+        if (found != null) return found;
+      }
+    }
+
+    return null;
   }
 
   void _handleScroll() {
@@ -162,6 +200,7 @@ class _SelectDialogState extends State<SelectDialog> {
                           }
 
                           final item = listData[index];
+                          final badgeText = _badgeText(item);
 
                           final isSelected =
                               item['value'].toString() == widget.selected;
@@ -192,10 +231,8 @@ class _SelectDialogState extends State<SelectDialog> {
                                       ),
                                     ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
+                                      Flexible(
                                         child: Text(
                                           item['label'],
                                           style: TextStyle(
@@ -205,9 +242,41 @@ class _SelectDialogState extends State<SelectDialog> {
                                           ),
                                         ),
                                       ),
-                                      if (isSelected)
+                                      if (badgeText != null) ...[
+                                        SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2, horizontal: 8),
+                                          decoration: BoxDecoration(
+                                            color: CustomTheme()
+                                                .buttonColor('primary')
+                                                .withOpacity(0.08),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: CustomTheme()
+                                                  .buttonColor('primary')
+                                                  .withOpacity(0.18),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            badgeText,
+                                            style: TextStyle(
+                                              color: CustomTheme()
+                                                  .buttonColor('primary'),
+                                              fontSize:
+                                                  CustomTheme().fontSize('sm'),
+                                              fontWeight: CustomTheme()
+                                                  .fontWeight('bold'),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      if (isSelected) ...[
+                                        SizedBox(width: 8),
                                         Icon(Icons.check_circle,
                                             color: Colors.green, size: 20),
+                                      ],
                                     ],
                                   ),
                                 ],

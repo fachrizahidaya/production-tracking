@@ -60,7 +60,7 @@ class GreigeProcessEditLayout extends StatelessWidget {
                             child: const TabBar(
                               tabs: [
                                 Tab(text: 'Mesin'),
-                                Tab(text: 'Info Greige Order'),
+                                Tab(text: 'Info Order Greige'),
                               ],
                             ),
                           ),

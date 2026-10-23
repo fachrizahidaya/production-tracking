@@ -70,7 +70,7 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
       child: Scaffold(
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
-          title: 'Greige Order Detail',
+          title: 'Detail Order Greige',
           onReturn: () {
             Navigator.pop(context);
           },

@@ -130,7 +130,50 @@ class _FinishWeavingProcessManualState
 
     setState(() {
       woData = _greigeOrderService.dataView;
+      final warpingType = _readWarpingType(woData);
+      if (warpingType != null) {
+        widget.form?['warping_type'] = warpingType;
+      }
     });
+  }
+
+  dynamic _readWarpingType(dynamic source, [int depth = 0]) {
+    if (source == null) return null;
+
+    if (source is! Map) {
+      final text = source.toString().trim();
+      return text.isEmpty ? null : source;
+    }
+
+    final direct = source['warping_type'];
+    if (direct != null &&
+        direct is! Map &&
+        direct.toString().trim().isNotEmpty) {
+      return direct;
+    }
+
+    if (depth >= 3) return null;
+
+    for (final value in source.values) {
+      if (value is Map) {
+        final found = _readWarpingType(value, depth + 1);
+        if (found != null) return found;
+      }
+    }
+
+    return null;
+  }
+
+  String _formatWarpingType(dynamic value) {
+    if (value == null || value.toString().trim().isEmpty) return '';
+
+    return value
+        .toString()
+        .split('_')
+        .map((word) => word.isEmpty
+            ? word
+            : '${word[0].toUpperCase()}${word.substring(1)}')
+        .join(' ');
   }
 
   Future<void> _getProcessView(dynamic id) async {
@@ -149,6 +192,9 @@ class _FinishWeavingProcessManualState
           processData['machines'] ?? [],
         );
         widget.form?['machine_id'] = processData['machine']?['id'];
+        widget.form?['warping_type'] = _readWarpingType(processData) ??
+            _readWarpingType(woData) ??
+            _readWarpingType(widget.form?['warping_type']);
         widget.form?['skip_shearing'] = processData['skip_shearing'];
         widget.form?['qty'] = processData['qty'];
         widget.form?['weight'] = processData['weight'];
@@ -181,6 +227,7 @@ class _FinishWeavingProcessManualState
       title: 'Work Order',
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
+      badgeKey: 'warping_type',
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -189,6 +236,7 @@ class _FinishWeavingProcessManualState
         setState(() {
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
+          widget.form?['warping_type'] = _readWarpingType(selected);
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -435,6 +483,12 @@ class _FinishWeavingProcessManualState
                                   selectedValue: widget.form?['order_greige_id']
                                           ?.toString() ??
                                       '',
+                                  badge: _formatWarpingType(
+                                    _readWarpingType(
+                                            widget.form?['warping_type']) ??
+                                        _readWarpingType(woData) ??
+                                        _readWarpingType(processData),
+                                  ),
                                   required: true,
                                 ),
                               ),

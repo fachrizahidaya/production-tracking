@@ -41,9 +41,13 @@ class CreateGreigeOrderProcessManual extends StatefulWidget {
   final processId;
   final idProcess;
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? optionBadgeKey;
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+  final String? optionBadgeKey;
+>>>>>>> c940e94a (fix:)
 
   const CreateGreigeOrderProcessManual({
     super.key,
@@ -66,9 +70,13 @@ class CreateGreigeOrderProcessManual extends StatefulWidget {
     this.idProcess,
     this.isMaklon,
 <<<<<<< HEAD
+<<<<<<< HEAD
     this.optionBadgeKey,
 =======
 >>>>>>> a1ea7df (feat: warping)
+=======
+    this.optionBadgeKey,
+>>>>>>> c940e94a (fix:)
   });
 
   @override
@@ -276,6 +284,9 @@ class _CreateGreigeOrderProcessManualState
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   dynamic _readWarpingType(dynamic source, [int depth = 0]) {
     if (source == null) return null;
 
@@ -303,8 +314,11 @@ class _CreateGreigeOrderProcessManualState
     return null;
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+>>>>>>> c940e94a (fix:)
   void _applyWarpingInitialData(Map<String, dynamic> source) {
     if (widget.label != 'Warping') return;
 
@@ -414,6 +428,9 @@ class _CreateGreigeOrderProcessManualState
         greigeOrderData = detailData;
         widget.form?['no_greige_order'] = detailData['wo_no']?.toString();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
         widget.form?['warping_type'] =
             _readWarpingType(detailData) ?? _readWarpingType(selectedData);
         _applyWarpingInitialData(detailData);
@@ -464,6 +481,7 @@ class _CreateGreigeOrderProcessManualState
           label: 'Order Greige',
           options: greigeOrderOption,
           badgeKey: widget.optionBadgeKey,
+<<<<<<< HEAD
           selected: widget.form?['order_greige_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
 =======
@@ -472,6 +490,8 @@ class _CreateGreigeOrderProcessManualState
           label: 'Order Greige',
 >>>>>>> 3d28a283 (fix: mulai warping)
           options: greigeOrderOption,
+=======
+>>>>>>> c940e94a (fix:)
           selected: widget.form?['order_greige_id']?.toString() ?? '',
           handleChangeValue: (selected) async {
 <<<<<<< HEAD

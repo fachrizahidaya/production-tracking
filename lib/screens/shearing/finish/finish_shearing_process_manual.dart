@@ -174,6 +174,9 @@ class _FinishShearingProcessManualState
     setState(() {
       woData = _greigeOrderService.dataView;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
       final warpingType = _readWarpingType(woData);
       if (warpingType != null) {
         widget.form?['warping_type'] = warpingType;
@@ -220,11 +223,14 @@ class _FinishShearingProcessManualState
         .join(' ');
   }
 
+<<<<<<< HEAD
 =======
     });
   }
 
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> c940e94a (fix:)
   Future<void> _getProcessView(dynamic id) async {
     setState(() => _firstLoading = true);
 
@@ -246,6 +252,7 @@ class _FinishShearingProcessManualState
         widget.form?['warping_type'] = _readWarpingType(processData) ??
             _readWarpingType(woData) ??
             _readWarpingType(widget.form?['warping_type']);
+<<<<<<< HEAD
 =======
       setState(() {
         processData = _shearingService.dataView['data'];
@@ -264,6 +271,8 @@ class _FinishShearingProcessManualState
         );
         widget.form?['machine_id'] = processData['machine']?['id'];
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+>>>>>>> c940e94a (fix:)
         widget.form?['qty'] = processData['qty'];
         widget.form?['weight'] = processData['weight'];
         widget.form?['order_greige_id'] = processData['order_greige_id'];
@@ -303,9 +312,13 @@ class _FinishShearingProcessManualState
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
 <<<<<<< HEAD
+<<<<<<< HEAD
       badgeKey: 'warping_type',
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+      badgeKey: 'warping_type',
+>>>>>>> c940e94a (fix:)
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -315,9 +328,13 @@ class _FinishShearingProcessManualState
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
           widget.form?['warping_type'] = _readWarpingType(selected);
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+          widget.form?['warping_type'] = _readWarpingType(selected);
+>>>>>>> c940e94a (fix:)
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -612,14 +629,20 @@ class _FinishShearingProcessManualState
                                           ?.toString() ??
                                       '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
                                     _readWarpingType(
                                             widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
+<<<<<<< HEAD
 =======
 >>>>>>> 95d1a035 (fix: weaving, shearing)
+=======
+>>>>>>> c940e94a (fix:)
                                   required: true,
                                 ),
                               ),

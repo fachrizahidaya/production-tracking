@@ -383,6 +383,7 @@ class _FinishWarpingProcessManualState
       if (warpingType != null) {
         widget.form?['warping_type'] = warpingType;
       }
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
@@ -413,6 +414,8 @@ class _FinishWarpingProcessManualState
 >>>>>>> e02e3ffb (fix: finish warping)
 =======
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+>>>>>>> c940e94a (fix:)
     });
   }
 
@@ -500,7 +503,10 @@ class _FinishWarpingProcessManualState
           data['machines'] ?? [],
         );
         widget.form?['machine_id'] = data['machine']?['id'];
-        widget.form?['warping_type'] = data['warping_type'];
+        widget.form?['warping_type'] = _readWarpingType(data) ??
+            _readWarpingType(data['order_greige']) ??
+            _readWarpingType(woData) ??
+            _readWarpingType(widget.form?['warping_type']);
         widget.form?['yarn_qty'] = data['yarn_qty'];
         widget.form?['beam_qty'] = data['beam_qty'];
         widget.form?['section'] = data['section'];
@@ -549,6 +555,9 @@ class _FinishWarpingProcessManualState
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   dynamic _readWarpingType(dynamic source, [int depth = 0]) {
     if (source == null) return null;
 
@@ -588,8 +597,11 @@ class _FinishWarpingProcessManualState
         .join(' ');
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> c940e94a (fix:)
   void _selectWorkOrder() {
     showSelectDialog(
       context: context,
@@ -597,9 +609,13 @@ class _FinishWarpingProcessManualState
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
 <<<<<<< HEAD
+<<<<<<< HEAD
       badgeKey: 'warping_type',
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      badgeKey: 'warping_type',
+>>>>>>> c940e94a (fix:)
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -609,9 +625,13 @@ class _FinishWarpingProcessManualState
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
           widget.form?['warping_type'] = _readWarpingType(selected);
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+          widget.form?['warping_type'] = _readWarpingType(selected);
+>>>>>>> c940e94a (fix:)
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -1021,13 +1041,19 @@ class _FinishWarpingProcessManualState
                                           ?.toString() ??
                                       '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
                                     _readWarpingType(widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> c940e94a (fix:)
                                   required: true,
                                 ),
                               ),
@@ -1046,8 +1072,11 @@ class _FinishWarpingProcessManualState
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
+=======
+>>>>>>> c940e94a (fix:)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

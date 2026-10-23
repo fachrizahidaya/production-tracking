@@ -466,7 +466,7 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
           if (withBrokenYarns)
             _buildSectionCard(
-              title: 'Catatan Benang Putus',
+              title: 'Benang Putus',
               icon: Icons.content_cut_outlined,
               child: _buildBrokenYarns(false),
             ),
@@ -573,7 +573,7 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
               if (withBrokenYarns)
                 _buildSectionCard(
-                  title: 'Catatan Benang Putus',
+                  title: 'Benang Putus',
                   icon: Icons.content_cut_outlined,
                   child: _buildBrokenYarns(true),
                 ),
@@ -1120,6 +1120,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     return _buildInfoGrid(rows);
   }
 
@@ -1201,6 +1202,15 @@ class GreigeProcessDetailList extends StatelessWidget {
   }) {
 =======
     return _buildInfoGrid(rows, isTablet);
+=======
+    return _buildInfoGrid(
+      rows,
+      isTablet,
+      crossAxisAlignment: processName == 'Warping'
+          ? WrapCrossAlignment.start
+          : WrapCrossAlignment.center,
+    );
+>>>>>>> c940e94a (fix:)
   }
 
 <<<<<<< HEAD
@@ -1234,6 +1244,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     List<Map<String, dynamic>> items,
     bool isTablet, {
     bool showIcon = true,
+    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.center,
   }) {
 >>>>>>> deb4d660 (fix: detail warping - shearing)
     if (items.isEmpty) {
@@ -1298,6 +1309,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     return Wrap(
       spacing: 16,
       runSpacing: 16,
+      crossAxisAlignment: crossAxisAlignment,
       children: items.map((item) {
         final width = isTablet ? 220.0 : double.infinity;
 
@@ -1485,12 +1497,18 @@ class GreigeProcessDetailList extends StatelessWidget {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
     final warpingTypeLabel = _formatWarpingType(
       design['warping_type'] ?? orderGreige['warping_type'],
     );
 
+<<<<<<< HEAD
 =======
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> c940e94a (fix:)
     return Column(
       children: yarnItems
           .map((item) {
@@ -1498,6 +1516,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               children: [
                 _buildInfoLine('Kode Warna', _display(item['color_code'])),
                 _buildInfoLine(
+<<<<<<< HEAD
 <<<<<<< HEAD
                     'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
                 if (item['ne'] != null)
@@ -1523,6 +1542,21 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
                 _buildInfoLine('Lot Benang', _display(design['yarn_lot'])),
 >>>>>>> b06a3be7 (fix: detail di order greige)
+=======
+                    'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
+                if (item['ne'] != null)
+                  _buildInfoLine(
+                    'Ne',
+                    _display(item['ne']),
+                    trailing: warpingTypeLabel.isEmpty
+                        ? null
+                        : _buildWarpingTypeBadge(warpingTypeLabel),
+                  ),
+                _buildInfoLine(
+                  'Lot Benang',
+                  _formatYarnLot(design['yarn_lot']),
+                ),
+>>>>>>> c940e94a (fix:)
               ],
             );
           })
@@ -1556,6 +1590,7 @@ class GreigeProcessDetailList extends StatelessWidget {
             return _buildDataBox(
               children: [
 <<<<<<< HEAD
+<<<<<<< HEAD
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine(
@@ -1567,15 +1602,24 @@ class GreigeProcessDetailList extends StatelessWidget {
                 // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
 =======
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
+=======
+                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
+                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
+>>>>>>> c940e94a (fix:)
                 _buildInfoLine(
                     'Lebar Beam', _withUnit(design['beam_width'], 'M')),
-                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
-                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine('No. MC', _display(design['machine_no'])),
+<<<<<<< HEAD
                 _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
+                // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
+                // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
+                // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
+>>>>>>> c940e94a (fix:)
               ],
             );
           })
@@ -1601,6 +1645,9 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   Widget _buildInfoLine(String label, String value, {Widget? trailing}) {
     final valueChildren = <Widget>[
       Flexible(
@@ -1623,9 +1670,12 @@ class GreigeProcessDetailList extends StatelessWidget {
       valueChildren.add(trailing);
     }
 
+<<<<<<< HEAD
 =======
   Widget _buildInfoLine(String label, String value) {
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> c940e94a (fix:)
     return Row(
       children: [
         Expanded(
@@ -1640,10 +1690,14 @@ class GreigeProcessDetailList extends StatelessWidget {
         ),
         Flexible(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: valueChildren,
+<<<<<<< HEAD
 =======
           child: Text(
             value,
@@ -1656,6 +1710,8 @@ class GreigeProcessDetailList extends StatelessWidget {
               fontWeight: CustomTheme().fontWeight('bold'),
             ),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> c940e94a (fix:)
           ),
         ),
       ].separatedBy(CustomTheme().hGap('md')),
@@ -1663,6 +1719,9 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
@@ -1705,8 +1764,11 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> c940e94a (fix:)
   Widget _buildNote(dynamic value) {
     if (value == null || value.toString().isEmpty) {
       return NoData();

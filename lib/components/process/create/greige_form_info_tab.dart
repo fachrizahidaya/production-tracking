@@ -163,6 +163,7 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   String _orderQtyUnit(Map<String, dynamic> data) {
     final spkItem = _mapValue(_mapValue(data['work_order_item'])['spk_item']);
@@ -171,6 +172,8 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
   }
 
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+>>>>>>> c940e94a (fix:)
   String _pasangText(Map<String, dynamic> data) {
     final pasangQty = data['pasang_qty'];
     final sectionQty = data['section_qty'];
@@ -298,19 +301,27 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
           title: 'Kebutuhan Benang',
           icon: Icons.layers_outlined,
 <<<<<<< HEAD
+<<<<<<< HEAD
           child: _buildYarnTable(yarnItems, data),
 =======
           child: _buildYarnTable(yarnItems),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+          child: _buildYarnTable(yarnItems, data),
+>>>>>>> c940e94a (fix:)
         ),
         TemplateCard(
           title: 'Kebutuhan Loom Beam',
           icon: Icons.inventory_2_outlined,
 <<<<<<< HEAD
+<<<<<<< HEAD
           child: _buildLoomBeamTable(loomBeams, data),
 =======
           child: _buildLoomBeamTable(loomBeams),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+          child: _buildLoomBeamTable(loomBeams, data),
+>>>>>>> c940e94a (fix:)
         ),
         TemplateCard(
           title: 'Catatan',
@@ -402,6 +413,7 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
             child: _buildQuickInfoItem(
               icon: Icons.scale_outlined,
 <<<<<<< HEAD
+<<<<<<< HEAD
               label: 'Qty Order',
               value: _withUnit(data['order_qty'], 'PCS'),
               isTablet: isTablet,
@@ -450,6 +462,31 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
             ),
           ),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+              label: 'Qty Order',
+              value: _withUnit(data['order_qty'], 'PCS'),
+              isTablet: isTablet,
+            ),
+          ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.view_week_outlined,
+          //     label: 'Warping Type',
+          //     value: _formatType(data['warping_type']),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.view_agenda_outlined,
+          //     label: 'Pasang',
+          //     value: _pasangText(data),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
+>>>>>>> c940e94a (fix:)
         ],
       ),
     );
@@ -503,6 +540,9 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
@@ -549,21 +589,30 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     List<Map<String, dynamic>> items,
     Map<String, dynamic> data,
   ) {
+<<<<<<< HEAD
 =======
   Widget _buildYarnTable(List<Map<String, dynamic>> items) {
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+>>>>>>> c940e94a (fix:)
     if (items.isEmpty) {
       return NoData();
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
     final design = _mapValue(data['design']);
     final warpingTypeLabel = _formatWarpingType(
       design['warping_type'] ?? data['warping_type'],
     );
 
+<<<<<<< HEAD
 =======
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+>>>>>>> c940e94a (fix:)
     return _buildDataTable(
       columns: const [
         DataColumn(
@@ -571,20 +620,28 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
         ),
         DataColumn(
 <<<<<<< HEAD
+<<<<<<< HEAD
           label: Text('Jml. Bng'),
 =======
           label: Text('Jumlah Benang'),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+          label: Text('Jml. Bng'),
+>>>>>>> c940e94a (fix:)
         ),
         DataColumn(
           label: Text('NE'),
         ),
         DataColumn(
 <<<<<<< HEAD
+<<<<<<< HEAD
           label: Text('Lot Benang'),
 =======
           label: Text('Lot'),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+          label: Text('Lot Benang'),
+>>>>>>> c940e94a (fix:)
         ),
       ],
       rows: items
@@ -600,6 +657,9 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                   _richUnit(
                     item['yarn_qty'],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
                     'Helai',
                   ),
                 ),
@@ -613,13 +673,17 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                       if (warpingTypeLabel.isNotEmpty)
                         _buildWarpingTypeBadge(warpingTypeLabel),
                     ].separatedBy(CustomTheme().hGap('sm')),
+<<<<<<< HEAD
 =======
                     'PCS',
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+>>>>>>> c940e94a (fix:)
                   ),
                 ),
                 DataCell(
                   Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
                     _formatYarnLot(design['yarn_lot'] ?? item['yarn_lot']),
 =======
@@ -630,6 +694,9 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                   Text(
                     _display(item['lot']),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+                    _formatYarnLot(design['yarn_lot'] ?? item['yarn_lot']),
+>>>>>>> c940e94a (fix:)
                   ),
                 ),
               ],
@@ -640,10 +707,14 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   Widget _buildLoomBeamTable(
     List<Map<String, dynamic>> items,
     Map<String, dynamic> data,
   ) {
+<<<<<<< HEAD
     if (items.isEmpty) return NoData();
 
     final design = _mapValue(data['design']);
@@ -653,6 +724,12 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
     if (items.isEmpty) return NoData();
 
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+    if (items.isEmpty) return NoData();
+
+    final design = _mapValue(data['design']);
+
+>>>>>>> c940e94a (fix:)
     return _buildDataTable(
       columns: const [
         DataColumn(label: Text('BENANG')),
@@ -668,6 +745,9 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 DataCell(_richUnit(item['yarn_qty'], 'PCS')),
                 DataCell(_richUnit(item['length'], 'M')),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
                 DataCell(
                   _richUnit(design['beam_width'] ?? item['beam_width'], 'M'),
                 ),
@@ -677,11 +757,14 @@ class _GreigeFormInfoTabState extends State<GreigeFormInfoTab> {
                 DataCell(
                   Text(_display(design['beam_ab'] ?? item['beam_ab'])),
                 ),
+<<<<<<< HEAD
 =======
                 DataCell(_richUnit(item['beam_width'], 'M')),
                 DataCell(Text(_display(item['machine_no']))),
                 DataCell(Text(_display(item['beam_ab']))),
 >>>>>>> 3d28a283 (fix: mulai warping)
+=======
+>>>>>>> c940e94a (fix:)
               ],
             ),
           )

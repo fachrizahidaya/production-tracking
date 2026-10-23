@@ -63,6 +63,7 @@ class GreigeProcessEditLayout extends StatelessWidget {
 <<<<<<< HEAD
                                 Tab(text: 'Mesin'),
                                 Tab(text: 'Info Order Greige'),
+<<<<<<< HEAD
 =======
                                 Tab(text: 'Form Edit'),
 =======
@@ -70,6 +71,8 @@ class GreigeProcessEditLayout extends StatelessWidget {
 >>>>>>> 80dec51b (fix: edit warping-shearing)
                                 Tab(text: 'Info Greige Order'),
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+>>>>>>> c940e94a (fix:)
                               ],
                             ),
                           ),

@@ -182,6 +182,9 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
     setState(() {
       woData = _greigeOrderService.dataView;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
       final warpingType = _readWarpingType(woData);
       if (warpingType != null) {
         widget.form?['warping_type'] = warpingType;
@@ -228,11 +231,14 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         .join(' ');
   }
 
+<<<<<<< HEAD
 =======
     });
   }
 
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> c940e94a (fix:)
   Future<void> _getProcessView(dynamic id) async {
     setState(() => _firstLoading = true);
 
@@ -258,6 +264,7 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         widget.form?['warping_type'] = _readWarpingType(processData) ??
             _readWarpingType(woData) ??
             _readWarpingType(widget.form?['warping_type']);
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 64274789 (fix: selesai warping-shearing)
@@ -273,6 +280,8 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
         );
         widget.form?['machine_id'] = processData['machine']?['id'];
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+>>>>>>> c940e94a (fix:)
         widget.form?['roll_length'] = processData['roll_length'];
         widget.form?['order_greige_id'] = processData['order_greige_id'];
         widget.form?['no_og'] =
@@ -311,9 +320,13 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
 <<<<<<< HEAD
+<<<<<<< HEAD
       badgeKey: 'warping_type',
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+      badgeKey: 'warping_type',
+>>>>>>> c940e94a (fix:)
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -323,9 +336,13 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
 <<<<<<< HEAD
+<<<<<<< HEAD
           widget.form?['warping_type'] = _readWarpingType(selected);
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+          widget.form?['warping_type'] = _readWarpingType(selected);
+>>>>>>> c940e94a (fix:)
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -666,14 +683,20 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                           ?.toString() ??
                                       '',
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
                                     _readWarpingType(
                                             widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
+<<<<<<< HEAD
 =======
 >>>>>>> 5d1f483f (fix: warping, sizing)
+=======
+>>>>>>> c940e94a (fix:)
                                   required: true,
                                 ),
                               ),

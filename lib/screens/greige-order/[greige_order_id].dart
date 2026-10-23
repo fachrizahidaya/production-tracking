@@ -71,10 +71,14 @@ class _GreigeOrderDetailState extends State<GreigeOrderDetail> {
         backgroundColor: const Color(0xFFf9fafc),
         appBar: CustomAppBar(
 <<<<<<< HEAD
+<<<<<<< HEAD
           title: 'Detail Order Greige',
 =======
           title: 'Greige Order Detail',
 >>>>>>> 230afad3 (feat: greige order detail)
+=======
+          title: 'Detail Order Greige',
+>>>>>>> c940e94a (fix:)
           onReturn: () {
             Navigator.pop(context);
           },

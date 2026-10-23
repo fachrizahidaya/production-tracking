@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 =======
 >>>>>>> 1e3750ac (fix: create process)
+=======
+import 'package:textile_tracking/components/master/card/custom_badge.dart';
+>>>>>>> c940e94a (fix:)
 import 'package:textile_tracking/components/master/container/template.dart';
 =======
 >>>>>>> 6aaef7aa (fix: create warping)
@@ -102,13 +106,19 @@ class GreigeInfoTab extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c940e94a (fix:)
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6aaef7aa (fix: create warping)
+=======
+>>>>>>> c940e94a (fix:)
   String _productCode() {
     final spkItem = _mapValue(_mapValue(data['work_order_item'])['spk_item']);
     final item = _mapValue(spkItem['item']);
@@ -130,6 +140,7 @@ class GreigeInfoTab extends StatelessWidget {
   }
 
   String _pasangText() {
+<<<<<<< HEAD
 <<<<<<< HEAD
     final design = _mapValue(data['design']);
     final pasangQty = design['pasang_qty'] ?? data['pasang_qty'];
@@ -159,19 +170,15 @@ class GreigeInfoTab extends StatelessWidget {
     final pasangQty = data['pasang_qty'];
     final sectionQty = data['section_qty'];
     final beamQty = data['beam_qty'];
+=======
+    final design = _mapValue(data['design']);
+    final pasangQty = design['pasang_qty'] ?? data['pasang_qty'];
+    final sectionQty = design['section_qty'] ?? data['section_qty'];
+>>>>>>> c940e94a (fix:)
 
-    if (pasangQty != null && sectionQty != null) {
-      return '${formatNumber(pasangQty)} x Pasang = ${formatNumber(sectionQty)} Section';
-    }
+    if (pasangQty == null || sectionQty == null) return '-';
 
-    if (pasangQty != null && beamQty != null) {
-      return '${formatNumber(pasangQty)} x Pasang = ${formatNumber(beamQty)} Beam';
-    }
-
-    if (pasangQty != null) return '${formatNumber(pasangQty)} Pasang';
-    if (sectionQty != null) return '${formatNumber(sectionQty)} Section';
-    if (beamQty != null) return '${formatNumber(beamQty)} Beam';
-    return '-';
+    return '${formatNumber(pasangQty)} x pasang = ${formatNumber(sectionQty)} section';
   }
 
 >>>>>>> 6aaef7aa (fix: create warping)
@@ -285,11 +292,11 @@ class GreigeInfoTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context),
-          TemplateCard(
-            title: 'Referensi Work Order',
-            icon: Icons.assignment_outlined,
-            child: _buildWorkOrderBox(),
-          ),
+          // TemplateCard(
+          //   title: 'Referensi Work Order',
+          //   icon: Icons.assignment_outlined,
+          //   child: _buildWorkOrderBox(),
+          // ),
           TemplateCard(
             title: 'Detail Order Greige',
             icon: Icons.info_outline,
@@ -368,10 +375,14 @@ class GreigeInfoTab extends StatelessWidget {
                     ),
                   ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                   _buildStatusBadge(),
 =======
                   _StatusPill(status: _display(data['status'])),
 >>>>>>> 9170cdf8 (fix: rumus otomatis berat greige persiapan dyeing)
+=======
+                  _buildStatusBadge(),
+>>>>>>> c940e94a (fix:)
                 ].separatedBy(CustomTheme().hGap('xl')),
               ),
               _buildQuickInfoRow(isTablet),
@@ -418,24 +429,24 @@ class GreigeInfoTab extends StatelessWidget {
 >>>>>>> 9170cdf8 (fix: rumus otomatis berat greige persiapan dyeing)
             ),
           ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.scale_outlined,
-              label: 'Jumlah Order',
-              value: _withUnit(data['order_qty'], _orderQtyUnit()),
-              isTablet: isTablet,
-            ),
-          ),
-          _buildVerticalDivider(),
-          Expanded(
-            child: _buildQuickInfoItem(
-              icon: Icons.view_week_outlined,
-              label: 'Warping Type',
-              value: _formatType(data['warping_type']),
-              isTablet: isTablet,
-            ),
-          ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.scale_outlined,
+          //     label: 'Jumlah Order',
+          //     value: _withUnit(data['order_qty'], _orderQtyUnit()),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
+          // _buildVerticalDivider(),
+          // Expanded(
+          //   child: _buildQuickInfoItem(
+          //     icon: Icons.view_week_outlined,
+          //     label: 'Warping Type',
+          //     value: _formatType(data['warping_type']),
+          //     isTablet: isTablet,
+          //   ),
+          // ),
           _buildVerticalDivider(),
           Expanded(
             child: _buildQuickInfoItem(
@@ -602,8 +613,9 @@ class GreigeInfoTab extends StatelessWidget {
 
   Widget _buildDetailGrid() {
     final user = _mapValue(data['user']);
+    final design = _mapValue(data['design']);
     final items = [
-      _DetailItem('Tanggal', _formatDate(data['og_date'] ?? data['pp_date'])),
+      // _DetailItem('Tanggal', _formatDate(data['og_date'] ?? data['pp_date'])),
       _DetailItem('No. SO', _display(data['so_no'])),
       _DetailItem('No. OB', _display(data['ob_no'])),
       _DetailItem('No. OP', _display(data['op_no'])),
@@ -611,11 +623,13 @@ class GreigeInfoTab extends StatelessWidget {
       _DetailItem('Desain Warna', _display(data['design_color'])),
       _DetailItem('Article', _productCode()),
       _DetailItem(
-          'Jumlah Order', _withUnit(data['order_qty'], _orderQtyUnit())),
-      _DetailItem('Warping Type', _formatType(data['warping_type']),
-          chip: true),
-      _DetailItem('Dibuat oleh', _display(user['name'])),
+        'Tipe Warping',
+        _formatType(design['warping_type'] ?? data['warping_type']),
+      ),
       _DetailItem('Pasang', _pasangText()),
+      _DetailItem('Qty Order', _withUnit(data['order_qty'], 'PCS')),
+      _DetailItem('Berat Order', _withUnit(data['weight'], _orderQtyUnit())),
+      // _DetailItem('Dibuat oleh', _display(user['name'])),
     ];
 
 >>>>>>> 6aaef7aa (fix: create warping)
@@ -974,6 +988,7 @@ class GreigeInfoTab extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: _valueStyle(fontSize: 'md'),
         ),
+<<<<<<< HEAD
       ].separatedBy(CustomTheme().vGap('sm')),
     );
   }
@@ -1000,6 +1015,8 @@ class GreigeInfoTab extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: _valueStyle(fontSize: 'md'),
               ),
+=======
+>>>>>>> c940e94a (fix:)
       ].separatedBy(CustomTheme().vGap('sm')),
     );
   }
@@ -1472,7 +1489,7 @@ class _DetailItem {
 
                 // Dari yarn_items
                 DataCell(
-                  _richUnit(item['yarn_qty'], 'PCS'),
+                  _richUnit(item['yarn_qty'], 'Helai'),
                 ),
 
                 // Dari yarn_items
@@ -1482,7 +1499,7 @@ class _DetailItem {
 
                 // Dari design
                 DataCell(
-                  Text(_display(design['yarn_lot'])),
+                  Text(_formatYarnLot(design['yarn_lot'])),
                 ),
               ],
             ),
@@ -1510,7 +1527,7 @@ class _DetailItem {
               cells: [
                 // Dari loom_beams
                 DataCell(
-                  _richUnit(item['yarn_qty'], 'PCS'),
+                  _richUnit(item['yarn_qty'], 'Helai'),
                 ),
 
                 // Dari loom_beams
@@ -1602,29 +1619,6 @@ class _DetailItem {
     );
   }
 
-  Widget _buildChip(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-      decoration: BoxDecoration(
-        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.12),
-        ),
-      ),
-      child: Text(
-        label,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: CustomTheme().buttonColor('primary'),
-          fontSize: CustomTheme().fontSize('xs'),
-          fontWeight: CustomTheme().fontWeight('bold'),
-        ),
-      ),
-    );
-  }
-
   Widget _richUnit(dynamic value, String unit) {
     if (value == null || value.toString().isEmpty) {
       return const Text('-');
@@ -1652,6 +1646,14 @@ class _DetailItem {
     );
   }
 
+  Widget _buildStatusBadge() {
+    return CustomBadge(
+      title: data['status']?.toString() ?? '-',
+      withStatus: true,
+      status: data['status']?.toString() ?? '-',
+    );
+  }
+
   TextStyle _labelStyle() {
     return TextStyle(
       color: Colors.grey.shade600,
@@ -1675,45 +1677,10 @@ class _DetailItem {
 class _DetailItem {
   final String label;
   final String value;
-  final bool chip;
 
   const _DetailItem(
     this.label,
-    this.value, {
-    this.chip = false,
-  });
-}
-
-class _StatusPill extends StatelessWidget {
-  final String status;
-
-  const _StatusPill({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.info_outline, size: 16, color: Colors.grey.shade800),
-          Text(
-            status,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.grey.shade800,
-              fontSize: CustomTheme().fontSize('sm'),
-              fontWeight: CustomTheme().fontWeight('bold'),
-            ),
-          ),
-        ].separatedBy(CustomTheme().hGap('xs')),
-      ),
-    );
-  }
+    this.value,
+  );
 }
 >>>>>>> 1e3750ac (fix: create process)

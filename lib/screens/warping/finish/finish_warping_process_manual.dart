@@ -683,8 +683,12 @@ class _FinishWarpingProcessManualState
                                           ?.toString() ??
                                       '',
                                   badge: _formatWarpingType(
+<<<<<<< HEAD
                                     _readWarpingType(
                                             widget.form?['warping_type']) ??
+=======
+                                    _readWarpingType(widget.form?['warping_type']) ??
+>>>>>>> 79249c5 (fix:)
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
@@ -701,8 +705,11 @@ class _FinishWarpingProcessManualState
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
+=======
+>>>>>>> 79249c5 (fix:)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

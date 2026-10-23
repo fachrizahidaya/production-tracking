@@ -16,6 +16,7 @@ class MachineEditSection extends StatefulWidget {
   final newMachines;
   final withAddMachine;
   final onMachineChanged;
+  final WrapCrossAlignment wrapCrossAxisAlignment;
 
   const MachineEditSection(
       {super.key,
@@ -25,7 +26,8 @@ class MachineEditSection extends StatefulWidget {
       this.getMachineStatus,
       this.newMachines,
       this.withAddMachine = true,
-      this.onMachineChanged});
+      this.onMachineChanged,
+      this.wrapCrossAxisAlignment = WrapCrossAlignment.center});
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();
@@ -52,6 +54,7 @@ class _MachineEditSectionState extends State<MachineEditSection> {
             return Wrap(
               spacing: 16,
               runSpacing: 16,
+              crossAxisAlignment: widget.wrapCrossAxisAlignment,
               children: machines.asMap().entries.map((entry) {
                 final index = entry.key;
                 final machine = entry.value;

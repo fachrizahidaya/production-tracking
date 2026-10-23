@@ -1045,8 +1045,12 @@ class _FinishWarpingProcessManualState
 =======
 >>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
+<<<<<<< HEAD
                                     _readWarpingType(
                                             widget.form?['warping_type']) ??
+=======
+                                    _readWarpingType(widget.form?['warping_type']) ??
+>>>>>>> 79249c5 (fix:)
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
@@ -1075,6 +1079,7 @@ class _FinishWarpingProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
 =======
@@ -1083,6 +1088,12 @@ class _FinishWarpingProcessManualState
                                     columns: 2,
                                     compactDisplay: true,
 >>>>>>> a750f85d (fix: warping - shearing)
+=======
+                                    columns: 2,
+                                    compactDisplay: true,
+=======
+>>>>>>> 79249c5 (fix:)
+>>>>>>> 581d9e1c (fix:)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

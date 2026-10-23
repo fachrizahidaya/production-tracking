@@ -1148,7 +1148,19 @@ class GreigeProcessDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 581d9e1c (fix:)
     return _buildInfoGrid(rows);
+=======
+    return _buildInfoGrid(
+      rows,
+      isTablet,
+      crossAxisAlignment: processName == 'Warping'
+          ? WrapCrossAlignment.start
+          : WrapCrossAlignment.center,
+    );
+>>>>>>> 79249c5 (fix:)
   }
 
   Widget _buildBrokenYarns() {
@@ -1226,6 +1238,7 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildInfoGrid(
     List<Map<String, dynamic>> items, {
     bool showIcon = true,
+    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.center,
   }) {
 =======
     return _buildInfoGrid(rows, isTablet);
@@ -1333,13 +1346,37 @@ class GreigeProcessDetailList extends StatelessWidget {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a750f85d (fix: warping - shearing)
+=======
+>>>>>>> 581d9e1c (fix:)
     final children = items
         .map((item) {
           final infoColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
+      crossAxisAlignment: crossAxisAlignment,
+      children: items.map((item) {
+        final width = isTablet ? 220.0 : double.infinity;
+
+        return Container(
+          width: width,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: Row(
+>>>>>>> 79249c5 (fix:)
+>>>>>>> 581d9e1c (fix:)
             children: [
               Text(
                 item['label'].toString(),

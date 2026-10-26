@@ -48,6 +48,7 @@ class _SortingSectionState extends State<SortingSection> {
   num _gradeAInput(int itemIndex) {
     if (itemIndex < 0 || itemIndex >= _items.length) return 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
     final item = _items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -76,6 +77,29 @@ class _SortingSectionState extends State<SortingSection> {
       if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
         total += num.tryParse(grade['qty'].toString()) ?? 0;
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+    final item = _items[itemIndex];
+    final grades = item['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += parseSafe(grade['qty']);
+      }
+    }
+
+    return total +
+        _transferQty(item['transfers_in']) -
+        _transferQty(item['transfers_out']);
+  }
+
+  num _transferQty(dynamic transfers) {
+    if (transfers is! List) return 0;
+
+    num total = 0;
+    for (final transfer in transfers) {
+      if (transfer is Map) {
+        total += parseSafe(transfer['qty']);
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
       }
     }
     return total;

@@ -183,6 +183,7 @@ class _SortingGradeASourceSectionState
       _rows.fold<num>(0, (total, row) => total + row.takenQty);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   bool get _qtyExceeded =>
       _rows.any(
         (row) => row.woId != null && row.takenQty > row.availableQty,
@@ -207,19 +208,23 @@ class _SortingGradeASourceSectionState
     widget.onSourceQtyInvalid?.call(_qtyExceeded);
 =======
   bool get _qtyExceeded => _rows.any(
+=======
+  bool get _qtyExceeded =>
+      _rows.any(
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
         (row) => row.woId != null && row.takenQty > row.availableQty,
       ) ||
       (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!);
 
   String? get _qtyWarning {
     if (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!) {
-      return 'maks. qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
+      return 'Maks. Qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
     }
 
     if (_rows.any(
       (row) => row.woId != null && row.takenQty > row.availableQty,
     )) {
-      return 'Qty diambil melebihi sisa qty';
+      return 'Qty yang diambil, melebihi dari Sisa Qty';
     }
 
     return null;
@@ -826,6 +831,7 @@ class _SortingGradeASourceSectionState
               children: [
                 Text(
 <<<<<<< HEAD
+<<<<<<< HEAD
                   'Qty yang diambil, melebihi dari Sisa Qty',
                   style: TextStyle(color: Colors.red),
                 ),
@@ -838,6 +844,13 @@ class _SortingGradeASourceSectionState
                 SizedBox(
                   width: 150,
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+                  'Qty yang diambil, melebihi dari Sisa Qty',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(
+                  width: 50,
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
                 )
               ],
             ),

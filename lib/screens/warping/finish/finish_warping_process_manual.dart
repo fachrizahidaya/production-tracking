@@ -1080,6 +1080,7 @@ class _FinishWarpingProcessManualState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
 =======
@@ -1089,11 +1090,20 @@ class _FinishWarpingProcessManualState
                                     compactDisplay: true,
 >>>>>>> a750f85d (fix: warping - shearing)
 =======
+=======
+>>>>>>> 968ce058 (fix: warping - shearing)
                                     columns: 2,
                                     compactDisplay: true,
 =======
 >>>>>>> 79249c5 (fix:)
+<<<<<<< HEAD
 >>>>>>> 581d9e1c (fix:)
+=======
+=======
+                                    columns: 2,
+                                    compactDisplay: true,
+>>>>>>> 4407641 (fix: warping - shearing)
+>>>>>>> 968ce058 (fix: warping - shearing)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

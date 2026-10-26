@@ -1037,6 +1037,7 @@ class GreigeProcessDetailList extends StatelessWidget {
       icon: icon,
       title: title,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 =======
     return Container(
@@ -1149,8 +1150,11 @@ class GreigeProcessDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 581d9e1c (fix:)
+=======
+>>>>>>> 968ce058 (fix: warping - shearing)
     return _buildInfoGrid(rows);
 =======
     return _buildInfoGrid(
@@ -1161,6 +1165,9 @@ class GreigeProcessDetailList extends StatelessWidget {
           : WrapCrossAlignment.center,
     );
 >>>>>>> 79249c5 (fix:)
+=======
+    return _buildInfoGrid(rows);
+>>>>>>> 4407641 (fix: warping - shearing)
   }
 
   Widget _buildBrokenYarns() {
@@ -1238,7 +1245,6 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildInfoGrid(
     List<Map<String, dynamic>> items, {
     bool showIcon = true,
-    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.center,
   }) {
 =======
     return _buildInfoGrid(rows, isTablet);
@@ -1347,17 +1353,25 @@ class GreigeProcessDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a750f85d (fix: warping - shearing)
 =======
 >>>>>>> 581d9e1c (fix:)
+=======
+=======
+>>>>>>> 4407641 (fix: warping - shearing)
+>>>>>>> 968ce058 (fix: warping - shearing)
     final children = items
         .map((item) {
           final infoColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 968ce058 (fix: warping - shearing)
 =======
     return Wrap(
       spacing: 16,
@@ -1376,7 +1390,12 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
           child: Row(
 >>>>>>> 79249c5 (fix:)
+<<<<<<< HEAD
 >>>>>>> 581d9e1c (fix:)
+=======
+=======
+>>>>>>> 4407641 (fix: warping - shearing)
+>>>>>>> 968ce058 (fix: warping - shearing)
             children: [
               Text(
                 item['label'].toString(),

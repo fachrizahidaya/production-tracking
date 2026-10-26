@@ -502,6 +502,8 @@ class _FinishWeavingProcessManualState
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+                                    columns: 2,
+                                    compactDisplay: true,
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),

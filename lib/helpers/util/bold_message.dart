@@ -7,6 +7,8 @@ Widget buildBoldMessage({
   required String message,
   required String prefix, // 👈 dynamic
 }) {
+  print('m: $message');
+  print('p: $prefix');
   final RegExp regExp = RegExp(r'(' + prefix + r'\/\S+)', caseSensitive: false);
   final matches = regExp.allMatches(message);
 

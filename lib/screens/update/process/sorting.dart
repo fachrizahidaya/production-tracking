@@ -166,10 +166,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   num? _maxGradeASourceQty(int itemIndex) {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return null;
@@ -196,6 +201,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
@@ -204,6 +210,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   dynamic get _currentWoId {
     final workOrder = widget.data['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -420,6 +432,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 =======
@@ -429,11 +442,20 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'qty_out': item['qty_out'] ?? 0,
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          'qty_in': item['qty_in'] ?? 0,
+          'qty_out': item['qty_out'] ?? 0,
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           'source_qty': item['qty'] ?? 0,
           'available_qty': item['available_qty'],
           'notes': grade['notes'],
@@ -793,10 +815,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                   SizedBox(
                     height: 16,
                   ),
@@ -964,6 +991,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   maxTakenQty: _maxGradeASourceQty(itemIndex),
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
@@ -975,6 +1003,14 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+                  maxTakenQty: _maxGradeASourceQty(itemIndex),
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+                  maxTakenQty: _maxGradeASourceQty(itemIndex),
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                   onTotalChanged: (total) {
                     setState(() => _absorbedQty[itemIndex] = total);
                   },
@@ -1157,8 +1193,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1691b544 (fix: sortir)
 =======
                     _getGradeController(
                       itemIndex,
@@ -1172,7 +1211,12 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                     setState(() {});
 
                     widget.updateTotalSorting();
@@ -1209,10 +1253,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
     final transferInRows = item['absorbed_work_orders'] is List
         ? item['absorbed_work_orders']
         : item['transfers_in'];
@@ -1254,6 +1303,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final rows = item['transfers_out'];
     if (rows is! List) return null;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 
@@ -1295,22 +1345,52 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
 
-    final transfers = rows.whereType<Map>().toList();
-    if (transfers.isEmpty) return null;
+    final transfersIn = transferInRows is List
+        ? transferInRows.whereType<Map>().toList()
+        : <Map>[];
+    final transfersOut = transferOutRows is List
+        ? transferOutRows.whereType<Map>().toList()
+        : <Map>[];
 
-    var total = 0.0;
-    final woNos = <String>[];
-    for (final row in transfers) {
-      total += parseSafe(row['qty']);
-      final woNo = row['to_wo_no']?.toString() ?? '';
-      if (woNo.isNotEmpty) woNos.add(woNo);
+    if (transfersIn.isEmpty && transfersOut.isEmpty) return null;
+
+    var totalIn = 0.0;
+    var totalOut = 0.0;
+    final sourceWoNos = <String>[];
+    final targetWoNos = <String>[];
+
+    for (final row in transfersIn) {
+      totalIn += parseSafe(row['qty']);
+      final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
+      if (woNo.isNotEmpty && !sourceWoNos.contains(woNo)) {
+        sourceWoNos.add(woNo);
+      }
     }
 
+<<<<<<< HEAD
     final target = woNos.join(', ');
     final remaining = parseSafe(grade['qty']) - total;
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+    for (final row in transfersOut) {
+      totalOut += parseSafe(row['qty']);
+      final woNo = row['to_wo_no']?.toString() ?? '';
+      if (woNo.isNotEmpty && !targetWoNos.contains(woNo)) {
+        targetWoNos.add(woNo);
+      }
+    }
+
+    final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
     const black = TextStyle(color: Colors.black);
     const blackBold = TextStyle(
       color: Colors.black,
@@ -1330,8 +1410,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1691b544 (fix: sortir)
               if (totalIn > 0) ...[
                 const TextSpan(
                   text: 'Qty ',
@@ -1393,6 +1476,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               ),
               if (target.isNotEmpty) ...[
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
               if (totalIn > 0) ...[
 >>>>>>> 1d6d2ab6 (fix: sortir)
@@ -1447,23 +1531,72 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                 ),
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+=======
+              if (totalIn > 0) ...[
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                 const TextSpan(
-                  text: ' untuk ',
+                  text: 'Qty ',
                   style: black,
                 ),
                 TextSpan(
-                  text: target,
+                  text: '+${formatNumber(totalIn)}',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (sourceWoNos.isNotEmpty) ...[
+                  const TextSpan(text: ' dari ', style: black),
+                  TextSpan(text: sourceWoNos.join(', '), style: black),
+                ],
+              ],
+              if (totalIn > 0 && totalOut > 0)
+                const TextSpan(text: '\n', style: black),
+              if (totalOut > 0) ...[
+                const TextSpan(
+                  text: 'Qty ',
                   style: black,
                 ),
+                TextSpan(
+                  text: '-${formatNumber(totalOut)}',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (targetWoNos.isNotEmpty) ...[
+                  const TextSpan(
+                    text: ' untuk ',
+                    style: black,
+                  ),
+                  TextSpan(
+                    text: targetWoNos.join(', '),
+                    style: black,
+                  ),
+                ],
               ],
+<<<<<<< HEAD
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+              if (totalIn == 0 && totalOut == 0)
+                const TextSpan(
+                  text: 'Tidak ada transfer',
+                  style: black,
+                ),
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
             ],
           ),
           textAlign: TextAlign.right,
         ),
         const SizedBox(height: 4),
         Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1475,11 +1608,19 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'Total akumulasi: ${formatNumber(accumulatedTotal)}',
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
           'Total akumulasi: ${formatNumber(accumulatedTotal)}',
 =======
           'Total: ${formatNumber(remaining)}',
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           textAlign: TextAlign.right,
           style: blackBold,
         ),
@@ -2061,6 +2202,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(grade);
 =======
@@ -2070,11 +2212,20 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         gradeATaken += _gradeATaken(grade);
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(grade);
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
+        gradeATaken += _gradeATaken(grade);
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -2141,8 +2292,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1691b544 (fix: sortir)
     return parseSafe(grade['qty']) +
         _gradeAAdditional(item, grade, itemIndex) -
         _gradeATaken(grade);
@@ -2172,10 +2326,14 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         absorbed -
         savedTransferIn;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1691b544 (fix: sortir)
 =======
     return parseSafe(grade['qty']) +
         _gradeAAdditional(item, grade, itemIndex) -
         _gradeATaken(grade);
+<<<<<<< HEAD
 >>>>>>> 1d6d2ab6 (fix: sortir)
   }
 
@@ -2195,19 +2353,30 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     return parseSafe(grade['qty_out']);
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   }
 
-  double _savedTransferInQty(Map item) {
-    final rows = item['transfers_in'];
-    if (rows is! List) return 0;
-
-    var total = 0.0;
-    for (final row in rows) {
-      if (row is Map) total += parseSafe(row['qty']);
+  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
+    if (_absorbedQty.containsKey(itemIndex)) {
+      return (_absorbedQty[itemIndex] ?? 0).toDouble();
     }
+<<<<<<< HEAD
     return total;
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+
+    return parseSafe(grade['qty_in']);
+  }
+
+  double _gradeATaken(Map grade) {
+    return parseSafe(grade['qty_out']);
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   }
 
   Widget _summaryBox(
@@ -2280,8 +2449,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1691b544 (fix: sortir)
           totalGradeAAdditional +=
               _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(grade);
@@ -2295,7 +2467,15 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          totalGradeAAdditional +=
+              _gradeAAdditional(item, grade, itemIndex);
+          totalGradeATaken += _gradeATaken(grade);
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {

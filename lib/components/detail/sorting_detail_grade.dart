@@ -96,6 +96,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 =======
@@ -105,11 +106,20 @@ class SortingDetailGradeList extends StatelessWidget {
           'qty_out': item['qty_out'] ?? 0,
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          'qty_in': item['qty_in'] ?? 0,
+          'qty_out': item['qty_out'] ?? 0,
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           'available_qty': item['available_qty'],
           'defects': item['defects'] ?? [],
           'semifinished_product': item['semifinished_product'],
@@ -284,6 +294,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
 =======
           // if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
@@ -292,11 +303,19 @@ class SortingDetailGradeList extends StatelessWidget {
           if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
           if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
 =======
           // if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
 
           /*
       |--------------------------------------------------------------------------
@@ -555,6 +574,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             text: 'Qty ',
 =======
             text: 'Qty diambil ',
@@ -563,11 +583,19 @@ class SortingDetailGradeList extends StatelessWidget {
             text: 'Qty ',
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
             text: 'Qty ',
 =======
             text: 'Qty diambil ',
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+            text: 'Qty ',
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
             style: labelStyle,
           ),
           TextSpan(
@@ -720,6 +748,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 color: Colors.white,
 =======
                 color: Colors.grey.shade50,
@@ -728,11 +757,19 @@ class SortingDetailGradeList extends StatelessWidget {
                 color: Colors.white,
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
                 color: Colors.white,
 =======
                 color: Colors.grey.shade50,
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+                color: Colors.white,
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey.shade300),
               ),
@@ -781,10 +818,15 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(
               Radius.circular(
@@ -799,6 +841,7 @@ class SortingDetailGradeList extends StatelessWidget {
           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
           decoration: CustomTheme().inputStaticDecorationDisabled(),
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
@@ -809,6 +852,13 @@ class SortingDetailGradeList extends StatelessWidget {
           decoration: CustomTheme().inputStaticDecorationDisabled(),
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+          decoration: CustomTheme().inputStaticDecorationDisabled(),
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           child: Text(
             value.isEmpty ? '-' : value,
             style: const TextStyle(fontWeight: FontWeight.w600),
@@ -829,10 +879,19 @@ class SortingDetailGradeList extends StatelessWidget {
 
   Widget _buildRepairBox(
     String title,
+<<<<<<< HEAD
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
   }) {
+=======
+    dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+  }
+  ) {
+>>>>>>> dd7ae31 (fix: sortir)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -873,6 +932,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     var gradeAAdditional = 0.0;
     var gradeATaken = 0.0;
 =======
@@ -882,11 +942,20 @@ class SortingDetailGradeList extends StatelessWidget {
     var gradeATaken = 0.0;
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
     var gradeAAdditional = 0.0;
     var gradeATaken = 0.0;
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+    var gradeAAdditional = 0.0;
+    var gradeATaken = 0.0;
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
     var gradeB = 0.0;
     var gradeBS = 0.0;
 
@@ -902,6 +971,7 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         gradeAAdditional += parseSafe(grade['qty_in']);
         gradeATaken += parseSafe(grade['qty_out']);
 =======
@@ -911,11 +981,20 @@ class SortingDetailGradeList extends StatelessWidget {
         gradeATaken += parseSafe(grade['qty_out']);
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
+=======
+>>>>>>> 1691b544 (fix: sortir)
         gradeAAdditional += parseSafe(grade['qty_in']);
         gradeATaken += parseSafe(grade['qty_out']);
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+        gradeAAdditional += parseSafe(grade['qty_in']);
+        gradeATaken += parseSafe(grade['qty_out']);
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -942,10 +1021,15 @@ class SortingDetailGradeList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           _buildRepairBox(
             'Grade A Tambahan',
             gradeAAdditional,
@@ -959,6 +1043,7 @@ class SortingDetailGradeList extends StatelessWidget {
           ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 =======
@@ -967,6 +1052,12 @@ class SortingDetailGradeList extends StatelessWidget {
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
           _buildRepairBox('Hasil Sortir', total),
         ].separatedBy(CustomTheme().hGap('xl')),
       ),

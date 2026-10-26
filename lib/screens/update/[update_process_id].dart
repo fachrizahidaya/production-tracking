@@ -762,16 +762,22 @@ class _UpdateProcessState extends State<UpdateProcess>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -782,6 +788,12 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+>>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1623,8 +1635,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         ),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+>>>>>>> 1691b544 (fix: sortir)
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1635,6 +1650,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                 final item =
                                                     (widget.data['items'] ?? [])[tabController.index];
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1691b544 (fix: sortir)
 =======
                                         Container(
                                           width: double.infinity,
@@ -1681,9 +1699,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             children:
                                                 (widget.data['items'] ?? [])
                                                     .map<Widget>((item) {
+<<<<<<< HEAD
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -2154,8 +2176,11 @@ class _UpdateProcessState extends State<UpdateProcess>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1691b544 (fix: sortir)
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
@@ -2170,6 +2195,7 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
                           isDisabled:
 <<<<<<< HEAD
+<<<<<<< HEAD
                               widget.label == 'Sorting' && _gradeASourceInvalid,
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
@@ -2177,6 +2203,10 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   widget.label == 'Packing') &&
                               _gradeASourceInvalid,
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+                              widget.label == 'Sorting' && _gradeASourceInvalid,
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
                           onPressed: () {
                             _handleSubmit(context);
                           },

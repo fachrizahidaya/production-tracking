@@ -702,6 +702,9 @@ Ringkasan Sorting
     String title,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1691b544 (fix: sortir)
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
@@ -713,6 +716,7 @@ Ringkasan Sorting
     Color? valueColor,
   }
   ) {
+<<<<<<< HEAD
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
     dynamic value, {
@@ -720,6 +724,9 @@ Ringkasan Sorting
     Color? valueColor,
   }) {
 >>>>>>> 49d7d9c9 (fix: detail packing)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
+>>>>>>> 1691b544 (fix: sortir)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),

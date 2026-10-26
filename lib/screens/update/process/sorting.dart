@@ -98,11 +98,27 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   num _gradeAInput(int itemIndex) {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return 0;
-    final grades = items[itemIndex]['grades'] ?? [];
+    final item = items[itemIndex];
+    final grades = item['grades'] ?? [];
     num total = 0;
     for (final grade in grades) {
       if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += num.tryParse(grade['qty'].toString()) ?? 0;
+        total += parseSafe(grade['qty']);
+      }
+    }
+
+    return total +
+        _transferQty(item['transfers_in']) -
+        _transferQty(item['transfers_out']);
+  }
+
+  num _transferQty(dynamic transfers) {
+    if (transfers is! List) return 0;
+
+    num total = 0;
+    for (final transfer in transfers) {
+      if (transfer is Map) {
+        total += parseSafe(transfer['qty']);
       }
     }
     return total;

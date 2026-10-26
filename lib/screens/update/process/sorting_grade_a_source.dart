@@ -117,20 +117,21 @@ class _SortingGradeASourceSectionState
   num get _totalTaken =>
       _rows.fold<num>(0, (total, row) => total + row.takenQty);
 
-  bool get _qtyExceeded => _rows.any(
+  bool get _qtyExceeded =>
+      _rows.any(
         (row) => row.woId != null && row.takenQty > row.availableQty,
       ) ||
       (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!);
 
   String? get _qtyWarning {
     if (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!) {
-      return 'maks. qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
+      return 'Maks. Qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
     }
 
     if (_rows.any(
       (row) => row.woId != null && row.takenQty > row.availableQty,
     )) {
-      return 'Qty diambil melebihi sisa qty';
+      return 'Qty yang diambil, melebihi dari Sisa Qty';
     }
 
     return null;
@@ -617,11 +618,11 @@ class _SortingGradeASourceSectionState
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  'Qty diambil melebihi sisa qty',
+                  'Qty yang diambil, melebihi dari Sisa Qty',
                   style: TextStyle(color: Colors.red),
                 ),
                 SizedBox(
-                  width: 150,
+                  width: 50,
                 )
               ],
             ),

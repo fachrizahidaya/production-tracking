@@ -705,14 +705,20 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dd7ae31 (fix: sortir)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> dd7ae31 (fix: sortir)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1502,6 +1508,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
+<<<<<<< HEAD
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1511,6 +1518,53 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               builder: (context, _) {
                                                 final item =
                                                     (widget.data['items'] ?? [])[tabController.index];
+=======
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.blue.shade100,
+                                            ),
+                                          ),
+                                          child: Wrap(
+                                            spacing: 12,
+                                            runSpacing: 12,
+                                            children: [
+                                              _buildSummaryItem(
+                                                'Total Grade A Sortir',
+                                                formatNumber(
+                                                    totalGradeASorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Keseluruhan Sortir',
+                                                formatNumber(totalAllSorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Packing',
+                                                formatNumber(totalPackingInput),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Grade A',
+                                                formatId(totalWeightGradeAAll),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Keseluruhan',
+                                                formatId(totalWeightAll),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 500,
+                                          child: TabBarView(
+                                            children:
+                                                (widget.data['items'] ?? [])
+                                                    .map<Widget>((item) {
+>>>>>>> dd7ae31 (fix: sortir)
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -1979,6 +2033,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                             child: FormButton(
                           label: 'Simpan',
 <<<<<<< HEAD
+<<<<<<< HEAD
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
@@ -1986,6 +2041,10 @@ class _UpdateProcessState extends State<UpdateProcess>
                           isDisabled: widget.label == 'Sorting' &&
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
                               _gradeASourceInvalid,
+=======
+                          isDisabled:
+                              widget.label == 'Sorting' && _gradeASourceInvalid,
+>>>>>>> dd7ae31 (fix: sortir)
                           onPressed: () {
                             _handleSubmit(context);
                           },

@@ -531,6 +531,8 @@ class _FinishSizingProcessManualState extends State<FinishSizingProcessManual> {
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
+                                    columns: 2,
+                                    compactDisplay: true,
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),

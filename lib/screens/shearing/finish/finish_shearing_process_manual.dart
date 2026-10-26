@@ -661,10 +661,15 @@ class _FinishShearingProcessManualState
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
 =======
 >>>>>>> 3562ec45 (fix: selesai warping - shearing)
+=======
+                                    columns: 2,
+                                    compactDisplay: true,
+>>>>>>> a750f85d (fix: warping - shearing)
                                     onMachineChanged: () => setState(() {}),
                                   ),
                                 ),

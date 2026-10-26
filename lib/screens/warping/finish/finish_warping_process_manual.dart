@@ -1073,10 +1073,15 @@ class _FinishWarpingProcessManualState
                                     withAddMachine: false,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
 =======
 >>>>>>> c940e94a (fix:)
+=======
+                                    columns: 2,
+                                    compactDisplay: true,
+>>>>>>> a750f85d (fix: warping - shearing)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

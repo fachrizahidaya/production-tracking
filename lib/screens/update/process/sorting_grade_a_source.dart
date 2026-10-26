@@ -279,8 +279,11 @@ class _SortingGradeASourceSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
   bool get _qtyExceeded =>
       _rows.any(
         (row) => row.woId != null && row.takenQty > row.availableQty,
@@ -336,19 +339,23 @@ class _SortingGradeASourceSectionState
 =======
 =======
   bool get _qtyExceeded => _rows.any(
+=======
+  bool get _qtyExceeded =>
+      _rows.any(
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
         (row) => row.woId != null && row.takenQty > row.availableQty,
       ) ||
       (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!);
 
   String? get _qtyWarning {
     if (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!) {
-      return 'maks. qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
+      return 'Maks. Qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
     }
 
     if (_rows.any(
       (row) => row.woId != null && row.takenQty > row.availableQty,
     )) {
-      return 'Qty diambil melebihi sisa qty';
+      return 'Qty yang diambil, melebihi dari Sisa Qty';
     }
 
     return null;
@@ -1212,8 +1219,11 @@ class _SortingGradeASourceSectionState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
                   'Qty yang diambil, melebihi dari Sisa Qty',
                   style: TextStyle(color: Colors.red),
                 ),
@@ -1236,7 +1246,17 @@ class _SortingGradeASourceSectionState
 >>>>>>> d176fb50 (fix: warning for qty grade A diambil)
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+                  'Qty yang diambil, melebihi dari Sisa Qty',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(
+                  width: 50,
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
+>>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
                 )
               ],
             ),

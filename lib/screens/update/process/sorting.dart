@@ -101,8 +101,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
     final item = items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -157,7 +160,33 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 >>>>>>> d176fb50 (fix: warning for qty grade A diambil)
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+<<<<<<< HEAD
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
+=======
+=======
+    final item = items[itemIndex];
+    final grades = item['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += parseSafe(grade['qty']);
+      }
+    }
+
+    return total +
+        _transferQty(item['transfers_in']) -
+        _transferQty(item['transfers_out']);
+  }
+
+  num _transferQty(dynamic transfers) {
+    if (transfers is! List) return 0;
+
+    num total = 0;
+    for (final transfer in transfers) {
+      if (transfer is Map) {
+        total += parseSafe(transfer['qty']);
+>>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
+>>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
       }
     }
     return total;

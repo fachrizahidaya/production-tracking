@@ -99,6 +99,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
     final item = items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -127,6 +128,29 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
         total += num.tryParse(grade['qty'].toString()) ?? 0;
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
+=======
+    final item = items[itemIndex];
+    final grades = item['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += parseSafe(grade['qty']);
+      }
+    }
+
+    return total +
+        _transferQty(item['transfers_in']) -
+        _transferQty(item['transfers_out']);
+  }
+
+  num _transferQty(dynamic transfers) {
+    if (transfers is! List) return 0;
+
+    num total = 0;
+    for (final transfer in transfers) {
+      if (transfer is Map) {
+        total += parseSafe(transfer['qty']);
+>>>>>>> d176fb50 (fix: warning for qty grade A diambil)
       }
     }
     return total;

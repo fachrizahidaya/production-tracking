@@ -108,6 +108,30 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     return total;
   }
 
+  num? _maxGradeASourceQty(int itemIndex) {
+    final items = widget.form['items'] ?? [];
+    if (itemIndex < 0 || itemIndex >= items.length) return null;
+
+    final woItems = widget.data['work_orders']?['items'];
+    if (woItems is! List) return null;
+
+    final item = items[itemIndex];
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+      if (raw['id']?.toString() != item['wo_item_id']?.toString()) continue;
+
+      final totalWoQty = parseSafe(raw['qty']);
+      if (totalWoQty <= 0) return null;
+
+      // Transfer dari WO lain hanya mengisi kekurangan Grade A. Grade B dan
+      // BS sudah merupakan hasil sortir dari WO ini, sehingga tidak boleh
+      // mengurangi kapasitas transfer Grade A.
+      return (totalWoQty - _gradeAInput(itemIndex)).clamp(0, totalWoQty);
+    }
+
+    return null;
+  }
+
   dynamic get _currentWoId {
     final workOrder = widget.data['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -250,6 +274,19 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 */
 
   Future<void> _initializeFormFromApi() async {
+    // The form is shared with the parent UpdateProcess.  When the outer
+    // Form Edit / Info WO tab rebuilds this section, do not rebuild the
+    // sorting items from the API again: that would discard values typed by
+    // the user and replace them with the existing values (or zero).
+    final currentItems = widget.form['items'];
+    if (currentItems is List &&
+        currentItems.isNotEmpty &&
+        currentItems.every(
+          (item) => item is Map && item['grades'] is List,
+        )) {
+      return;
+    }
+
     final grades = widget.data['grades'] ?? [];
     final woItems = widget.data['work_orders']?['items'] ?? [];
 
@@ -308,6 +345,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'code': itemGrade['code'],
           'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
+          'qty_in': item['qty_in'] ?? 0,
+          'qty_out': item['qty_out'] ?? 0,
           'source_qty': item['qty'] ?? 0,
           'available_qty': item['available_qty'],
           'notes': grade['notes'],
@@ -664,6 +703,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                     CustomTheme().vGap('xl'),
                   ],
                   _buildGlobalSummary(),
+                  SizedBox(
+                    height: 16,
+                  ),
                   KeyedSubtree(
                     key: const ValueKey('sorting-edit-body'),
                     child: Column(
@@ -732,7 +774,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.white,
+        border: Border.all(
+          width: 0.5,
+          color: CustomTheme().colors('text-primary').withOpacity(0.2),
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -773,6 +819,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   excludeWoId: _currentWoId,
                   sortingId: widget.data['id'],
                   gradeAInput: _gradeAInput(itemIndex),
+                  maxTakenQty: _maxGradeASourceQty(itemIndex),
                   onTotalChanged: (total) {
                     setState(() => _absorbedQty[itemIndex] = total);
                   },
@@ -952,12 +999,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
                     grade['qty'] = parsed;
 
-                    _getGradeController(
-                      itemIndex,
-                      gradeIndex,
-                      parsed,
-                    ).text = value;
-
                     setState(() {});
 
                     widget.updateTotalSorting();
@@ -991,22 +1032,42 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   }
 
   Widget? _transferOutNote(Map item, Map grade) {
-    final rows = item['transfers_out'];
-    if (rows is! List) return null;
+    final transferInRows = item['absorbed_work_orders'] is List
+        ? item['absorbed_work_orders']
+        : item['transfers_in'];
+    final transferOutRows = item['transfers_out'];
 
-    final transfers = rows.whereType<Map>().toList();
-    if (transfers.isEmpty) return null;
+    final transfersIn = transferInRows is List
+        ? transferInRows.whereType<Map>().toList()
+        : <Map>[];
+    final transfersOut = transferOutRows is List
+        ? transferOutRows.whereType<Map>().toList()
+        : <Map>[];
 
-    var total = 0.0;
-    final woNos = <String>[];
-    for (final row in transfers) {
-      total += parseSafe(row['qty']);
-      final woNo = row['to_wo_no']?.toString() ?? '';
-      if (woNo.isNotEmpty) woNos.add(woNo);
+    if (transfersIn.isEmpty && transfersOut.isEmpty) return null;
+
+    var totalIn = 0.0;
+    var totalOut = 0.0;
+    final sourceWoNos = <String>[];
+    final targetWoNos = <String>[];
+
+    for (final row in transfersIn) {
+      totalIn += parseSafe(row['qty']);
+      final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
+      if (woNo.isNotEmpty && !sourceWoNos.contains(woNo)) {
+        sourceWoNos.add(woNo);
+      }
     }
 
-    final target = woNos.join(', ');
-    final remaining = parseSafe(grade['qty']) - total;
+    for (final row in transfersOut) {
+      totalOut += parseSafe(row['qty']);
+      final woNo = row['to_wo_no']?.toString() ?? '';
+      if (woNo.isNotEmpty && !targetWoNos.contains(woNo)) {
+        targetWoNos.add(woNo);
+      }
+    }
+
+    final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
     const black = TextStyle(color: Colors.black);
     const blackBold = TextStyle(
       color: Colors.black,
@@ -1023,34 +1084,60 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               fontSize: 12,
             ),
             children: [
-              const TextSpan(
-                text: 'Qty diambil ',
-                style: black,
-              ),
-              TextSpan(
-                text: '-${formatNumber(total)}',
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              if (target.isNotEmpty) ...[
+              if (totalIn > 0) ...[
                 const TextSpan(
-                  text: ' untuk ',
+                  text: 'Qty ',
                   style: black,
                 ),
                 TextSpan(
-                  text: target,
+                  text: '+${formatNumber(totalIn)}',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (sourceWoNos.isNotEmpty) ...[
+                  const TextSpan(text: ' dari ', style: black),
+                  TextSpan(text: sourceWoNos.join(', '), style: black),
+                ],
+              ],
+              if (totalIn > 0 && totalOut > 0)
+                const TextSpan(text: '\n', style: black),
+              if (totalOut > 0) ...[
+                const TextSpan(
+                  text: 'Qty ',
                   style: black,
                 ),
+                TextSpan(
+                  text: '-${formatNumber(totalOut)}',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                if (targetWoNos.isNotEmpty) ...[
+                  const TextSpan(
+                    text: ' untuk ',
+                    style: black,
+                  ),
+                  TextSpan(
+                    text: targetWoNos.join(', '),
+                    style: black,
+                  ),
+                ],
               ],
+              if (totalIn == 0 && totalOut == 0)
+                const TextSpan(
+                  text: 'Tidak ada transfer',
+                  style: black,
+                ),
             ],
           ),
           textAlign: TextAlign.right,
         ),
         const SizedBox(height: 4),
         Text(
-          'Total: ${formatNumber(remaining)}',
+          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
           textAlign: TextAlign.right,
           style: blackBold,
         ),
@@ -1095,12 +1182,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               g[key] = parsed;
             }
           });
-
-          _getRepairController(
-            itemIndex,
-            key,
-            parsed,
-          ).text = value;
 
           widget.updateTotalSorting();
         },
@@ -1621,6 +1702,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final grades = item['grades'] ?? [];
 
     double gradeA = 0;
+    double gradeAAdditional = 0;
+    double gradeATaken = 0;
     double gradeB = 0;
     double gradeBS = 0;
 
@@ -1633,6 +1716,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
+        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
+        gradeATaken += _gradeATaken(grade);
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -1674,6 +1759,17 @@ class _SortingEditSectionState extends State<SortingEditSection> {
             totalRepair,
           ),
           _summaryBox(
+            'Grade A Tambahan',
+            gradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            gradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
+          ),
+          _summaryBox(
             'Hasil Sortir',
             totalSorting,
           ),
@@ -1685,34 +1781,31 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   }
 
   double _summaryGradeA(Map item, Map grade, int itemIndex) {
-    final input = parseSafe(grade['qty']);
-    final absorbed = _absorbedQty[itemIndex] ?? 0;
-    if (grade['available_qty'] == null) {
-      return input + absorbed;
-    }
-
-    final savedTransferIn = _savedTransferInQty(item);
-    return parseSafe(grade['available_qty']) +
-        input -
-        parseSafe(grade['source_qty']) +
-        absorbed -
-        savedTransferIn;
+    return parseSafe(grade['qty']) +
+        _gradeAAdditional(item, grade, itemIndex) -
+        _gradeATaken(grade);
   }
 
-  double _savedTransferInQty(Map item) {
-    final rows = item['transfers_in'];
-    if (rows is! List) return 0;
-
-    var total = 0.0;
-    for (final row in rows) {
-      if (row is Map) total += parseSafe(row['qty']);
+  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
+    if (_absorbedQty.containsKey(itemIndex)) {
+      return (_absorbedQty[itemIndex] ?? 0).toDouble();
     }
-    return total;
+
+    return parseSafe(grade['qty_in']);
+  }
+
+  double _gradeATaken(Map grade) {
+    return parseSafe(grade['qty_out']);
   }
 
   Widget _summaryBox(
     String title,
     dynamic value,
+    {
+    double? titleFontSize,
+    String valuePrefix = '',
+    Color? valueColor,
+  }
   ) {
     return Expanded(
       child: Container(
@@ -1727,13 +1820,19 @@ class _SortingEditSectionState extends State<SortingEditSection> {
         ),
         child: Column(
           children: [
-            Text(title),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: titleFontSize),
+            ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: valueColor,
               ),
             ),
           ],
@@ -1746,6 +1845,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     final items = widget.form['items'] ?? [];
 
     double totalGradeA = 0;
+    double totalGradeAAdditional = 0;
+    double totalGradeATaken = 0;
     double totalGradeB = 0;
     double totalGradeBS = 0;
 
@@ -1764,6 +1865,9 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
+          totalGradeAAdditional +=
+              _gradeAAdditional(item, grade, itemIndex);
+          totalGradeATaken += _gradeATaken(grade);
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -1806,6 +1910,17 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           _summaryBox(
             'Perbaikan',
             totalRepair,
+          ),
+          _summaryBox(
+            'Grade A Tambahan',
+            totalGradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            totalGradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
           ),
           _summaryBox(
             'Hasil Sortir',

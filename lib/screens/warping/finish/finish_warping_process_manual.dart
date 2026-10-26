@@ -706,10 +706,15 @@ class _FinishWarpingProcessManualState
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
 =======
 >>>>>>> 79249c5 (fix:)
+=======
+                                    columns: 2,
+                                    compactDisplay: true,
+>>>>>>> 4407641 (fix: warping - shearing)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),

@@ -734,6 +734,7 @@ class GreigeProcessDetailList extends StatelessWidget {
       icon: icon,
       title: title,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           child,
         ].separatedBy(CustomTheme().vGap('lg')),
@@ -776,6 +777,7 @@ class GreigeProcessDetailList extends StatelessWidget {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     return _buildInfoGrid(rows);
 =======
     return _buildInfoGrid(
@@ -786,6 +788,9 @@ class GreigeProcessDetailList extends StatelessWidget {
           : WrapCrossAlignment.center,
     );
 >>>>>>> 79249c5 (fix:)
+=======
+    return _buildInfoGrid(rows);
+>>>>>>> 4407641 (fix: warping - shearing)
   }
 
   Widget _buildBrokenYarns() {
@@ -863,17 +868,20 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildInfoGrid(
     List<Map<String, dynamic>> items, {
     bool showIcon = true,
-    WrapCrossAlignment crossAxisAlignment = WrapCrossAlignment.center,
   }) {
     if (items.isEmpty) {
       return NoData();
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4407641 (fix: warping - shearing)
     final children = items
         .map((item) {
           final infoColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+<<<<<<< HEAD
 =======
     return Wrap(
       spacing: 16,
@@ -892,6 +900,8 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
           child: Row(
 >>>>>>> 79249c5 (fix:)
+=======
+>>>>>>> 4407641 (fix: warping - shearing)
             children: [
               Text(
                 item['label'].toString(),

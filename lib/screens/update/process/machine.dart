@@ -21,11 +21,14 @@ class MachineEditSection extends StatefulWidget {
   final WrapCrossAlignment wrapCrossAxisAlignment;
   final int columns;
   final bool compactDisplay;
+<<<<<<< HEAD
 =======
 >>>>>>> 4d0feb6f (fix: machine)
 =======
   final WrapCrossAlignment wrapCrossAxisAlignment;
 >>>>>>> 1590739e (fix: posisis mesin)
+=======
+>>>>>>> 1d6d2ab6 (fix: sortir)
 
   const MachineEditSection(
       {super.key,
@@ -46,8 +49,14 @@ class MachineEditSection extends StatefulWidget {
 >>>>>>> 4d0feb6f (fix: machine)
 =======
       this.onMachineChanged,
+<<<<<<< HEAD
       this.wrapCrossAxisAlignment = WrapCrossAlignment.center});
 >>>>>>> 1590739e (fix: posisis mesin)
+=======
+      this.wrapCrossAxisAlignment = WrapCrossAlignment.center,
+      this.columns = 4,
+      this.compactDisplay = false});
+>>>>>>> 1d6d2ab6 (fix: sortir)
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();

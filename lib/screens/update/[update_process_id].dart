@@ -588,6 +588,7 @@ class _UpdateProcessState extends State<UpdateProcess>
       final gradeItems = grade['items'] ?? [];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       for (final gradeItem in gradeItems) {
         if (gradeItem is! Map) continue;
         if (gradeItem['wo_item_id'] != woItemId) continue;
@@ -602,6 +603,11 @@ class _UpdateProcessState extends State<UpdateProcess>
       if (matched != null) {
         final qty = parseInput(matched['qty']);
 >>>>>>> 12b70b7 (fix: mulai weaving)
+=======
+      for (final gradeItem in gradeItems) {
+        if (gradeItem is! Map) continue;
+        if (gradeItem['wo_item_id'] != woItemId) continue;
+>>>>>>> 1d6d2ab6 (fix: sortir)
 
         if (gradeCode == 'A') {
           gradeA += _gradeAQty(gradeItem);
@@ -750,14 +756,20 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d6d2ab6 (fix: sortir)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 1d6d2ab6 (fix: sortir)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1553,6 +1565,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
+<<<<<<< HEAD
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1562,6 +1575,53 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               builder: (context, _) {
                                                 final item =
                                                     (widget.data['items'] ?? [])[tabController.index];
+=======
+                                        Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                              color: Colors.blue.shade100,
+                                            ),
+                                          ),
+                                          child: Wrap(
+                                            spacing: 12,
+                                            runSpacing: 12,
+                                            children: [
+                                              _buildSummaryItem(
+                                                'Total Grade A Sortir',
+                                                formatNumber(
+                                                    totalGradeASorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Keseluruhan Sortir',
+                                                formatNumber(totalAllSorting),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Packing',
+                                                formatNumber(totalPackingInput),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Grade A',
+                                                formatId(totalWeightGradeAAll),
+                                              ),
+                                              _buildSummaryItem(
+                                                'Total Berat Keseluruhan',
+                                                formatId(totalWeightAll),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 500,
+                                          child: TabBarView(
+                                            children:
+                                                (widget.data['items'] ?? [])
+                                                    .map<Widget>((item) {
+>>>>>>> 1d6d2ab6 (fix: sortir)
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -2030,6 +2090,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                             child: FormButton(
                           label: 'Simpan',
 <<<<<<< HEAD
+<<<<<<< HEAD
                           isDisabled:
                               (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
@@ -2037,6 +2098,10 @@ class _UpdateProcessState extends State<UpdateProcess>
                           isDisabled: widget.label == 'Sorting' &&
 >>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                               _gradeASourceInvalid,
+=======
+                          isDisabled:
+                              widget.label == 'Sorting' && _gradeASourceInvalid,
+>>>>>>> 1d6d2ab6 (fix: sortir)
                           onPressed: () {
                             _handleSubmit(context);
                           },

@@ -700,10 +700,19 @@ Ringkasan Sorting
 
   Widget _buildSummaryItem(
     String title,
+<<<<<<< HEAD
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
   }) {
+=======
+    dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+  }
+  ) {
+>>>>>>> 1d6d2ab6 (fix: sortir)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),

@@ -18,6 +18,7 @@ class SortingGradeASourceSection extends StatefulWidget {
   final dynamic excludeWoId;
   final dynamic sortingId;
   final num gradeAInput;
+  final num? maxTakenQty;
   final ValueChanged<num>? onTotalChanged;
   final ValueChanged<List<Map<String, dynamic>>>? onRowsChanged;
   final ValueChanged<bool>? onExceededChanged;
@@ -29,6 +30,7 @@ class SortingGradeASourceSection extends StatefulWidget {
     this.excludeWoId,
     this.sortingId,
     this.gradeAInput = 0,
+    this.maxTakenQty,
     this.onTotalChanged,
     this.onRowsChanged,
     this.onExceededChanged,
@@ -86,12 +88,21 @@ class _SortingGradeASourceSectionState
     super.didUpdateWidget(oldWidget);
     if (oldWidget.itemId == widget.itemId &&
         oldWidget.excludeWoId == widget.excludeWoId &&
-        oldWidget.sortingId == widget.sortingId) {
+        oldWidget.sortingId == widget.sortingId &&
+        oldWidget.maxTakenQty == widget.maxTakenQty) {
       return;
     }
-    _options = null;
-    _loading = true;
-    _fetchOptions();
+    if (oldWidget.itemId != widget.itemId ||
+        oldWidget.excludeWoId != widget.excludeWoId ||
+        oldWidget.sortingId != widget.sortingId) {
+      _options = null;
+      _loading = true;
+      _fetchOptions();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _notify();
+      });
+    }
   }
 
   @override
@@ -108,7 +119,22 @@ class _SortingGradeASourceSectionState
 
   bool get _qtyExceeded => _rows.any(
         (row) => row.woId != null && row.takenQty > row.availableQty,
-      );
+      ) ||
+      (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!);
+
+  String? get _qtyWarning {
+    if (widget.maxTakenQty != null && _totalTaken > widget.maxTakenQty!) {
+      return 'maks. qty Grade A yang bisa diinput adalah ${formatNumber(widget.maxTakenQty!)}';
+    }
+
+    if (_rows.any(
+      (row) => row.woId != null && row.takenQty > row.availableQty,
+    )) {
+      return 'Qty diambil melebihi sisa qty';
+    }
+
+    return null;
+  }
 
   void _notify() {
     widget.onExceededChanged?.call(_qtyExceeded);
@@ -258,8 +284,11 @@ class _SortingGradeASourceSectionState
     final fromSortingId =
         item['sorting_id'] ?? item['from_sorting_id'] ?? sorting['id'];
     final sourceItemId = item['item_id'] ?? widget.itemId;
-    final sortingNo =
-        (item['from_sorting_no'] ?? sorting['sorting_no'] ?? '').toString();
+    final sortingNo = (item['from_sorting_no'] ??
+            item['sorting_no'] ??
+            sorting['sorting_no'] ??
+            '')
+        .toString();
     final lot = (item['lot'] ??
             item['lot_no'] ??
             item['spk_no'] ??
@@ -280,7 +309,7 @@ class _SortingGradeASourceSectionState
       'wo_no': woNo,
       'sorting_no': sortingNo,
       'lot': lot,
-      'label': sortingNo.isEmpty ? woNo : '$woNo ($sortingNo)',
+      'label': woNo,
       'code': woNo,
       'qty': available is num
           ? available
@@ -364,7 +393,13 @@ class _SortingGradeASourceSectionState
 
   bool get _canAddItem {
     final sourceCount = _options?.length ?? 0;
-    return !_loading && sourceCount >= 1 && _rows.length < sourceCount;
+    final maxReached =
+        widget.maxTakenQty != null && _totalTaken >= widget.maxTakenQty!;
+
+    return !_loading &&
+        !maxReached &&
+        sourceCount >= 1 &&
+        _rows.length < sourceCount;
   }
 
   void _addRow() {
@@ -450,6 +485,24 @@ class _SortingGradeASourceSectionState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var index = 0; index < _rows.length; index++) _buildRow(index),
+          if (_qtyWarning != null)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.orange.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded,
+                      color: Colors.orange.shade700),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(_qtyWarning!)),
+                ],
+              ),
+            ),
           Align(
             alignment: Alignment.centerRight,
             child: ElevatedButton.icon(
@@ -508,7 +561,7 @@ class _SortingGradeASourceSectionState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 flex: 3,
@@ -516,9 +569,9 @@ class _SortingGradeASourceSectionState
                   label: 'WO / Lot',
                   required: false,
                   isDisabled: _loading,
-                  selectedLabel: row.sortingNo.isEmpty
-                      ? row.woNo
-                      : '${row.woNo} (${row.sortingNo})',
+                  isWithCode: true,
+                  selectedCode: row.woNo,
+                  selectedLabel: row.sortingNo,
                   selectedValue: row.id?.toString() ?? '',
                   onTap: () => _pick(index),
                 ),
@@ -540,6 +593,9 @@ class _SortingGradeASourceSectionState
                   initialValue:
                       row.takenQty == 0 ? '' : row.takenQty.toString(),
                   handleChange: (value) {
+                    // TextForm already updates the controller.  Only update
+                    // the model here; assigning controller.text again while
+                    // typing can reset the current edit/caret.
                     setState(() => row.takenQty = _parseQty(value));
                     _notify();
                   },

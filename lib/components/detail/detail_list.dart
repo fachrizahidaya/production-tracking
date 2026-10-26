@@ -600,6 +600,8 @@ Ringkasan Sorting
     int totalRepair = 0;
 
     int totalGradeA = 0;
+    int totalGradeAAdditional = 0;
+    int totalGradeATaken = 0;
     int totalGradeB = 0;
     int totalGradeBS = 0;
 
@@ -618,6 +620,8 @@ Ringkasan Sorting
 
         if (code == 'A') {
           totalGradeA += qty;
+          totalGradeAAdditional += parseSafe(item['qty_in']).toInt();
+          totalGradeATaken += parseSafe(item['qty_out']).toInt();
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -674,6 +678,17 @@ Ringkasan Sorting
           totalRepair,
         ),
         _buildSummaryItem(
+          'Grade A Tambahan',
+          totalGradeAAdditional,
+          valuePrefix: '+',
+        ),
+        _buildSummaryItem(
+          'Grade A Diambil',
+          totalGradeATaken,
+          valuePrefix: '-',
+          valueColor: Colors.red,
+        ),
+        _buildSummaryItem(
           'Hasil Sortir',
           totalSorting,
         ),
@@ -686,6 +701,10 @@ Ringkasan Sorting
   Widget _buildSummaryItem(
     String title,
     dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+  }
   ) {
     return Expanded(
       child: Container(
@@ -709,10 +728,11 @@ Ringkasan Sorting
             ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: valueColor,
               ),
             ),
           ],

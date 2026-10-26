@@ -57,6 +57,26 @@ class _SortingSectionState extends State<SortingSection> {
     return total;
   }
 
+  num? _maxGradeASourceQty(int itemIndex) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return null;
+
+    final woItems = widget.processData?['work_orders']?['items'];
+    if (woItems is! List) return null;
+
+    final item = _items[itemIndex];
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+      if (raw['id']?.toString() != item['wo_item_id']?.toString()) continue;
+
+      final totalWoQty = _parseQty(raw['qty']);
+      if (totalWoQty <= 0) return null;
+
+      return (totalWoQty - _gradeAInput(itemIndex)).clamp(0, totalWoQty);
+    }
+
+    return null;
+  }
+
   dynamic get _currentWoId {
     final workOrder = widget.processData?['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -976,8 +996,9 @@ class _SortingSectionState extends State<SortingSection> {
                     CustomTheme().vGap('xl'),
                   ],
                   _buildGlobalSummary(),
+                  const SizedBox(height: 16),
                   KeyedSubtree(
-                    key: const ValueKey('sorting-finish-body'),
+                    key: const ValueKey('sorting-edit-body'),
                     child: Column(
                       children: [
                         Container(
@@ -1044,7 +1065,11 @@ class _SortingSectionState extends State<SortingSection> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.white,
+        border: Border.all(
+          width: 0.5,
+          color: CustomTheme().colors('text-primary').withOpacity(0.2),
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -1085,8 +1110,9 @@ class _SortingSectionState extends State<SortingSection> {
             excludeWoId: _currentWoId,
             sortingId: widget.processData?['id'],
             gradeAInput: _gradeAInput(itemIndex),
+            maxTakenQty: _maxGradeASourceQty(itemIndex),
             onTotalChanged: (total) {
-              _absorbedQty[itemIndex] = total;
+              setState(() => _absorbedQty[itemIndex] = total);
             },
             onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
             onExceededChanged: (exceeded) =>
@@ -1881,6 +1907,8 @@ class _SortingSectionState extends State<SortingSection> {
     final grades = item['grades'] ?? [];
 
     double gradeA = 0;
+    double gradeAAdditional = 0;
+    double gradeATaken = 0;
     double gradeB = 0;
     double gradeBS = 0;
 
@@ -1891,6 +1919,8 @@ class _SortingSectionState extends State<SortingSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
+        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
+        gradeATaken += _gradeATaken(item, grade);
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -1935,6 +1965,17 @@ class _SortingSectionState extends State<SortingSection> {
             totalRepair,
           ),
           _summaryBox(
+            'Grade A Tambahan',
+            gradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            gradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
+          ),
+          _summaryBox(
             'Hasil Sortir',
             totalSorting,
           ),
@@ -1970,9 +2011,34 @@ class _SortingSectionState extends State<SortingSection> {
     return total;
   }
 
+  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
+    if (_absorbedQty.containsKey(itemIndex)) {
+      return (_absorbedQty[itemIndex] ?? 0).toDouble();
+    }
+
+    return parseSafe(grade['qty_in']);
+  }
+
+  double _gradeATaken(Map item, Map grade) {
+    final rows = item['transfers_out'];
+    if (rows is List) {
+      var total = 0.0;
+      for (final row in rows) {
+        if (row is Map) total += parseSafe(row['qty']);
+      }
+      return total;
+    }
+
+    return parseSafe(grade['qty_out']);
+  }
+
   Widget _summaryBox(
     String title,
     dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+    }
   ) {
     return Expanded(
       child: Container(
@@ -1987,13 +2053,18 @@ class _SortingSectionState extends State<SortingSection> {
         ),
         child: Column(
           children: [
-            Text(title),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: valueColor,
               ),
             ),
           ],
@@ -2006,6 +2077,8 @@ class _SortingSectionState extends State<SortingSection> {
     final items = _items;
 
     double totalGradeA = 0;
+    double totalGradeAAdditional = 0;
+    double totalGradeATaken = 0;
     double totalGradeB = 0;
     double totalGradeBS = 0;
 
@@ -2022,6 +2095,9 @@ class _SortingSectionState extends State<SortingSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
+          totalGradeAAdditional +=
+              _gradeAAdditional(item, grade, itemIndex);
+          totalGradeATaken += _gradeATaken(item, grade);
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -2067,6 +2143,17 @@ class _SortingSectionState extends State<SortingSection> {
           _summaryBox(
             'Perbaikan',
             totalRepair,
+          ),
+          _summaryBox(
+            'Grade A Tambahan',
+            totalGradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            totalGradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
           ),
           _summaryBox(
             'Hasil Sortir',

@@ -553,22 +553,16 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final gradeItems = grade['items'] ?? [];
 
-      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          return gradeItem?['wo_item_id'] == woItemId;
-        },
-        orElse: () => null,
-      );
-
-      if (matched != null) {
-        final qty = parseInput(matched['qty']);
+      for (final gradeItem in gradeItems) {
+        if (gradeItem is! Map) continue;
+        if (gradeItem['wo_item_id'] != woItemId) continue;
 
         if (gradeCode == 'A') {
-          gradeA = qty;
+          gradeA += _gradeAQty(gradeItem);
         } else if (gradeCode == 'B') {
-          gradeB = qty;
+          gradeB += parseInput(gradeItem['qty']);
         } else if (gradeCode == 'BS') {
-          gradeBS = qty;
+          gradeBS += parseInput(gradeItem['qty']);
         }
       }
     }
@@ -709,18 +703,27 @@ class _UpdateProcessState extends State<UpdateProcess>
     return int.tryParse(value?.toString() ?? '') ?? value;
   }
 
+  double _gradeAQty(Map gradeItem) {
+    return parseInput(gradeItem['qty']) +
+        parseInput(gradeItem['qty_in']) -
+        parseInput(gradeItem['qty_out']);
+  }
+
   double get totalGradeASorting {
-    final grades = widget.data?['sorting']?['grades'] ??
-        widget.data?['sorting']?['grades'] ??
-        [];
+    final grades = widget.data?['sorting']?['grades'] ?? [];
 
     double total = 0;
 
     for (final grade in grades) {
-      final code = grade['item_grade']?['code'];
+      final code = grade['item_grade']?['code']?.toString().trim();
 
-      if (code == 'A') {
-        total += parseInput(grade['qty']);
+      if (code != 'A') continue;
+
+      final gradeItems = grade['items'] ?? [];
+
+      for (final gradeItem in gradeItems) {
+        if (gradeItem is! Map) continue;
+        total += _gradeAQty(gradeItem);
       }
     }
 
@@ -728,14 +731,23 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
   double get totalAllSorting {
-    final grades = widget.data?['sorting']?['grades'] ??
-        widget.data?['sorting']?['grades'] ??
-        [];
+    final grades = widget.data?['sorting']?['grades'] ?? [];
 
     double total = 0;
 
     for (final grade in grades) {
-      total += parseInput(grade['qty']);
+      final code = grade['item_grade']?['code']?.toString().trim();
+
+      if (code == 'A') {
+        final gradeItems = grade['items'] ?? [];
+
+        for (final gradeItem in gradeItems) {
+          if (gradeItem is! Map) continue;
+          total += _gradeAQty(gradeItem);
+        }
+      } else if (code == 'B' || code == 'BS') {
+        total += parseInput(grade['qty']);
+      }
     }
 
     return total;
@@ -1460,12 +1472,12 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             runSpacing: 12,
                                             children: [
                                               _buildSummaryItem(
-                                                'Total Grade A Sorting',
+                                                'Total Grade A Sortir',
                                                 formatNumber(
                                                     totalGradeASorting),
                                               ),
                                               _buildSummaryItem(
-                                                'Total Keseluruhan Sorting',
+                                                'Total Keseluruhan Sortir',
                                                 formatNumber(totalAllSorting),
                                               ),
                                               _buildSummaryItem(
@@ -1882,8 +1894,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
-                          isDisabled: widget.label == 'Sorting' &&
-                              _gradeASourceInvalid,
+                          isDisabled:
+                              widget.label == 'Sorting' && _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);
                           },

@@ -17,6 +17,8 @@ class MachineEditSection extends StatefulWidget {
   final withAddMachine;
   final onMachineChanged;
   final WrapCrossAlignment wrapCrossAxisAlignment;
+  final int columns;
+  final bool compactDisplay;
 
   const MachineEditSection(
       {super.key,
@@ -27,7 +29,9 @@ class MachineEditSection extends StatefulWidget {
       this.newMachines,
       this.withAddMachine = true,
       this.onMachineChanged,
-      this.wrapCrossAxisAlignment = WrapCrossAlignment.center});
+      this.wrapCrossAxisAlignment = WrapCrossAlignment.center,
+      this.columns = 4,
+      this.compactDisplay = false});
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();
@@ -49,9 +53,13 @@ class _MachineEditSectionState extends State<MachineEditSection> {
       children: [
         LayoutBuilder(
           builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth - 24) / 4;
+            final itemWidth =
+                (constraints.maxWidth - (widget.columns - 1) * 16) /
+                    widget.columns;
 
             return Wrap(
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
               spacing: 16,
               runSpacing: 16,
               crossAxisAlignment: widget.wrapCrossAxisAlignment,
@@ -133,33 +141,44 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
+                        color: widget.compactDisplay ? Colors.white : null,
                         border: Border.all(
-                          color: Colors.grey.shade300,
+                          color: Colors.grey.shade200,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: Text(
-                              machineData == null
-                                  ? (machine['name'] ?? '-')
-                                  : (machineData['code'] == null
-                                      ? (machineData['name'] ?? '-')
-                                      : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            child: widget.compactDisplay
+                                ? Text(
+                                    machineData?['name'] ??
+                                        machine['name'] ??
+                                        '-',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                : Text(
+                                    machineData == null
+                                        ? (machine['name'] ?? '-')
+                                        : (machineData['code'] == null
+                                            ? (machineData['name'] ?? '-')
+                                            : '${machineData['code']} - ${machineData['name'] ?? '-'}'),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                           ),
 
                           /// BADGE
-                          if (status != 'Tersedia')
+                          if (widget.compactDisplay || status != 'Tersedia')
                             CustomBadge(
-                              status:
-                                  status == 'Selesai' ? 'Selesai' : 'Diproses',
-                              title: status ?? '',
+                              status: status == 'Selesai'
+                                  ? 'Selesai'
+                                  : 'Diproses',
+                              title: status ?? 'Tersedia',
                             ),
 
                           /// DELETE BUTTON

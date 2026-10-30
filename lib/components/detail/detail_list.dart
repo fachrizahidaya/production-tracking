@@ -701,6 +701,7 @@ Ringkasan Sorting
   Widget _buildSummaryItem(
     String title,
 <<<<<<< HEAD
+<<<<<<< HEAD
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
@@ -713,6 +714,12 @@ Ringkasan Sorting
   }
   ) {
 >>>>>>> dd7ae31 (fix: sortir)
+=======
+    dynamic value, {
+    String valuePrefix = '',
+    Color? valueColor,
+  }) {
+>>>>>>> 80d4e6a (fix: detail packing)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -1611,6 +1618,8 @@ Catatan WO
             item['qty']?.toString() ?? '0',
           ) ??
           0;
+
+
 
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',

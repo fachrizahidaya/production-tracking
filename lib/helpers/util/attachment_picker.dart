@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/screens/env_config.dart';
 
 class AttachmentPicker extends StatelessWidget {
   final List attachments;
@@ -48,6 +49,16 @@ class AttachmentPicker extends StatelessWidget {
     if (source != null) {
       await onAddAttachment(source);
     }
+  }
+
+  String _remoteUrl(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    final baseUrl = EnvConfig.apiUrl;
+    if (path.startsWith('/')) return '$baseUrl$path';
+    return '$baseUrl/$path';
   }
 
   @override
@@ -103,8 +114,12 @@ class AttachmentPicker extends StatelessWidget {
               );
             }
 
-            final bool isNew = item.containsKey('path');
-            final String? filePath = isNew ? item['path'] : item['file_path'];
+            // Backend responses can also contain a `path` field. Only files
+            // explicitly marked as new should be opened from local storage.
+            final bool isNew = item['isNew'] == true;
+            final String? filePath = isNew
+                ? item['path']?.toString()
+                : (item['file_path'] ?? item['path'])?.toString();
 
             final String fileName = isNew
                 ? item['name']
@@ -118,7 +133,7 @@ class AttachmentPicker extends StatelessWidget {
             } else if (isNew && filePath != null) {
               preview = Image.file(File(filePath), fit: BoxFit.cover);
             } else if (filePath != null) {
-              preview = Image.network(filePath, fit: BoxFit.cover);
+              preview = Image.network(_remoteUrl(filePath), fit: BoxFit.cover);
             } else {
               preview = Icon(Icons.insert_drive_file);
             }
@@ -130,7 +145,10 @@ class AttachmentPicker extends StatelessWidget {
                   onTap: () {
                     if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
                         filePath != null) {
-                      onPreviewImage(isNew, filePath);
+                      onPreviewImage(
+                        isNew,
+                        isNew ? filePath : _remoteUrl(filePath),
+                      );
                     }
                   },
                   child: Container(

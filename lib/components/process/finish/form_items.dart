@@ -2164,6 +2164,7 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
+<<<<<<< HEAD
                                     key: ValueKey(
                                       'packing-grade-a-${widget.form['wo_id']}-$itemId',
 =======
@@ -2427,6 +2428,17 @@ class _FormItemsState extends State<FormItems>
                                         'packing-grade-a-${widget.form['wo_id']}-$itemId',
                                       ),
 >>>>>>> cb30986c (fix: finish dyeing)
+=======
+<<<<<<< HEAD
+                                      key: ValueKey(
+                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                      ),
+=======
+                                    key: ValueKey(
+                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                    ),
+>>>>>>> 1ae4f78 (fix: stok di packing)
+>>>>>>> b69af3a7 (fix: stok di packing)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']
@@ -2465,8 +2477,13 @@ class _FormItemsState extends State<FormItems>
                                           widget.form['items'],
                                         );
                                       },
+<<<<<<< HEAD
                                       onExceededChanged:
                                           widget.handleItemQtyWarning,
+=======
+                                    onExceededChanged:
+                                        widget.handleItemQtyWarning,
+>>>>>>> 1ae4f78 (fix: stok di packing)
                                     ),
                                   ].separatedBy(
                                     CustomTheme().vGap('xl'),

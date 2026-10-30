@@ -1603,7 +1603,10 @@ Catatan WO
           ) ??
           0;
 
-
+      final gradeAAdditionalQty = _packingGradeASourceRows(item).fold<double>(
+        0,
+        (total, usage) => total + parseSafe(usage['qty']),
+      );
 
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',
@@ -1878,6 +1881,37 @@ Catatan WO
                               ),
                               Text(
                                 '${formatNumber(qty)} PCS',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: CustomTheme().fontWeight('bold'),
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (isPacking)
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.grey[200]!),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Grade A Tambahan',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '+ ${formatNumber(gradeAAdditionalQty)} PCS',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: CustomTheme().fontWeight('bold'),

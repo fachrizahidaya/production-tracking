@@ -609,6 +609,16 @@ class _UpdateProcessState extends State<UpdateProcess>
     return double.tryParse(str) ?? 0;
   }
 
+  double getPackingGradeAAdditionalQty(Map<String, dynamic> item) {
+    final usages = item['grade_a_stock_usages'];
+    if (usages is! List) return 0;
+
+    return usages.fold<double>(
+      0,
+      (total, usage) => usage is Map ? total + parseInput(usage['qty']) : total,
+    );
+  }
+
   void calculateLongHemmingWeight() {
     final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
@@ -1532,6 +1542,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                   item,
                                                   widget.data,
                                                 );
+                                                final gradeAAdditionalQty =
+                                                    getPackingGradeAAdditionalQty(
+                                                        item);
 
                                                 return Container(
                                                   padding: EdgeInsets.all(12),
@@ -1762,30 +1775,54 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                           ),
                                                         ),
                                                         Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Expanded(
-                                                              child:
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
                                                                   PackingNumberForm(
-                                                                label:
-                                                                    'Total Packing (PCS)',
-                                                                controller:
-                                                                    _packingQtyControllers[
-                                                                        itemId]!,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  setState(() {
-                                                                    item['qty'] =
-                                                                        value;
+                                                                    label:
+                                                                        'Total Packing (PCS)',
+                                                                    controller:
+                                                                        _packingQtyControllers[
+                                                                            itemId]!,
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        item['qty'] =
+                                                                            value;
 
-                                                                    calculateBeratA(
-                                                                        item);
-                                                                    calculateTotalBerat(
-                                                                      item,
-                                                                      widget
-                                                                          .data,
-                                                                    );
-                                                                  });
-                                                                },
+                                                                        calculateBeratA(
+                                                                            item);
+                                                                        calculateTotalBerat(
+                                                                          item,
+                                                                          widget
+                                                                              .data,
+                                                                        );
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          6),
+                                                                  Text(
+                                                                    'Grade A Tambahan +${formatNumber(gradeAAdditionalQty)} PCS',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          600],
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                             Expanded(

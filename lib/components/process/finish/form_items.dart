@@ -452,6 +452,16 @@ class _FormItemsState extends State<FormItems>
     return double.tryParse(str) ?? 0;
   }
 
+  double getPackingGradeAAdditionalQty(Map<String, dynamic> item) {
+    final usages = item['grade_a_stock_usages'];
+    if (usages is! List) return 0;
+
+    return usages.fold<double>(
+      0,
+      (total, usage) => usage is Map ? total + parseInput(usage['qty']) : total,
+    );
+  }
+
   void calculateLongHemmingWeight() {
     final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
@@ -1822,6 +1832,8 @@ class _FormItemsState extends State<FormItems>
                                 item,
                                 widget.processData,
                               );
+                              final gradeAAdditionalQty =
+                                  getPackingGradeAAdditionalQty(item);
 
                               final packingId = widget.processData?['id'] ??
                                   widget.data?['id'] ??
@@ -1993,26 +2005,43 @@ class _FormItemsState extends State<FormItems>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: PackingNumberForm(
-                                                label: 'Total Packing (PCS)',
-                                                controller:
-                                                    _packingQtyControllers[
-                                                        itemId]!,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    item['qty'] = value;
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  PackingNumberForm(
+                                                    label:
+                                                        'Total Packing (PCS)',
+                                                    controller:
+                                                        _packingQtyControllers[
+                                                            itemId]!,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        item['qty'] = value;
 
-                                                    calculateBeratA(item);
-                                                    calculateTotalBerat(
-                                                      item,
-                                                      widget.processData,
-                                                    );
+                                                        calculateBeratA(item);
+                                                        calculateTotalBerat(
+                                                          item,
+                                                          widget.processData,
+                                                        );
 
-                                                    _validateAllPackingQty();
-                                                  });
-                                                },
+                                                        _validateAllPackingQty();
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    'Tambahan Grade A +${formatNumber(gradeAAdditionalQty)} PCS',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                             Expanded(
@@ -2081,9 +2110,9 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
-                                    key: ValueKey(
-                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                    ),
+                                      key: ValueKey(
+                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                      ),
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']
@@ -2122,8 +2151,8 @@ class _FormItemsState extends State<FormItems>
                                           widget.form['items'],
                                         );
                                       },
-                                    onExceededChanged:
-                                        widget.handleItemQtyWarning,
+                                      onExceededChanged:
+                                          widget.handleItemQtyWarning,
                                     ),
                                   ].separatedBy(
                                     CustomTheme().vGap('xl'),

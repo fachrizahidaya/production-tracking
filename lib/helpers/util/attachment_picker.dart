@@ -52,6 +52,9 @@ class AttachmentPicker extends StatelessWidget {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 058f0c91 (fix: show gambar attachment)
   String _remoteUrl(String path) {
     if (path.startsWith('http://') || path.startsWith('https://')) {
       return path;
@@ -62,8 +65,11 @@ class AttachmentPicker extends StatelessWidget {
     return '$baseUrl/$path';
   }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6fcd942e (fix: tambah ambil foto dari galeri)
+=======
+>>>>>>> 058f0c91 (fix: show gambar attachment)
   @override
   Widget build(BuildContext context) {
     return TemplateCard(
@@ -138,6 +144,7 @@ class AttachmentPicker extends StatelessWidget {
             } else if (filePath != null) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               preview = Image.network(_remoteUrl(filePath), fit: BoxFit.cover);
 =======
               preview = Image.network(
@@ -150,6 +157,9 @@ class AttachmentPicker extends StatelessWidget {
 =======
               preview = Image.network(filePath, fit: BoxFit.cover);
 >>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
+=======
+              preview = Image.network(_remoteUrl(filePath), fit: BoxFit.cover);
+>>>>>>> 058f0c91 (fix: show gambar attachment)
             } else {
               preview = Icon(Icons.insert_drive_file);
             }
@@ -162,6 +172,7 @@ class AttachmentPicker extends StatelessWidget {
                     if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
                         filePath != null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                       onPreviewImage(
                         isNew,
 <<<<<<< HEAD
@@ -173,6 +184,12 @@ class AttachmentPicker extends StatelessWidget {
 =======
                       onPreviewImage(isNew, filePath);
 >>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
+=======
+                      onPreviewImage(
+                        isNew,
+                        isNew ? filePath : _remoteUrl(filePath),
+                      );
+>>>>>>> 058f0c91 (fix: show gambar attachment)
                     }
                   },
                   child: Container(

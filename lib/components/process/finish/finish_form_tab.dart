@@ -6,9 +6,18 @@ class FinishFormTab extends StatefulWidget {
   final id;
   final form;
   final formKey;
+  final handleSelectMachine;
   final isLoading;
   final maklon;
+  final isMaklon;
+  final withMaklonOrMachine;
+  final withOnlyMaklon;
+  final withNoMaklonOrMachine;
+  final handleSelectUnit;
+  final handleSelectLengthUnit;
+  final handleSelectWidthUnit;
   final handleChangeInput;
+  final processId;
   final length;
   final width;
   final weight;
@@ -16,33 +25,59 @@ class FinishFormTab extends StatefulWidget {
   final qty;
   final qtyItem;
   final handleSelectWo;
+  final handleSelectQtyUnit;
+  final handleSelectQtyUnitItem;
+  final handleSelectQtyUnitDyeing;
   final data;
+  final weightDozen;
   final gsm;
   final totalWeight;
   final woData;
 
+  final isSubmitting;
+  final isFormIncomplete;
+  final isChanged;
+  final initialQty;
+  final initialWeight;
+  final initialLength;
+  final initialWidth;
+  final initialNotes;
+  final allAttachments;
+  final handlePickAttachments;
   final processData;
   final withItemGrade;
   final itemGradeOption;
   final withQtyAndWeight;
   final label;
   final forDyeing;
+  final forPacking;
+  final forHemming;
+  final forSewing;
   final validateWeight;
   final weightWarning;
   final validateQty;
   final qtyWarning;
+  final handleTotalItemQty;
+  final handleRemainingQtyForGrade;
+  final onGradeChanged;
+  final dyeingLotNo;
+  final handleSelectFinishedMaterial;
   final weightGood;
   final weightDefect;
   final packingQty;
   final combing;
   final spraying;
+  final reworkLongHemming;
   final itemTypeOption;
   final defects;
   final defectQty;
+  final handleUpdateDefect;
   final weightGradeA;
   final finishedItem;
+  final grades;
   final dyeingQty;
   final finishedItemGrb;
+  final finishedItemGood;
   final isInitializing;
   final reworkCategoryOption;
   final onMachineChanged;
@@ -53,15 +88,37 @@ class FinishFormTab extends StatefulWidget {
       {super.key,
       this.form,
       this.formKey,
+      this.handleSelectMachine,
       this.id,
       this.isLoading,
+      this.isMaklon,
       this.maklon,
+      this.withMaklonOrMachine,
+      this.withNoMaklonOrMachine,
+      this.withOnlyMaklon,
       this.handleChangeInput,
+      this.handleSelectLengthUnit,
+      this.handleSelectUnit,
+      this.handleSelectWidthUnit,
+      this.allAttachments,
+      this.handlePickAttachments,
+      this.handleSelectQtyUnit,
+      this.handleSelectQtyUnitItem,
+      this.handleSelectQtyUnitDyeing,
       this.handleSelectWo,
+      this.initialLength,
+      this.initialNotes,
+      this.initialQty,
+      this.initialWeight,
+      this.initialWidth,
+      this.isChanged,
+      this.isFormIncomplete,
+      this.isSubmitting,
       this.itemGradeOption,
       this.length,
       this.note,
       this.processData,
+      this.processId,
       this.qty,
       this.qtyItem,
       this.weight,
@@ -71,29 +128,43 @@ class FinishFormTab extends StatefulWidget {
       this.label,
       this.forDyeing,
       this.data,
+      this.forPacking,
+      this.weightDozen,
       this.gsm,
       this.totalWeight,
       this.validateWeight,
       this.weightWarning,
       this.qtyWarning,
       this.validateQty,
+      this.handleRemainingQtyForGrade,
+      this.handleTotalItemQty,
+      this.onGradeChanged,
+      this.dyeingLotNo,
+      this.forHemming,
+      this.forSewing,
+      this.handleSelectFinishedMaterial,
       this.weightDefect,
       this.weightGood,
       this.woData,
       this.packingQty,
       this.combing,
       this.spraying,
+      this.reworkLongHemming,
       this.itemTypeOption,
       this.defects,
       this.defectQty,
+      this.handleUpdateDefect,
       this.weightGradeA,
       this.finishedItem,
+      this.grades,
       this.dyeingQty,
+      this.finishedItemGood,
       this.finishedItemGrb,
       this.isInitializing,
-      this.handleItemQtyWarning,
       this.reworkCategoryOption,
-      this.onMachineChanged});
+      this.onMachineChanged,
+      this.handleItemQtyWarning,
+      this.onAttachmentChanged});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();

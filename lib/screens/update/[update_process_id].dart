@@ -31,6 +31,7 @@ import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
 import 'package:textile_tracking/screens/update/process/long_hemming.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/update/process/sorting.dart';
+import 'package:textile_tracking/screens/update/process/packing_grade_a_source.dart';
 
 class UpdateProcess extends StatefulWidget {
   final id;
@@ -1408,6 +1409,44 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.blue.shade100,
+                                      ),
+                                    ),
+                                    child: Wrap(
+                                      spacing: 12,
+                                      runSpacing: 12,
+                                      children: [
+                                        _buildSummaryItem(
+                                          'Total Grade A Sortir',
+                                          formatNumber(totalGradeASorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Keseluruhan Sortir',
+                                          formatNumber(totalAllSorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Packing',
+                                          formatNumber(totalPackingInput),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Grade A',
+                                          formatId(totalWeightGradeAAll),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Keseluruhan',
+                                          formatId(totalWeightAll),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                if (widget.label == 'Packing')
                                   DefaultTabController(
                                     length: (widget.form['items'] ?? []).length,
                                     child: Column(
@@ -1456,51 +1495,15 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color: Colors.blue.shade100,
-                                            ),
-                                          ),
-                                          child: Wrap(
-                                            spacing: 12,
-                                            runSpacing: 12,
-                                            children: [
-                                              _buildSummaryItem(
-                                                'Total Grade A Sortir',
-                                                formatNumber(
-                                                    totalGradeASorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Keseluruhan Sortir',
-                                                formatNumber(totalAllSorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Packing',
-                                                formatNumber(totalPackingInput),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Grade A',
-                                                formatId(totalWeightGradeAAll),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Keseluruhan',
-                                                formatId(totalWeightAll),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 500,
-                                          child: TabBarView(
-                                            children:
-                                                (widget.data['items'] ?? [])
-                                                    .map<Widget>((item) {
+                                        Builder(
+                                          builder: (context) {
+                                            final tabController =
+                                                DefaultTabController.of(context);
+                                            return AnimatedBuilder(
+                                              animation: tabController,
+                                              builder: (context, _) {
+                                                final item =
+                                                    (widget.data['items'] ?? [])[tabController.index];
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -1514,9 +1517,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               return Container(
                                                 padding: EdgeInsets.all(12),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.grey[100],
+                                                  // color: Colors.grey[100],
+
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade300),
                                                   borderRadius:
-                                                      BorderRadius.circular(12),
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: TemplateCard(
                                                   title: 'Material',
@@ -1833,14 +1840,84 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               .hGap('xl'),
                                                         ),
                                                       ),
+                                                      PackingGradeASourceSection(
+                                                        initialUsages: (item[
+                                                                    'grade_a_stock_usages']
+                                                                is List)
+                                                            ? (item['grade_a_stock_usages']
+                                                                    as List)
+                                                                .whereType<
+                                                                    Map>()
+                                                                .map((row) => Map<
+                                                                        String,
+                                                                        dynamic>.from(
+                                                                    row))
+                                                                .toList()
+                                                            : const [],
+                                                        itemId: item[
+                                                                'semifinished_product_id'] ??
+                                                            item['item_id'],
+                                                        excludeWoId: widget
+                                                            .data['wo_id'],
+                                                        packingId:
+                                                            widget.data['id'],
+                                                        onRowsChanged: (rows) {
+                                                          item['grade_a_stock_usages'] =
+                                                              rows;
+                                                          final formItems =
+                                                              widget.form[
+                                                                  'items'];
+                                                          if (formItems
+                                                              is List) {
+                                                            final formItem = formItems
+                                                                .whereType<
+                                                                    Map>()
+                                                                .cast<
+                                                                    Map<String,
+                                                                        dynamic>>()
+                                                                .firstWhere(
+                                                                  (value) =>
+                                                                      value['id']
+                                                                          ?.toString() ==
+                                                                      item['id']
+                                                                          ?.toString(),
+                                                                  orElse: () =>
+                                                                      <String,
+                                                                          dynamic>{},
+                                                                );
+                                                            if (formItem
+                                                                .isNotEmpty) {
+                                                              formItem[
+                                                                      'grade_a_stock_usages'] =
+                                                                  rows;
+                                                            }
+                                                          }
+                                                          widget
+                                                              .handleChangeInput(
+                                                                  'items',
+                                                                  widget.form[
+                                                                      'items']);
+                                                        },
+                                                        onExceededChanged:
+                                                            (invalid) {
+                                                          if (_gradeASourceInvalid ==
+                                                              invalid) {
+                                                            return;
+                                                          }
+                                                          setState(() =>
+                                                              _gradeASourceInvalid =
+                                                                  invalid);
+                                                        },
+                                                      ),
                                                     ].separatedBy(
                                                       CustomTheme().vGap('xl'),
                                                     ),
                                                   ),
                                                 ),
                                               );
-                                            }).toList(),
-                                          ),
+                                              },
+                                            );
+                                          },
                                         ),
                                       ].separatedBy(CustomTheme().vGap('xl')),
                                     ),
@@ -1895,7 +1972,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                             child: FormButton(
                           label: 'Simpan',
                           isDisabled:
-                              widget.label == 'Sorting' && _gradeASourceInvalid,
+                              (widget.label == 'Sorting' ||
+                                  widget.label == 'Packing') &&
+                              _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);
                           },

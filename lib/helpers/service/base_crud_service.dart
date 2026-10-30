@@ -559,6 +559,20 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
 
           request.fields['items[$i][total_weight]'] =
               item['total_weight']?.toString() ?? '0';
+
+          final usages = item['grade_a_stock_usages'];
+          if (usages is List) {
+            for (int j = 0; j < usages.length; j++) {
+              final usage = usages[j];
+              if (usage is! Map) continue;
+
+              request.fields[
+                      'items[$i][grade_a_stock_usages][$j][from_packing_item_id]'] =
+                  usage['from_packing_item_id']?.toString() ?? '';
+              request.fields['items[$i][grade_a_stock_usages][$j][qty]'] =
+                  usage['qty']?.toString() ?? '0';
+            }
+          }
         }
       }
 
@@ -950,12 +964,23 @@ abstract class BaseCrudService<T> extends ChangeNotifier {
       request.fields['_method'] = 'PATCH';
 
       if (attachments is List) {
+        final attachmentIds = attachments
+            .whereType<Map>()
+            .map((file) => file['id'])
+            .where((id) => id != null)
+            .toList();
+
+        for (var i = 0; i < attachmentIds.length; i++) {
+          request.fields['attachment_ids[$i]'] = attachmentIds[i].toString();
+        }
+
         for (var file in attachments) {
           if (file is File) {
             request.files.add(
               await http.MultipartFile.fromPath('attachments[]', file.path),
             );
           } else if (file is Map &&
+              file['isNew'] == true &&
               file['path'] != null &&
               file['path'].toString().isNotEmpty) {
             request.files.add(

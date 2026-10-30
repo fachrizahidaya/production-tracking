@@ -1460,6 +1460,44 @@ class _UpdateProcessState extends State<UpdateProcess>
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.blue.shade100,
+                                      ),
+                                    ),
+                                    child: Wrap(
+                                      spacing: 12,
+                                      runSpacing: 12,
+                                      children: [
+                                        _buildSummaryItem(
+                                          'Total Grade A Sortir',
+                                          formatNumber(totalGradeASorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Keseluruhan Sortir',
+                                          formatNumber(totalAllSorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Packing',
+                                          formatNumber(totalPackingInput),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Grade A',
+                                          formatId(totalWeightGradeAAll),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Keseluruhan',
+                                          formatId(totalWeightAll),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                if (widget.label == 'Packing')
                                   DefaultTabController(
                                     length: (widget.form['items'] ?? []).length,
                                     child: Column(
@@ -1509,6 +1547,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                           ),
                                         ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ae4f78 (fix: stok di packing)
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1518,6 +1559,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               builder: (context, _) {
                                                 final item =
                                                     (widget.data['items'] ?? [])[tabController.index];
+<<<<<<< HEAD
 =======
                                         Container(
                                           width: double.infinity,
@@ -1565,6 +1607,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                 (widget.data['items'] ?? [])
                                                     .map<Widget>((item) {
 >>>>>>> dd7ae31 (fix: sortir)
+=======
+>>>>>>> 1ae4f78 (fix: stok di packing)
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -2043,8 +2087,14 @@ class _UpdateProcessState extends State<UpdateProcess>
                               _gradeASourceInvalid,
 =======
                           isDisabled:
+<<<<<<< HEAD
                               widget.label == 'Sorting' && _gradeASourceInvalid,
 >>>>>>> dd7ae31 (fix: sortir)
+=======
+                              (widget.label == 'Sorting' ||
+                                  widget.label == 'Packing') &&
+                              _gradeASourceInvalid,
+>>>>>>> 1ae4f78 (fix: stok di packing)
                           onPressed: () {
                             _handleSubmit(context);
                           },

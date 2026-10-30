@@ -701,6 +701,7 @@ Ringkasan Sorting
   Widget _buildSummaryItem(
     String title,
 <<<<<<< HEAD
+<<<<<<< HEAD
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
@@ -713,6 +714,12 @@ Ringkasan Sorting
   }
   ) {
 >>>>>>> 1d6d2ab6 (fix: sortir)
+=======
+    dynamic value, {
+    String valuePrefix = '',
+    Color? valueColor,
+  }) {
+>>>>>>> 49d7d9c9 (fix: detail packing)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -2054,6 +2061,9 @@ Catatan WO
     return DefaultTabController(
       length: items.length,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 49d7d9c9 (fix: detail packing)
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -2088,6 +2098,7 @@ Catatan WO
                               child: Tab(text: 'Item ${index + 1}'),
                             ),
                         ],
+<<<<<<< HEAD
 =======
       child: Column(
         children: [
@@ -2120,6 +2131,9 @@ Catatan WO
 >>>>>>> 12b70b7 (fix: mulai weaving)
                       ),
 <<<<<<< HEAD
+=======
+                      ),
+>>>>>>> 49d7d9c9 (fix: detail packing)
                     ),
                   ),
                   buildItem(item),
@@ -2128,6 +2142,7 @@ Catatan WO
             },
           );
         },
+<<<<<<< HEAD
 =======
                     );
                   },
@@ -2153,6 +2168,8 @@ Catatan WO
           CustomTheme().vGap('lg'),
         ),
 >>>>>>> 95f19e13 (fix: bug detail process)
+=======
+>>>>>>> 49d7d9c9 (fix: detail packing)
       ),
     );
   }

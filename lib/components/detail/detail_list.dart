@@ -703,8 +703,11 @@ Ringkasan Sorting
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1691b544 (fix: sortir)
+=======
+>>>>>>> 655bb899 (fix: detail packing)
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
@@ -726,7 +729,16 @@ Ringkasan Sorting
 >>>>>>> 49d7d9c9 (fix: detail packing)
 =======
 >>>>>>> dd7ae31 (fix: sortir)
+<<<<<<< HEAD
 >>>>>>> 1691b544 (fix: sortir)
+=======
+=======
+    dynamic value, {
+    String valuePrefix = '',
+    Color? valueColor,
+  }) {
+>>>>>>> 80d4e6a (fix: detail packing)
+>>>>>>> 655bb899 (fix: detail packing)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -1625,6 +1637,8 @@ Catatan WO
             item['qty']?.toString() ?? '0',
           ) ??
           0;
+
+
 
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',

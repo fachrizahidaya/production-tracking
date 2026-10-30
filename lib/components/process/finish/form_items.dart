@@ -489,6 +489,16 @@ class _FormItemsState extends State<FormItems>
     return double.tryParse(str) ?? 0;
   }
 
+  double getPackingGradeAAdditionalQty(Map<String, dynamic> item) {
+    final usages = item['grade_a_stock_usages'];
+    if (usages is! List) return 0;
+
+    return usages.fold<double>(
+      0,
+      (total, usage) => usage is Map ? total + parseInput(usage['qty']) : total,
+    );
+  }
+
   void calculateLongHemmingWeight() {
     final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
@@ -1903,6 +1913,8 @@ class _FormItemsState extends State<FormItems>
                                 item,
                                 widget.processData,
                               );
+                              final gradeAAdditionalQty =
+                                  getPackingGradeAAdditionalQty(item);
 
                               final packingId = widget.processData?['id'] ??
                                   widget.data?['id'] ??
@@ -2075,26 +2087,43 @@ class _FormItemsState extends State<FormItems>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
-                                              child: PackingNumberForm(
-                                                label: 'Total Packing (PCS)',
-                                                controller:
-                                                    _packingQtyControllers[
-                                                        itemId]!,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    item['qty'] = value;
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  PackingNumberForm(
+                                                    label:
+                                                        'Total Packing (PCS)',
+                                                    controller:
+                                                        _packingQtyControllers[
+                                                            itemId]!,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        item['qty'] = value;
 
-                                                    calculateBeratA(item);
-                                                    calculateTotalBerat(
-                                                      item,
-                                                      widget.processData,
-                                                    );
+                                                        calculateBeratA(item);
+                                                        calculateTotalBerat(
+                                                          item,
+                                                          widget.processData,
+                                                        );
 
-                                                    _validateAllPackingQty();
-                                                  });
-                                                },
+                                                        _validateAllPackingQty();
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    'Tambahan Grade A +${formatNumber(gradeAAdditionalQty)} PCS',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                             Expanded(
@@ -2164,6 +2193,7 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     key: ValueKey(
                                       'packing-grade-a-${widget.form['wo_id']}-$itemId',
@@ -2429,6 +2459,8 @@ class _FormItemsState extends State<FormItems>
                                       ),
 >>>>>>> cb30986c (fix: finish dyeing)
 =======
+=======
+>>>>>>> 34eadd95 (fix: keterangan ambil stok)
 <<<<<<< HEAD
                                       key: ValueKey(
                                         'packing-grade-a-${widget.form['wo_id']}-$itemId',
@@ -2438,7 +2470,15 @@ class _FormItemsState extends State<FormItems>
                                       'packing-grade-a-${widget.form['wo_id']}-$itemId',
                                     ),
 >>>>>>> 1ae4f78 (fix: stok di packing)
+<<<<<<< HEAD
 >>>>>>> b69af3a7 (fix: stok di packing)
+=======
+=======
+                                      key: ValueKey(
+                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                      ),
+>>>>>>> 9339670 (fix: keterangan ambil stok)
+>>>>>>> 34eadd95 (fix: keterangan ambil stok)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']
@@ -2478,12 +2518,17 @@ class _FormItemsState extends State<FormItems>
                                         );
                                       },
 <<<<<<< HEAD
+<<<<<<< HEAD
                                       onExceededChanged:
                                           widget.handleItemQtyWarning,
 =======
                                     onExceededChanged:
                                         widget.handleItemQtyWarning,
 >>>>>>> 1ae4f78 (fix: stok di packing)
+=======
+                                      onExceededChanged:
+                                          widget.handleItemQtyWarning,
+>>>>>>> 9339670 (fix: keterangan ambil stok)
                                     ),
                                   ].separatedBy(
                                     CustomTheme().vGap('xl'),

@@ -109,6 +109,23 @@ class _FinishSectionState extends State<FinishSection> {
   late List<Map<String, dynamic>> allAttachments;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
+  List<Map<String, dynamic>> _mergeAttachments(
+    List<Map<String, dynamic>> existing,
+    List<Map<String, dynamic>> newOnes,
+  ) {
+    final result = <Map<String, dynamic>>[];
+    final keys = <String>{};
+
+    for (final attachment in [...existing, ...newOnes]) {
+      final key = attachment['id'] != null
+          ? 'id:${attachment['id']}'
+          : 'path:${attachment['file_path'] ?? attachment['path'] ?? attachment['name']}';
+      if (keys.add(key)) result.add(attachment);
+    }
+
+    return result;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -119,8 +136,7 @@ class _FinishSectionState extends State<FinishSection> {
         (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
     allAttachments = [
-      ...existing,
-      ...newOnes,
+      ..._mergeAttachments(existing, newOnes),
       {'is_add_button': true},
     ];
   }
@@ -137,8 +153,7 @@ class _FinishSectionState extends State<FinishSection> {
             (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
         allAttachments = [
-          ...existing,
-          ...newOnes,
+          ..._mergeAttachments(existing, newOnes),
           {'is_add_button': true},
         ];
       });

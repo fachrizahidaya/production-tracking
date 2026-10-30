@@ -17,24 +17,33 @@ class SortingGradeASourceSection extends StatefulWidget {
   final dynamic itemId;
   final dynamic excludeWoId;
   final dynamic sortingId;
+  final dynamic packingId;
+  final bool isPacking;
   final num gradeAInput;
   final num? maxTakenQty;
   final ValueChanged<num>? onTotalChanged;
   final ValueChanged<List<Map<String, dynamic>>>? onRowsChanged;
   final ValueChanged<bool>? onExceededChanged;
+  final ValueChanged<bool>? onSourceQtyInvalid;
+  final bool showQtyWarning;
+  final label;
 
-  const SortingGradeASourceSection({
-    super.key,
-    this.initialTransfers = const [],
-    this.itemId,
-    this.excludeWoId,
-    this.sortingId,
-    this.gradeAInput = 0,
-    this.maxTakenQty,
-    this.onTotalChanged,
-    this.onRowsChanged,
-    this.onExceededChanged,
-  });
+  const SortingGradeASourceSection(
+      {super.key,
+      this.initialTransfers = const [],
+      this.itemId,
+      this.excludeWoId,
+      this.sortingId,
+      this.packingId,
+    this.isPacking = false,
+      this.gradeAInput = 0,
+      this.maxTakenQty,
+      this.onTotalChanged,
+      this.onRowsChanged,
+      this.onExceededChanged,
+      this.onSourceQtyInvalid,
+      this.showQtyWarning = true,
+      this.label});
 
   @override
   State<SortingGradeASourceSection> createState() =>
@@ -46,6 +55,7 @@ class _SourceRow {
   dynamic transferId;
   dynamic woId;
   dynamic fromSortingId;
+  dynamic fromPackingItemId;
   dynamic itemId;
   String woNo = '';
   String sortingNo = '';
@@ -89,12 +99,16 @@ class _SortingGradeASourceSectionState
     if (oldWidget.itemId == widget.itemId &&
         oldWidget.excludeWoId == widget.excludeWoId &&
         oldWidget.sortingId == widget.sortingId &&
+        oldWidget.packingId == widget.packingId &&
+        oldWidget.isPacking == widget.isPacking &&
         oldWidget.maxTakenQty == widget.maxTakenQty) {
       return;
     }
     if (oldWidget.itemId != widget.itemId ||
         oldWidget.excludeWoId != widget.excludeWoId ||
-        oldWidget.sortingId != widget.sortingId) {
+        oldWidget.sortingId != widget.sortingId ||
+        oldWidget.packingId != widget.packingId ||
+        oldWidget.isPacking != widget.isPacking) {
       _options = null;
       _loading = true;
       _fetchOptions();
@@ -138,6 +152,7 @@ class _SortingGradeASourceSectionState
   }
 
   void _notify() {
+    widget.onSourceQtyInvalid?.call(_qtyExceeded);
     widget.onExceededChanged?.call(_qtyExceeded);
     widget.onTotalChanged?.call(_totalTaken);
     widget.onRowsChanged?.call(
@@ -150,6 +165,7 @@ class _SortingGradeASourceSectionState
               'wo_id': row.woId,
               'sorting_id': row.fromSortingId,
               'from_sorting_id': row.fromSortingId,
+              'from_packing_item_id': row.fromPackingItemId,
               'item_id': row.itemId ?? widget.itemId,
               'wo_no': row.woNo,
               'sorting_no': row.sortingNo,
@@ -190,6 +206,7 @@ class _SortingGradeASourceSectionState
     row.id = raw['from_wo_id'] ?? raw['wo_id'] ?? raw['value'];
     row.woId = raw['from_wo_id'] ?? raw['wo_id'];
     row.fromSortingId = raw['sorting_id'] ?? raw['from_sorting_id'];
+    row.fromPackingItemId = raw['from_packing_item_id'];
     row.itemId = raw['item_id'];
     row.woNo = (raw['from_wo_no'] ?? raw['wo_no'] ?? '').toString();
     row.sortingNo =
@@ -223,6 +240,7 @@ class _SortingGradeASourceSectionState
       final available = match['qty'];
       if (available is num) row.availableQty = available;
       row.fromSortingId ??= match['sorting_id'] ?? match['from_sorting_id'];
+      row.fromPackingItemId ??= match['from_packing_item_id'];
       row.itemId ??= match['item_id'] ?? widget.itemId;
       if (row.woNo.isEmpty) {
         row.woNo = match['wo_no']?.toString() ?? '';
@@ -238,11 +256,18 @@ class _SortingGradeASourceSectionState
     final itemId = widget.itemId?.toString().trim() ?? '';
     final excludeWoId = widget.excludeWoId?.toString().trim() ?? '';
     final sortingId = widget.sortingId?.toString().trim() ?? '';
+    final packingId = widget.packingId?.toString().trim() ?? '';
     if (itemId.isNotEmpty) query['item_id'] = itemId;
     if (excludeWoId.isNotEmpty) query['exclude_wo_id'] = excludeWoId;
-    if (sortingId.isNotEmpty) query['sorting_id'] = sortingId;
+    if (widget.isPacking) {
+      if (packingId.isNotEmpty) query['packing_id'] = packingId;
+    } else if (sortingId.isNotEmpty) {
+      query['sorting_id'] = sortingId;
+    }
 
-    final uri = Uri.parse('${EnvConfig.apiUrl}/sortings/grade-a-sources')
+    final uri = Uri.parse(widget.isPacking
+            ? '${EnvConfig.apiUrl}/packings/grade-a-stock-sources'
+            : '${EnvConfig.apiUrl}/sortings/grade-a-sources')
         .replace(queryParameters: query);
     final response = await HttpClient.get(uri);
     if (response.statusCode < 200 || response.statusCode >= 300) {
@@ -285,6 +310,7 @@ class _SortingGradeASourceSectionState
     final fromSortingId =
         item['sorting_id'] ?? item['from_sorting_id'] ?? sorting['id'];
     final sourceItemId = item['item_id'] ?? widget.itemId;
+    final fromPackingItemId = item['from_packing_item_id'];
     final sortingNo = (item['from_sorting_no'] ??
             item['sorting_no'] ??
             sorting['sorting_no'] ??
@@ -306,6 +332,7 @@ class _SortingGradeASourceSectionState
       'wo_id': woId,
       'sorting_id': fromSortingId,
       'from_sorting_id': fromSortingId,
+      'from_packing_item_id': fromPackingItemId,
       'item_id': sourceItemId,
       'wo_no': woNo,
       'sorting_no': sortingNo,
@@ -364,6 +391,7 @@ class _SortingGradeASourceSectionState
                 row.woId = value['wo_id'];
                 row.fromSortingId =
                     value['sorting_id'] ?? value['from_sorting_id'];
+                row.fromPackingItemId = value['from_packing_item_id'];
                 row.itemId = value['item_id'] ?? widget.itemId;
                 row.woNo = value['wo_no']?.toString() ?? '';
                 row.sortingNo = value['sorting_no']?.toString() ?? '';
@@ -435,6 +463,7 @@ class _SortingGradeASourceSectionState
     if (index < 0 || index >= _rows.length) return;
     final row = _rows[index];
     final sortingId = widget.sortingId;
+    if (widget.packingId != null) return;
     final transferId = row.transferId;
     if (sortingId == null || transferId == null) return;
 
@@ -480,13 +509,15 @@ class _SortingGradeASourceSectionState
   @override
   Widget build(BuildContext context) {
     return TemplateCard(
-      title: 'Ambil Qty Grade A',
+      title: 'Ambil Stok Grade A',
       icon: Icons.move_down_outlined,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var index = 0; index < _rows.length; index++) _buildRow(index),
-          if (_qtyWarning != null)
+          if (widget.showQtyWarning &&
+              _qtyWarning != null &&
+              widget.label == 'Sorting')
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -613,7 +644,7 @@ class _SortingGradeASourceSectionState
               ),
             ].separatedBy(CustomTheme().hGap('md')),
           ),
-          if (exceeded)
+          if (widget.showQtyWarning && exceeded)
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

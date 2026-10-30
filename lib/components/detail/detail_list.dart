@@ -700,12 +700,10 @@ Ringkasan Sorting
 
   Widget _buildSummaryItem(
     String title,
-    dynamic value,
-    {
+    dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
-  }
-  ) {
+  }) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -1605,6 +1603,8 @@ Catatan WO
           ) ??
           0;
 
+
+
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',
           ) ??
@@ -2028,6 +2028,8 @@ Catatan WO
                 CustomTheme().vGap('xl'),
               ),
             ),
+          if (isPacking && _packingGradeASourceRows(item).isNotEmpty)
+            _buildPackingGradeASourceSection(item),
         ].separatedBy(
           CustomTheme().vGap('xl'),
         ),
@@ -2042,60 +2044,128 @@ Catatan WO
     /// MULTIPLE ITEMS
     return DefaultTabController(
       length: items.length,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: items.asMap().entries.map(
-                  (entry) {
-                    final index = entry.key;
-
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Tab(
-                        text: 'Item ${index + 1}',
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              final item = items[tabController.index];
+              return Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: TabBar(
+                        isScrollable: true,
+                        dividerColor: Colors.transparent,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.black,
+                        indicatorColor: Colors.white,
+                        indicator: BoxDecoration(
+                          color: Colors.blue[800],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        tabAlignment: TabAlignment.start,
+                        tabs: [
+                          for (int index = 0; index < items.length; index++)
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Tab(text: 'Item ${index + 1}'),
+                            ),
+                        ],
                       ),
-                    );
-                  },
-                ).toList(),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: isPacking
-                ? 250
-                : widget.label == 'Long Hemming'
-                    ? 250
-                    : isQtyProcess
-                        ? 200
-                        : 150,
-            child: TabBarView(
-              children: items.map((item) {
-                return buildItem(item);
-              }).toList(),
-            ),
-          ),
-        ].separatedBy(
-          CustomTheme().vGap('lg'),
-        ),
+                    ),
+                  ),
+                  buildItem(item),
+                ].separatedBy(CustomTheme().vGap('lg')),
+              );
+            },
+          );
+        },
       ),
     );
+  }
+
+  List<Map> _packingGradeASourceRows(Map item) {
+    final rows = item['grade_a_stock_usages'];
+    if (rows is! List) return [];
+    return rows.whereType<Map>().toList();
+  }
+
+  Widget _buildPackingGradeASourceSection(Map item) {
+    final rows = _packingGradeASourceRows(item);
+    return TemplateCard(
+      title: 'Grade A dari Stok',
+      icon: Icons.move_down_outlined,
+      child: Column(
+        children: [
+          for (final row in rows)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: _packingReadOnlyField(
+                      'Packing / WO',
+                      _packingGradeASourceLabel(row),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: _packingReadOnlyField(
+                      'Qty diambil',
+                      formatNumber(row['qty'] ?? 0),
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('md')),
+              ),
+            ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _packingReadOnlyField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(color: Colors.grey.shade700)),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          height: 56,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.white,
+          ),
+          child: Text(value.isEmpty ? '-' : value),
+        ),
+      ],
+    );
+  }
+
+  String _packingGradeASourceLabel(Map row) {
+    final packingNo =
+        (row['from_packing_no'] ?? row['packing_no'] ?? '').toString();
+    final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
+    if (packingNo.isEmpty) return woNo;
+    if (woNo.isEmpty) return packingNo;
+    return '$packingNo ($woNo)';
   }
 
   /// Layout untuk Tablet
@@ -2686,14 +2756,28 @@ Catatan WO
   }
 
   Widget _buildPackingSummaryInfo() {
-    final items = widget.data['items'] ?? [];
+    final items = widget.data['items'] is List
+        ? (widget.data['items'] as List).whereType<Map>().toList()
+        : <Map>[];
 
-    double totalPacking = 0;
+    final totalPacking = items.fold<double>(
+      0,
+      (total, item) {
+        var itemTotal = parseSafe(item['qty']);
+        final usages = item['grade_a_stock_usages'];
+        if (usages is List) {
+          for (final usage in usages) {
+            if (usage is Map) {
+              itemTotal += parseSafe(usage['qty']);
+            }
+          }
+        }
+        return total + itemTotal;
+      },
+    );
     double totalWeight = 0;
 
     for (final item in items) {
-      totalPacking += parseSafe(item['qty']);
-
       totalWeight += parseSafe(item['total_weight']);
     }
 
@@ -2701,7 +2785,7 @@ Catatan WO
       children: [
         Expanded(
           child: _buildPackingInfoCard(
-            title: 'Total Packing',
+            title: 'Total Hasil Packing',
             value: formatNumber(totalPacking),
             subtitle: 'PCS',
             icon: Icons.inventory_2_outlined,

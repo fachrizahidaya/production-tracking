@@ -1828,6 +1828,9 @@ class _FormItemsState extends State<FormItems>
                         ),
                       ),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ead5d4b9 (fix: stok di packing)
                       Builder(
                         builder: (context) {
                           final tabController =
@@ -1837,6 +1840,7 @@ class _FormItemsState extends State<FormItems>
                             builder: (context, _) {
                               final item = safeItems[tabController.index];
                               final itemId = item['id'];
+<<<<<<< HEAD
 =======
                       SizedBox(
                         height: 520,
@@ -1844,6 +1848,8 @@ class _FormItemsState extends State<FormItems>
                           children: (safeItems).map<Widget>((item) {
                             final itemId = item['id'];
 >>>>>>> ccc6b638 (fix: warning selesai packing)
+=======
+>>>>>>> ead5d4b9 (fix: stok di packing)
 
                               _packingQtyControllers.putIfAbsent(
                                 itemId,
@@ -1940,6 +1946,7 @@ class _FormItemsState extends State<FormItems>
                                           ),
                                         ],
                                       ),
+<<<<<<< HEAD
                                     ),
                                     Container(
                                       width: double.infinity,
@@ -2159,61 +2166,177 @@ class _FormItemsState extends State<FormItems>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        children: [
-                                          Expanded(
-                                            child: PackingNumberForm(
-                                              label: 'Total Packing (PCS)',
-                                              controller:
-                                                  _packingQtyControllers[
-                                                      itemId]!,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  item['qty'] = value;
-
-                                                  calculateBeratA(item);
-                                                  calculateTotalBerat(
-                                                    item,
-                                                    widget.processData,
-                                                  );
-
-                                                  _validateAllPackingQty();
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: PackingNumberForm(
-                                              label: 'Berat per Lusin (KG)',
-                                              controller:
-                                                  _weightPerDozenControllers[
-                                                      itemId]!,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  item['weight_per_dozen'] =
-                                                      value;
-
-                                                  calculateGsm(item);
-                                                  calculateBeratA(item);
-                                                  calculateTotalBerat(
-                                                    item,
-                                                    widget.processData,
-                                                  );
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ].separatedBy(
-                                          CustomTheme().hGap('xl'),
+=======
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.shade50,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Colors.blue.shade100,
                                         ),
                                       ),
-                                      if (_packingQtyWarnings[itemId] != null)
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8),
-                                          child: _buildPackingQtyWarning(
-                                            _packingQtyWarnings[itemId]!,
+                                      child: Row(
+>>>>>>> ead5d4b9 (fix: stok di packing)
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Grade A',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  formatNumber(
+                                                      sortingQty['grade_a']),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Grade B',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  formatNumber(
+                                                      sortingQty['grade_b']),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Tipe BS',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  formatNumber(
+                                                    sortingQty['grade_bs'],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Total Perbaikan',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  formatNumber(totalPerbaikan),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.orange,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Total Keseluruhan',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  formatNumber(
+                                                    parseInput(
+                                                          sortingQty['grade_a'],
+                                                        ) +
+                                                        parseInput(
+                                                          sortingQty['grade_b'],
+                                                        ) +
+                                                        parseInput(
+                                                          sortingQty[
+                                                              'grade_bs'],
+                                                        ) +
+                                                        totalPerbaikan,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: PackingNumberForm(
+                                                label: 'Total Packing (PCS)',
+                                                controller:
+                                                    _packingQtyControllers[
+                                                        itemId]!,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    item['qty'] = value;
+
+                                                    calculateBeratA(item);
+                                                    calculateTotalBerat(
+                                                      item,
+                                                      widget.processData,
+                                                    );
+
+                                                    _validateAllPackingQty();
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: PackingNumberForm(
+                                                label: 'Berat per Lusin (KG)',
+                                                controller:
+                                                    _weightPerDozenControllers[
+                                                        itemId]!,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    item['weight_per_dozen'] =
+                                                        value;
+
+                                                    calculateGsm(item);
+                                                    calculateBeratA(item);
+                                                    calculateTotalBerat(
+                                                      item,
+                                                      widget.processData,
+                                                    );
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ].separatedBy(
+                                            CustomTheme().hGap('xl'),
                                           ),
                                         ),
+<<<<<<< HEAD
                                     ],
                                   ),
                                   Row(
@@ -2245,6 +2368,52 @@ class _FormItemsState extends State<FormItems>
                                       CustomTheme().hGap('xl'),
 >>>>>>> ccc6b638 (fix: warning selesai packing)
                                     ),
+=======
+                                        if (_packingQtyWarnings[itemId] != null)
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8),
+                                            child: _buildPackingQtyWarning(
+                                              _packingQtyWarnings[itemId]!,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextForm(
+                                            label: 'Gramasi (GSM)',
+                                            isDisabled: true,
+                                            controller: _gsmControllers[itemId],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: TextForm(
+                                            label: 'Berat Grade A (KG)',
+                                            isDisabled: true,
+                                            controller:
+                                                _weightGradeAControllers[
+                                                    itemId],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: TextForm(
+                                            label: 'Total Berat (KG)',
+                                            isDisabled: true,
+                                            controller:
+                                                _totalWeightControllers[itemId],
+                                          ),
+                                        ),
+                                      ].separatedBy(
+                                        CustomTheme().hGap('xl'),
+                                      ),
+                                    ),
+                                    PackingGradeASourceSection(
+                                    key: ValueKey(
+                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                    ),
+>>>>>>> ead5d4b9 (fix: stok di packing)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']

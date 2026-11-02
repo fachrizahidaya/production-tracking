@@ -67,6 +67,10 @@ class SortingDetailGradeList extends StatelessWidget {
         if (!groupedItems.containsKey(uniqueKey)) {
           groupedItems[uniqueKey] = {
             'wo_item_id': item['wo_item_id'],
+            'code': item['code'] ??
+                item['semifinished_product']?['code'] ??
+                item['finished_product']?['code'],
+            'semifinished_product': item['semifinished_product'],
             'finished_product': item['finished_product'],
             'grades': [],
             'defects': item['defects'] ?? [],
@@ -182,7 +186,13 @@ class SortingDetailGradeList extends StatelessWidget {
                                 horizontal: 8,
                               ),
                               child: Tab(
-                                text: 'Item ${index + 1}',
+                                text: (items[index]['code'] ??
+                                        items[index]['semifinished_product']?
+                                            ['code'] ??
+                                        items[index]['finished_product']?
+                                            ['code'] ??
+                                        'Item ${index + 1}')
+                                    .toString(),
                               ),
                             ),
                         ],

@@ -1172,17 +1172,22 @@ Multi Mesin
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${machine['machine']['code']} - ${machine['machine']['name']}',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            'Lokasi: ${machine['location']}',
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${machine['machine']['code']} - ${machine['machine']['name']}',
+                              maxLines: 2,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              'Lokasi: ${machine['location']}',
+                            ),
+                          ],
+                        ),
                       ),
                       CustomBadge(
                         title: machine['status'],
@@ -2109,7 +2114,15 @@ Catatan WO
                           for (int index = 0; index < items.length; index++)
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Tab(text: 'Item ${index + 1}'),
+                              child: Tab(
+                                text: (items[index]['code'] ??
+                                        items[index]['semifinished_product']?
+                                            ['code'] ??
+                                        items[index]['finished_product']?
+                                            ['code'] ??
+                                        'Item ${index + 1}')
+                                    .toString(),
+                              ),
                             ),
                         ],
                       ),

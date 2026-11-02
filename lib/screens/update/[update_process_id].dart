@@ -1515,7 +1515,18 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                       horizontal: 8,
                                                     ),
                                                     child: Tab(
-                                                      text: 'Item ${index + 1}',
+                                                      text: ((widget.data['items']
+                                                                  [index]['code'] ??
+                                                              widget.data['items']
+                                                                  [index]['semifinished_product']?
+                                                                      ['code'] ??
+                                                              widget.data['items']
+                                                                  [index]['finished_product']?
+                                                                      ['code'] ??
+                                                              widget.data['items']
+                                                                  [index]['item_code'] ??
+                                                              'Item ${index + 1}')
+                                                          .toString()),
                                                     ),
                                                   ),
                                               ],

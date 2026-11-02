@@ -1044,7 +1044,14 @@ class _SortingSectionState extends State<SortingSection> {
                                       horizontal: 8,
                                     ),
                                     child: Tab(
-                                      text: 'Item ${i + 1}',
+                                      text: (items[i]['code'] ??
+                                              items[i]['semifinished_product']?
+                                                  ['code'] ??
+                                              items[i]['finished_product']?
+                                                  ['code'] ??
+                                              items[i]['item_code'] ??
+                                              'Item ${i + 1}')
+                                          .toString(),
                                     ),
                                   ),
                               ],

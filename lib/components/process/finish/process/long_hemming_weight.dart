@@ -277,6 +277,12 @@ class _LongHemmingItemsWeightSectionState
                     tabAlignment: TabAlignment.start,
                     tabs: widget.items.asMap().entries.map((entry) {
                       final index = entry.key;
+                      final item = entry.value;
+                      final itemCode = item['code'] ??
+                          item['semifinished_product']?['code'] ??
+                          item['finished_product']?['code'] ??
+                          item['item_code'] ??
+                          'Item ${index + 1}';
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(
@@ -284,7 +290,7 @@ class _LongHemmingItemsWeightSectionState
                           horizontal: 8,
                         ),
                         child: Tab(
-                          text: 'Item ${index + 1}',
+                          text: itemCode.toString(),
                         ),
                       );
                     }).toList(),

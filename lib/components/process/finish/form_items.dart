@@ -1733,7 +1733,14 @@ class _FormItemsState extends State<FormItems>
                                     horizontal: 8,
                                   ),
                                   child: Tab(
-                                    text: 'Item ${index + 1}',
+                                    text: (safeItems[index]['code'] ??
+                                            safeItems[index]
+                                                ['semifinished_product']?['code'] ??
+                                            safeItems[index]
+                                                ['finished_product']?['code'] ??
+                                            safeItems[index]['item_code'] ??
+                                            'Item ${index + 1}')
+                                        .toString(),
                                   ),
                                 ),
                             ],

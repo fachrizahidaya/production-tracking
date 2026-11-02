@@ -79,6 +79,10 @@ class FinishFormTab extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
   final isInitializing;
+  final reworkCategoryOption;
+  final onMachineChanged;
+  final handleItemQtyWarning;
+  final onAttachmentChanged;
 
   const FinishFormTab(
       {super.key,
@@ -156,7 +160,11 @@ class FinishFormTab extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGood,
       this.finishedItemGrb,
-      this.isInitializing});
+      this.isInitializing,
+      this.reworkCategoryOption,
+      this.onMachineChanged,
+      this.handleItemQtyWarning,
+      this.onAttachmentChanged});
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -170,12 +178,6 @@ class _FinishFormTabState extends State<FinishFormTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    // if (widget.isLoading) {
-    //   return Center(
-    //     child: CircularProgressIndicator(),
-    //   );
-    // }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -193,59 +195,41 @@ class _FinishFormTabState extends State<FinishFormTab>
                   width: widget.width,
                   length: widget.length,
                   handleSelectWo: widget.handleSelectWo,
-                  handleSelectUnit: widget.handleSelectUnit,
                   handleChangeInput: widget.handleChangeInput,
-                  handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-                  handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
                   id: widget.id,
-                  processId: widget.processId,
                   processData: widget.processData,
-                  isLoading: widget.isLoading,
-                  handleSelectLengthUnit: widget.handleSelectLengthUnit,
-                  handleSelectWidthUnit: widget.handleSelectWidthUnit,
                   withItemGrade: widget.withItemGrade,
                   itemGradeOption: widget.itemGradeOption,
-                  handleSelectQtyUnit: widget.handleSelectQtyUnit,
                   qty: widget.qty,
                   withQtyAndWeight: widget.withQtyAndWeight,
                   qtyItem: widget.qtyItem,
                   label: widget.label,
                   forDyeing: widget.forDyeing,
                   data: widget.data,
-                  forPacking: widget.forPacking,
                   gsm: widget.gsm,
-                  weightDozen: widget.weightDozen,
                   totalWeight: widget.totalWeight,
                   validateWeight: widget.validateWeight,
                   weightWarning: widget.weightWarning,
                   validateQty: widget.validateQty,
                   qtyWarning: widget.qtyWarning,
-                  handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
-                  handleTotalItemQty: widget.handleTotalItemQty,
-                  onGradeChanged: widget.onGradeChanged,
-                  dyeingLotNo: widget.dyeingLotNo,
-                  forHemming: widget.forHemming,
-                  forSewing: widget.forSewing,
-                  handleSelectFinishedMaterial:
-                      widget.handleSelectFinishedMaterial,
                   weightDefect: widget.weightDefect,
                   weightGood: widget.weightGood,
                   woData: widget.woData,
                   packingQty: widget.packingQty,
                   combing: widget.combing,
                   spraying: widget.spraying,
-                  reworkLongHemming: widget.reworkLongHemming,
                   itemTypeOption: widget.itemTypeOption,
                   defects: widget.defects,
                   defectQty: widget.defectQty,
-                  handleUpdateDefect: widget.handleUpdateDefect,
                   weightGradeA: widget.weightGradeA,
                   finishedItem: widget.finishedItem,
-                  grades: widget.grades,
                   dyeingQty: widget.dyeingQty,
-                  finishedItemGood: widget.finishedItemGood,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
+                  reworkCategoryOption: widget.reworkCategoryOption,
+                  onMachineChanged: widget.onMachineChanged,
+                  handleItemQtyWarning: widget.handleItemQtyWarning,
+                  onAttachmentChanged: widget.onAttachmentChanged,
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/create/tab_section.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/models/master/spk.dart';
@@ -213,6 +214,12 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
     });
   }
 
+  void _handleChangeInput(String key, dynamic value) {
+    setState(() {
+      widget.form?[key] = value;
+    });
+  }
+
   void _selectWorkOrder() {
     if (_isFetchingWorkOrder) {
       showDialog(
@@ -266,11 +273,10 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                     .replaceAll(' ', '_'),
                 baseCodes: params['base_codes'] ?? [],
                 colorCodes: params['color_codes'] ?? [],
+                variantCodes: params['variant_codes'] ?? [],
               );
 
               final semiFinishedItems = semiFinishedService.dataListOption;
-
-              final woItems = woData['items'] ?? [];
 
               if (widget.label == 'Dyeing') {
                 final baseCodes = params['base_codes'] ?? [];
@@ -353,7 +359,26 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
   }
 
   Future<void> _selectMachine() async {
-    if (widget.label == 'Long Hemming' ||
+    if (_isFetchingMachine) {
+      return;
+    }
+
+    // Jika tidak ada mesin tersedia
+    if (machineOption.isEmpty) {
+      showAlertDialog(
+        context: context,
+        title: 'Mesin Tidak Tersedia',
+        message:
+            'Saat ini tidak ada mesin yang tersedia atau seluruh mesin sedang dipakai.',
+      );
+      return;
+    }
+
+    if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Long Slitting' ||
+        widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       showSelectDialog(
@@ -425,7 +450,9 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
       isSubmitting: _isSubmitting,
       selectMachine: _selectMachine,
       selectWorkOrder: _selectWorkOrder,
+      onFormChanged: () => setState(() {}),
       spkDocuments: spkDocuments,
+      handleChangeInput: _handleChangeInput,
     );
   }
 }

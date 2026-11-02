@@ -17,6 +17,11 @@ class _AppDrawerState extends State<AppDrawer> {
 
   List<String> menuOrder = [
     'Dashboard',
+    'Warping',
+    'Sizing',
+    'Weaving',
+    'Shearing',
+    'Persiapan Dyeing',
     'Dyeing',
     'Press',
     'Tumbler',
@@ -29,23 +34,38 @@ class _AppDrawerState extends State<AppDrawer> {
     'Printing',
     'Sorting',
     'Packing',
+    'Laporan Produksi',
+    'Evaluasi Rework',
+    'Evaluasi BS',
+    'Evaluasi GSM',
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
     'Work Order',
     'Proses Produksi',
-    'Laporan'
+    'Produksi',
+    'Pesanan',
+    'Order Greige',
+    'Desain',
+    'Warping',
+    'Sizing',
+    'Weaving',
+    'Shearing',
+    'Persiapan Dyeing',
+    'Anomali Data',
+    'Desain',
+    'Notifikasi'
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
     final List<MenuItem> result = [];
 
     for (final menu in menus) {
-      if (menu.allowMobile == false) continue;
-
       if (menu.subMenuItems.isEmpty) {
-        result.add(menu);
+        if (menu.allowMobile) {
+          result.add(menu);
+        }
       } else {
         for (final sub in menu.subMenuItems) {
           if (sub.allowMobile == false) continue;
@@ -82,7 +102,10 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.sizeOf(context).shortestSide >= 600;
+
     return Drawer(
+      width: isTablet ? 320 : 280,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
@@ -91,7 +114,7 @@ class _AppDrawerState extends State<AppDrawer> {
               DrawerHeader(
                 child: Image.asset(
                   'assets/images/icon_logo.png',
-                  height: 100,
+                  height: isTablet ? 100 : 72,
                 ),
               ),
               Expanded(
@@ -161,11 +184,33 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                             ? Icons.layers_outlined
                                                                             : item.title == 'Tumbler'
                                                                                 ? Icons.dry_cleaning_outlined
-                                                                                : Icons.menu,
+                                                                                : item.title == 'Warping'
+                                                                                    ? Icons.join_inner_outlined
+                                                                                    : item.title == 'Sizing'
+                                                                                        ? Icons.straighten_outlined
+                                                                                        : item.title == 'Weaving'
+                                                                                            ? Icons.grid_on
+                                                                                            : item.title == 'Shearing'
+                                                                                                ? Icons.content_cut_outlined
+                                                                                                : item.title == 'Persiapan Dyeing'
+                                                                                                    ? Icons.format_color_fill_outlined
+                                                                                                    : item.title == 'Laporan Produksi'
+                                                                                                        ? Icons.file_copy_outlined
+                                                                                                        : item.title == 'Evaluasi Rework'
+                                                                                                            ? Icons.restart_alt_outlined
+                                                                                                            : item.title == 'Evaluasi BS'
+                                                                                                                ? Icons.production_quantity_limits_outlined
+                                                                                                                : item.title == 'Evaluasi GSM'
+                                                                                                                    ? Icons.inventory_outlined
+                                                                                                                    : Icons.menu,
                           ),
-                          onTap: item.route == null
-                              ? null
-                              : () => Navigator.pushNamed(context, item.route!),
+                          onTap: () {
+                            Navigator.pop(context);
+
+                            if (item.route != null) {
+                              Navigator.pushNamed(context, item.route!);
+                            }
+                          },
                         );
                       },
                     );

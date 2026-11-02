@@ -7,6 +7,8 @@ import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/form/text_form_grade.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/screens/update/process/sorting_grade_a_source.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
@@ -24,6 +26,7 @@ class SortingSection extends StatefulWidget {
   final finishedItem;
   final woData;
   final bool isInitializing;
+  final onQtyWarning;
 
   const SortingSection(
       {super.key,
@@ -34,13 +37,70 @@ class SortingSection extends StatefulWidget {
       this.finishedItemGrb,
       this.finishedItem,
       this.woData,
-      this.isInitializing = false});
+      this.isInitializing = false,
+      this.onQtyWarning});
 
   @override
   State<SortingSection> createState() => _SortingSectionState();
 }
 
 class _SortingSectionState extends State<SortingSection> {
+  num _gradeAInput(int itemIndex) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return 0;
+    final item = _items[itemIndex];
+    final grades = item['grades'] ?? [];
+    num total = 0;
+    for (final grade in grades) {
+      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
+        total += parseSafe(grade['qty']);
+      }
+    }
+
+    return total +
+        _transferQty(item['transfers_in']) -
+        _transferQty(item['transfers_out']);
+  }
+
+  num _transferQty(dynamic transfers) {
+    if (transfers is! List) return 0;
+
+    num total = 0;
+    for (final transfer in transfers) {
+      if (transfer is Map) {
+        total += parseSafe(transfer['qty']);
+      }
+    }
+    return total;
+  }
+
+  num? _maxGradeASourceQty(int itemIndex) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return null;
+
+    final woItems = widget.processData?['work_orders']?['items'];
+    if (woItems is! List) return null;
+
+    final item = _items[itemIndex];
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+      if (raw['id']?.toString() != item['wo_item_id']?.toString()) continue;
+
+      final totalWoQty = _parseQty(raw['qty']);
+      if (totalWoQty <= 0) return null;
+
+      return (totalWoQty - _gradeAInput(itemIndex)).clamp(0, totalWoQty);
+    }
+
+    return null;
+  }
+
+  dynamic get _currentWoId {
+    final workOrder = widget.processData?['work_orders'];
+    if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
+    return widget.form['wo_id'] ?? widget.woData?['id'];
+  }
+
+  final Map<int, num> _absorbedQty = {};
+  final Map<int, bool> _sourceQtyExceeded = {};
   final Map<String, TextEditingController> _gradeControllers = {};
   final Map<String, TextEditingController> _repairControllers = {};
   late List<Map<String, dynamic>> _items;
@@ -129,6 +189,7 @@ class _SortingSectionState extends State<SortingSection> {
   List<Map<String, dynamic>> mapSemiFinishedByBaseColor({
     required List<dynamic> baseCodes,
     required List<dynamic> colorCodes,
+    List<dynamic> variantCodes = const [],
     required List<Map<String, dynamic>> options,
   }) {
     final List<Map<String, dynamic>> result = [];
@@ -137,6 +198,9 @@ class _SortingSectionState extends State<SortingSection> {
       final baseCode = baseCodes[i].toString();
 
       final colorCode = i < colorCodes.length ? colorCodes[i].toString() : '';
+
+      final variantCode =
+          i < variantCodes.length ? variantCodes[i].toString() : '';
 
       Map<String, dynamic>? matched;
 
@@ -149,7 +213,14 @@ class _SortingSectionState extends State<SortingSection> {
 
         final optionColorCode = parts.isNotEmpty ? parts.last : '';
 
-        if (optionBaseCode == baseCode && optionColorCode == colorCode) {
+        final optionVariantCode = extractVariantCode(code);
+
+        final sameVariant =
+            variantCode.isEmpty || optionVariantCode == variantCode;
+
+        if (optionBaseCode == baseCode &&
+            optionColorCode == colorCode &&
+            sameVariant) {
           matched = option;
           break;
         }
@@ -193,9 +264,14 @@ class _SortingSectionState extends State<SortingSection> {
 
       _syncFormItems();
 
+      widget.form['grades'] =
+          _items.expand((item) => item['grades'] ?? []).toList();
+
       if (mounted) {
         setState(() {});
       }
+
+      _validateAllSortingQty();
 
       return;
     }
@@ -237,12 +313,31 @@ class _SortingSectionState extends State<SortingSection> {
           };
         }
 
+        if ((itemGrade?['code'] ?? '').toString().toUpperCase() == 'A') {
+          final transfersIn = item['transfers_in'];
+          if (transfersIn is List) {
+            groupedItems[itemKey]!['transfers_in'] = transfersIn
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+          final transfersOut = item['transfers_out'];
+          if (transfersOut is List) {
+            groupedItems[itemKey]!['transfers_out'] = transfersOut
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+        }
+
         groupedItems[itemKey]!['grades'].add({
           'item_grade_id': itemGrade['id'],
           'name': itemGrade['name'],
           'code': itemGrade['code'],
           'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
+          'source_qty': item['qty'] ?? 0,
+          'available_qty': item['available_qty'],
           'notes': grade['notes'],
           'semifinished_product_id': item['semifinished_product_id'],
           'semifinished_product': item['semifinished_product'],
@@ -286,6 +381,7 @@ class _SortingSectionState extends State<SortingSection> {
         process: 'packing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final List<Map<String, dynamic>> semiFinishedItemsGradeA =
@@ -298,6 +394,7 @@ class _SortingSectionState extends State<SortingSection> {
       final mappedGradeAItems = mapSemiFinishedByBaseColor(
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
         options: semiFinishedItemsGradeA,
       );
 
@@ -307,6 +404,7 @@ class _SortingSectionState extends State<SortingSection> {
         process: 'sorting',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: ['GRB'],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final List<Map<String, dynamic>> semiFinishedItemsGradeB =
@@ -322,6 +420,7 @@ class _SortingSectionState extends State<SortingSection> {
           (params['base_codes'] ?? []).length,
           (_) => 'GRB',
         ),
+        variantCodes: params['variant_codes'] ?? [],
         options: semiFinishedItemsGradeB,
       );
 
@@ -543,6 +642,8 @@ class _SortingSectionState extends State<SortingSection> {
     if (mounted) {
       setState(() {});
     }
+
+    _validateAllSortingQty();
   }
 
   /*
@@ -551,11 +652,89 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
 
+  void _setAbsorbedRows(int itemIndex, List<Map<String, dynamic>> rows) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return;
+    _items[itemIndex]['absorbed_work_orders'] = rows;
+    _syncFormItems();
+    if (mounted) setState(() {});
+    _validateAllSortingQty();
+  }
+
   void _syncFormItems() {
     widget.form['items'] = List<Map<String, dynamic>>.from(_items);
 
     widget.form['grades'] =
         _items.expand((item) => item['grades'] ?? []).toList();
+    widget.form['grade_a_transfers'] = _buildGradeATransfers();
+  }
+
+  List<Map<String, dynamic>> _buildGradeATransfers() {
+    final transfers = <Map<String, dynamic>>[];
+
+    for (final item in _items) {
+      final rows = item['absorbed_work_orders'];
+      if (rows is! List) continue;
+
+      for (final row in rows) {
+        if (row is! Map) continue;
+        final fromSortingId = row['sorting_id'] ?? row['from_sorting_id'];
+        if (fromSortingId == null) continue;
+
+        transfers.add({
+          'from_sorting_id': _transferId(fromSortingId),
+          'item_id': _transferId(row['item_id']),
+          'qty': row['qty'] ?? 0,
+        });
+      }
+    }
+
+    return transfers;
+  }
+
+  dynamic _transferId(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? value;
+  }
+
+  void _setSourceQtyExceeded(int itemIndex, bool exceeded) {
+    _sourceQtyExceeded[itemIndex] = exceeded;
+  }
+
+  List<Map<String, dynamic>> _gradeATransfers(int itemIndex) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return [];
+    final item = _items[itemIndex];
+    if (item.containsKey('absorbed_work_orders')) {
+      final saved = item['absorbed_work_orders'];
+      if (saved is List) {
+        return saved
+            .whereType<Map>()
+            .map((row) => Map<String, dynamic>.from(row))
+            .toList();
+      }
+    }
+    final transfers = item['transfers_in'];
+    if (transfers is! List) return [];
+    return transfers
+        .whereType<Map>()
+        .map((row) => Map<String, dynamic>.from(row))
+        .toList();
+  }
+
+  dynamic _gradeAItemId(int itemIndex) {
+    if (itemIndex < 0 || itemIndex >= _items.length) return null;
+    final item = _items[itemIndex];
+    final grades = item['grades'];
+    if (grades is List) {
+      for (final grade in grades) {
+        if (grade is! Map) continue;
+        if ((grade['code'] ?? '').toString().toUpperCase() != 'A') continue;
+        return item['item_id'] ??
+            grade['item_id'] ??
+            grade['semifinished_product_id'];
+      }
+    }
+    return item['item_id'];
   }
 
   double parseSafe(dynamic value) {
@@ -619,6 +798,8 @@ class _SortingSectionState extends State<SortingSection> {
     if (mounted) {
       setState(() {});
     }
+
+    _validateAllSortingQty();
   }
 
   @override
@@ -658,6 +839,142 @@ class _SortingSectionState extends State<SortingSection> {
     super.dispose();
   }
 
+  double _toDouble(dynamic value) {
+    if (value == null) return 0;
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    final stringValue = value.toString().trim();
+
+    if (stringValue.isEmpty) {
+      return 0;
+    }
+
+    return double.tryParse(
+          stringValue.replaceAll(',', '.'),
+        ) ??
+        0;
+  }
+
+  String? _validateSortingQty(int itemIndex) {
+    if (itemIndex >= _items.length) {
+      return null;
+    }
+
+    final item = _items[itemIndex];
+
+    final woItems = widget.processData['work_orders']?['items'];
+
+    if (woItems is! List || woItems.isEmpty) {
+      return null;
+    }
+
+    final woItemId = item['wo_item_id'];
+
+    Map<String, dynamic>? woItem;
+
+    for (final raw in woItems) {
+      if (raw is! Map) continue;
+
+      if (raw['id'].toString() == woItemId?.toString()) {
+        woItem = Map<String, dynamic>.from(raw);
+        break;
+      }
+    }
+
+    if (woItem == null) {
+      return null;
+    }
+
+    final referenceQty = _parseQty(woItem['qty']);
+
+    if (referenceQty <= 0) {
+      return null;
+    }
+
+    final grades = item['grades'] ?? [];
+
+    double gradeA = 0;
+    double gradeB = 0;
+    double gradeBS = 0;
+
+    for (final grade in grades) {
+      if (grade is! Map) continue;
+      final code = (grade['code'] ?? '').toString().toUpperCase();
+      final qty = _parseQty(grade['qty']);
+
+      if (code == 'A') {
+        gradeA += _summaryGradeA(item, grade, itemIndex);
+      } else if (code == 'B') {
+        gradeB += qty;
+      } else if (code == 'BS') {
+        gradeBS += qty;
+      }
+    }
+
+    final repair = grades.isEmpty
+        ? 0.0
+        : _parseQty(grades[0]['spraying']) +
+            _parseQty(grades[0]['rework_long_hemming']) +
+            _parseQty(grades[0]['combing']);
+    final totalSorting = gradeA + gradeB + gradeBS + repair;
+
+    final lowerLimit = referenceQty * 0.90;
+    final upperLimit = referenceQty * 1.10;
+
+    if (totalSorting < lowerLimit || totalSorting > upperLimit) {
+      final differencePercent =
+          ((totalSorting - referenceQty) / referenceQty) * 100;
+
+      return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
+          '${differencePercent.abs().toStringAsFixed(2)}% '
+          '(Batas: ${formatNumber(lowerLimit)} – '
+          '${formatNumber(upperLimit)})';
+    }
+
+    return null;
+  }
+
+  void _validateAllSortingQty() {
+    String? warning;
+
+    for (int i = 0; i < _items.length; i++) {
+      final itemWarning = _validateSortingQty(i);
+
+      if (itemWarning != null) {
+        warning = itemWarning;
+        break;
+      }
+    }
+
+    final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
+
+    widget.onQtyWarning?.call(
+      warning != null || sourceExceeded,
+    );
+  }
+
+  double _parseQty(dynamic value) {
+    if (value == null) return 0;
+
+    if (value is num) {
+      return value.toDouble();
+    }
+
+    final valueString = value.toString().trim();
+
+    if (valueString.isEmpty) {
+      return 0;
+    }
+
+    return double.tryParse(
+          valueString.replaceAll(',', ''),
+        ) ??
+        0;
+  }
+
   /*
 |--------------------------------------------------------------------------
 | BUILD
@@ -668,10 +985,6 @@ class _SortingSectionState extends State<SortingSection> {
   Widget build(BuildContext context) {
     final items = _items;
 
-    String getSpkNo(Map<String, dynamic> item) {
-      return item['spk_no']?.toString() ?? '-';
-    }
-
     if (items.isEmpty) {
       return Center(
         child: CircularProgressIndicator(),
@@ -680,70 +993,73 @@ class _SortingSectionState extends State<SortingSection> {
 
     return DefaultTabController(
       length: items.length,
-      child: Column(
-        children: [
-          /*
-|--------------------------------------------------------------------------
-| TAB HEADER
-|--------------------------------------------------------------------------
-*/
-          _buildGlobalSummary(),
-          SizedBox(height: 16),
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(
-                12,
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: List.generate(
-                  items.length,
-                  (index) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 8,
-                    ),
-                    child: Tab(
-                      text: 'Item ${index + 1}',
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              final itemIndex = tabController.index;
+              String? sortingWarning;
+              for (int i = 0; i < items.length; i++) {
+                sortingWarning = _validateSortingQty(i);
+                if (sortingWarning != null) break;
+              }
+              return Column(
+                children: [
+                  if (sortingWarning != null) ...[
+                    _buildQtyWarning(sortingWarning),
+                    CustomTheme().vGap('xl'),
+                  ],
+                  _buildGlobalSummary(),
+                  const SizedBox(height: 16),
+                  KeyedSubtree(
+                    key: const ValueKey('sorting-edit-body'),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: TabBar(
+                              isScrollable: true,
+                              dividerColor: Colors.transparent,
+                              labelColor: Colors.white,
+                              unselectedLabelColor: Colors.black,
+                              indicatorColor: Colors.white,
+                              indicator: BoxDecoration(
+                                color: Colors.blue[800],
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              tabAlignment: TabAlignment.start,
+                              tabs: [
+                                for (int i = 0; i < items.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                      horizontal: 8,
+                                    ),
+                                    child: Tab(
+                                      text: 'Item ${i + 1}',
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildItemCard(itemIndex),
+                      ].separatedBy(CustomTheme().vGap('xl')),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-
-          /*
-|--------------------------------------------------------------------------
-| TAB BODY
-|--------------------------------------------------------------------------
-*/
-          SizedBox(
-            height: 1200,
-            child: TabBarView(
-              children: [
-                for (int itemIndex = 0; itemIndex < items.length; itemIndex++)
-                  _buildItemCard(
-                    itemIndex,
-                  ),
-              ],
-            ),
-          ),
-        ],
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -760,15 +1076,28 @@ class _SortingSectionState extends State<SortingSection> {
     final item = _items[itemIndex];
 
     final grades = item['grades'] ?? [];
+    final qtyWarning = _validateSortingQty(itemIndex);
 
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        border: Border.all(
+          width: 0.5,
+          color: CustomTheme().colors('text-primary').withOpacity(0.2),
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
+          if (qtyWarning != null) ...[
+            _buildQtyWarning(qtyWarning),
+            const SizedBox(height: 16),
+          ],
+          KeyedSubtree(
+            key: ValueKey('sorting-item-fields-$itemIndex'),
+            child: Column(
+              children: [
           /*
       |--------------------------------------------------------------------------
       | GRADES
@@ -789,6 +1118,21 @@ class _SortingSectionState extends State<SortingSection> {
                 SizedBox(height: 12),
               ),
             ),
+          ),
+          SortingGradeASourceSection(
+            key: ValueKey('grade-a-source-$itemIndex'),
+            initialTransfers: _gradeATransfers(itemIndex),
+            itemId: _gradeAItemId(itemIndex),
+            excludeWoId: _currentWoId,
+            sortingId: widget.processData?['id'],
+            gradeAInput: _gradeAInput(itemIndex),
+            maxTakenQty: _maxGradeASourceQty(itemIndex),
+            onTotalChanged: (total) {
+              setState(() => _absorbedQty[itemIndex] = total);
+            },
+            onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
+            onExceededChanged: (exceeded) =>
+                _setSourceQtyExceeded(itemIndex, exceeded),
           ),
 
           /*
@@ -842,9 +1186,12 @@ class _SortingSectionState extends State<SortingSection> {
           _buildSummary(
             itemIndex,
           ),
-        ].separatedBy(
-          SizedBox(height: 16),
-        ),
+              ].separatedBy(
+                const SizedBox(height: 16),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -871,6 +1218,8 @@ class _SortingSectionState extends State<SortingSection> {
       return item['spk_no']?.toString() ?? '-';
     }
 
+    final transferOutNote = _transferOutNote(item, grade);
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -879,7 +1228,9 @@ class _SortingSectionState extends State<SortingSection> {
         ),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Row(
+      child: Column(
+        children: [
+          Row(
         children: [
           /*
 |--------------------------------------------------------------------------
@@ -887,6 +1238,7 @@ class _SortingSectionState extends State<SortingSection> {
 |--------------------------------------------------------------------------
 */
           Expanded(
+            flex: 1,
             child: Text(
               grade['code'] ?? '-',
               style: const TextStyle(
@@ -894,7 +1246,6 @@ class _SortingSectionState extends State<SortingSection> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
 
           /*
 |--------------------------------------------------------------------------
@@ -924,10 +1275,7 @@ class _SortingSectionState extends State<SortingSection> {
                   ? [
                       Text(
                         'Perhitungan otomatis dari total Tipe BS',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ]
                   : grade['code'] == 'B' &&
@@ -935,10 +1283,7 @@ class _SortingSectionState extends State<SortingSection> {
                       ? [
                           Text(
                             'Material code belum tersedia',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: Colors.grey),
                           ),
                         ]
                       : [
@@ -946,24 +1291,16 @@ class _SortingSectionState extends State<SortingSection> {
                             grade['semifinished_product']?['code'] ??
                                 grade['finished_product']?['code'] ??
                                 '-',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
                           ),
-                          const SizedBox(height: 2),
                           Text(
                             grade['semifinished_product']?['name'] ??
                                 grade['finished_product']?['name'] ??
                                 '-',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                            ),
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
             ),
           ),
-          const SizedBox(width: 12),
 
           /*
 |--------------------------------------------------------------------------
@@ -990,11 +1327,137 @@ class _SortingSectionState extends State<SortingSection> {
                 _syncFormItems();
 
                 setState(() {});
+
+                _validateAllSortingQty();
               },
             ),
           ),
         ],
+          ),
+          if (grade['code'] == 'A' && transferOutNote != null) ...[
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Spacer(flex: 4),
+                Expanded(
+                  flex: 2,
+                  child: transferOutNote,
+                ),
+              ],
+            ),
+          ],
+        ],
       ),
+    );
+  }
+
+  Widget? _transferOutNote(Map item, Map grade) {
+    final out = _transferSummary(item['transfers_out'], 'to_wo_no');
+    final incoming = _transferSummary(item['transfers_in'], 'from_wo_no');
+    if (out == null && incoming == null) return null;
+
+    const black = TextStyle(color: Colors.black);
+    const blackBold = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+    );
+    const redBold = TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.w700,
+    );
+    final lines = <Widget>[];
+
+    if (out != null) {
+      lines.add(
+        _qtyTakenLine(
+          amount: '-${formatNumber(out.$1)}',
+          amountStyle: redBold,
+          conjunction: ' untuk ',
+          woNos: out.$2,
+          labelStyle: black,
+        ),
+      );
+    }
+
+    if (incoming != null) {
+      lines.add(
+        _qtyTakenLine(
+          amount: '+${formatNumber(incoming.$1)}',
+          amountStyle: blackBold,
+          conjunction: ' dari ',
+          woNos: incoming.$2,
+          labelStyle: black,
+        ),
+      );
+    }
+
+    final total =
+        parseSafe(grade['qty']) - (out?.$1 ?? 0) + (incoming?.$1 ?? 0);
+    lines.add(
+      Text(
+        'Total: ${formatNumber(total)}',
+        textAlign: TextAlign.right,
+        style: blackBold,
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: lines.separatedBy(const SizedBox(height: 4)).toList(),
+    );
+  }
+
+  (double, String)? _transferSummary(dynamic rows, String woKey) {
+    if (rows is! List) return null;
+    final transfers = rows.whereType<Map>().toList();
+    if (transfers.isEmpty) return null;
+
+    var total = 0.0;
+    final woNos = <String>[];
+    for (final row in transfers) {
+      total += parseSafe(row['qty']);
+      final woNo = (row[woKey] ?? row['wo_no'])?.toString() ?? '';
+      if (woNo.isNotEmpty) woNos.add(woNo);
+    }
+
+    return (total, woNos.join(', '));
+  }
+
+  Widget _qtyTakenLine({
+    required String amount,
+    required TextStyle amountStyle,
+    required String conjunction,
+    required String woNos,
+    required TextStyle labelStyle,
+  }) {
+    return Text.rich(
+      TextSpan(
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 12,
+        ),
+        children: [
+          TextSpan(
+            text: 'Qty diambil ',
+            style: labelStyle,
+          ),
+          TextSpan(
+            text: amount,
+            style: amountStyle,
+          ),
+          if (woNos.isNotEmpty) ...[
+            TextSpan(
+              text: conjunction,
+              style: labelStyle,
+            ),
+            TextSpan(
+              text: woNos,
+              style: labelStyle,
+            ),
+          ],
+        ],
+      ),
+      textAlign: TextAlign.right,
     );
   }
 
@@ -1035,6 +1498,8 @@ class _SortingSectionState extends State<SortingSection> {
           });
 
           _syncFormItems();
+
+          _validateAllSortingQty();
         },
       ),
     );
@@ -1458,6 +1923,8 @@ class _SortingSectionState extends State<SortingSection> {
     final grades = item['grades'] ?? [];
 
     double gradeA = 0;
+    double gradeAAdditional = 0;
+    double gradeATaken = 0;
     double gradeB = 0;
     double gradeBS = 0;
 
@@ -1467,7 +1934,9 @@ class _SortingSectionState extends State<SortingSection> {
       final qty = num.tryParse(grade['qty'].toString()) ?? 0;
 
       if (code == 'A') {
-        gradeA += qty;
+        gradeA += _summaryGradeA(item, grade, itemIndex);
+        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
+        gradeATaken += _gradeATaken(item, grade);
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -1512,6 +1981,17 @@ class _SortingSectionState extends State<SortingSection> {
             totalRepair,
           ),
           _summaryBox(
+            'Grade A Tambahan',
+            gradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            gradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
+          ),
+          _summaryBox(
             'Hasil Sortir',
             totalSorting,
           ),
@@ -1522,9 +2002,59 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
+  double _summaryGradeA(Map item, Map grade, int itemIndex) {
+    final input = parseSafe(grade['qty']);
+    final absorbed = _absorbedQty[itemIndex] ?? 0;
+    if (grade['available_qty'] == null) {
+      return input + absorbed;
+    }
+
+    return parseSafe(grade['available_qty']) +
+        input -
+        parseSafe(grade['source_qty']) +
+        absorbed -
+        _savedTransferInQty(item);
+  }
+
+  double _savedTransferInQty(Map item) {
+    final rows = item['transfers_in'];
+    if (rows is! List) return 0;
+
+    var total = 0.0;
+    for (final row in rows) {
+      if (row is Map) total += parseSafe(row['qty']);
+    }
+    return total;
+  }
+
+  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
+    if (_absorbedQty.containsKey(itemIndex)) {
+      return (_absorbedQty[itemIndex] ?? 0).toDouble();
+    }
+
+    return parseSafe(grade['qty_in']);
+  }
+
+  double _gradeATaken(Map item, Map grade) {
+    final rows = item['transfers_out'];
+    if (rows is List) {
+      var total = 0.0;
+      for (final row in rows) {
+        if (row is Map) total += parseSafe(row['qty']);
+      }
+      return total;
+    }
+
+    return parseSafe(grade['qty_out']);
+  }
+
   Widget _summaryBox(
     String title,
     dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+    }
   ) {
     return Expanded(
       child: Container(
@@ -1539,13 +2069,18 @@ class _SortingSectionState extends State<SortingSection> {
         ),
         child: Column(
           children: [
-            Text(title),
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: valueColor,
               ),
             ),
           ],
@@ -1558,12 +2093,15 @@ class _SortingSectionState extends State<SortingSection> {
     final items = _items;
 
     double totalGradeA = 0;
+    double totalGradeAAdditional = 0;
+    double totalGradeATaken = 0;
     double totalGradeB = 0;
     double totalGradeBS = 0;
 
     double totalRepair = 0;
 
-    for (final item in items) {
+    for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+      final item = items[itemIndex];
       final grades = item['grades'] ?? [];
 
       for (final grade in grades) {
@@ -1572,7 +2110,10 @@ class _SortingSectionState extends State<SortingSection> {
         final qty = num.tryParse(grade['qty'].toString()) ?? 0;
 
         if (code == 'A') {
-          totalGradeA += qty;
+          totalGradeA += _summaryGradeA(item, grade, itemIndex);
+          totalGradeAAdditional +=
+              _gradeAAdditional(item, grade, itemIndex);
+          totalGradeATaken += _gradeATaken(item, grade);
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -1620,6 +2161,17 @@ class _SortingSectionState extends State<SortingSection> {
             totalRepair,
           ),
           _summaryBox(
+            'Grade A Tambahan',
+            totalGradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _summaryBox(
+            'Grade A Diambil',
+            totalGradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
+          ),
+          _summaryBox(
             'Hasil Sortir',
             totalSorting,
           ),
@@ -1629,4 +2181,38 @@ class _SortingSectionState extends State<SortingSection> {
       ),
     );
   }
+
+  Widget _buildQtyWarning(String warning) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.orange.shade200,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.orange.shade700,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              warning,
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 }

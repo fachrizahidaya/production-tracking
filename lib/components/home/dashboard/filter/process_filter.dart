@@ -10,11 +10,13 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 class ProcessFilter<T> extends StatefulWidget {
   final onHandleFilter;
   final params;
+  final void Function(String startDate, String endDate)? onDateRangeSelected;
 
   const ProcessFilter({
     super.key,
     this.onHandleFilter,
     this.params,
+    this.onDateRangeSelected,
   });
 
   @override
@@ -31,10 +33,15 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
   ];
 
   List<Map<String, dynamic>> selectedStatuses = [];
+  String _startDate = '';
+  String _endDate = '';
 
   @override
   void initState() {
     super.initState();
+
+    _startDate = widget.params?['start_date']?.toString() ?? '';
+    _endDate = widget.params?['end_date']?.toString() ?? '';
 
     if (widget.params['status'] != null) {
       final activeStatuses = widget.params['status'].split(',');
@@ -43,6 +50,69 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
           .map((s) => Map<String, dynamic>.from(s))
           .toList();
     }
+  }
+
+  DateTime? _parseDate(dynamic date) {
+    if (date == null || date.toString().isEmpty) return null;
+    if (date is DateTime) return date;
+    return DateTime.tryParse(date.toString());
+  }
+
+  String _toApiDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
+  String _formatDate(dynamic date) {
+    final parsedDate = _parseDate(date);
+    if (parsedDate == null) return '-';
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ];
+
+    return '${parsedDate.day} ${months[parsedDate.month - 1]} ${parsedDate.year}';
+  }
+
+  String get _dateRangeText =>
+      '${_formatDate(_startDate)} - ${_formatDate(_endDate)}';
+
+  Future<void> _selectDateRange() async {
+    final now = DateTime.now();
+    final start =
+        _parseDate(_startDate) ?? DateTime(now.year, now.month - 2, now.day);
+    final end = _parseDate(_endDate) ?? now;
+
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+      initialDateRange: DateTimeRange(start: start, end: end),
+    );
+
+    if (picked == null) return;
+
+    final startDate = _toApiDate(picked.start);
+    final endDate = _toApiDate(picked.end);
+
+    setState(() {
+      _startDate = startDate;
+      _endDate = endDate;
+    });
+
+    widget.onDateRangeSelected?.call(startDate, endDate);
   }
 
   @override
@@ -77,6 +147,33 @@ class _ProcessFilterState<T> extends State<ProcessFilter<T>> {
             ),
           ),
           Divider(),
+          if (widget.onDateRangeSelected != null)
+            Container(
+              padding: CustomTheme().padding('card-detail'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tanggal',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('md'),
+                      fontWeight: CustomTheme().fontWeight('semibold'),
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: _selectDateRange,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: CustomTheme().cardTheme(),
+                      padding: const EdgeInsets.all(12),
+                      child: Text(_dateRangeText),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Container(
             padding: CustomTheme().padding('card-detail'),
             child: FilterSelectForm(

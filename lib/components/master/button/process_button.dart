@@ -22,6 +22,9 @@ class ProcessButton extends StatefulWidget {
   final withItemQtyAndWeight;
   final isAllMachineDone;
   final label;
+  final hasItemQtyWarning;
+  final attachments;
+  final hasAttachment;
 
   const ProcessButton(
       {super.key,
@@ -41,7 +44,10 @@ class ProcessButton extends StatefulWidget {
       this.withItemGrade,
       this.withItemQtyAndWeight,
       this.isAllMachineDone,
-      this.label});
+      this.label,
+      this.hasItemQtyWarning = false,
+      this.attachments,
+      this.hasAttachment});
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -53,13 +59,32 @@ class _ProcessButtonState extends State<ProcessButton> {
     final bool hasBasicError =
         widget.weightWarning != null || widget.qtyWarning != null;
 
+    final bool isDyeingRework =
+        widget.label == 'Dyeing' && widget.data?['rework'] == true;
     final bool isNeedMachineValidation = [
+      'dyeing',
+      'press',
+      'tumbler',
+      'long slitting',
       'long hemming',
       'sewing',
       'cross cutting'
     ].contains(widget.label.toLowerCase());
 
-    final result = widget.isAllMachineDone(widget.data?['machines'] ?? []);
+    bool hasDyeingReworkError() {
+      if (!isDyeingRework) {
+        return false;
+      }
+
+      final reworkCategory = widget.form?['rework_category']?.toString();
+      final reworkType = widget.form?['rework_type'] as List? ?? [];
+      final reworkMethod = widget.form?['rework_method'] as List? ?? [];
+
+      return reworkCategory == null ||
+          reworkCategory.isEmpty ||
+          (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
+          (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
+    }
 
     double parseSafeWeight(dynamic value) {
       if (value == null) return 0;
@@ -123,8 +148,19 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
-    final bool isDisabled =
-        hasBasicError || hasWeightItemError || hasQtyItemError;
+    final bool hasPackingAttachmentError = widget.label == 'Packing' &&
+        ((widget.attachments == null) ||
+            (widget.attachments is! List) ||
+            (widget.attachments as List)
+                .where((e) => e['is_add_button'] != true)
+                .isEmpty);
+
+    final bool isDisabled = hasBasicError ||
+        hasWeightItemError ||
+        hasQtyItemError ||
+        hasDyeingReworkError() ||
+        // hasPackingAttachmentError ||
+        widget.hasItemQtyWarning == true;
 
     return SafeArea(
       child: Padding(
@@ -150,8 +186,7 @@ class _ProcessButtonState extends State<ProcessButton> {
                   Expanded(
                       child: FormButton(
                     label: widget.labelProcess,
-                    isDisabled:
-                        isDisabled || (isNeedMachineValidation && !result),
+                    isDisabled: isDisabled,
                     customHeight: 56.0,
                     fontSize: CustomTheme().fontSize('xl'),
                     onPressed: () async {

@@ -3,17 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/button/process_button.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 import 'package:textile_tracking/components/process/finish/work_order_info_tab.dart';
 import 'package:textile_tracking/components/process/finish/finish_form_tab.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/spk/tab/note_attachment_spk.dart';
 import 'package:textile_tracking/helpers/result/safe_to_api.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
 import 'package:textile_tracking/helpers/util/extract_semi_finished.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/models/master/spk.dart';
 import 'package:textile_tracking/models/master/work_order.dart';
 import 'package:textile_tracking/models/option/option_item.dart';
@@ -21,6 +22,7 @@ import 'package:textile_tracking/models/option/option_item_grade.dart';
 import 'package:textile_tracking/models/option/option_item_semi_finished.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_unit.dart';
+import 'package:textile_tracking/models/process/dyeing.dart';
 import 'package:textile_tracking/components/process/finish/functions/fetch_function.dart';
 
 class FinishProcessManual extends StatefulWidget {
@@ -96,6 +98,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   bool _isInitializingSorting = false;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> _hasAttachment = ValueNotifier(false);
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _listFormKey = GlobalKey();
@@ -130,6 +133,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   late List<dynamic> unitOption = [];
   late List<dynamic> finishedItemGrb = [];
   late List<dynamic> finishedItemGood = [];
+  late List<dynamic> reworkCategoryOption = [];
   List<Map<String, dynamic>> spkDocuments = [];
 
   Map<String, dynamic> woData = {};
@@ -144,9 +148,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   var processId = '';
 
+  bool _hasItemQtyWarning = false;
+
   @override
   void initState() {
     super.initState();
+    if (widget.label == 'Sorting') {
+      _hasItemQtyWarning = true;
+    }
 
     spkDocuments = List<Map<String, dynamic>>.from(
       widget.form?['spk_documents'] ?? [],
@@ -199,6 +208,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     await _handleFetchUnit();
     await _handleFetchItemType();
 
+    if (widget.label == 'Dyeing' && data['rework'] == true) {
+      await _handleFetchReworkCategory();
+
+      if (!mounted) return;
+
+      setState(() {
+        _mapExistingDyeingRework(data);
+      });
+    }
+
     if ((widget.finishedItemOptions ?? []).isEmpty) {
       await _handleFetchFinishedMaterial();
     } else {
@@ -222,6 +241,12 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     });
 
     _handleChangeInput('defects', _defects);
+  }
+
+  void _updateAttachmentStatus() {
+    final attachments = widget.form?['attachments'];
+
+    _hasAttachment.value = attachments is List && attachments.isNotEmpty;
   }
 
   Future<void> _handleFetchWorkOrder() async {
@@ -424,6 +449,35 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  Future<void> _handleFetchReworkCategory() async {
+    if (widget.label != 'Dyeing') return;
+
+    try {
+      final dyeingService = DyeingService();
+
+      final result = await dyeingService.fetchReworkCategoryOptions(context);
+
+      if (!mounted) return;
+
+      setState(() {
+        reworkCategoryOption = result;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
+    }
+  }
+
+  void _setNumberControllerText(
+    TextEditingController controller,
+    dynamic value,
+  ) {
+    controller.text = formatNumber(value);
+  }
+
   Future<void> _getDataView(id) async {
     setState(() => _firstLoading = true);
 
@@ -437,7 +491,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (widget.label == 'Dyeing') {
         final totalWeight = getTotalItemWeight();
 
-        _qtyController.text = totalWeight.toString();
+        _setNumberControllerText(_qtyController, totalWeight);
         widget.form?['qty'] = totalWeight;
       } else if ([
         'Press',
@@ -447,10 +501,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       ].contains(widget.label)) {
         final totalWeight = getTotalItemWeight();
 
-        _weightController.text = totalWeight.toString();
+        _setNumberControllerText(_weightController, totalWeight);
         widget.form?['weight'] = totalWeight;
       } else if (greigeQty != null) {
-        _weightController.text = greigeQty.toString();
+        _setNumberControllerText(_weightController, greigeQty);
         widget.form?['weight'] = greigeQty.toString();
       }
 
@@ -480,40 +534,45 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           'Stenter',
           'Long Slitting',
         ].contains(widget.label)) {
-          _weightController.text = data['weight'].toString();
+          _setNumberControllerText(_weightController, data['weight']);
           widget.form?['weight'] = data['weight'];
         } else if (widget.label != 'Sewing' &&
             widget.label != 'Long Hemming' &&
             widget.label != 'Cross Cutting') {
-          _weightController.text = woData['greige_qty'].toString();
+          _setNumberControllerText(_weightController, woData['greige_qty']);
           widget.form?['weight'] = woData['greige_qty'];
         }
       }
       if (data['good_weight'] != null) {
-        _weightGoodController.text = data['good_weight'].toString();
+        _setNumberControllerText(_weightGoodController, data['good_weight']);
         widget.form?['good_weight'] = data['good_weight'];
       }
       if (data['bs_weight'] != null) {
-        _weightDefectController.text = data['bs_weight'].toString();
+        _setNumberControllerText(_weightDefectController, data['bs_weight']);
         widget.form?['bs_weight'] = data['bs_weight'];
       }
 
       if (data['combing'] != null) {
-        _combingController.text = data['combing'].toString();
+        _setNumberControllerText(_combingController, data['combing']);
         widget.form?['combing'] = data['combing'];
       }
       if (data['spraying'] != null) {
-        _sprayingController.text = data['spraying'].toString();
+        _setNumberControllerText(_sprayingController, data['spraying']);
         widget.form?['spraying'] = data['spraying'];
       }
       if (data['rework_long_hemming'] != null) {
-        _reworkLongHemmingController.text =
-            data['rework_long_hemming'].toString();
+        _setNumberControllerText(
+          _reworkLongHemmingController,
+          data['rework_long_hemming'],
+        );
         widget.form?['rework_long_hemming'] = data['rework_long_hemming'];
       }
 
       if (data['weight_per_dozen'] != null) {
-        _weightDozenController.text = data['weight_per_dozen'].toString();
+        _setNumberControllerText(
+          _weightDozenController,
+          data['weight_per_dozen'],
+        );
         widget.form?['weight_per_dozen'] = data['weight_per_dozen'];
       }
       if (data['weight_grade_a'] != null) {
@@ -525,23 +584,23 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         widget.form?['gsm'] = data['gsm'];
       }
       if (data['total_weight'] != null) {
-        _totalWeightController.text = data['total_weight'].toString();
+        _setNumberControllerText(_totalWeightController, data['total_weight']);
         widget.form?['total_weight'] = data['total_weight'];
       }
       if (data['item_qty'] != null) {
-        _qtyItemController.text = data['item_qty'].toString();
+        _setNumberControllerText(_qtyItemController, data['item_qty']);
         widget.form?['item_qty'] = data['item_qty'].toString();
       }
       if (data['qty'] != null) {
-        _packingQtyController.text = data['qty'].toString();
+        _setNumberControllerText(_packingQtyController, data['qty']);
         widget.form?['qty'] = data['qty'];
       }
       if (data['qty'] != null) {
         if (widget.label == 'Dyeing') {
-          _qtyController.text = data['qty'].toString();
+          _setNumberControllerText(_qtyController, data['qty']);
           widget.form?['qty'] = data['qty'];
         } else {
-          _qtyController.text = woData['greige_qty'].toString();
+          _setNumberControllerText(_qtyController, woData['greige_qty']);
           widget.form?['qty'] = woData['greige_qty'];
         }
       }
@@ -556,10 +615,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       if (data['machine'] != null) {
         widget.form?['machine_id'] = data['machine']['id'].toString();
         widget.form?['nama_mesin'] = data['machine']['name'].toString();
+      } else if (data['machine_id'] != null) {
+        widget.form?['machine_id'] = data['machine_id'].toString();
       }
       if (data['unit'] != null) {
         widget.form?['unit_id'] = data['unit']['id'].toString();
         widget.form?['nama_satuan'] = data['unit']['name'].toString();
+      } else if (data['unit_id'] != null) {
+        widget.form?['unit_id'] = data['unit_id'].toString();
       }
       if (data['item_unit'] != null) {
         widget.form?['item_unit_id'] = data['item_unit']['id'].toString();
@@ -592,10 +655,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       }
       if (data['attachments'] != null) {
         widget.form?['attachments'] = List.from(data['attachments']);
+        _updateAttachmentStatus();
       }
       if (data['items'] != null) {
         widget.form?['items'] = List.from(data['items']);
       }
+
+      _mapExistingDyeingRework(data);
 
       if (data['grades'] != null) {
         widget.form?['grades'] = List.from(data['grades']);
@@ -721,6 +787,22 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
 
     if (context.mounted) {
+      final attachments = widget.form?['attachments'];
+      final hasAttachment = attachments is List &&
+          attachments.any(
+            (attachment) =>
+                attachment is Map && attachment['is_add_button'] != true,
+          );
+
+      if (widget.label == 'Packing' && !hasAttachment) {
+        await showAlertDialog(
+          context: context,
+          title: 'Peringatan',
+          message: 'Lampiran wajib diisi.',
+        );
+        return;
+      }
+
       widget.form?['good_weight'] = safeToApi(_weightGoodController.text);
       widget.form?['bs_weight'] = safeToApi(_weightDefectController.text);
       widget.form?['combing'] = safeToApi(_combingController.text);
@@ -744,6 +826,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         );
 
         widget.form?['grades'] = buildGradesPayload();
+        widget.form?['grade_a_transfers'] = _buildGradeATransfers();
       }
 
       widget.form?['attachments'] ??= [];
@@ -751,6 +834,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       widget.form?['grades'] ??= [];
       widget.form?['semifinished_products'] ??= [];
       widget.form?['items'] ??= [];
+
+      if (widget.label == 'Dyeing' && data['rework'] == true) {
+        _sanitizeDyeingReworkForm();
+      }
 
       widget.form?['defects'] = _defects
           .map((e) => {
@@ -783,6 +870,132 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
+  void _sanitizeDyeingReworkForm() {
+    final reworkCategory = widget.form?['rework_category']?.toString();
+    final reworkTypes = List<String>.from(
+      widget.form?['rework_type'] ?? [],
+    );
+
+    widget.form?['rework_type'] ??= [];
+    widget.form?['rework_method'] ??= [];
+
+    if (reworkCategory != 'perbaikan') {
+      widget.form?['rework_type'] = [];
+      widget.form?['rework_method'] = [];
+    } else if (!reworkTypes.contains('perbaikan_warna')) {
+      widget.form?['rework_method'] = [];
+    }
+  }
+
+  void _mapExistingDyeingRework(Map<String, dynamic> d) {
+    if (widget.label != 'Dyeing' || d['rework'] != true) {
+      return;
+    }
+
+    final categories = List<Map<String, dynamic>>.from(
+      d['rework_categories'] ?? [],
+    );
+
+    widget.form?['rework'] = true;
+
+    final categoryTypes = categories
+        .map((e) => e['type']?.toString())
+        .whereType<String>()
+        .toList();
+    final existingParentCategory = d['rework_category']?.toString();
+    final inferredParentCategory =
+        existingParentCategory != null && existingParentCategory.isNotEmpty
+            ? existingParentCategory
+            : _findReworkCategoryFromResponseTypes(categoryTypes);
+    final isParentCategoryFromResponse = inferredParentCategory != null &&
+        categoryTypes.contains(inferredParentCategory);
+    final existingTypes =
+        isParentCategoryFromResponse ? <String>[] : categoryTypes;
+
+    final existingMethods = categories
+        .expand(
+          (e) => List<dynamic>.from(e['methods'] ?? []),
+        )
+        .map((e) => e is Map ? e['value']?.toString() : e.toString())
+        .whereType<String>()
+        .toList();
+
+    widget.form?['rework_type'] = existingTypes.isNotEmpty
+        ? existingTypes
+        : List<String>.from(d['rework_type'] ?? []);
+
+    widget.form?['rework_method'] = existingMethods.isNotEmpty
+        ? existingMethods
+        : List<String>.from(d['rework_method'] ?? []);
+
+    widget.form?['rework_category'] = inferredParentCategory;
+
+    if (widget.form?['rework_category'] == null &&
+        (widget.form?['rework_type'] as List).isNotEmpty) {
+      widget.form?['rework_category'] = _findParentReworkCategory(
+        widget.form?['rework_type'],
+      );
+    }
+
+    if (widget.form?['rework_category'] == null && categories.isNotEmpty) {
+      widget.form?['rework_category'] = 'perbaikan';
+    }
+
+    _sanitizeDyeingReworkForm();
+  }
+
+  String? _findReworkCategoryFromResponseTypes(List<String> types) {
+    if (types.isEmpty) {
+      return null;
+    }
+
+    final options = List<Map<String, dynamic>>.from(
+      reworkCategoryOption,
+    );
+
+    for (final option in options) {
+      final value = option['value']?.toString();
+
+      if (value != null && types.contains(value)) {
+        return value;
+      }
+    }
+
+    if (types.contains('toping')) {
+      return 'toping';
+    }
+
+    if (types.contains('perbaikan')) {
+      return 'perbaikan';
+    }
+
+    return null;
+  }
+
+  String? _findParentReworkCategory(List<String> types) {
+    final options = List<Map<String, dynamic>>.from(
+      reworkCategoryOption,
+    );
+
+    for (final category in options) {
+      final children = List<Map<String, dynamic>>.from(
+        category['children'] ?? [],
+      );
+
+      final found = children.any(
+        (child) => types.contains(
+          child['value']?.toString(),
+        ),
+      );
+
+      if (found) {
+        return category['value']?.toString();
+      }
+    }
+
+    return null;
+  }
+
   Future<void> _handleFetchSemiFinishedItems() async {
     final semiFinishedService = Provider.of<OptionItemSemiFinishedService>(
       context,
@@ -801,6 +1014,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
       process: processName,
       baseCodes: params['base_codes'] ?? [],
       colorCodes: params['color_codes'] ?? [],
+      variantCodes: params['variant_codes'] ?? [],
     );
 
     final semiFinishedItems = semiFinishedService.dataListOption;
@@ -887,6 +1101,16 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
           e[widget.idProcess].toString(),
         );
 
+        if (widget.label == 'Dyeing' && data['rework'] == true) {
+          await _handleFetchReworkCategory();
+
+          if (!mounted) return;
+
+          setState(() {
+            _mapExistingDyeingRework(data);
+          });
+        }
+
         /*
       |--------------------------------------------------------------------------
       | BARU WO
@@ -896,6 +1120,25 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         await _getDataView(
           e['value'].toString(),
         );
+
+        final processKey =
+            widget.label.toString().trim().toLowerCase().replaceAll(' ', '_');
+
+        final canContinue = canStartCurrentProcess(
+          woData['processes'] ?? [],
+          processKey,
+        );
+
+        if (!canContinue) {
+          showAlertDialog(
+            context: context,
+            title: 'Proses Sebelumnya Belum Selesai',
+            message: 'Proses sebelumnya masih berstatus Diproses. '
+                'Silakan selesaikan terlebih dahulu sebelum melakukan proses ${widget.label}.',
+          );
+
+          return;
+        }
 
         await _fetchSpkDocuments();
 
@@ -918,166 +1161,33 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
-  _selectUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['weight_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['weight_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan_berat'] = e['label'].toString();
-        });
-      },
+  bool canStartCurrentProcess(
+    List<dynamic> processes,
+    String currentProcess,
+  ) {
+    final currentIndex = processes.indexWhere(
+      (e) => e['key'] == currentProcess,
     );
-  }
 
-  _selectLengthUnit() {
-    showSelectDialog(
-        context: context,
-        title: 'Satuan Panjang',
-        isFetching: _isFetchingUnit,
-        option: unitOption,
-        selected: widget.form?['length_unit_id'].toString() ?? '',
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['length_unit_id'] = e['value'].toString();
-            widget.form?['nama_satuan_panjang'] = e['label'].toString();
-          });
-        });
-  }
+    if (currentIndex <= 0) return true;
 
-  _selectWidthUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Lebar',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['width_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['width_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan_lebar'] = e['label'].toString();
-        });
-      },
-    );
-  }
+    for (int i = 0; i < currentIndex; i++) {
+      final process = processes[i];
 
-  _selectQtyUnit(int index) async {
-    if (_isFetchingUnit) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-      return;
+      final data = process['data'] as List? ?? [];
+
+      if (data.isEmpty) {
+        continue;
+      }
+
+      final status = data.first['status']?.toString();
+
+      if (status == 'Diproses') {
+        return false;
+      }
     }
 
-    final currentUnitName =
-        widget.form?['grades']?[index]?['unit']?['name']?.toString() ?? '';
-
-    await showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Satuan',
-        options: unitOption,
-        selected: currentUnitName,
-        handleChangeValue: (selected) {
-          setState(() {
-            widget.form?['grades'] ??= [];
-
-            while (widget.form!['grades'].length <= index) {
-              widget.form!['grades'].add({
-                'item_grade_id': '',
-                'unit_id': 1,
-                'unit': {},
-                'qty': '0',
-                'notes': '',
-                'greige_item_id': null,
-              });
-            }
-
-            widget.form!['grades'][index]['unit_id'] =
-                selected['value'].toString();
-
-            widget.form!['grades'][index]
-                ['unit'] = {'name': selected['label'].toString()};
-          });
-        },
-      ),
-    );
-  }
-
-  _selectQtyItemUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Qty',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['item_unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['item_unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectQtyDyeingUnit() {
-    showSelectDialog(
-      context: context,
-      title: 'Satuan Qty',
-      isFetching: _isFetchingUnit,
-      option: unitOption,
-      selected: widget.form?['unit_id'].toString() ?? '',
-      handleChangeValue: (e) {
-        setState(() {
-          widget.form?['unit_id'] = e['value'].toString();
-          widget.form?['nama_satuan'] = e['label'].toString();
-        });
-      },
-    );
-  }
-
-  _selectFinishedMaterial() {
-    final provider = Provider.of<OptionItemService>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (_) => SelectDialog(
-        label: 'Material Greige',
-        options: (widget.finishedItemOptions != null &&
-                widget.finishedItemOptions!.isNotEmpty)
-            ? widget.finishedItemOptions!
-            : finishedItemOption,
-        selected: widget.form?['greige_item_id']?.toString(),
-        isManyOption: true,
-        isAnyAdditionalData: true,
-        isLoading: provider.isLoading,
-        hasMoreData: provider.hasMoreData,
-        onSearch: (value) {
-          provider.fetchOptions(
-            isInitialLoad: true,
-            searchQuery: value,
-          );
-        },
-        onLoadMore: () {
-          provider.fetchOptions();
-        },
-        handleChangeValue: (e) {
-          setState(() {
-            widget.form?['greige_item_id'] = e?['value']?.toString();
-            widget.form?['nama_greige_item'] = e?['label']?.toString();
-            widget.form?['sku_greige_item'] = e?['code']?.toString();
-          });
-        },
-      ),
-    );
+    return true;
   }
 
   double _getTotalItemQty() {
@@ -1109,22 +1219,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
   }
 
   void _validateWeight(String weight) {
-    double referenceWeight;
-
-    if ([
-      'Press',
-      'Tumbler',
-      'Stenter',
-      'Long Slitting',
-    ].contains(widget.label)) {
-      referenceWeight = getTotalItemWeight();
-    } else {
-      referenceWeight = double.tryParse(
-            data['work_orders']?['greige_qty']?.toString() ?? '0',
-          ) ??
-          0;
-    }
-
     final berat = toDouble(weight);
     final greigeQty = (data['work_orders']['greige_qty']);
 
@@ -1145,7 +1239,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _weightWarningValidationMessage =
             'Berat ${berat < greigeQty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+            '(Batas: ${formatNumber(lowerLimit)} – ${formatNumber(upperLimit)})';
       });
     } else {
       setState(() {
@@ -1193,7 +1287,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
         _itemWarningValidationMessage =
             'Qty ${inputQty < qty ? 'kurang' : 'lebih'} '
             '${diffPercent.abs().toStringAsFixed(2)}% '
-            '(Batas: ${lowerLimit.toStringAsFixed(0)} – ${upperLimit.toStringAsFixed(0)})';
+            '(Batas: ${formatNumber(lowerLimit)} – ${formatNumber(upperLimit)})';
       });
     } else {
       setState(() {
@@ -1249,12 +1343,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return grades.any((g) {
       final qty = double.tryParse(g['qty']?.toString() ?? '0') ?? 0;
       return qty > 0;
-    });
-  }
-
-  void _onGradeChanged(List<dynamic> grades) {
-    setState(() {
-      widget.form!['grades'] = grades;
     });
   }
 
@@ -1426,8 +1514,34 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return _buildSortingGradesFallbackPayload();
   }
 
+  List<Map<String, dynamic>> _buildGradeATransfers() {
+    final items = widget.form?['items'] ?? [];
+    final transfers = <Map<String, dynamic>>[];
+
+    for (final item in items) {
+      if (item is! Map) continue;
+      final rows = item['absorbed_work_orders'];
+      if (rows is! List) continue;
+
+      for (final row in rows) {
+        if (row is! Map) continue;
+        final fromSortingId = row['sorting_id'] ?? row['from_sorting_id'];
+        if (fromSortingId == null) continue;
+
+        transfers.add({
+          'from_sorting_id': fromSortingId,
+          'item_id': row['item_id'],
+          'qty': row['qty'] ?? 0,
+        });
+      }
+    }
+
+    return transfers;
+  }
+
   @override
   void dispose() {
+    _hasAttachment.dispose();
     if (widget.form != null) {
       widget.form!.clear();
     }
@@ -1442,6 +1556,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   @override
   Widget build(BuildContext context) {
+    final shouldShowFormLoader =
+        _firstLoading && (widget.id != null || widget.form?['wo_id'] != null);
+
     return DefaultTabController(
       length: 3,
       child: GestureDetector(
@@ -1477,18 +1594,14 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      _firstLoading
+                      shouldShowFormLoader
                           ? Center(child: CircularProgressIndicator())
                           : FinishFormTab(
                               id: widget.id,
                               isLoading: _firstLoading,
                               form: widget.form,
                               formKey: _formKey,
-                              handleSelectMachine: null,
-                              handleSelectLengthUnit: _selectLengthUnit,
                               handleChangeInput: _handleChangeInput,
-                              handleSelectUnit: _selectUnit,
-                              handleSelectWidthUnit: _selectWidthUnit,
                               qty: _qtyItemController,
                               dyeingQty: _qtyController,
                               packingQty: _packingQtyController,
@@ -1498,49 +1611,41 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               qtyItem: _qtyControllers,
                               weight: _weightController,
                               gsm: _gsmController,
-                              weightDozen: _weightDozenController,
                               weightGradeA: _weightGradeAController,
                               totalWeight: _totalWeightController,
                               handleSelectWo: _selectWorkOrder,
-                              handleSelectFinishedMaterial:
-                                  _selectFinishedMaterial,
-                              handleSelectQtyUnitItem: _selectQtyItemUnit,
-                              handleSelectQtyUnitDyeing: _selectQtyDyeingUnit,
-                              processId: processId,
                               processData: data,
                               withItemGrade: widget.withItemGrade,
                               itemGradeOption: itemGradeOption,
-                              handleSelectQtyUnit: _selectQtyUnit,
                               withQtyAndWeight: widget.withQtyAndWeight,
                               label: widget.label,
                               forDyeing: widget.forDyeing,
                               data: data['work_orders'],
-                              forPacking: widget.forPacking,
-                              forHemming: widget.forHemming,
-                              forSewing: widget.forSewing,
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
-                              qtyWarning: _itemWarningValidationMessage,
-                              handleRemainingQtyForGrade:
-                                  getRemainingQtyForGrade,
-                              handleTotalItemQty: getTotalItemQty,
-                              onGradeChanged: _onGradeChanged,
-                              dyeingLotNo: _dyeingLotNoController,
+                              // qtyWarning: _itemWarningValidationMessage,
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,
-                              reworkLongHemming: _reworkLongHemmingController,
                               weightGood: _weightGoodController,
                               woData: woData,
                               itemTypeOption: itemTypeOption,
                               defects: _defects,
                               defectQty: _defectQtyControllers,
-                              handleUpdateDefect: updateDefect,
                               finishedItem: finishedItemOption,
-                              finishedItemGood: finishedItemGood,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              handleItemQtyWarning: (hasWarning) {
+                                if (!mounted) return;
+
+                                setState(() {
+                                  _hasItemQtyWarning = hasWarning;
+                                });
+                              },
+                              onAttachmentChanged: () {
+                                _updateAttachmentStatus();
+                              },
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1573,6 +1678,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             withItemQtyAndWeight: widget.withQtyAndWeight,
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
+            hasItemQtyWarning: _hasItemQtyWarning,
+            hasAttachment: _hasAttachment,
           ),
         ),
       ),

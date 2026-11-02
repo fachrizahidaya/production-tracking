@@ -8,7 +8,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
+  final int notificationCount;
+  final VoidCallback? onNotifications;
+  final String notificationTooltip;
   final bool isWithAccount;
+  final bool showAvatar;
+  final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
   final bool? canUpdate;
@@ -25,6 +30,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final handleSave;
   final name;
   final bool isLoading;
+  final bool isDashboardSettingsLoading;
+  final VoidCallback? onDashboardSettings;
+  final VoidCallback? onReportSettings;
+  final VoidCallback? onEdit;
 
   const CustomAppBar(
       {super.key,
@@ -32,7 +41,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
       this.isWithAccount = false,
+      this.showAvatar = true,
       this.tab,
       this.canDelete,
       this.canUpdate,
@@ -48,7 +61,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.handleSave,
       this.name,
       this.handleFinish,
-      this.isLoading = false});
+      this.isLoading = false,
+      this.isDashboardSettingsLoading = false,
+      this.onDashboardSettings,
+      this.onReportSettings,
+      this.onEdit,
+      this.showNameWithAvatar = false});
 
   @override
   Widget build(BuildContext context) {
@@ -71,20 +89,71 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
+        if (isWithNotification)
+          _buildNotificationButton(
+            tooltip: notificationTooltip,
+            icon: Icons.assignment_late_outlined,
+            count: notificationCount,
+            onPressed: onNotifications,
+          ),
+        if (isDashboardSettingsLoading)
+          const Padding(
+            padding: EdgeInsets.all(14),
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          )
+        else if (onDashboardSettings != null)
+          IconButton(
+            tooltip: 'Atur widget dashboard',
+            onPressed: onDashboardSettings,
+            icon: const Icon(Icons.dashboard_customize_outlined),
+          ),
+        if (onReportSettings != null)
+          IconButton(
+            tooltip: 'Atur widget laporan',
+            onPressed: onReportSettings,
+            icon: const Icon(Icons.dashboard_customize_outlined),
+          ),
+        if (onEdit != null)
+          IconButton(
+            tooltip: 'Edit',
+            onPressed: onEdit,
+            icon: const Icon(Icons.edit_outlined),
+          ),
         if (isWithAccount)
           PopupMenuButton<String>(
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundColor: CustomTheme().colors('primary'),
-              child: Text(
-                getInitial(name),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: CustomTheme().fontSize('sm'),
-                ),
-              ),
-            ),
+            icon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (showNameWithAvatar)
+                    Text(
+                      name ?? '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: CustomTheme().fontSize('md'),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  if (showAvatar)
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: CustomTheme().colors('primary'),
+                      child: Text(
+                        getInitial(name),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: CustomTheme().fontSize('sm'),
+                        ),
+                      ),
+                    )
+                  else
+                    const Icon(Icons.account_circle_outlined),
+                ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),
             onSelected: (value) {
@@ -160,6 +229,50 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildNotificationButton({
+    required String tooltip,
+    required IconData icon,
+    required int count,
+    VoidCallback? onPressed,
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        IconButton(
+          tooltip: tooltip,
+          onPressed: onPressed,
+          icon: Icon(icon),
+        ),
+        if (count > 0)
+          Positioned(
+            right: 4,
+            top: 4,
+            child: Container(
+              constraints: const BoxConstraints(
+                minWidth: 18,
+                minHeight: 18,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white, width: 1.5),
+              ),
+              child: Text(
+                count > 99 ? '99+' : count.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

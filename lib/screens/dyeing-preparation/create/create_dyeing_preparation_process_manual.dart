@@ -1,0 +1,600 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
+import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
+import 'package:textile_tracking/models/master/work_order.dart';
+import 'package:textile_tracking/models/option/option_work_order.dart';
+import 'package:textile_tracking/screens/dyeing-preparation/create/dyeing_preparation_form_section.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+
+class CreateDyeingPreparationProcessManual extends StatefulWidget {
+  final dynamic id;
+  final Map<String, dynamic>? data;
+  final Map<String, dynamic>? form;
+  final Future<void> Function()? handleSubmit;
+
+  const CreateDyeingPreparationProcessManual({
+    super.key,
+    this.id,
+    this.data,
+    this.form,
+    this.handleSubmit,
+  });
+
+  @override
+  State<CreateDyeingPreparationProcessManual> createState() =>
+      _CreateDyeingPreparationProcessManualState();
+}
+
+class _CreateDyeingPreparationProcessManualState
+    extends State<CreateDyeingPreparationProcessManual> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final WorkOrderService _workOrderService = WorkOrderService();
+  final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
+  final String baseUrl = dotenv.env['API_URL'] ?? '';
+  final TextEditingController _noteController = TextEditingController();
+  late List<Map<String, dynamic>> allAttachments;
+
+  bool _firstLoading = false;
+  bool _isFetchingWorkOrder = false;
+  List<dynamic> workOrderOption = [];
+  Map<String, dynamic> woData = {};
+  List<Map<String, dynamic>> existingItems = [];
+  List<Map<String, dynamic>> greigeItemOptions = [];
+  String? greigeInfoMessage;
+  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  String _baseCode(String? code) {
+    if (code == null || code.isEmpty) return '';
+
+    return code.split('-').first;
+  }
+
+  bool _isGreigeReady(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value == 1;
+    if (value is String) {
+      return value.toLowerCase() == 'true' || value == '1';
+    }
+
+    return false;
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchGreigeItemOptions(
+    List<dynamic> items,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    final options = <Map<String, dynamic>>[];
+    final optionCache = <String, List<dynamic>>{};
+
+    for (final rawItem in items) {
+      final item = Map<String, dynamic>.from(rawItem);
+      final baseCode = _baseCode(item['item_code']?.toString());
+
+      if (baseCode.isEmpty) {
+        continue;
+      }
+
+      if (!optionCache.containsKey(baseCode)) {
+        final uri = Uri.parse('$baseUrl/item/option').replace(
+          queryParameters: {
+            'type': 'greige_item',
+            'base_code': baseCode,
+            'process': 'work_order',
+          },
+        );
+
+        final response = await http.get(
+          uri,
+          headers: {'Authorization': 'Bearer $token'},
+        );
+
+        final responseData = jsonDecode(response.body);
+
+        if (response.statusCode != 200) {
+          throw responseData['message'] ?? 'Gagal mengambil opsi greige item.';
+        }
+
+        optionCache[baseCode] = List<dynamic>.from(responseData['data'] ?? []);
+      }
+
+      final data = optionCache[baseCode] ?? [];
+
+      options.addAll(
+        data.map<Map<String, dynamic>>((rawOption) {
+          final option = Map<String, dynamic>.from(rawOption);
+
+          return {
+            "work_order_item_id": item["id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_id": item["item_id"],
+            "source_item_code": item["item_code"],
+            "source_item_name": item["item_name"],
+            "item_id": option["value"],
+            "item_code": option["code"],
+            "item_name": option["label"],
+            "spk_no": null,
+            "qty": item["qty"],
+            "weight": item["weight"],
+            "qty_tolerance": 0,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+          };
+        }),
+      );
+    }
+
+    return options;
+  }
+
+  Map<String, dynamic> _resolveGreigeItem(
+    Map<String, dynamic> item,
+    List<Map<String, dynamic>> options,
+    Map<String, dynamic>? greige,
+  ) {
+    final greigeItem = greige?["greige_item"] is Map
+        ? Map<String, dynamic>.from(greige?["greige_item"])
+        : <String, dynamic>{};
+
+    final greigeItemId = greige?["greige_item_id"] ?? item["item_id"];
+    final matchedOption = options.cast<Map<String, dynamic>?>().firstWhere(
+          (option) =>
+              option?["work_order_item_id"] == item["id"] &&
+              option?["item_id"]?.toString() == greigeItemId?.toString(),
+          orElse: () => null,
+        );
+
+    final fallbackOption = options.cast<Map<String, dynamic>?>().firstWhere(
+          (option) => option?["work_order_item_id"] == item["id"],
+          orElse: () => null,
+        );
+
+    final option = matchedOption ?? fallbackOption;
+
+    return {
+      "item_id": option?["item_id"] ?? greigeItemId,
+      "item_code":
+          option?["item_code"] ?? greigeItem["code"] ?? item["item_code"],
+      "item_name":
+          option?["item_name"] ?? greigeItem["name"] ?? item["item_name"],
+    };
+  }
+
+  List<Map<String, dynamic>> _mapExistingItems(
+    List<dynamic> items,
+    List<Map<String, dynamic>> options,
+  ) {
+    return items.expand<Map<String, dynamic>>((e) {
+      final item = Map<String, dynamic>.from(e);
+      final greigeItems = List<dynamic>.from(item["greige_items"] ?? []);
+
+      if (greigeItems.isEmpty) {
+        final greigeItem = _resolveGreigeItem(item, options, null);
+
+        return [
+          {
+            "id": null,
+            "work_order_item_id": item["id"],
+            "item_id": greigeItem["item_id"],
+            "spk_item_id": item["spk_item_id"],
+            "source_item_code": item["item_code"],
+            "source_item_name": item["item_name"],
+            "item_code": greigeItem["item_code"],
+            "item_name": greigeItem["item_name"],
+            "spk_no": null,
+
+            "qty": item["qty"],
+            "weight": item["weight"],
+
+            // Sumber rumus dari Work Order
+            "source_qty": item["qty"],
+            "source_weight": item["weight"],
+
+            "qty_tolerance": 0,
+            "unit_id": item["unit"]?["id"] ?? 1,
+            "weight_unit_id": item["weight_unit"]?["id"] ?? 2,
+          },
+        ];
+      }
+
+      return greigeItems.map<Map<String, dynamic>>((rawGreige) {
+        final greige = Map<String, dynamic>.from(rawGreige);
+        final greigeItem = _resolveGreigeItem(item, options, greige);
+
+        return {
+          "id": greige["id"],
+          "work_order_item_id": item["id"],
+          "item_id": greigeItem["item_id"],
+          "spk_item_id": item["spk_item_id"],
+          "source_item_code": item["item_code"],
+          "source_item_name": item["item_name"],
+          "item_code": greigeItem["item_code"],
+          "item_name": greigeItem["item_name"],
+          "spk_no": greige["greige_item_op_no"],
+
+          // Nilai Qty Greige yang sedang digunakan
+          "qty": greige["qty"] ?? item["qty"],
+
+          // Berat Greige yang tersimpan
+          "weight": greige["weight"] ?? item["weight"],
+
+          // ==============================
+          // SUMBER RUMUS DARI WORK ORDER
+          // ==============================
+          "source_qty": item["qty"],
+          "source_weight": item["weight"],
+
+          "qty_tolerance": greige["qty_tolerance"] ?? 0,
+          "unit_id": greige["unit_id"] ?? 1,
+          "weight_unit_id": greige["weight_unit_id"] ?? 2,
+        };
+      }).toList();
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.data != null && widget.data!.isNotEmpty) {
+      woData = widget.data!;
+    }
+
+    _noteController.text = widget.form?['notes']?.toString() ?? '';
+
+    final existing = List<Map<String, dynamic>>.from(
+      widget.form?['attachments'] ?? [],
+    );
+
+    allAttachments = [
+      ...existing,
+      {'is_add_button': true},
+    ];
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchWorkOrder();
+      _hydrateInitialData();
+    });
+  }
+
+  Future<void> _hydrateInitialData() async {
+    if (widget.data == null || widget.data!.isEmpty) return;
+
+    setState(() {
+      _firstLoading = true;
+    });
+
+    try {
+      final data = widget.data!['id'] != null
+          ? await _workOrderService.getFormInfo(widget.data!['id'])
+          : widget.data!;
+      final items = List<dynamic>.from(data['items'] ?? [])
+          .map((rawItem) => Map<String, dynamic>.from(rawItem))
+          .where((item) => _isGreigeReady(item['greige_ready']))
+          .toList();
+      final options = await _fetchGreigeItemOptions(items);
+
+      setState(() {
+        woData = data;
+        greigeItemOptions = options;
+        existingItems = _mapExistingItems(items, options);
+        greigeInfoMessage = items.isEmpty
+            ? 'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.'
+            : null;
+      });
+    } catch (e) {
+      setState(() {
+        existingItems = [];
+        greigeItemOptions = [];
+        greigeInfoMessage =
+            'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _firstLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _fetchWorkOrder() async {
+    setState(() {
+      _isFetchingWorkOrder = true;
+    });
+
+    final service = Provider.of<OptionWorkOrderService>(context, listen: false);
+
+    try {
+      await service.fetchDyeingPreparationOptions();
+
+      setState(() {
+        workOrderOption = service.dataListOption;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
+    } finally {
+      setState(() {
+        _isFetchingWorkOrder = false;
+      });
+    }
+  }
+
+  Future<void> _getDataView(dynamic id) async {
+    setState(() {
+      _firstLoading = true;
+    });
+
+    try {
+      final data = await _workOrderService.getFormInfo(id);
+
+      final List<dynamic> items = List<dynamic>.from(data['items'] ?? []);
+
+      if (items.isEmpty) {
+        throw 'Item tidak ditemukan.';
+      }
+
+      final availableItems = items
+          .map((rawItem) => Map<String, dynamic>.from(rawItem))
+          .where((item) => _isGreigeReady(item['greige_ready']))
+          .toList();
+
+      final options = await _fetchGreigeItemOptions(availableItems);
+
+      setState(() {
+        woData = data;
+
+        if (availableItems.isEmpty) {
+          existingItems = [];
+          greigeItemOptions = [];
+          greigeInfoMessage =
+              'Order Greige ${woData['items'][0]['order_greige']['og_no']} sudah selesai. Stok SAP belum ter-update WO bisa lanjut ke Persiapan Dyeing setelah stok greige mencukupi.';
+        } else {
+          greigeItemOptions = options;
+          existingItems = _mapExistingItems(availableItems, options);
+          greigeInfoMessage = null;
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _firstLoading = false;
+        });
+      }
+    }
+  }
+
+  void _selectWorkOrder() {
+    if (_isFetchingWorkOrder) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      useSafeArea: true,
+      builder: (BuildContext context) {
+        return SelectDialog(
+          label: 'Work Order',
+          options: workOrderOption,
+          selected: widget.form?['wo_id']?.toString() ?? '',
+          handleChangeValue: (selected) async {
+            if (selected == null) {
+              setState(() {
+                widget.form?['wo_id'] = null;
+                widget.form?['no_wo'] = '';
+                woData = {};
+                existingItems = [];
+                greigeItemOptions = [];
+              });
+              return;
+            }
+
+            final woId = selected['value']?.toString();
+
+            setState(() {
+              widget.form?['wo_id'] = woId;
+              widget.form?['no_wo'] = selected['label']?.toString();
+            });
+
+            if (woId != null && woId.isNotEmpty) {
+              await _getDataView(woId);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void _handleChangeInput(String key, dynamic value) {
+    setState(() {
+      widget.form?[key] = value;
+    });
+  }
+
+  Future<File?> compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path);
+    }
+
+    final dir = await getTemporaryDirectory();
+
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result != null ? File(result.path) : null;
+  }
+
+  Future<void> _pickAttachments(ImageSource source) async {
+    try {
+      final picker = ImagePicker();
+
+      final XFile? image = await picker.pickImage(source: source);
+
+      if (image == null) return;
+
+      final compressedFile = await compressImage(image.path);
+
+      if (compressedFile == null) return;
+
+      setState(() {
+        allAttachments.removeWhere((e) => e['is_add_button'] == true);
+
+        final newFile = {
+          'name': compressedFile.path.split('/').last,
+          'path': compressedFile.path,
+          'extension': compressedFile.path.split('.').last,
+          'isNew': true,
+        };
+
+        allAttachments.add(newFile);
+
+        allAttachments.add({'is_add_button': true});
+
+        widget.form?['attachments'] =
+            allAttachments.where((e) => e['is_add_button'] != true).toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  void showImageDialog(BuildContext context, bool isNew, String filePath) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: CustomTheme().padding('process-content'),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    if (!context.mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(const Duration(milliseconds: 200));
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          allAttachments.remove(item);
+
+          widget.form?['attachments'] =
+              allAttachments.where((e) => e['is_add_button'] != true).toList();
+        });
+
+        Navigator.pop(context);
+
+        completer.complete(true);
+      },
+    );
+
+    return completer.future;
+  }
+
+  @override
+  void dispose() {
+    widget.form?.clear();
+    _isSubmitting.dispose();
+    _noteController.dispose();
+    _isLoading.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DyeingPreparationFormSection(
+      id: widget.id,
+      title: 'Buat Persiapan Dyeing',
+      form: widget.form,
+      formKey: _formKey,
+      woData: widget.data != null && widget.data!.isNotEmpty
+          ? (woData.isNotEmpty ? woData : widget.data!)
+          : woData,
+      handleSubmit: widget.handleSubmit ?? () async {},
+      isSubmitting: _isSubmitting,
+      selectWorkOrder: _selectWorkOrder,
+      firstLoading: _firstLoading,
+      existingItems: existingItems,
+      itemOptions: greigeItemOptions.isEmpty ? null : greigeItemOptions,
+      greigeInfoMessage: greigeInfoMessage,
+      greigeReady: existingItems.isNotEmpty,
+      handleChangeInput: _handleChangeInput,
+      note: _noteController,
+      isEdit: false,
+      disableWorkOrder: false,
+      attachments: allAttachments,
+      onAddAttachment: _pickAttachments,
+      onDeleteAttachment: _handleDeleteAttachment,
+      onPreviewImage: (isNew, filePath) {
+        showImageDialog(context, isNew, filePath);
+      },
+    );
+  }
+}

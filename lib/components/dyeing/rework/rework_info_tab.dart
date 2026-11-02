@@ -12,9 +12,11 @@ class ReworkInfoTab extends StatefulWidget {
   final data;
   final form;
   final formKey;
-  final handleSubmit;
   final handleSelectMachine;
   final handleSelectWorkOrder;
+  final handleSelectReworkCategory;
+  final reworkCategoryOption;
+  final onFormChanged;
   final isLoading;
 
   const ReworkInfoTab(
@@ -23,11 +25,13 @@ class ReworkInfoTab extends StatefulWidget {
       this.form,
       this.formKey,
       this.handleSelectMachine,
+      this.handleSelectReworkCategory,
       this.handleSelectWorkOrder,
-      this.handleSubmit,
       this.id,
       this.isLoading,
-      this.label});
+      this.label,
+      this.onFormChanged,
+      this.reworkCategoryOption});
 
   @override
   State<ReworkInfoTab> createState() => _ReworkInfoTabState();
@@ -51,14 +55,15 @@ class _ReworkInfoTabState extends State<ReworkInfoTab> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CreateForm(
+                data: widget.data,
                 form: widget.form,
                 formKey: widget.formKey,
-                handleSubmit: widget.handleSubmit,
-                data: widget.data,
                 selectWorkOrder: widget.handleSelectWorkOrder,
                 selectMachine: widget.handleSelectMachine,
+                selectReworkCategory: widget.handleSelectReworkCategory,
+                reworkCategoryOption: widget.reworkCategoryOption,
+                onFormChanged: widget.onFormChanged,
                 id: widget.id,
-                isLoading: widget.isLoading,
               ),
               if (widget.form?['wo_id'] != null)
                 InfoTab(

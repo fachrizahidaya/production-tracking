@@ -62,6 +62,11 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
     'no_dyeing': '',
     'nama_mesin': '',
     'nama_satuan': '',
+    'machines': [],
+    'machine_ids': [],
+    'rework_category': null,
+    'rework_type': [],
+    'rework_method': [],
     'semifinished_products': [],
     'items': [],
     'attachments_ids': [],
@@ -142,6 +147,7 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         process: 'dyeing',
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final semiFinishedItems = semiFinishedService.dataListOption;
@@ -172,7 +178,6 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
             data: data,
             form: _form,
             handleSubmit: _handleSubmit,
-            handleChangeInput: _handleChangeInput,
           ),
         ),
       );
@@ -200,9 +205,17 @@ class _ReworkDyeingState extends State<ReworkDyeing> {
         machine_id: _form['machine_id'] != null
             ? int.tryParse(_form['machine_id'].toString())
             : null,
+        machine_ids: (_form['machines'] as List?)
+            ?.map((e) => int.tryParse(e['value'].toString()))
+            .where((e) => e != null)
+            .cast<int>()
+            .toList(),
         rework_reference_id: _form['rework_reference_id'] != null
             ? int.tryParse(_form['rework_reference_id'].toString())
             : null,
+        rework_category: _form['rework_category']?.toString(),
+        rework_type: _form['rework_type'] ?? [],
+        rework_method: _form['rework_method'] ?? [],
         notes: _form['notes'],
         rework: _form['rework'],
         status: _form['status'],
@@ -287,7 +300,6 @@ Route _createRoute(dynamic form, handleSubmit, handleChangeInput) {
       dyeingId: null,
       form: form,
       handleSubmit: handleSubmit,
-      handleChangeInput: handleChangeInput,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

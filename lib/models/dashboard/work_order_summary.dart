@@ -10,17 +10,42 @@ import 'package:textile_tracking/providers/api_client.dart';
 
 class WorkOrderSummaryService extends BaseService {
   final String baseUrl = '${dotenv.env['API_URL']}/dashboard/wo-summary';
+  final String preWoBaseUrl =
+      '${dotenv.env['API_URL']}/dashboard/pre-wo-summary';
 
   bool _isLoading = false;
   List<dynamic> _dataList = [];
+  List<dynamic> _preDataList = [];
   List<dynamic> _dataSummary = [];
   bool get isLoading => _isLoading;
   List<dynamic> get dataList => _dataList;
+  List<dynamic> get preDataList => _preDataList;
   List<dynamic> get dataSummary => _dataSummary;
 
+  void filterByProcessNames(Iterable<String> processNames) {
+    final normalizedProcessNames = processNames
+        .map((name) => name.trim().toLowerCase())
+        .where((name) => name.isNotEmpty)
+        .toSet();
+
+    bool isAllowed(dynamic item) {
+      if (item is! Map) return false;
+
+      final processName =
+          (item['process_name'] ?? '').toString().trim().toLowerCase();
+      return normalizedProcessNames.contains(processName);
+    }
+
+    _dataList = _dataList.where(isAllowed).toList();
+    _preDataList = _preDataList.where(isAllowed).toList();
+    notifyListeners();
+  }
+
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -33,7 +58,10 @@ class WorkOrderSummaryService extends BaseService {
 
   @override
   Future<void> updateItem(
-      String id, item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -48,7 +76,9 @@ class WorkOrderSummaryService extends BaseService {
   }
 
   Future<void> getDataList(
-      BuildContext context, Map<String, String> params) async {
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
     final url = Uri.parse(baseUrl).replace(queryParameters: params);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -62,10 +92,7 @@ class WorkOrderSummaryService extends BaseService {
       _dataList.clear();
       notifyListeners();
 
-      final response = await ApiClient.instance.get(
-        context,
-        url,
-      );
+      final response = await ApiClient.instance.get(context, url);
 
       final responseData = jsonDecode(response.body);
 
@@ -73,6 +100,43 @@ class WorkOrderSummaryService extends BaseService {
         case 200:
           if (responseData['data'] != null) {
             _dataList = responseData['data'];
+          }
+          notifyListeners();
+          break;
+
+        default:
+          throw responseData['message'] ?? 'Unknown error';
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getPreDataList(
+    BuildContext context,
+    Map<String, String> params,
+  ) async {
+    final url = Uri.parse(preWoBaseUrl).replace(queryParameters: params);
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString('access_token');
+
+    if (token == null) {
+      throw 'Token not found';
+    }
+
+    try {
+      _preDataList.clear();
+      notifyListeners();
+
+      final response = await ApiClient.instance.get(context, url);
+
+      final responseData = jsonDecode(response.body);
+
+      switch (response.statusCode) {
+        case 200:
+          if (responseData['data'] != null) {
+            _preDataList = responseData['data'];
           }
           notifyListeners();
           break;

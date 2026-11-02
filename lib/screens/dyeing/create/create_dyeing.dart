@@ -22,6 +22,11 @@ class CreateDyeing extends StatelessWidget {
       machine_id: form['machine_id'] != null
           ? int.tryParse(form['machine_id'].toString())
           : null,
+      machine_ids: (form['machines'] as List?)
+          ?.map((e) => int.tryParse(e['value'].toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList(),
       rework_reference_id: form['rework_reference_id'] != null
           ? int.tryParse(form['rework_reference_id'].toString())
           : null,

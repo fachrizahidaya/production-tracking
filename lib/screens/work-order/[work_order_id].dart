@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
+import 'package:textile_tracking/components/work-order/tab/greige_order_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/wo_info_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/note_tab.dart';
 import 'package:textile_tracking/components/work-order/tab/process_tab.dart';
@@ -50,7 +51,7 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
           backgroundColor: Color(0xFFf9fafc),
           appBar: CustomAppBar(
@@ -72,6 +73,9 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                       text: 'Proses Produksi',
                     ),
                     Tab(
+                      text: 'Order Greige',
+                    ),
+                    Tab(
                       text: 'Catatan',
                     ),
                   ]),
@@ -83,6 +87,9 @@ class _WorkOrderDetailState extends State<WorkOrderDetail> {
                       isLoading: _firstLoading,
                     ),
                     ProcessTab(
+                      data: data,
+                    ),
+                    GreigeOrderTab(
                       data: data,
                     ),
                     NoteTab(

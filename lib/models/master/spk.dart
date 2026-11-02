@@ -21,9 +21,10 @@ class SpkService extends ChangeNotifier {
       _dataView = {};
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       final responseData = json.decode(response.body);
 
@@ -49,17 +50,62 @@ class SpkService extends ChangeNotifier {
 
     final response = await http.get(
       Uri.parse('$baseUrl/$id/documents'),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
     );
 
     final responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return Map<String, dynamic>.from(
-        responseData['data'] ?? {},
-      );
+      return Map<String, dynamic>.from(responseData['data'] ?? {});
+    }
+
+    throw responseData['message'];
+  }
+
+  Future<Map<String, dynamic>> checkStock({
+    required int spkItemId,
+    int? itemId,
+    int qty = 0,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    final url = Uri.parse(
+      '$baseUrl/check-stock'
+      '?spk_item_id=$spkItemId'
+      '&item_id=${itemId ?? ''}'
+      '&qty=$qty',
+    );
+
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return Map<String, dynamic>.from(responseData);
+    }
+
+    throw responseData['message'];
+  }
+
+  Future<Map<String, dynamic>> getSpkItem(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    final url = Uri.parse('${dotenv.env['API_URL']}/spk-items/$id');
+
+    final response = await http.get(
+      url,
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return Map<String, dynamic>.from(responseData);
     }
 
     throw responseData['message'];

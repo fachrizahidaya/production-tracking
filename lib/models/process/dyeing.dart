@@ -1,6 +1,10 @@
 // ignore_for_file: non_constant_identifier_names, annotate_overrides, prefer_final_fields
 
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
+import 'package:textile_tracking/providers/api_client.dart';
 
 class Dyeing {
   final int? id;
@@ -31,6 +35,12 @@ class Dyeing {
   final dyeingLotNo;
   final greige_item_id;
   final semifinished_products;
+  final machines;
+  final machine_ids;
+  final String? rework_category;
+  final rework_type;
+  final rework_method;
+  final rework_categories;
 
   Dyeing(
       {this.id,
@@ -60,7 +70,13 @@ class Dyeing {
       this.rework_reference,
       this.dyeingLotNo,
       this.greige_item_id,
-      this.semifinished_products});
+      this.semifinished_products,
+      this.machine_ids,
+      this.machines,
+      this.rework_category,
+      this.rework_type,
+      this.rework_method,
+      this.rework_categories});
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -92,6 +108,12 @@ class Dyeing {
       dyeingLotNo: json['lot_celup_no'],
       greige_item_id: json['greige_item_id'] as int?,
       semifinished_products: json['semifinished_products'] ?? [],
+      machines: json['machines'] ?? [],
+      machine_ids: json['machine_ids'] ?? [],
+      rework_category: json['rework_category'],
+      rework_type: json['rework_type'] ?? [],
+      rework_method: json['rework_method'] ?? [],
+      rework_categories: json['rework_categories'] ?? [],
     );
   }
 
@@ -125,6 +147,12 @@ class Dyeing {
       'lot_celup_no': dyeingLotNo,
       'greige_item_id': greige_item_id,
       'semifinished_products': semifinished_products,
+      'machines': machines,
+      'machine_ids': machine_ids,
+      'rework_category': rework_category,
+      'rework_type': rework_type,
+      'rework_method': rework_method,
+      'rework_categories': rework_categories,
     };
   }
 }
@@ -136,4 +164,17 @@ class DyeingService extends BaseCrudService<Dyeing> {
           fromJson: (json) => Dyeing.fromJson(json),
           toJson: (item) => item.toJson(),
         );
+
+  Future<List<dynamic>> fetchReworkCategoryOptions(BuildContext context) async {
+    final url = Uri.parse('$baseUrl/dyeings/rework-category-options');
+
+    final response = await ApiClient.instance.get(context, url);
+    final decoded = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return decoded['data'] ?? [];
+    }
+
+    throw (decoded['message'] ?? 'Gagal mengambil kategori rework');
+  }
 }

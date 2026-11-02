@@ -59,47 +59,37 @@ class _SubmitSectionState extends State<SubmitSection> {
                       child: Center(child: LayoutBuilder(
                         builder: (context, constraints) {
                           final isLandscape =
-                              MediaQuery.of(context).orientation ==
-                                  Orientation.landscape;
-                          double scanWidth = isLandscape
-                              ? constraints.maxHeight
-                              : constraints.maxWidth * 0.9;
-                          double scanHeight = isLandscape
-                              ? constraints.maxWidth
+                              orientation == Orientation.landscape;
+                          final scanSize = isLandscape
+                              ? constraints.maxHeight * 0.9
                               : constraints.maxWidth * 0.9;
                           return ClipRRect(
                               child: SizedBox(
-                            width: scanWidth,
-                            height: scanHeight,
+                            width: scanSize,
+                            height: scanSize,
                             child: Stack(
                               children: [
-                                AnimatedRotation(
-                                  turns: orientation == Orientation.landscape
-                                      ? -0.25
-                                      : 0,
-                                  duration: Duration(milliseconds: 300),
-                                  child: MobileScanner(
-                                    controller: controller,
-                                    onDetect: (capture) {
-                                      final List<Barcode> barcodes =
-                                          capture.barcodes;
+                                MobileScanner(
+                                  controller: controller,
+                                  onDetect: (capture) {
+                                    final List<Barcode> barcodes =
+                                        capture.barcodes;
 
-                                      for (final barcode in barcodes) {
-                                        final String? code = barcode.rawValue;
+                                    for (final barcode in barcodes) {
+                                      final String? code = barcode.rawValue;
 
-                                        if (code != null && code.isNotEmpty) {
-                                          controller.stop();
-                                          setState(() {
-                                            _isScannerStopped = true;
-                                          });
+                                      if (code != null && code.isNotEmpty) {
+                                        controller.stop();
+                                        setState(() {
+                                          _isScannerStopped = true;
+                                        });
 
-                                          widget.handleScan(code);
+                                        widget.handleScan(code);
 
-                                          break;
-                                        }
+                                        break;
                                       }
-                                    },
-                                  ),
+                                    }
+                                  },
                                 ),
                                 if (_isScannerStopped)
                                   Center(

@@ -3,12 +3,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
+import 'package:textile_tracking/screens/env_config.dart';
 
 class AttachmentPicker extends StatelessWidget {
   final List attachments;
-  final VoidCallback onAddAttachment;
+  final Future<void> Function(ImageSource source) onAddAttachment;
   final Future<bool?> Function(Map item) onDeleteAttachment;
   final void Function(bool isNew, String path) onPreviewImage;
 
@@ -19,6 +21,45 @@ class AttachmentPicker extends StatelessWidget {
     required this.onDeleteAttachment,
     required this.onPreviewImage,
   });
+
+  Future<void> _showSourcePicker(BuildContext context) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.camera_alt_outlined),
+                title: Text('Kamera'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library_outlined),
+                title: Text('Galeri'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      await onAddAttachment(source);
+    }
+  }
+
+  String _remoteUrl(String path) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    final baseUrl = EnvConfig.apiUrl;
+    if (path.startsWith('/')) return '$baseUrl$path';
+    return '$baseUrl/$path';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +78,7 @@ class AttachmentPicker extends StatelessWidget {
 
             if (item['is_add_button'] == true) {
               return GestureDetector(
-                onTap: onAddAttachment,
+                onTap: () => _showSourcePicker(context),
                 child: Container(
                   width: 100,
                   height: 100,
@@ -73,8 +114,12 @@ class AttachmentPicker extends StatelessWidget {
               );
             }
 
-            final bool isNew = item.containsKey('path');
-            final String? filePath = isNew ? item['path'] : item['file_path'];
+            // Backend responses can also contain a `path` field. Only files
+            // explicitly marked as new should be opened from local storage.
+            final bool isNew = item['isNew'] == true;
+            final String? filePath = isNew
+                ? item['path']?.toString()
+                : (item['file_path'] ?? item['path'])?.toString();
 
             final String fileName = isNew
                 ? item['name']
@@ -88,7 +133,7 @@ class AttachmentPicker extends StatelessWidget {
             } else if (isNew && filePath != null) {
               preview = Image.file(File(filePath), fit: BoxFit.cover);
             } else if (filePath != null) {
-              preview = Image.network(filePath, fit: BoxFit.cover);
+              preview = Image.network(_remoteUrl(filePath), fit: BoxFit.cover);
             } else {
               preview = Icon(Icons.insert_drive_file);
             }
@@ -100,7 +145,10 @@ class AttachmentPicker extends StatelessWidget {
                   onTap: () {
                     if (['png', 'jpg', 'jpeg', 'gif'].contains(extension) &&
                         filePath != null) {
-                      onPreviewImage(isNew, filePath);
+                      onPreviewImage(
+                        isNew,
+                        isNew ? filePath : _remoteUrl(filePath),
+                      );
                     }
                   },
                   child: Container(

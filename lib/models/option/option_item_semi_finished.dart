@@ -22,10 +22,7 @@ class OptionItemSemiFinished {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -73,16 +70,14 @@ class OptionItemSemiFinishedService
   ) async {}
 
   @override
-  Future<void> deleteItem(
-    String id,
-    ValueNotifier<bool> isSubmitting,
-  ) async {}
+  Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
   Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
     String? process,
     List<String>? baseCodes,
     List<String>? colorCodes,
+    List<String>? variantCodes,
     String searchQuery = '',
   }) async {
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
@@ -117,15 +112,17 @@ class OptionItemSemiFinishedService
           if (colorCodes != null && colorCodes.isNotEmpty)
             'color_code': colorCodes.join(','),
 
+          // 30,30
+          if (variantCodes != null && variantCodes.isNotEmpty)
+            'variant_code': variantCodes.join(','),
+
           if (searchQuery.isNotEmpty) 'search': searchQuery,
         },
       );
 
       final response = await http.get(
         uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
@@ -155,12 +152,14 @@ class OptionItemSemiFinishedService
     String process = 'dyeing',
     List<String> baseCodes = const [],
     List<String> colorCodes = const [],
+    List<String> variantCodes = const [],
   }) async {
     await _fetchOptionsGeneric(
       isInitialLoad: isInitialLoad,
       process: process,
       baseCodes: baseCodes,
       colorCodes: colorCodes,
+      variantCodes: variantCodes,
       searchQuery: searchQuery,
     );
   }

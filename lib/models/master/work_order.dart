@@ -16,22 +16,24 @@ class WorkOrder {
   final String? status;
   final int? greige_unit_id;
 
-  WorkOrder(
-      {this.id,
-      this.wo_no,
-      this.greige_qty,
-      this.notes,
-      this.status,
-      this.greige_unit_id});
+  WorkOrder({
+    this.id,
+    this.wo_no,
+    this.greige_qty,
+    this.notes,
+    this.status,
+    this.greige_unit_id,
+  });
 
   factory WorkOrder.fromJson(Map<String, dynamic> json) {
     return WorkOrder(
-        id: json['id'] as int,
-        wo_no: json['wo_no'] ?? '',
-        greige_qty: json['greige_qty'],
-        notes: json['notes'] ?? '',
-        status: json['status'] ?? '',
-        greige_unit_id: json['greige_unit_id']);
+      id: json['id'] as int,
+      wo_no: json['wo_no'] ?? '',
+      greige_qty: json['greige_qty'],
+      notes: json['notes'] ?? '',
+      status: json['status'] ?? '',
+      greige_unit_id: json['greige_unit_id'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -41,7 +43,7 @@ class WorkOrder {
       'greige_qty': greige_qty,
       'notes': notes,
       'status': status,
-      'greige_unit_id': greige_unit_id
+      'greige_unit_id': greige_unit_id,
     };
   }
 }
@@ -62,8 +64,10 @@ class WorkOrderService extends BaseService<WorkOrder> {
   Map<String, dynamic> get dataView => _dataView;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {
     if (isLoading || (!hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -131,9 +135,10 @@ class WorkOrderService extends BaseService<WorkOrder> {
       _dataView = {};
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       final responseData = json.decode(response.body);
       switch (response.statusCode) {
@@ -151,6 +156,34 @@ class WorkOrderService extends BaseService<WorkOrder> {
     }
   }
 
+  Future<Map<String, dynamic>> getFormInfo(id) async {
+    final url = Uri.parse('$baseUrl/$id/form-info?process=persiapan_dyeing');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('access_token').toString();
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      final responseData = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = responseData is Map<String, dynamic> &&
+                responseData['data'] is Map<String, dynamic>
+            ? responseData['data']
+            : responseData;
+
+        return Map<String, dynamic>.from(data);
+      }
+
+      throw responseData['message'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> getDataList(Map<String, dynamic> params) async {
     final url = Uri.parse(baseUrl).replace(queryParameters: params);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -160,9 +193,10 @@ class WorkOrderService extends BaseService<WorkOrder> {
       _dataList.clear();
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
       final responseData = jsonDecode(response.body);
       switch (response.statusCode) {
         case 200:
@@ -219,7 +253,9 @@ class WorkOrderService extends BaseService<WorkOrder> {
   }
 
   Future<Map<String, dynamic>?> getProcessData(
-      Map<String, dynamic> woForm, ValueNotifier<bool> isSubmitting) async {
+    Map<String, dynamic> woForm,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 
@@ -253,7 +289,10 @@ class WorkOrderService extends BaseService<WorkOrder> {
 
   @override
   Future<void> updateItem(
-      String id, WorkOrder item, ValueNotifier<bool> isSubmitting) async {
+    String id,
+    WorkOrder item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 

@@ -17,57 +17,31 @@ import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 class DetailList extends StatefulWidget {
   final dynamic data;
   final no;
-  final String? processType;
   final onRefresh;
   final existingAttachment;
-  final existingGrades;
   final handleBuildAttachment;
   final withItemGrade;
   final withQtyAndWeight;
-  final withMaklon;
   final label;
   final forDyeing;
   final maklon;
-  final handleUpdate;
-  final handleDelete;
-  final idProcess;
-  final processService;
-  final forPacking;
-  final fetchFinish;
-  final handleChangeInput;
-  final form;
-  final handleSubmit;
-  final itemGradeOption;
-  final forSewing;
-  final forHemming;
 
-  const DetailList(
-      {super.key,
-      required this.data,
-      this.processType,
-      this.onRefresh,
-      this.existingAttachment,
-      this.existingGrades,
-      this.handleBuildAttachment,
-      this.no,
-      this.forDyeing = false,
-      this.label,
-      this.withItemGrade = false,
-      this.withQtyAndWeight = false,
-      this.maklon,
-      this.withMaklon,
-      this.handleUpdate,
-      this.handleDelete,
-      this.idProcess,
-      this.processService,
-      this.forPacking,
-      this.fetchFinish,
-      this.handleChangeInput,
-      this.form,
-      this.handleSubmit,
-      this.itemGradeOption,
-      this.forHemming,
-      this.forSewing});
+  final form;
+
+  const DetailList({
+    super.key,
+    required this.data,
+    this.onRefresh,
+    this.existingAttachment,
+    this.handleBuildAttachment,
+    this.no,
+    this.forDyeing = false,
+    this.label,
+    this.withItemGrade = false,
+    this.withQtyAndWeight = false,
+    this.maklon,
+    this.form,
+  });
 
   @override
   State<DetailList> createState() => _DetailListState();
@@ -621,24 +595,13 @@ Ringkasan Sorting
 */
   Widget _buildTotalSorting(bool isTablet) {
     /// 📊 Calculate Total Perbaikan Long Hemming (spraying + combing + rework)
-    int totalVermak = 0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['rework_long_hemming']?.toString() ?? '0'
-            : widget.data['rework_long_hemming']?.toString() ?? '0') ??
-        0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['combing']?.toString() ?? '0'
-            : widget.data['combing']?.toString() ?? '0') ??
-        0;
-    totalVermak += int.tryParse(widget.label == 'Packing'
-            ? widget.data['sorting']['spraying']?.toString() ?? '0'
-            : widget.data['spraying']?.toString() ?? '0') ??
-        0;
 
     /// 📊 Calculate Total Qty Sorting (sum of all grades + vermak)
     int totalRepair = 0;
 
     int totalGradeA = 0;
+    int totalGradeAAdditional = 0;
+    int totalGradeATaken = 0;
     int totalGradeB = 0;
     int totalGradeBS = 0;
 
@@ -652,11 +615,13 @@ Ringkasan Sorting
 
       for (final item in items) {
         final int qty = parseSafe(
-          item['qty'],
+          code == 'A' ? (item['available_qty'] ?? item['qty']) : item['qty'],
         ).toInt();
 
         if (code == 'A') {
           totalGradeA += qty;
+          totalGradeAAdditional += parseSafe(item['qty_in']).toInt();
+          totalGradeATaken += parseSafe(item['qty_out']).toInt();
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -713,6 +678,17 @@ Ringkasan Sorting
           totalRepair,
         ),
         _buildSummaryItem(
+          'Grade A Tambahan',
+          totalGradeAAdditional,
+          valuePrefix: '+',
+        ),
+        _buildSummaryItem(
+          'Grade A Diambil',
+          totalGradeATaken,
+          valuePrefix: '-',
+          valueColor: Colors.red,
+        ),
+        _buildSummaryItem(
           'Hasil Sortir',
           totalSorting,
         ),
@@ -724,8 +700,10 @@ Ringkasan Sorting
 
   Widget _buildSummaryItem(
     String title,
-    dynamic value,
-  ) {
+    dynamic value, {
+    String valuePrefix = '',
+    Color? valueColor,
+  }) {
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -748,10 +726,11 @@ Ringkasan Sorting
             ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
+                color: valueColor,
               ),
             ),
           ],
@@ -868,6 +847,297 @@ Rework
     ];
 
     return _buildInfoGrid(items, isTablet);
+  }
+
+  Widget _buildReworkDetailInfo(bool isTablet) {
+    final reworkCategories = List<Map<String, dynamic>>.from(
+      widget.data['rework_categories'] ?? [],
+    );
+
+    final category = widget.data['rework_categories']?[0]?['type']?.toString();
+
+    String categoryLabel;
+
+    if (category == 'toping') {
+      categoryLabel = 'Toping / Perbaikan Warna';
+    } else if (category != null &&
+        category.toLowerCase().contains('perbaikan')) {
+      categoryLabel = 'Perbaikan';
+    } else {
+      categoryLabel = category != null && category.isNotEmpty
+          ? capitalizeWords(category.replaceAll('_', ' '))
+          : 'Perbaikan';
+    }
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: const Color(0xFFE5E7EB),
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // HEADER
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.local_offer_outlined,
+                    size: 16,
+                    color: Color(0xFF737782),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'KATEGORI REWORK',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF737782),
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        categoryLabel,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF111111),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          if (reworkCategories.isNotEmpty) ...[
+            const Divider(
+              height: 1,
+              thickness: 1,
+              color: Color(0xFFE5E7EB),
+            ),
+            Column(
+              children: [
+                for (int i = 0; i < reworkCategories.length; i++)
+                  _buildReworkCategoryItem(
+                    reworkCategories[i],
+                    isLast: i == reworkCategories.length - 1,
+                  ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReworkCategoryItem(
+    Map<String, dynamic> category, {
+    required bool isLast,
+  }) {
+    final label = category['label']?.toString() ?? '';
+
+    final methods = List<Map<String, dynamic>>.from(
+      category['methods'] ?? [],
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // JENIS REWORK
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xFF303038),
+                ),
+              ),
+
+              // METHOD
+              if (methods.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final method in methods)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          bottom: 2,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              '•',
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1.3,
+                                color: Color(0xFF565863),
+                              ),
+                            ),
+                            const SizedBox(width: 7),
+                            Expanded(
+                              child: Text(
+                                method['label']?.toString() ?? '',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF565863),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+        if (!isLast)
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: Color(0xFFE5E7EB),
+          ),
+      ],
+    );
+  }
+
+  String _getReworkCategoryLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    // Jika API mengirim rework_category
+    final category = widget.data['rework_category']?.toString();
+
+    if (category != null && category.isNotEmpty) {
+      switch (category) {
+        case 'perbaikan':
+          return 'Perbaikan';
+
+        case 'toping':
+          return 'Toping / Perbaikan Warna';
+
+        default:
+          return capitalizeWords(
+            category.replaceAll('_', ' '),
+          );
+      }
+    }
+
+    // Response detail terbaru tidak memiliki
+    // rework_category, hanya rework_categories.
+    //
+    // Jika ada data rework_categories, berarti
+    // kategori utamanya adalah Perbaikan.
+    if (reworkCategories.isNotEmpty) {
+      return 'Perbaikan';
+    }
+
+    return '-';
+  }
+
+  String _joinLabels(
+    List<Map<String, dynamic>> items,
+  ) {
+    final labels = items
+        .map(
+          (item) => item['label']?.toString() ?? '',
+        )
+        .where(
+          (label) => label.isNotEmpty,
+        )
+        .toList();
+
+    if (labels.isEmpty) {
+      return '-';
+    }
+
+    return labels.join(', ');
+  }
+
+  String _getReworkTypeLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    if (reworkCategories.isEmpty) {
+      return _joinDynamicLabels(
+        widget.data['rework_type'],
+      );
+    }
+
+    return _joinLabels(reworkCategories);
+  }
+
+  String _getReworkMethodLabel(
+    List<Map<String, dynamic>> reworkCategories,
+  ) {
+    final methods = reworkCategories
+        .expand(
+          (item) => List<Map<String, dynamic>>.from(
+            item['methods'] ?? [],
+          ),
+        )
+        .toList();
+
+    if (methods.isNotEmpty) {
+      return _joinLabels(methods);
+    }
+
+    return _joinDynamicLabels(
+      widget.data['rework_method'],
+    );
+  }
+
+  String _joinDynamicLabels(dynamic values) {
+    final labels = (values as List? ?? [])
+        .map((item) {
+          if (item is Map) {
+            return item['label']?.toString() ?? item['value']?.toString() ?? '';
+          }
+
+          return item?.toString() ?? '';
+        })
+        .where((label) => label.isNotEmpty)
+        .map((label) => capitalizeWords(label.replaceAll('_', ' ')))
+        .toList();
+
+    if (labels.isEmpty) {
+      return '-';
+    }
+
+    return labels.join(', ');
   }
 
   /*
@@ -1141,6 +1411,107 @@ Material WO
     );
   }
 
+  Widget _buildMaterialChanges(bool isTablet) {
+    final itemChanges = List<Map<String, dynamic>>.from(
+      widget.data['item_changes'] ?? [],
+    );
+
+    return Column(
+      children: itemChanges
+          .map((change) {
+            final fromMaterial = _buildChangedMaterial(
+              label: 'Dari',
+              code: change['from_item_code']?.toString() ?? '-',
+              name: change['from_item_name']?.toString() ?? '-',
+              isTablet: isTablet,
+              isPrevious: true,
+            );
+            final toMaterial = _buildChangedMaterial(
+              label: 'Menjadi',
+              code: change['to_item_code']?.toString() ?? '-',
+              name: change['to_item_name']?.toString() ?? '-',
+              isTablet: isTablet,
+            );
+
+            return Container(
+              width: double.infinity,
+              padding: CustomTheme().padding('card'),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: isTablet
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(child: fromMaterial),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Icon(Icons.arrow_forward, color: Colors.grey),
+                        ),
+                        Expanded(child: toMaterial),
+                      ],
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        fromMaterial,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Icon(Icons.arrow_downward, color: Colors.grey),
+                        ),
+                        toMaterial,
+                      ],
+                    ),
+            );
+          })
+          .toList()
+          .separatedBy(CustomTheme().vGap('lg')),
+    );
+  }
+
+  Widget _buildChangedMaterial({
+    required String label,
+    required String code,
+    required String name,
+    required bool isTablet,
+    bool isPrevious = false,
+  }) {
+    final textDecoration =
+        isPrevious ? TextDecoration.lineThrough : TextDecoration.none;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isTablet ? 12 : 11,
+            color: Colors.grey.shade600,
+          ),
+        ),
+        Text(
+          code,
+          style: TextStyle(
+            fontSize: isTablet ? 14 : 13,
+            fontWeight: FontWeight.w600,
+            color: isPrevious ? Colors.grey.shade600 : Colors.grey.shade800,
+            decoration: textDecoration,
+          ),
+        ),
+        Text(
+          name,
+          style: TextStyle(
+            fontSize: isTablet ? 14 : 13,
+            color: isPrevious ? Colors.grey.shade500 : Colors.grey.shade700,
+            decoration: textDecoration,
+          ),
+        ),
+      ].separatedBy(CustomTheme().vGap('sm')),
+    );
+  }
+
   /*
 Catatan
 */
@@ -1231,6 +1602,8 @@ Catatan WO
             item['qty']?.toString() ?? '0',
           ) ??
           0;
+
+
 
       final weight = double.tryParse(
             item['weight_grade_a']?.toString() ?? '0',
@@ -1655,6 +2028,8 @@ Catatan WO
                 CustomTheme().vGap('xl'),
               ),
             ),
+          if (isPacking && _packingGradeASourceRows(item).isNotEmpty)
+            _buildPackingGradeASourceSection(item),
         ].separatedBy(
           CustomTheme().vGap('xl'),
         ),
@@ -1669,59 +2044,128 @@ Catatan WO
     /// MULTIPLE ITEMS
     return DefaultTabController(
       length: items.length,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: items.asMap().entries.map(
-                  (entry) {
-                    final index = entry.key;
-                    final item = entry.value;
-
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Tab(
-                        text: 'Item ${index + 1}',
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              final item = items[tabController.index];
+              return Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: TabBar(
+                        isScrollable: true,
+                        dividerColor: Colors.transparent,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.black,
+                        indicatorColor: Colors.white,
+                        indicator: BoxDecoration(
+                          color: Colors.blue[800],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        tabAlignment: TabAlignment.start,
+                        tabs: [
+                          for (int index = 0; index < items.length; index++)
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Tab(text: 'Item ${index + 1}'),
+                            ),
+                        ],
                       ),
-                    );
-                  },
-                ).toList(),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: isPacking
-                ? 250
-                : widget.label == 'Long Hemming'
-                    ? 250
-                    : 150,
-            child: TabBarView(
-              children: items.map((item) {
-                return buildItem(item);
-              }).toList(),
-            ),
-          ),
-        ].separatedBy(
-          CustomTheme().vGap('lg'),
-        ),
+                    ),
+                  ),
+                  buildItem(item),
+                ].separatedBy(CustomTheme().vGap('lg')),
+              );
+            },
+          );
+        },
       ),
     );
+  }
+
+  List<Map> _packingGradeASourceRows(Map item) {
+    final rows = item['grade_a_stock_usages'];
+    if (rows is! List) return [];
+    return rows.whereType<Map>().toList();
+  }
+
+  Widget _buildPackingGradeASourceSection(Map item) {
+    final rows = _packingGradeASourceRows(item);
+    return TemplateCard(
+      title: 'Grade A dari Stok',
+      icon: Icons.move_down_outlined,
+      child: Column(
+        children: [
+          for (final row in rows)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: _packingReadOnlyField(
+                      'Packing / WO',
+                      _packingGradeASourceLabel(row),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: _packingReadOnlyField(
+                      'Qty diambil',
+                      formatNumber(row['qty'] ?? 0),
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('md')),
+              ),
+            ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _packingReadOnlyField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(color: Colors.grey.shade700)),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          height: 56,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.white,
+          ),
+          child: Text(value.isEmpty ? '-' : value),
+        ),
+      ],
+    );
+  }
+
+  String _packingGradeASourceLabel(Map row) {
+    final packingNo =
+        (row['from_packing_no'] ?? row['packing_no'] ?? '').toString();
+    final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
+    if (packingNo.isEmpty) return woNo;
+    if (woNo.isEmpty) return packingNo;
+    return '$packingNo ($woNo)';
   }
 
   /// Layout untuk Tablet
@@ -1730,7 +2174,11 @@ Catatan WO
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeaderSection(true),
-        if (widget.label == 'Long Hemming' ||
+        if (widget.label == 'Dyeing' ||
+            widget.label == 'Press' ||
+            widget.label == 'Tumbler' ||
+            widget.label == 'Long Slitting' ||
+            widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing')
           _buildInfoCard(
@@ -1761,6 +2209,12 @@ Catatan WO
             icon: Icons.replay_outlined,
             child: _buildReworkInfo(true),
           ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Detail Rework',
+            icon: Icons.build_circle_outlined,
+            child: _buildReworkDetailInfo(true),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
             title: 'Informasi Packing',
@@ -1777,6 +2231,12 @@ Catatan WO
             title: 'Total Sortir',
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(true),
+          ),
+        if ((widget.data['item_changes'] as List? ?? []).isNotEmpty)
+          _buildInfoCard(
+            title: 'Ganti Material',
+            icon: Icons.swap_horiz_outlined,
+            child: _buildMaterialChanges(true),
           ),
         if ((widget.label == 'Dyeing'))
           _buildInfoCard(
@@ -1828,7 +2288,11 @@ Catatan WO
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeaderSection(false),
-        if (widget.label == 'Long Hemming' ||
+        if (widget.label == 'Dyeing' ||
+            widget.label == 'Press' ||
+            widget.label == 'Tumbler' ||
+            widget.label == 'Long Slitting' ||
+            widget.label == 'Long Hemming' ||
             widget.label == 'Cross Cutting' ||
             widget.label == 'Sewing')
           _buildInfoCard(
@@ -1859,6 +2323,12 @@ Catatan WO
             icon: Icons.replay_outlined,
             child: _buildReworkInfo(false),
           ),
+        if (widget.data['rework'] == true)
+          _buildInfoCard(
+            title: 'Detail Rework',
+            icon: Icons.build_circle_outlined,
+            child: _buildReworkDetailInfo(false),
+          ),
         if (widget.label == 'Packing')
           _buildInfoCard(
             title: 'Informasi Packing',
@@ -1875,6 +2345,12 @@ Catatan WO
             title: 'Total Sortir',
             icon: Icons.attachment_outlined,
             child: _buildTotalSorting(false),
+          ),
+        if ((widget.data['item_changes'] as List? ?? []).isNotEmpty)
+          _buildInfoCard(
+            title: 'Ganti Material',
+            icon: Icons.swap_horiz_outlined,
+            child: _buildMaterialChanges(false),
           ),
         if ((widget.label == 'Dyeing'))
           _buildInfoCard(
@@ -2280,14 +2756,28 @@ Catatan WO
   }
 
   Widget _buildPackingSummaryInfo() {
-    final items = widget.data['items'] ?? [];
+    final items = widget.data['items'] is List
+        ? (widget.data['items'] as List).whereType<Map>().toList()
+        : <Map>[];
 
-    double totalPacking = 0;
+    final totalPacking = items.fold<double>(
+      0,
+      (total, item) {
+        var itemTotal = parseSafe(item['qty']);
+        final usages = item['grade_a_stock_usages'];
+        if (usages is List) {
+          for (final usage in usages) {
+            if (usage is Map) {
+              itemTotal += parseSafe(usage['qty']);
+            }
+          }
+        }
+        return total + itemTotal;
+      },
+    );
     double totalWeight = 0;
 
     for (final item in items) {
-      totalPacking += parseSafe(item['qty']);
-
       totalWeight += parseSafe(item['total_weight']);
     }
 
@@ -2295,7 +2785,7 @@ Catatan WO
       children: [
         Expanded(
           child: _buildPackingInfoCard(
-            title: 'Total Packing',
+            title: 'Total Hasil Packing',
             value: formatNumber(totalPacking),
             subtitle: 'PCS',
             icon: Icons.inventory_2_outlined,

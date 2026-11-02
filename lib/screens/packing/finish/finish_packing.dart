@@ -75,7 +75,6 @@ class _FinishPackingState extends State<FinishPacking> {
       fetchWorkOrder: (service) async =>
           await service.fetchPackingFinishOptions(),
       getWorkOrderOptions: (service) => service.dataListOption,
-      fetchFinishedItem: (service) async => await service.fetchOptions(),
       getFinishedItemOptions: (service) => service.dataListOption,
       formPageBuilder: (context, id, processId, data, form, handleSubmit,
               handleChangeInput, finishedItemOption, finishedItemOptionGrb) =>

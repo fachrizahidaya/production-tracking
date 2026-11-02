@@ -68,56 +68,6 @@ class _QtyWeightSectionState extends State<QtyWeightSection> {
         icon: Icons.list_alt_outlined,
         child: Column(
           children: [
-            /// ✅ LONG HEMMING
-            if (widget.label == 'Long Hemming')
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        TextForm(
-                          label: 'Berat Bagus (KG)',
-                          initialValue:
-                              widget.form['good_weight']?.toString() ?? '0',
-                          req: true,
-                          isNumber: true,
-                          controller: widget.weightGood,
-                          handleChange: (value) {
-                            final safe = value.trim().isEmpty ? '0' : value;
-
-                            widget.onChange('good_weight', safe);
-
-                            setState(() {
-                              widget.validateWeight(safe);
-                            });
-
-                            widget.calculateLongHemmingWeight();
-                          },
-                        ),
-                        if (widget.weightWarning != null)
-                          _buildWarning(widget.weightWarning!),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: TextForm(
-                      label: 'Berat BS (KG)',
-                      req: true,
-                      initialValue: widget.form['bs_weight']?.toString() ?? '0',
-                      isNumber: true,
-                      controller: widget.weightDefect,
-                      handleChange: (value) {
-                        final safe = value.trim().isEmpty ? '0' : value;
-
-                        widget.onChange('bs_weight', safe);
-                        widget.calculateLongHemmingWeight();
-                      },
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().hGap('xl')),
-              ),
-
             /// ✅ QTY
             if (widget.withQtyAndWeight == true)
               Column(

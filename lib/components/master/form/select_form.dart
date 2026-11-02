@@ -13,6 +13,7 @@ class SelectForm extends StatefulWidget {
   final isDisabled;
   final validator;
   final isWithCode;
+  final String? badge;
 
   const SelectForm(
       {super.key,
@@ -24,13 +25,35 @@ class SelectForm extends StatefulWidget {
       required this.required,
       this.isDisabled = false,
       this.validator,
-      this.isWithCode = false});
+      this.isWithCode = false,
+      this.badge});
 
   @override
   State<SelectForm> createState() => _SelectFormState();
 }
 
 class _SelectFormState extends State<SelectForm> {
+  Widget _buildBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+      decoration: BoxDecoration(
+        color: CustomTheme().buttonColor('primary').withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: CustomTheme().buttonColor('primary').withValues(alpha: 0.18),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: CustomTheme().buttonColor('primary'),
+          fontSize: CustomTheme().fontSize('sm'),
+          fontWeight: CustomTheme().fontWeight('bold'),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormField<String>(
@@ -94,7 +117,20 @@ class _SelectFormState extends State<SelectForm> {
                           );
                         }
 
-                        return Text(widget.selectedLabel);
+                        return Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                widget.selectedLabel,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if ((widget.badge ?? '').isNotEmpty) ...[
+                              const SizedBox(width: 8),
+                              _buildBadge(widget.badge!),
+                            ],
+                          ],
+                        );
                       },
                     ),
                   ),

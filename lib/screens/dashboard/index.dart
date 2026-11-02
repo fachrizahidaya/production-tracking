@@ -1,10 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields, control_flow_in_finally
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/process_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/filter/summary_filter.dart';
 import 'package:textile_tracking/components/home/dashboard/machine/active_machine.dart';
@@ -21,20 +25,44 @@ import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final bool isMobile;
+  final Future<void> Function()? onRefreshReworkNotifications;
+
+  const Dashboard({
+    super.key,
+    required this.isMobile,
+    this.onRefreshReworkNotifications,
+  });
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
+  static const Set<String> _supportedDashboardWidgets = {
+    'process_summary',
+    'machine_status',
+    'wo_list',
+  };
+
+  final Map<String, bool> _dashboardWidgets = {
+    'process_summary': false,
+    'machine_status': false,
+    'wo_list': false,
+  };
+  List<Map<String, dynamic>> _dashboardWidgetOptions = [];
+  bool _isDashboardWidgetsLoading = true;
+  bool _isDashboardWidgetsUpdating = false;
+
   List<dynamic> statsList = [];
   List<dynamic> chartList = [];
   List<dynamic> pieList = [];
   List<dynamic> summaryList = [];
+  List<dynamic> greigeSummaryList = [];
   Map<String, dynamic> machineList = {};
   final List<dynamic> _dataList = [];
   List<dynamic> menus = [];
+  Set<String> menuProcessNames = {};
 
   String dariTanggalSummary = '';
   String sampaiTanggalSummary = '';
@@ -54,6 +82,32 @@ class _DashboardState extends State<Dashboard> {
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
 
+  bool get _isMobile => widget.isMobile;
+
+  void _applyMobileProcessParams() {
+    final now = DateTime.now();
+    final processStartDate = DateTime(now.year, now.month - 2, now.day);
+    params = {
+      'search': _search,
+      'page': '0',
+      'per_page': '10',
+      'start_date': params['start_date'] ??
+          DateFormat('yyyy-MM-dd').format(processStartDate),
+      'end_date': params['end_date'] ?? DateFormat('yyyy-MM-dd').format(now),
+      if (params['status'] != null && params['status']!.isNotEmpty)
+        'status': params['status']!,
+    };
+  }
+
+  void _applyTabletProcessParams() {
+    params = {
+      'search': _search,
+      'page': '0',
+      if (params['status'] != null && params['status']!.isNotEmpty)
+        'status': params['status']!,
+    };
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,28 +118,221 @@ class _DashboardState extends State<Dashboard> {
     dariTanggalSummary = DateFormat('yyyy-MM-dd').format(firstDayOfMonth);
     sampaiTanggalSummary = DateFormat('yyyy-MM-dd').format(now);
 
-    params = {
-      'search': _search,
-      'page': '0',
-    };
+    params = {'search': _search, 'page': '0'};
 
     summaryParams = {
       'start_date': dariTanggalSummary,
       'end_date': sampaiTanggalSummary,
     };
 
-    _loadDashboardData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      setState(() {
+        if (_isMobile) {
+          _applyMobileProcessParams();
+        } else {
+          _applyTabletProcessParams();
+        }
+      });
+
+      _fetchDashboardWidgets();
+      if (mounted) {
+        _loadDashboardData();
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant Dashboard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isMobile == widget.isMobile) return;
+
+    setState(() {
+      if (_isMobile) {
+        _applyMobileProcessParams();
+      } else {
+        _applyTabletProcessParams();
+      }
+    });
+    _loadMore();
+  }
+
+  Future<Map<String, String>> _getAuthHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+
+    if (token == null) throw Exception('Unauthenticated');
+
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    };
+  }
+
+  Future<void> _fetchDashboardWidgets() async {
+    if (mounted) setState(() => _isDashboardWidgetsLoading = true);
+
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final headers = await _getAuthHeaders();
+      final keysResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widget-keys'),
+        headers: headers,
+      );
+      final widgetsResponse = await http.get(
+        Uri.parse('$baseUrl/dashboard/widgets'),
+        headers: headers,
+      );
+
+      if (keysResponse.statusCode != 200 || widgetsResponse.statusCode != 200) {
+        throw Exception('Gagal mengambil pengaturan widget dashboard');
+      }
+
+      final keyData = List<Map<String, dynamic>>.from(
+        jsonDecode(keysResponse.body)['data'] ?? [],
+      );
+      final widgetData = List<Map<String, dynamic>>.from(
+        jsonDecode(widgetsResponse.body)['data'] ?? [],
+      );
+      final visibilityByValue = {
+        for (final widget in widgetData)
+          widget['value']?.toString() ?? '': widget['is_visible'] == true,
+      };
+      final supportedOptions = keyData
+          .where(
+            (widget) => _supportedDashboardWidgets.contains(
+              widget['value']?.toString(),
+            ),
+          )
+          .toList();
+
+      if (!mounted) return;
+      setState(() {
+        _dashboardWidgetOptions = supportedOptions;
+        for (final option in supportedOptions) {
+          final value = option['value']?.toString();
+          if (value != null) {
+            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
+          }
+        }
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    } finally {
+      if (mounted) setState(() => _isDashboardWidgetsLoading = false);
+    }
+  }
+
+  Future<void> _updateDashboardWidget(
+    String widgetValue,
+    bool isVisible,
+  ) async {
+    final baseUrl = dotenv.env['API_URL'] ?? '';
+    final response = await http.patch(
+      Uri.parse('$baseUrl/dashboard/widgets'),
+      headers: await _getAuthHeaders(),
+      body: jsonEncode({
+        'widgets': [
+          {'value': widgetValue, 'is_visible': isVisible},
+        ],
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      dynamic responseData;
+      try {
+        responseData = jsonDecode(response.body);
+      } catch (_) {
+        responseData = null;
+      }
+      throw Exception(
+        responseData is Map
+            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
+            : 'Gagal mengubah widget dashboard',
+      );
+    }
+  }
+
+  void _showDashboardWidgetSettings() {
+    if (_dashboardWidgetOptions.isEmpty) {
+      _fetchDashboardWidgets();
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (modalContext) => StatefulBuilder(
+        builder: (modalContext, setModalState) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Widget Dashboard',
+                    style: TextStyle(
+                      fontSize: CustomTheme().fontSize('lg'),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ..._dashboardWidgetOptions.map((option) {
+                  final value = option['value']?.toString() ?? '';
+                  return SwitchListTile(
+                    title: Text(option['label']?.toString() ?? ''),
+                    value: _dashboardWidgets[value] ?? false,
+                    onChanged: _isDashboardWidgetsUpdating
+                        ? null
+                        : (isVisible) async {
+                            final previousValue =
+                                _dashboardWidgets[value] ?? false;
+                            setState(() {
+                              _dashboardWidgets[value] = isVisible;
+                              _isDashboardWidgetsUpdating = true;
+                            });
+                            setModalState(() {});
+                            try {
+                              await _updateDashboardWidget(value, isVisible);
+                            } catch (e) {
+                              if (!mounted) return;
+                              setState(
+                                () => _dashboardWidgets[value] = previousValue,
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())),
+                              );
+                            } finally {
+                              if (mounted) {
+                                setState(
+                                  () => _isDashboardWidgetsUpdating = false,
+                                );
+                                if (modalContext.mounted) setModalState(() {});
+                              }
+                            }
+                          },
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
-        final name = (menu['name'] ?? '').toString().toLowerCase();
-
-        if (name == 'sorting' || name == 'packing') {
-          return true;
-        }
-
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -107,15 +354,45 @@ class _DashboardState extends State<Dashboard> {
 
       setState(() {
         menus = result;
+        menuProcessNames = _getMenuProcessNames(result);
       });
     } catch (e) {
-      debugPrint('Error fetch menu: $e');
+      throw ('Error fetch menu: $e');
     }
+  }
+
+  Set<String> _getMenuProcessNames(List<dynamic> menuList) {
+    final processNames = <String>{};
+
+    for (final menu in menuList) {
+      if (menu is! Map) continue;
+
+      final name = (menu['name'] ?? '').toString().trim();
+      if (name.isNotEmpty) {
+        processNames.add(name);
+      }
+
+      final children = menu['children'];
+      if (children is List) {
+        processNames.addAll(_getMenuProcessNames(children));
+      }
+    }
+
+    return processNames;
   }
 
   bool _checkIsFiltered() {
     return params.keys.any(
-        (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty);
+      (key) {
+        if (key == 'page' || key == 'search' || key == 'per_page') {
+          return false;
+        }
+        if (_isMobile && (key == 'start_date' || key == 'end_date')) {
+          return false;
+        }
+        return params[key]!.isNotEmpty;
+      },
+    );
   }
 
   Future<void> _loadDashboardData() async {
@@ -123,29 +400,37 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
-    try {
-      await Future.wait([
-        _handleFetchMenu(),
-        _handleFetchStats(),
-        _handleFetchPie(),
-        _handleFetchMachine(),
-        _handleFetchSummary(),
-      ]);
+    await _safeFetch(_handleFetchMenu);
 
-      Future.microtask(() => _loadMore());
+    await Future.wait([
+      _safeFetch(_handleFetchStats),
+      _safeFetch(_handleFetchPie),
+      _safeFetch(_handleFetchMachine),
+      _safeFetch(_handleFetchSummary),
+      _safeFetch(_loadMore),
+    ]);
+
+    if (!mounted) return;
+
+    setState(() => isLoading = false);
+  }
+
+  Future<void> _safeFetch(Future<void> Function() callback) async {
+    try {
+      await callback();
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$e")));
-    } finally {
-      if (!mounted) return;
-      setState(() => isLoading = false);
+      if (mounted) {
+        debugPrint('Dashboard request failed: $e');
+      }
     }
   }
 
   Future<void> _handleFetchStats() async {
-    final service = Provider.of<WorkOrderStatsService>(context, listen: false);
+    final service = context.read<WorkOrderStatsService>();
 
     await service.getDataList();
+
+    if (!mounted) return;
 
     setState(() {
       statsList = service.dataList;
@@ -154,42 +439,90 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _handleFetchMachine() async {
     if (!mounted) return;
-    setState(() => isMachineLoading = true);
 
-    await Provider.of<MachineService>(context, listen: false).getDataList();
-
-    if (!mounted) return;
     setState(() {
-      machineList =
-          Provider.of<MachineService>(context, listen: false).dataList;
-      isMachineLoading = false;
+      isMachineLoading = true;
+      machineList = {};
     });
+
+    try {
+      final service = context.read<MachineService>();
+
+      await service.getDataList();
+
+      if (!mounted) return;
+
+      setState(() {
+        machineList = service.dataList;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        machineList = {};
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isMachineLoading = false;
+      });
+    }
   }
 
   Future<void> _handleFetchPie() async {
-    await Provider.of<WorkOrderChartService>(context, listen: false)
-        .getDataPie();
+    final service = context.read<WorkOrderChartService>();
+
+    await service.getDataPie();
 
     if (!mounted) return;
+
     setState(() {
-      pieList =
-          Provider.of<WorkOrderChartService>(context, listen: false).dataPie;
+      pieList = service.dataPie;
     });
   }
 
   Future<void> _handleFetchSummary() async {
     if (!mounted) return;
-    setState(() => isSummaryLoading = true);
 
-    await Provider.of<WorkOrderSummaryService>(context, listen: false)
-        .getDataList(context, summaryParams);
-
-    if (!mounted) return;
     setState(() {
-      summaryList =
-          Provider.of<WorkOrderSummaryService>(context, listen: false).dataList;
-      isSummaryLoading = false;
+      isSummaryLoading = true;
+      summaryList = [];
+      greigeSummaryList = [];
     });
+
+    try {
+      final service = Provider.of<WorkOrderSummaryService>(
+        context,
+        listen: false,
+      );
+
+      await Future.wait([
+        service.getDataList(context, summaryParams),
+        service.getPreDataList(context, summaryParams),
+      ]);
+      service.filterByProcessNames(menuProcessNames);
+
+      if (!mounted) return;
+
+      setState(() {
+        summaryList = service.dataList;
+        greigeSummaryList = service.preDataList;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        summaryList = [];
+        greigeSummaryList = [];
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isSummaryLoading = false;
+      });
+    }
   }
 
   void _handleSummaryFilter(String key, String value) {
@@ -199,6 +532,23 @@ class _DashboardState extends State<Dashboard> {
       } else {
         summaryParams[key] = value;
       }
+
+      if (key == 'start_date') {
+        dariTanggalSummary = value;
+      } else if (key == 'end_date') {
+        sampaiTanggalSummary = value;
+      }
+    });
+
+    _handleFetchSummary();
+  }
+
+  void _handleSummaryDateRange(String startDate, String endDate) {
+    setState(() {
+      dariTanggalSummary = startDate;
+      sampaiTanggalSummary = endDate;
+      summaryParams['start_date'] = startDate;
+      summaryParams['end_date'] = endDate;
     });
 
     _handleFetchSummary();
@@ -219,6 +569,20 @@ class _DashboardState extends State<Dashboard> {
     _loadMore();
   }
 
+  void _handleProcessDateRange(String startDate, String endDate) {
+    if (!_isMobile) return;
+
+    setState(() {
+      params['page'] = '0';
+      params['per_page'] = '10';
+      params['start_date'] = startDate;
+      params['end_date'] = endDate;
+    });
+
+    _isFiltered = _checkIsFiltered();
+    _loadMore();
+  }
+
   Future<void> _handleSearch(String value) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -235,36 +599,64 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
-    setState(() => _isLoadMore = true);
+    if (_isLoadMore) return;
 
-    if (params['page'] == '0') {
-      setState(() {
+    final isReset = params['page'] == '0';
+    if (!isReset && !_hasMore) return;
+
+    if (_isMobile) {
+      params['per_page'] = '10';
+    } else {
+      params.remove('per_page');
+      params.remove('start_date');
+      params.remove('end_date');
+    }
+
+    setState(() {
+      _isLoadMore = true;
+      if (isReset) {
         _dataList.clear();
         _firstLoading = true;
         _hasMore = true;
-      });
-    }
+      }
+    });
 
     final currentPage = int.tryParse(params['page'] ?? '0') ?? 0;
     params['page'] = (currentPage + 1).toString();
 
-    await Provider.of<WorkOrderProcessService>(context, listen: false)
-        .getDataList(context, params);
+    try {
+      final service = Provider.of<WorkOrderProcessService>(
+        context,
+        listen: false,
+      );
 
-    if (!mounted) return;
+      await service.getDataList(context, params);
 
-    List<dynamic> loadData =
-        Provider.of<WorkOrderProcessService>(context, listen: false).items;
+      if (!mounted) return;
 
-    if (loadData.isEmpty) {
+      final loadData = service.items;
+
       setState(() {
-        _firstLoading = false;
-        _isLoadMore = false;
+        if (params['page'] == '1') {
+          _dataList.clear();
+        }
+
+        _dataList.addAll(loadData);
+        _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        if (isReset) {
+          _dataList.clear();
+        }
         _hasMore = false;
       });
-    } else {
+    } finally {
+      if (!mounted) return;
+
       setState(() {
-        _dataList.addAll(loadData);
         _firstLoading = false;
         _isLoadMore = false;
       });
@@ -274,10 +666,13 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     if (!mounted) return;
     setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-      };
+      if (_isMobile) {
+        params['search'] = _search;
+        params['page'] = '0';
+        params['per_page'] = '10';
+      } else {
+        params = {'search': _search, 'page': '0'};
+      }
     });
     _loadMore();
   }
@@ -294,66 +689,124 @@ class _DashboardState extends State<Dashboard> {
       behavior: HitTestBehavior.translucent,
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: Color(0xFFf9fafc),
+        backgroundColor: const Color(0xFFf9fafc),
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
               await _loadDashboardData();
+              await widget.onRefreshReworkNotifications?.call();
             },
             child: CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-                  padding: CustomTheme().padding('content'),
+                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
                   sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                    WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    WorkOrderSummary(
-                      data: summaryList,
-                      handleRefetch: _handleFetchSummary,
-                      isFetching: isSummaryLoading,
-                      filterWidget: SummaryFilter(
-                        dariTanggal: dariTanggalSummary,
-                        sampaiTanggal: sampaiTanggalSummary,
-                        onHandleFilter: _handleSummaryFilter,
-                        params: summaryParams,
-                      ),
+                    delegate: SliverChildListDelegate(
+                      [
+                        _buildDashboardSettingsButton(),
+                        WorkOrderStats(
+                          data: statsList,
+                          isFetching: isStatsLoading,
+                          isMobile: _isMobile,
+                        ),
+                        if (_dashboardWidgets['process_summary'] ?? false)
+                          WorkOrderSummary(
+                            data: summaryList,
+                            greigeData: greigeSummaryList,
+                            handleRefetch: _handleFetchSummary,
+                            isFetching: isSummaryLoading,
+                            isMobile: _isMobile,
+                            dariTanggal: summaryParams['start_date'] ??
+                                dariTanggalSummary,
+                            sampaiTanggal: summaryParams['end_date'] ??
+                                sampaiTanggalSummary,
+                            onDateRangeSelected:
+                                _isMobile ? _handleSummaryDateRange : null,
+                            filterWidget: SummaryFilter(
+                              dariTanggal: dariTanggalSummary,
+                              sampaiTanggal: sampaiTanggalSummary,
+                              onHandleFilter: _handleSummaryFilter,
+                              params: summaryParams,
+                            ),
+                          ),
+                        if ((_dashboardWidgets['machine_status'] ?? false) &&
+                            !shouldHideActiveMachine)
+                          ActiveMachine(
+                            data: machineList,
+                            available: machineList['available'],
+                            unavailable: machineList['unavailable'],
+                            handleRefetch: _handleFetchMachine,
+                            isFetching: isMachineLoading,
+                            processNames: menuProcessNames,
+                            isMobile: _isMobile,
+                          ),
+                        if (_dashboardWidgets['wo_list'] ?? false)
+                          WorkOrderProcessScreen(
+                            data: _dataList,
+                            search: _search,
+                            handleSearch: _handleSearch,
+                            firstLoading: _firstLoading,
+                            hasMore: _hasMore,
+                            handleLoadMore: _loadMore,
+                            handleRefetch: _refetch,
+                            isLoadMore: _isLoadMore,
+                            isMobile: _isMobile,
+                            filterWidget: ProcessFilter(
+                              params: params,
+                              onHandleFilter: _handleProcessFilter,
+                              onDateRangeSelected:
+                                  _isMobile ? _handleProcessDateRange : null,
+                            ),
+                            handleFetchData: (params) async {
+                              final service =
+                                  Provider.of<WorkOrderProcessService>(
+                                context,
+                                listen: false,
+                              );
+                              await service.getDataList(context, params);
+                              return service.items;
+                            },
+                            service: WorkOrderProcessService(),
+                            isFiltered: _isFiltered,
+                          ),
+                      ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
-                    if (!shouldHideActiveMachine)
-                      ActiveMachine(
-                        data: machineList,
-                        available: machineList['available'],
-                        unavailable: machineList['unavailable'],
-                        handleRefetch: _handleFetchMachine,
-                        isFetching: isMachineLoading,
-                      ),
-                    WorkOrderProcessScreen(
-                      data: _dataList,
-                      search: _search,
-                      handleSearch: _handleSearch,
-                      firstLoading: _firstLoading,
-                      hasMore: _hasMore,
-                      handleLoadMore: _loadMore,
-                      handleRefetch: _refetch,
-                      isLoadMore: _isLoadMore,
-                      filterWidget: ProcessFilter(
-                        params: params,
-                        onHandleFilter: _handleProcessFilter,
-                      ),
-                      handleFetchData: (params) async {
-                        final service = Provider.of<WorkOrderProcessService>(
-                            context,
-                            listen: false);
-                        await service.getDataList(context, params);
-                        return service.items;
-                      },
-                      service: WorkOrderProcessService(),
-                      isFiltered: _isFiltered,
-                    ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
+                  ),
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardSettingsButton() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: CustomTheme().cardTheme(),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Widget Dashboard',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+              _isDashboardWidgetsLoading
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(Icons.dashboard_customize_outlined),
+            ],
           ),
         ),
       ),

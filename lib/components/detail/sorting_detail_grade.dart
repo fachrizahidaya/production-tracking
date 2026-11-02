@@ -61,7 +61,6 @@ class SortingDetailGradeList extends StatelessWidget {
       final items = grade['items'] ?? [];
 
       for (final item in items) {
-        final itemId = item['item_id'];
         final uniqueKey =
             '${item['wo_item_id']}_${item['finished_product']?['code']}';
 
@@ -74,9 +73,29 @@ class SortingDetailGradeList extends StatelessWidget {
           };
         }
 
+        if (gradeCode?.toString().toUpperCase() == 'A') {
+          final transfersOut = item['transfers_out'];
+          if (transfersOut is List) {
+            groupedItems[uniqueKey]!['transfers_out'] = transfersOut
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+          final transfersIn = item['transfers_in'];
+          if (transfersIn is List) {
+            groupedItems[uniqueKey]!['transfers_in'] = transfersIn
+                .whereType<Map>()
+                .map((transfer) => Map<String, dynamic>.from(transfer))
+                .toList();
+          }
+        }
+
         groupedItems[uniqueKey]!['grades'].add({
           'code': gradeCode,
           'qty': item['qty'] ?? 0,
+          'qty_in': item['qty_in'] ?? 0,
+          'qty_out': item['qty_out'] ?? 0,
+          'available_qty': item['available_qty'],
           'defects': item['defects'] ?? [],
           'semifinished_product': item['semifinished_product'],
           'finished_product': item['finished_product'],
@@ -84,7 +103,35 @@ class SortingDetailGradeList extends StatelessWidget {
           'rework_long_hemming': item['rework_long_hemming'] ?? 0,
           'combing': item['combing'] ?? 0,
         });
+        final absorbed = item['absorbed_work_orders'];
+        if (absorbed is List && absorbed.isNotEmpty) {
+          groupedItems[uniqueKey]!['absorbed_work_orders'] = absorbed;
+        }
       }
+    }
+
+    final sourceItems = sortingData['items'];
+    if (sourceItems is List) {
+      for (final grouped in groupedItems.values) {
+        if (_absorbedRows(grouped).isNotEmpty) continue;
+        for (final source in sourceItems.whereType<Map>()) {
+          if (source['wo_item_id']?.toString() !=
+              grouped['wo_item_id']?.toString()) {
+            continue;
+          }
+          final absorbed = source['absorbed_work_orders'];
+          if (absorbed is List && absorbed.isNotEmpty) {
+            grouped['absorbed_work_orders'] = absorbed;
+          }
+        }
+      }
+    }
+
+    if (groupedItems.length == 1 &&
+        _absorbedRows(groupedItems.values.first).isEmpty &&
+        sortingData['absorbed_work_orders'] is List) {
+      groupedItems.values.first['absorbed_work_orders'] =
+          sortingData['absorbed_work_orders'];
     }
 
     final items = groupedItems.values.toList();
@@ -97,60 +144,57 @@ class SortingDetailGradeList extends StatelessWidget {
           child: NoData());
     }
 
-    final woItems = sortingData['work_orders']?['items'] ?? [];
-
     return DefaultTabController(
       length: items.length,
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(
-                12,
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: [
-                  for (int index = 0; index < items.length; index++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      child: Tab(
-                        text: 'Item ${index + 1}',
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              final item = items[tabController.index];
+              return Column(
+                children: [
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: TabBar(
+                        isScrollable: true,
+                        dividerColor: Colors.transparent,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.black,
+                        indicatorColor: Colors.white,
+                        indicator: BoxDecoration(
+                          color: Colors.blue[800],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        tabAlignment: TabAlignment.start,
+                        tabs: [
+                          for (int index = 0; index < items.length; index++)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8,
+                              ),
+                              child: Tab(
+                                text: 'Item ${index + 1}',
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 800,
-            child: TabBarView(
-              children: [
-                for (final item in items)
-                  _buildItemCard(
-                    item,
                   ),
-              ],
-            ),
-          ),
-        ].separatedBy(CustomTheme().vGap('xl')),
+                  _buildItemCard(item),
+                ].separatedBy(CustomTheme().vGap('xl')),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -170,7 +214,11 @@ class SortingDetailGradeList extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.white,
+        border: Border.all(
+          width: 0.5,
+          color: CustomTheme().colors('text-primary').withOpacity(0.2),
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -186,16 +234,22 @@ class SortingDetailGradeList extends StatelessWidget {
             icon: Icons.grade_outlined,
             child: Column(
               children: [
-                for (final grade in grades)
+                for (final grade in grades) ...[
                   _buildGradeCard(
                     item,
                     grade,
                   ),
+                  if (grade['code']?.toString().toUpperCase() == 'A')
+                    ..._transferOutNotes(item, grade),
+                ],
+                if (_absorbedRows(item).isNotEmpty)
+                  _buildAbsorbedWorkOrders(item),
               ].separatedBy(
                 CustomTheme().vGap('xl'),
               ),
             ),
           ),
+          if (_transferInRows(item).isNotEmpty) _buildGradeASourceSection(item),
 
           /*
       |--------------------------------------------------------------------------
@@ -295,8 +349,182 @@ class SortingDetailGradeList extends StatelessWidget {
               ].separatedBy(CustomTheme().hGap('xl')),
             ),
           ),
+          _buildHasilSortir(grades),
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
+    );
+  }
+
+  List<Map<String, dynamic>> _absorbedRows(Map item) {
+    final raw = item['absorbed_work_orders'];
+    if (raw is! List) return [];
+    return raw
+        .whereType<Map>()
+        .map((row) => Map<String, dynamic>.from(row))
+        .where((row) {
+      final label = row['wo_no'] ?? row['label'] ?? row['wo_id'];
+      return label != null && label.toString().trim().isNotEmpty;
+    }).toList();
+  }
+
+  Widget _buildAbsorbedWorkOrders(Map<String, dynamic> item) {
+    final rows = _absorbedRows(item);
+    final total = rows.fold<num>(
+      0,
+      (sum, row) => sum + parseSafe(row['qty']),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(height: 24),
+        Text(
+          'Qty dari WO lain',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        for (final row in rows) ...[
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  (row['wo_no'] ?? row['label'] ?? row['wo_id']).toString(),
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+              Text(formatNumber(row['qty'])),
+            ],
+          ),
+          const SizedBox(height: 6),
+        ],
+        Text(
+          'Total qty diambil: ${formatNumber(total)}',
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _transferOutNotes(Map item, Map grade) {
+    final out = _transferSummary(item['transfers_out'], 'to_wo_no');
+    final incoming = _transferSummary(item['transfers_in'], 'from_wo_no');
+    if (out == null && incoming == null) return [];
+
+    const black = TextStyle(color: Colors.black);
+    const blackBold = TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w700,
+    );
+    const redBold = TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.w700,
+    );
+    final lines = <Widget>[];
+
+    if (out != null) {
+      lines.add(
+        _qtyTakenLine(
+          amount: '-${formatNumber(out.$1)}',
+          amountStyle: redBold,
+          conjunction: ' untuk ',
+          woNos: out.$2,
+          labelStyle: black,
+        ),
+      );
+    }
+
+    if (incoming != null) {
+      lines.add(
+        _qtyTakenLine(
+          amount: '+${formatNumber(incoming.$1)}',
+          amountStyle: blackBold,
+          conjunction: ' dari ',
+          woNos: incoming.$2,
+          labelStyle: black,
+        ),
+      );
+    }
+
+    final total =
+        parseSafe(grade['qty']) - (out?.$1 ?? 0) + (incoming?.$1 ?? 0);
+    lines.add(
+      Text(
+        'Total: ${formatNumber(total)}',
+        textAlign: TextAlign.right,
+        style: blackBold,
+      ),
+    );
+
+    return [
+      Row(
+        children: [
+          const Spacer(flex: 4),
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: lines.separatedBy(const SizedBox(height: 4)).toList(),
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  (double, String)? _transferSummary(dynamic rows, String woKey) {
+    if (rows is! List) return null;
+    final transfers = rows.whereType<Map>().toList();
+    if (transfers.isEmpty) return null;
+
+    var total = 0.0;
+    final woNos = <String>[];
+    for (final row in transfers) {
+      total += parseSafe(row['qty']);
+      final woNo = (row[woKey] ?? row['wo_no'])?.toString() ?? '';
+      if (woNo.isNotEmpty) woNos.add(woNo);
+    }
+
+    return (total, woNos.join(', '));
+  }
+
+  Widget _qtyTakenLine({
+    required String amount,
+    required TextStyle amountStyle,
+    required String conjunction,
+    required String woNos,
+    required TextStyle labelStyle,
+  }) {
+    return Text.rich(
+      TextSpan(
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 12,
+        ),
+        children: [
+          TextSpan(
+            text: 'Qty ',
+            style: labelStyle,
+          ),
+          TextSpan(
+            text: amount,
+            style: amountStyle,
+          ),
+          if (woNos.isNotEmpty) ...[
+            TextSpan(
+              text: conjunction,
+              style: labelStyle,
+            ),
+            TextSpan(
+              text: woNos,
+              style: labelStyle,
+            ),
+          ],
+        ],
+      ),
+      textAlign: TextAlign.right,
     );
   }
 
@@ -409,9 +637,107 @@ class SortingDetailGradeList extends StatelessWidget {
     );
   }
 
+  List<Map> _transferInRows(Map item) {
+    final rows = item['transfers_in'];
+    if (rows is! List) return [];
+    return rows.whereType<Map>().toList();
+  }
+
+  Widget _buildGradeASourceSection(Map item) {
+    final rows = _transferInRows(item);
+
+    return TemplateCard(
+      title: 'Ambil Qty Grade A',
+      icon: Icons.move_down_outlined,
+      child: Column(
+        children: [
+          for (final row in rows)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: _readOnlyField(
+                      'WO / Lot',
+                      _transferInLabel(row),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: _readOnlyField(
+                      'Qty diambil',
+                      formatNumber(row['qty'] ?? 0),
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('md')),
+              ),
+            ),
+        ].separatedBy(CustomTheme().vGap('xl')),
+      ),
+    );
+  }
+
+  Widget _readOnlyField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontWeight: CustomTheme().fontWeight('semibold'),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          height: 56,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                8.0,
+              ),
+            ),
+            border: Border.all(
+              width: 0.5,
+              color: CustomTheme().colors('text-primary').withOpacity(0.5),
+            ),
+            color: Colors.white,
+          ),
+          child: Text(
+            value.isEmpty ? '-' : value,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _transferInLabel(Map row) {
+    final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
+    final sortingNo =
+        (row['from_sorting_no'] ?? row['sorting_no'] ?? '').toString();
+    if (woNo.isEmpty) return sortingNo;
+    if (sortingNo.isEmpty) return woNo;
+    return '$woNo ($sortingNo)';
+  }
+
   Widget _buildRepairBox(
     String title,
     dynamic value,
+    {
+    String valuePrefix = '',
+    Color? valueColor,
+  }
   ) {
     return Expanded(
       child: Container(
@@ -435,14 +761,73 @@ class SortingDetailGradeList extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              formatNumber(value).toString(),
+              '$valuePrefix${formatNumber(value)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                color: valueColor,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildHasilSortir(List grades) {
+    var gradeA = 0.0;
+    var gradeAAdditional = 0.0;
+    var gradeATaken = 0.0;
+    var gradeB = 0.0;
+    var gradeBS = 0.0;
+
+    for (final grade in grades) {
+      if (grade is! Map) continue;
+      final code = (grade['code'] ?? '').toString().toUpperCase();
+      final qty = parseSafe(grade['qty']);
+
+      if (code == 'A') {
+        gradeA += grade['available_qty'] == null
+            ? qty
+            : parseSafe(grade['available_qty']);
+        gradeAAdditional += parseSafe(grade['qty_in']);
+        gradeATaken += parseSafe(grade['qty_out']);
+      } else if (code == 'B') {
+        gradeB += qty;
+      } else if (code == 'BS') {
+        gradeBS += qty;
+      }
+    }
+
+    final repair = grades.isEmpty
+        ? 0.0
+        : parseSafe(grades.first['spraying']) +
+            parseSafe(grades.first['rework_long_hemming']) +
+            parseSafe(grades.first['combing']);
+    final total = gradeA + gradeB + gradeBS + repair;
+
+    return TemplateCard(
+      title: 'Hasil Sortir',
+      icon: Icons.summarize_outlined,
+      child: Row(
+        children: [
+          _buildRepairBox('Grade A', gradeA),
+          _buildRepairBox('Grade B', gradeB),
+          _buildRepairBox('Tipe BS', gradeBS),
+          _buildRepairBox('Perbaikan', repair),
+          _buildRepairBox(
+            'Grade A Tambahan',
+            gradeAAdditional,
+            valuePrefix: '+',
+          ),
+          _buildRepairBox(
+            'Grade A Diambil',
+            gradeATaken,
+            valuePrefix: '-',
+            valueColor: Colors.red,
+          ),
+          _buildRepairBox('Hasil Sortir', total),
+        ].separatedBy(CustomTheme().hGap('xl')),
       ),
     );
   }

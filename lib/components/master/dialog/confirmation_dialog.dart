@@ -25,15 +25,21 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.sizeOf(context).shortestSide < 600;
+
     return Dialog(
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 24 : 40,
+        vertical: isMobile ? 24 : 40,
+      ),
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.5,
-          maxHeight: MediaQuery.of(context).size.height * 0.5,
+          maxWidth: MediaQuery.sizeOf(context).width * (isMobile ? 0.86 : 0.5),
+          maxHeight: MediaQuery.sizeOf(context).height * (isMobile ? 0.7 : 0.5),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -45,12 +51,14 @@ class ConfirmationDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      padding: EdgeInsets.symmetric(
+                          vertical: isMobile ? 14 : 16,
+                          horizontal: isMobile ? 16 : 24),
                       child: Text(
                         title,
                         style: TextStyle(
-                            fontSize: CustomTheme().fontSize('2xl'),
+                            fontSize:
+                                CustomTheme().fontSize(isMobile ? 'xl' : '2xl'),
                             fontWeight: CustomTheme().fontWeight('bold'),
                             height: 1),
                       ),
@@ -58,14 +66,16 @@ class ConfirmationDialog extends StatelessWidget {
                     Divider(),
                     // SizedBox(height: 16),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                      padding: EdgeInsets.symmetric(
+                          vertical: isMobile ? 14 : 16,
+                          horizontal: isMobile ? 16 : 24),
                       child: message != null
                           ? Text(
                               message,
                               textAlign: TextAlign.left,
                               style: TextStyle(
-                                fontSize: CustomTheme().fontSize('xl'),
+                                fontSize: CustomTheme()
+                                    .fontSize(isMobile ? 'md' : 'xl'),
                               ),
                             )
                           : child,
@@ -75,7 +85,8 @@ class ConfirmationDialog extends StatelessWidget {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              padding: EdgeInsets.symmetric(
+                  vertical: isMobile ? 12 : 16, horizontal: isMobile ? 16 : 24),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -89,22 +100,24 @@ class ConfirmationDialog extends StatelessWidget {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      height: 56,
+                      height: isMobile ? 48 : 56,
                       child: CancelButton(
                         label: 'Tidak',
                         onPressed: onCancel,
-                        fontSize: CustomTheme().fontSize('xl'),
+                        fontSize:
+                            CustomTheme().fontSize(isMobile ? 'md' : 'xl'),
                       ),
                     ),
                   ),
                   Expanded(
                     child: SizedBox(
-                      height: 56,
+                      height: isMobile ? 48 : 56,
                       child: FormButton(
                         label: 'Ya',
                         onPressed: isLoading ? null : onConfirm,
                         isLoading: isLoading,
-                        fontSize: CustomTheme().fontSize('xl'),
+                        fontSize:
+                            CustomTheme().fontSize(isMobile ? 'md' : 'xl'),
                         backgroundColor: buttonBackground,
                       ),
                     ),

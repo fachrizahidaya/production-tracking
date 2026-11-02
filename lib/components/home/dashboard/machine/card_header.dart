@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 
-class CardHeader extends StatelessWidget {
-  final data;
-  final isTablet;
-  const CardHeader({super.key, this.data, this.isTablet});
+class MachineCardHeader extends StatelessWidget {
+  final dynamic data;
+  final bool isTablet;
+  final bool isMobile;
+
+  const MachineCardHeader({
+    super.key,
+    required this.data,
+    this.isTablet = false,
+    this.isMobile = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +20,9 @@ class CardHeader extends StatelessWidget {
     final statusConfig = _getStatusConfig(status);
 
     return Container(
-      padding: CustomTheme().padding('card'),
+      padding: EdgeInsets.all(
+        isMobile ? 12 : 16,
+      ),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -26,29 +35,26 @@ class CardHeader extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             color: statusConfig['color'].withOpacity(0.2),
-            width: 1,
           ),
         ),
       ),
       child: Row(
         children: [
-          // Machine Icon
           Container(
-            padding: CustomTheme().padding('process-content'),
+            padding: EdgeInsets.all(
+              isMobile ? 9 : 12,
+            ),
             decoration: BoxDecoration(
               color: statusConfig['color'].withOpacity(0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               _getMachineIcon(),
-              size: isTablet
-                  ? CustomTheme().iconSize('3xl')
-                  : CustomTheme().iconSize('2xl'),
+              size: isMobile ? 22 : 28,
               color: statusConfig['color'],
             ),
           ),
-
-          // Machine Name & Code
+          SizedBox(width: isMobile ? 10 : 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,46 +62,57 @@ class CardHeader extends StatelessWidget {
                 Text(
                   data['name']?.toString() ?? 'Mesin',
                   style: TextStyle(
-                    fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
+                    fontSize: isMobile ? 14 : 17,
+                    fontWeight: FontWeight.w700,
                     color: Colors.grey[800],
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                const SizedBox(height: 5),
                 Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        data['code']?.toString() ?? '-',
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          fontWeight: CustomTheme().fontWeight('semibold'),
-                          color: Colors.grey[700],
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          data['code']?.toString() ?? '-',
+                          style: TextStyle(
+                            fontSize: isMobile ? 10 : 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[700],
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
                     if (data['type'] != null) ...[
-                      Text(
-                        data['type'].toString(),
-                        style: TextStyle(
-                          fontSize: CustomTheme().fontSize('md'),
-                          color: Colors.grey[600],
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          data['type'].toString(),
+                          style: TextStyle(
+                            fontSize: isMobile ? 10 : 12,
+                            color: Colors.grey[600],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
-                  ].separatedBy(CustomTheme().hGap('lg')),
+                  ],
                 ),
-              ].separatedBy(CustomTheme().vGap('xs')),
+              ],
             ),
           ),
-
-          // Status Badge
-        ].separatedBy(CustomTheme().hGap('lg')),
+        ],
       ),
     );
   }
@@ -104,37 +121,71 @@ class CardHeader extends StatelessWidget {
     if (data['status'] != null) {
       return data['status'].toString().toLowerCase();
     }
+
     if (data['current_job'] != null) {
       return 'running';
     }
+
     return 'idle';
   }
 
   Map<String, dynamic> _getStatusConfig(String status) {
-    switch (status.toLowerCase()) {
-      default:
-        return {
-          'label': '',
-          'color': Colors.grey,
-        };
-    }
+    return {
+      'label': '',
+      'color': Colors.grey,
+    };
   }
 
   IconData _getMachineIcon() {
     final type = data['process_type']?.toString().toLowerCase() ?? '';
 
-    if (type.contains('dyeing')) return Icons.invert_colors_on_outlined;
-    if (type.contains('press')) return Icons.layers_outlined;
-    if (type.contains('tumbler')) return Icons.dry_cleaning_outlined;
-    if (type.contains('stenter')) return Icons.air;
-    if (type.contains('long slitting')) return Icons.content_paste_outlined;
-    if (type.contains('long hemming')) return Icons.cut_outlined;
-    if (type.contains('cross cutting')) return Icons.cut_outlined;
-    if (type.contains('sewing')) return Icons.link_outlined;
-    if (type.contains('embroidery')) return Icons.color_lens_outlined;
-    if (type.contains('printing')) return Icons.print_outlined;
-    if (type.contains('sorting')) return Icons.sort_outlined;
-    if (type.contains('packing')) return Icons.inventory_2_outlined;
+    if (type.contains('dyeing')) {
+      return Icons.invert_colors_on_outlined;
+    }
+
+    if (type.contains('press')) {
+      return Icons.layers_outlined;
+    }
+
+    if (type.contains('tumbler')) {
+      return Icons.dry_cleaning_outlined;
+    }
+
+    if (type.contains('stenter')) {
+      return Icons.air;
+    }
+
+    if (type.contains('long slitting')) {
+      return Icons.content_paste_outlined;
+    }
+
+    if (type.contains('long hemming')) {
+      return Icons.cut_outlined;
+    }
+
+    if (type.contains('cross cutting')) {
+      return Icons.cut_outlined;
+    }
+
+    if (type.contains('sewing')) {
+      return Icons.link_outlined;
+    }
+
+    if (type.contains('embroidery')) {
+      return Icons.color_lens_outlined;
+    }
+
+    if (type.contains('printing')) {
+      return Icons.print_outlined;
+    }
+
+    if (type.contains('sorting')) {
+      return Icons.sort_outlined;
+    }
+
+    if (type.contains('packing')) {
+      return Icons.inventory_2_outlined;
+    }
 
     return Icons.precision_manufacturing_outlined;
   }

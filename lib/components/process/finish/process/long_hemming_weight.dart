@@ -277,7 +277,6 @@ class _LongHemmingItemsWeightSectionState
                     tabAlignment: TabAlignment.start,
                     tabs: widget.items.asMap().entries.map((entry) {
                       final index = entry.key;
-                      final item = entry.value;
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(

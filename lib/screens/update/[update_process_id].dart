@@ -1,11 +1,19 @@
 // ignore_for_file: file_names, use_build_context_synchronously, deprecated_member_use, prefer_final_fields
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/button/cancel_button.dart';
 import 'package:textile_tracking/components/master/button/form_button.dart';
 import 'package:textile_tracking/components/master/card/custom_badge.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
+import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
@@ -13,58 +21,48 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/update/detail_work_order.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/format_idr.dart';
+import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/to_double.dart';
+import 'package:textile_tracking/helpers/util/attachment_picker.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
 import 'package:textile_tracking/screens/update/process/long_hemming.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/update/process/sorting.dart';
+import 'package:textile_tracking/screens/update/process/packing_grade_a_source.dart';
 
 class UpdateProcess extends StatefulWidget {
   final id;
   final label;
   final form;
-  final formKey;
   final data;
   final woData;
   final handleUpdate;
   final handleSelectMachine;
-  final handleSelectItemType;
   final withMaklon;
   final maklon;
-  final qtyItem;
   final handleChangeInput;
   final withQtyAndWeight;
-  final handleSelectQtyItemUnit;
   final length;
   final width;
   final weight;
-  final handleSelectUnit;
-  final handleSelectWidthUnit;
-  final handleSelectLengthUnit;
   final isSubmitting;
   final forDyeing;
   final grades;
   final getMachineStatus;
-  final handleFetchMachine;
   final qty;
   final defectQty;
   final note;
   final itemGradeOption;
-  final onGradeChanged;
   final itemTypeOption;
   final defects;
-  final handleUpdateGrade;
-  final handleUpdateDefect;
   final reworkLongHemming;
   final combing;
   final spraying;
   final cuttingSewingQty;
   final packingQty;
-  final defectWeight;
-  final goodWeight;
   final gsm;
   final totalWeight;
   final weightPerDozen;
@@ -72,6 +70,8 @@ class UpdateProcess extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
   final finishedItemMaterial;
+  final handleSelectReworkCategory;
+  final reworkCategoryOption;
 
   const UpdateProcess(
       {super.key,
@@ -79,51 +79,40 @@ class UpdateProcess extends StatefulWidget {
       this.id,
       this.form,
       this.withMaklon,
-      this.handleSelectItemType,
       this.data,
       this.maklon,
       this.handleChangeInput,
-      this.qtyItem,
-      this.handleSelectQtyItemUnit,
       this.withQtyAndWeight,
       this.length,
       this.weight,
       this.width,
       this.handleUpdate,
-      this.handleSelectUnit,
-      this.handleSelectWidthUnit,
-      this.handleSelectLengthUnit,
       this.isSubmitting,
-      this.formKey,
       this.forDyeing,
       this.handleSelectMachine,
       this.grades,
       this.getMachineStatus,
-      this.handleFetchMachine,
       this.defectQty,
       this.note,
       this.qty,
       this.itemGradeOption,
-      this.onGradeChanged,
       this.itemTypeOption,
       this.defects,
-      this.handleUpdateGrade,
-      this.handleUpdateDefect,
       this.reworkLongHemming,
       this.combing,
       this.spraying,
       this.woData,
       this.cuttingSewingQty,
-      this.defectWeight,
-      this.goodWeight,
       this.packingQty,
       this.gsm,
       this.totalWeight,
       this.weightPerDozen,
       this.weightGradeA,
-      this.finishedItemMaterial,
       this.finishedItemGrb,
-      this.finishedItemGood});
+      this.finishedItemGood,
+      this.handleSelectReworkCategory,
+      this.reworkCategoryOption,
+      this.finishedItemMaterial});
 
   @override
   State<UpdateProcess> createState() => _UpdateProcessState();
@@ -144,8 +133,10 @@ class _UpdateProcessState extends State<UpdateProcess>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
+  late List<Map<String, dynamic>> _allAttachments;
 
   List<Map<String, dynamic>> _newMachines = [];
+  bool _gradeASourceInvalid = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -162,6 +153,10 @@ class _UpdateProcessState extends State<UpdateProcess>
     _defects = (widget.defects ?? [])
         .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e))
         .toList();
+    _allAttachments = [
+      ...(widget.form['attachments'] ?? []).cast<Map<String, dynamic>>(),
+      {'is_add_button': true},
+    ];
 
     final items = widget.data['items'] ?? [];
 
@@ -294,6 +289,120 @@ class _UpdateProcessState extends State<UpdateProcess>
     _updateTotalSorting();
   }
 
+  Future<File?> _compressImage(String path) async {
+    if (kIsWeb) {
+      return File(path);
+    }
+
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      targetPath,
+      quality: 70,
+    );
+
+    return result == null ? null : File(result.path);
+  }
+
+  Future<void> _pickAttachments(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+
+      if (image == null) return;
+
+      final compressedFile = await _compressImage(image.path);
+
+      if (compressedFile == null || !mounted) return;
+
+      setState(() {
+        _allAttachments.removeWhere((e) => e['is_add_button'] == true);
+        _allAttachments.add({
+          'name': compressedFile.path.split('/').last,
+          'path': compressedFile.path,
+          'extension': compressedFile.path.split('.').last,
+          'isNew': true,
+        });
+        _allAttachments.add({'is_add_button': true});
+        widget.form['attachments'] =
+            _allAttachments.where((e) => e['is_add_button'] != true).toList();
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      await showAlertDialog(
+        context: context,
+        title: 'Error',
+        message: e.toString(),
+      );
+    }
+  }
+
+  void _showImageDialog(
+    BuildContext context,
+    bool isNew,
+    String filePath,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          insetPadding: CustomTheme().padding('content'),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.6,
+            padding: CustomTheme().padding('process-content'),
+            child: InteractiveViewer(
+              minScale: 1,
+              maxScale: 4,
+              child: isNew
+                  ? Image.file(File(filePath), fit: BoxFit.contain)
+                  : Image.network(filePath, fit: BoxFit.contain),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<bool?> _handleDeleteAttachment(Map item) async {
+    if (!mounted) return false;
+
+    final completer = Completer<bool?>();
+
+    showConfirmationDialog(
+      context: context,
+      isLoading: _isLoading,
+      title: 'Hapus Lampiran',
+      message: 'Apakah Anda yakin ingin menghapus lampiran ini?',
+      buttonBackground: CustomTheme().buttonColor('danger'),
+      onConfirm: () async {
+        await Future.delayed(Duration(milliseconds: 200));
+
+        if (!mounted) {
+          completer.complete(false);
+          return;
+        }
+
+        setState(() {
+          _allAttachments.remove(item);
+          widget.form['attachments'] =
+              _allAttachments.where((e) => e['is_add_button'] != true).toList();
+        });
+
+        Navigator.pop(context);
+        completer.complete(true);
+      },
+    );
+
+    return completer.future;
+  }
+
   double _calculateTotalVermak() {
     final spraying = parseSafe(widget.spraying.text);
     final combing = parseSafe(widget.combing.text);
@@ -355,7 +464,7 @@ class _UpdateProcessState extends State<UpdateProcess>
       return;
     }
 
-    final rawGsm = (beratLusin * 10000000) / (12 * 70 * 140);
+    final rawGsm = (beratLusin * 10000000) / (12 * panjang * lebar);
 
     final rounded = customRound(rawGsm);
 
@@ -394,8 +503,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
     final grades = processData['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
-
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -403,9 +510,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
         (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
           return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
@@ -443,7 +547,6 @@ class _UpdateProcessState extends State<UpdateProcess>
     double gradeB = 0;
     double gradeBS = 0;
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     for (final grade in grades) {
@@ -451,25 +554,16 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final gradeItems = grade['items'] ?? [];
 
-      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
-          return gradeItem?['wo_item_id'] == woItemId;
-        },
-        orElse: () => null,
-      );
-
-      if (matched != null) {
-        final qty = parseInput(matched['qty']);
+      for (final gradeItem in gradeItems) {
+        if (gradeItem is! Map) continue;
+        if (gradeItem['wo_item_id'] != woItemId) continue;
 
         if (gradeCode == 'A') {
-          gradeA = qty;
+          gradeA += _gradeAQty(gradeItem);
         } else if (gradeCode == 'B') {
-          gradeB = qty;
+          gradeB += parseInput(gradeItem['qty']);
         } else if (gradeCode == 'BS') {
-          gradeBS = qty;
+          gradeBS += parseInput(gradeItem['qty']);
         }
       }
     }
@@ -579,18 +673,58 @@ class _UpdateProcessState extends State<UpdateProcess>
     return groupedGrades.values.toList();
   }
 
+  List<Map<String, dynamic>> _buildGradeATransfers() {
+    final items = widget.form['items'] ?? [];
+    final transfers = <Map<String, dynamic>>[];
+
+    for (final item in items) {
+      if (item is! Map) continue;
+      final rows = item['absorbed_work_orders'];
+      if (rows is! List) continue;
+
+      for (final row in rows) {
+        if (row is! Map) continue;
+        final fromSortingId = row['sorting_id'] ?? row['from_sorting_id'];
+        if (fromSortingId == null) continue;
+
+        transfers.add({
+          'from_sorting_id': _transferId(fromSortingId),
+          'item_id': _transferId(row['item_id']),
+          'qty': row['qty'] ?? 0,
+        });
+      }
+    }
+
+    return transfers;
+  }
+
+  dynamic _transferId(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? value;
+  }
+
+  double _gradeAQty(Map gradeItem) {
+    return parseInput(gradeItem['qty']) +
+        parseInput(gradeItem['qty_in']) -
+        parseInput(gradeItem['qty_out']);
+  }
+
   double get totalGradeASorting {
-    final grades = widget.data?['sorting']?['grades'] ??
-        widget.data?['sorting']?['grades'] ??
-        [];
+    final grades = widget.data?['sorting']?['grades'] ?? [];
 
     double total = 0;
 
     for (final grade in grades) {
-      final code = grade['item_grade']?['code'];
+      final code = grade['item_grade']?['code']?.toString().trim();
 
-      if (code == 'A') {
-        total += parseInput(grade['qty']);
+      if (code != 'A') continue;
+
+      final gradeItems = grade['items'] ?? [];
+
+      for (final gradeItem in gradeItems) {
+        if (gradeItem is! Map) continue;
+        total += _gradeAQty(gradeItem);
       }
     }
 
@@ -598,14 +732,23 @@ class _UpdateProcessState extends State<UpdateProcess>
   }
 
   double get totalAllSorting {
-    final grades = widget.data?['sorting']?['grades'] ??
-        widget.data?['sorting']?['grades'] ??
-        [];
+    final grades = widget.data?['sorting']?['grades'] ?? [];
 
     double total = 0;
 
     for (final grade in grades) {
-      total += parseInput(grade['qty']);
+      final code = grade['item_grade']?['code']?.toString().trim();
+
+      if (code == 'A') {
+        final gradeItems = grade['items'] ?? [];
+
+        for (final gradeItem in gradeItems) {
+          if (gradeItem is! Map) continue;
+          total += _gradeAQty(gradeItem);
+        }
+      } else if (code == 'B' || code == 'BS') {
+        total += parseInput(grade['qty']);
+      }
     }
 
     return total;
@@ -653,7 +796,6 @@ class _UpdateProcessState extends State<UpdateProcess>
   ) {
     final grades = data['sorting']?['grades'] ?? [];
 
-    final itemCode = item['finished_product']?['code']?.toString().trim();
     final woItemId = item['wo_item_id'];
 
     double total = 0;
@@ -663,9 +805,6 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
         (gradeItem) {
-          final gradeItemCode =
-              gradeItem?['finished_product']?['code']?.toString().trim();
-
           return gradeItem?['wo_item_id'] == woItemId;
         },
         orElse: () => null,
@@ -699,6 +838,22 @@ class _UpdateProcessState extends State<UpdateProcess>
 
   Future<void> _handleSubmit(BuildContext context) async {
     if (context.mounted) {
+      final attachments = widget.form['attachments'];
+      final hasAttachment = attachments is List &&
+          attachments.any(
+            (attachment) =>
+                attachment is Map && attachment['is_add_button'] != true,
+          );
+
+      if (widget.label == 'Packing' && !hasAttachment) {
+        await showAlertDialog(
+          context: context,
+          title: 'Peringatan',
+          message: 'Lampiran wajib diisi.',
+        );
+        return;
+      }
+
       showConfirmationDialog(
         context: context,
         isLoading: widget.isSubmitting,
@@ -707,7 +862,11 @@ class _UpdateProcessState extends State<UpdateProcess>
           widget.isSubmitting.value = true;
 
           try {
-            if (widget.label == 'Long Hemming' ||
+            if (widget.label == 'Dyeing' ||
+                widget.label == 'Press' ||
+                widget.label == 'Tumbler' ||
+                widget.label == 'Long Slitting' ||
+                widget.label == 'Long Hemming' ||
                 widget.label == 'Cross Cutting' ||
                 widget.label == 'Sewing') {
               final machines = List<Map<String, dynamic>>.from(
@@ -733,6 +892,7 @@ class _UpdateProcessState extends State<UpdateProcess>
               widget.form['combing'] = toDouble(widget.form['combing']);
 
               widget.form['grades'] = buildGradesPayload();
+              widget.form['grade_a_transfers'] = _buildGradeATransfers();
             }
 
             /// 🔥 MAKLON
@@ -749,6 +909,22 @@ class _UpdateProcessState extends State<UpdateProcess>
               widget.form['maklon_name'] = null;
               widget.form['maklon'] = false;
             }
+
+            if (widget.label == 'Dyeing' && widget.data['rework'] == true) {
+              final reworkCategory =
+                  widget.form?['rework_category']?.toString();
+              final reworkTypes = List<String>.from(
+                widget.form?['rework_type'] ?? [],
+              );
+
+              if (reworkCategory != 'perbaikan') {
+                widget.form['rework_type'] = [];
+                widget.form['rework_method'] = [];
+              } else if (!reworkTypes.contains('perbaikan_warna')) {
+                widget.form['rework_method'] = [];
+              }
+            }
+
             widget.form.remove('semifinished_products');
 
             widget.form['wo_id'] = widget.data['wo_id'];
@@ -763,6 +939,155 @@ class _UpdateProcessState extends State<UpdateProcess>
         buttonBackground: CustomTheme().buttonColor('primary'),
       );
     }
+  }
+
+  Map<String, dynamic>? get _selectedDyeingReworkCategory {
+    final categoryValue = widget.form?['rework_category']?.toString();
+
+    if (categoryValue == null || categoryValue.isEmpty) {
+      return null;
+    }
+
+    final options = List<Map<String, dynamic>>.from(
+      widget.reworkCategoryOption ?? [],
+    );
+
+    for (final option in options) {
+      if (option['value']?.toString() == categoryValue) {
+        return option;
+      }
+    }
+
+    return null;
+  }
+
+  List<Map<String, dynamic>> _methodOptions(
+    List<Map<String, dynamic>> typeOptions,
+  ) {
+    for (final option in typeOptions) {
+      if (option['value']?.toString() == 'perbaikan_warna') {
+        return List<Map<String, dynamic>>.from(
+          option['children'] ?? [],
+        );
+      }
+    }
+
+    return [];
+  }
+
+  void _toggleDyeingReworkValue({
+    required String fieldName,
+    required String value,
+    required bool checked,
+  }) {
+    final values = List<String>.from(
+      widget.form?[fieldName] ?? [],
+    );
+
+    if (checked) {
+      if (!values.contains(value)) {
+        values.add(value);
+      }
+    } else {
+      values.remove(value);
+    }
+
+    widget.form?[fieldName] = values;
+
+    // Paksa parent/detail ikut mengetahui perubahan.
+    widget.handleChangeInput?.call(
+      fieldName,
+      values,
+    );
+  }
+
+  String _getReworkCategoryLabel(
+    String? categoryValue,
+  ) {
+    if (categoryValue == null || categoryValue.isEmpty) {
+      return '';
+    }
+
+    final option = _selectedDyeingReworkCategory;
+
+    if (option != null) {
+      return option['label']?.toString() ?? '';
+    }
+
+    return categoryValue
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map(
+          (word) => word.isEmpty
+              ? word
+              : '${word[0].toUpperCase()}${word.substring(1)}',
+        )
+        .join(' ');
+  }
+
+  List<Map<String, dynamic>> _getDyeingReworkTypeOptions() {
+    final result = <Map<String, dynamic>>[];
+    final categoryValue = widget.form?['rework_category']?.toString();
+
+    if (categoryValue != 'perbaikan') {
+      return result;
+    }
+
+    // 1. Ambil existing data dari response
+    final existingCategories = List<Map<String, dynamic>>.from(
+      widget.data['rework_categories'] ?? [],
+    );
+
+    for (final item in existingCategories) {
+      final value = item['type']?.toString();
+
+      if (value == null || value.isEmpty || _isReworkCategoryValue(value)) {
+        continue;
+      }
+
+      result.add({
+        'value': value,
+        'label': item['label']?.toString() ?? value,
+      });
+    }
+
+    // 2. Ambil option dari master berdasarkan category
+    final category = _selectedDyeingReworkCategory;
+
+    final children = List<Map<String, dynamic>>.from(
+      category?['children'] ?? [],
+    );
+
+    // 3. Merge option master
+    for (final item in children) {
+      final value = item['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      final exists = result.any(
+        (e) => e['value']?.toString() == value,
+      );
+
+      if (!exists) {
+        result.add(item);
+      }
+    }
+
+    return result;
+  }
+
+  bool _isReworkCategoryValue(String value) {
+    final options = List<Map<String, dynamic>>.from(
+      widget.reworkCategoryOption ?? [],
+    );
+
+    if (options.any((option) => option['value']?.toString() == value)) {
+      return true;
+    }
+
+    return value == 'toping' || value == 'perbaikan';
   }
 
   @override
@@ -790,6 +1115,9 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       return matched?['spk_no']?.toString() ?? woItemId.toString();
     }
+
+    final isReworkDyeing =
+        widget.label == 'Dyeing' && widget.data['rework'] == true;
 
     return DefaultTabController(
       length: 2,
@@ -993,7 +1321,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        if (widget.label == 'Long Hemming' ||
+                                        if (widget.label == 'Dyeing' ||
+                                            widget.label == 'Press' ||
+                                            widget.label == 'Tumbler' ||
+                                            widget.label == 'Long Slitting' ||
+                                            widget.label == 'Long Hemming' ||
                                             widget.label == 'Cross Cutting' ||
                                             widget.label == 'Sewing')
                                           MachineEditSection(
@@ -1066,6 +1398,53 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     updateTotalSorting: _updateTotalSorting,
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
+                                    onSourceQtyInvalid: (invalid) {
+                                      if (_gradeASourceInvalid == invalid) {
+                                        return;
+                                      }
+                                      setState(
+                                        () => _gradeASourceInvalid = invalid,
+                                      );
+                                    },
+                                  ),
+                                if (isReworkDyeing) _buildDyeingReworkForm(),
+                                if (widget.label == 'Packing')
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: Colors.blue.shade100,
+                                      ),
+                                    ),
+                                    child: Wrap(
+                                      spacing: 12,
+                                      runSpacing: 12,
+                                      children: [
+                                        _buildSummaryItem(
+                                          'Total Grade A Sortir',
+                                          formatNumber(totalGradeASorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Keseluruhan Sortir',
+                                          formatNumber(totalAllSorting),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Packing',
+                                          formatNumber(totalPackingInput),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Grade A',
+                                          formatId(totalWeightGradeAAll),
+                                        ),
+                                        _buildSummaryItem(
+                                          'Total Berat Keseluruhan',
+                                          formatId(totalWeightAll),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 if (widget.label == 'Packing')
                                   DefaultTabController(
@@ -1116,51 +1495,15 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color: Colors.blue.shade100,
-                                            ),
-                                          ),
-                                          child: Wrap(
-                                            spacing: 12,
-                                            runSpacing: 12,
-                                            children: [
-                                              _buildSummaryItem(
-                                                'Total Grade A Sorting',
-                                                formatNumber(
-                                                    totalGradeASorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Keseluruhan Sorting',
-                                                formatNumber(totalAllSorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Packing',
-                                                formatNumber(totalPackingInput),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Grade A',
-                                                formatId(totalWeightGradeAAll),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Keseluruhan',
-                                                formatId(totalWeightAll),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 500,
-                                          child: TabBarView(
-                                            children:
-                                                (widget.data['items'] ?? [])
-                                                    .map<Widget>((item) {
+                                        Builder(
+                                          builder: (context) {
+                                            final tabController =
+                                                DefaultTabController.of(context);
+                                            return AnimatedBuilder(
+                                              animation: tabController,
+                                              builder: (context, _) {
+                                                final item =
+                                                    (widget.data['items'] ?? [])[tabController.index];
                                               final itemId = item['id'];
                                               final sortingQty =
                                                   getSortingGradeQty(
@@ -1174,9 +1517,13 @@ class _UpdateProcessState extends State<UpdateProcess>
                                               return Container(
                                                 padding: EdgeInsets.all(12),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.grey[100],
+                                                  // color: Colors.grey[100],
+
+                                                  border: Border.all(
+                                                      color:
+                                                          Colors.grey.shade300),
                                                   borderRadius:
-                                                      BorderRadius.circular(12),
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: TemplateCard(
                                                   title: 'Material',
@@ -1493,17 +1840,100 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               .hGap('xl'),
                                                         ),
                                                       ),
+                                                      PackingGradeASourceSection(
+                                                        initialUsages: (item[
+                                                                    'grade_a_stock_usages']
+                                                                is List)
+                                                            ? (item['grade_a_stock_usages']
+                                                                    as List)
+                                                                .whereType<
+                                                                    Map>()
+                                                                .map((row) => Map<
+                                                                        String,
+                                                                        dynamic>.from(
+                                                                    row))
+                                                                .toList()
+                                                            : const [],
+                                                        itemId: item[
+                                                                'semifinished_product_id'] ??
+                                                            item['item_id'],
+                                                        excludeWoId: widget
+                                                            .data['wo_id'],
+                                                        packingId:
+                                                            widget.data['id'],
+                                                        onRowsChanged: (rows) {
+                                                          item['grade_a_stock_usages'] =
+                                                              rows;
+                                                          final formItems =
+                                                              widget.form[
+                                                                  'items'];
+                                                          if (formItems
+                                                              is List) {
+                                                            final formItem = formItems
+                                                                .whereType<
+                                                                    Map>()
+                                                                .cast<
+                                                                    Map<String,
+                                                                        dynamic>>()
+                                                                .firstWhere(
+                                                                  (value) =>
+                                                                      value['id']
+                                                                          ?.toString() ==
+                                                                      item['id']
+                                                                          ?.toString(),
+                                                                  orElse: () =>
+                                                                      <String,
+                                                                          dynamic>{},
+                                                                );
+                                                            if (formItem
+                                                                .isNotEmpty) {
+                                                              formItem[
+                                                                      'grade_a_stock_usages'] =
+                                                                  rows;
+                                                            }
+                                                          }
+                                                          widget
+                                                              .handleChangeInput(
+                                                                  'items',
+                                                                  widget.form[
+                                                                      'items']);
+                                                        },
+                                                        onExceededChanged:
+                                                            (invalid) {
+                                                          if (_gradeASourceInvalid ==
+                                                              invalid) {
+                                                            return;
+                                                          }
+                                                          setState(() =>
+                                                              _gradeASourceInvalid =
+                                                                  invalid);
+                                                        },
+                                                      ),
                                                     ].separatedBy(
                                                       CustomTheme().vGap('xl'),
                                                     ),
                                                   ),
                                                 ),
                                               );
-                                            }).toList(),
-                                          ),
+                                              },
+                                            );
+                                          },
                                         ),
                                       ].separatedBy(CustomTheme().vGap('xl')),
                                     ),
+                                  ),
+                                if (widget.label == 'Packing')
+                                  AttachmentPicker(
+                                    attachments: _allAttachments,
+                                    onAddAttachment: _pickAttachments,
+                                    onDeleteAttachment: _handleDeleteAttachment,
+                                    onPreviewImage: (isNew, filePath) {
+                                      _showImageDialog(
+                                        context,
+                                        isNew,
+                                        filePath,
+                                      );
+                                    },
                                   ),
                               ].separatedBy(CustomTheme().vGap('xl'))),
                         )),
@@ -1514,7 +1944,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                           label: widget.label,
                           forDyeing: widget.forDyeing,
                           withNote: true,
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -1541,6 +1971,10 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
+                          isDisabled:
+                              (widget.label == 'Sorting' ||
+                                  widget.label == 'Packing') &&
+                              _gradeASourceInvalid,
                           onPressed: () {
                             _handleSubmit(context);
                           },
@@ -1592,5 +2026,228 @@ class _UpdateProcessState extends State<UpdateProcess>
         ],
       ),
     );
+  }
+
+  Widget _buildDyeingReworkMethodOptions(
+    List<Map<String, dynamic>> methodOptions,
+    List<String> selectedMethods,
+  ) {
+    return Container(
+      padding: const EdgeInsets.only(left: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(
+            color: Colors.grey.shade300,
+            width: 2,
+          ),
+        ),
+      ),
+      child: GroupForm(
+        label: 'Metode Perbaikan',
+        req: true,
+        formControl: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: methodOptions.map((method) {
+            final methodValue = method['value']?.toString() ?? '';
+
+            final methodLabel = method['label']?.toString() ?? '';
+
+            return CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text(methodLabel),
+              value: selectedMethods.contains(methodValue),
+              onChanged: (checked) {
+                setState(() {
+                  _toggleDyeingReworkValue(
+                    fieldName: 'rework_method',
+                    value: methodValue,
+                    checked: checked == true,
+                  );
+                });
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDyeingReworkForm() {
+    final categoryValue = widget.form?['rework_category']?.toString();
+
+    final category = _selectedDyeingReworkCategory;
+
+    final categoryLabel = category?['label']?.toString() ??
+        _getReworkCategoryLabel(categoryValue);
+
+    final typeOptions = _getDyeingReworkTypeOptions();
+
+    final selectedTypes = List<String>.from(
+      widget.form['rework_type'] ?? [],
+    );
+
+    final isPerbaikan = categoryValue == 'perbaikan';
+
+    return TemplateCard(
+      title: 'Rework',
+      icon: Icons.build_circle_outlined,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SelectForm(
+              label: 'Kategori Rework',
+              onTap: () {
+                widget.handleSelectReworkCategory?.call();
+              },
+              selectedLabel: categoryLabel,
+              selectedValue: categoryValue ?? '',
+              required: true,
+            ),
+          ),
+          if (isPerbaikan) ...[
+            const SizedBox(height: 16),
+            Expanded(
+              flex: 2,
+              child: GroupForm(
+                label: 'Jenis Perbaikan',
+                req: true,
+                formControl: Container(
+                  width: double.infinity,
+                  padding: CustomTheme().padding('card'),
+                  decoration: CustomTheme().inputStaticDecorationRequired(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...typeOptions.map((type) {
+                        final typeValue = type['value']?.toString() ?? '';
+
+                        final typeLabel = type['label']?.toString() ?? '';
+
+                        final isSelected = selectedTypes.contains(typeValue);
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CheckboxListTile(
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              controlAffinity: ListTileControlAffinity.leading,
+                              title: Text(typeLabel),
+                              value: isSelected,
+                              onChanged: (checked) {
+                                setState(() {
+                                  _toggleDyeingReworkValue(
+                                    fieldName: 'rework_type',
+                                    value: typeValue,
+                                    checked: checked == true,
+                                  );
+
+                                  if (typeValue == 'perbaikan_warna' &&
+                                      checked != true) {
+                                    widget.form['rework_method'] = [];
+                                    widget.handleChangeInput?.call(
+                                      'rework_method',
+                                      [],
+                                    );
+                                  }
+                                });
+                              },
+                            ),
+                            if (isSelected)
+                              _buildReworkMethodsFromExisting(typeValue),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ].separatedBy(CustomTheme().hGap('xl')),
+      ),
+    );
+  }
+
+  Widget _buildReworkMethodsFromExisting(
+    String typeValue,
+  ) {
+    if (typeValue != 'perbaikan_warna') {
+      return const SizedBox.shrink();
+    }
+
+    final methodOptions = _getDyeingReworkMethodOptions();
+
+    if (methodOptions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final selectedMethods = List<String>.from(
+      widget.form?['rework_method'] ?? [],
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 40),
+      child: _buildDyeingReworkMethodOptions(
+        methodOptions,
+        selectedMethods,
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _getDyeingReworkMethodOptions() {
+    final result = <Map<String, dynamic>>[];
+
+    final category = _selectedDyeingReworkCategory;
+
+    final children = List<Map<String, dynamic>>.from(
+      category?['children'] ?? [],
+    );
+
+    final methodOptions = _methodOptions(children);
+
+    for (final method in methodOptions) {
+      final value = method['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      result.add(method);
+    }
+
+    final categories = List<Map<String, dynamic>>.from(
+      widget.data?['rework_categories'] ?? [],
+    );
+
+    final existing = categories.firstWhere(
+      (item) => item['type']?.toString() == 'perbaikan_warna',
+      orElse: () => <String, dynamic>{},
+    );
+
+    final methods = List<Map<String, dynamic>>.from(
+      existing['methods'] ?? [],
+    );
+
+    for (final method in methods) {
+      final value = method['value']?.toString();
+
+      if (value == null || value.isEmpty) {
+        continue;
+      }
+
+      final exists = result.any(
+        (item) => item['value']?.toString() == value,
+      );
+
+      if (!exists) {
+        result.add(method);
+      }
+    }
+
+    return result;
   }
 }

@@ -15,17 +15,11 @@ class OptionUnit {
   OptionUnit({this.value, this.label});
 
   factory OptionUnit.fromJson(Map<String, dynamic> json) {
-    return OptionUnit(
-      value: json['value'] as int,
-      label: json['label'] ?? '',
-    );
+    return OptionUnit(value: json['value'] as int, label: json['label'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -45,8 +39,10 @@ class OptionUnitService extends BaseService<OptionUnit> {
   List<dynamic> get dataListOption => _dataListOption;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {
     if (isLoading || (!hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -105,7 +101,9 @@ class OptionUnitService extends BaseService<OptionUnit> {
 
   @override
   Future<void> addItem(
-      OptionUnit item, ValueNotifier<bool> isSubmitting) async {
+    OptionUnit item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 
@@ -139,7 +137,10 @@ class OptionUnitService extends BaseService<OptionUnit> {
 
   @override
   Future<void> updateItem(
-      String id, OptionUnit item, ValueNotifier<bool> isSubmitting) async {
+    String id,
+    OptionUnit item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {
     try {
       isSubmitting.value = true;
 
@@ -226,11 +227,13 @@ class OptionUnitService extends BaseService<OptionUnit> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL']}/unit/option'), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
+      final response = await http.get(
+        Uri.parse('${dotenv.env['API_URL']}/unit/option'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -286,11 +289,13 @@ class OptionUnitService extends BaseService<OptionUnit> {
         throw Exception('Access token is missing');
       }
 
-      final response = await http
-          .get(Uri.parse('${dotenv.env['API_URL']}/unit/option'), headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      });
+      final response = await http.get(
+        Uri.parse('${dotenv.env['API_URL']}/unit/option'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);

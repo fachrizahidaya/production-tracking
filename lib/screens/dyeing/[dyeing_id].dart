@@ -12,15 +12,14 @@ class DyeingDetail extends StatefulWidget {
   final String no;
   final canDelete;
   final canUpdate;
-  final bool openUpdateOnStart;
 
-  const DyeingDetail(
-      {super.key,
-      required this.id,
-      required this.no,
-      this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
+  const DyeingDetail({
+    super.key,
+    required this.id,
+    required this.no,
+    this.canDelete,
+    this.canUpdate,
+  });
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -30,68 +29,150 @@ class _DyeingDetailState extends State<DyeingDetail> {
   final DyeingService _dyeingService = DyeingService();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ProcessDetail<Dyeing>(
       id: widget.id,
       no: widget.no,
       label: 'Dyeing',
       prefix: 'DYE',
-      isMultiMachine: false,
-      service: Provider.of<DyeingService>(context, listen: false),
+      isMultiMachine: true,
+      service: Provider.of<DyeingService>(
+        context,
+        listen: false,
+      ),
+
+      /*
+      |--------------------------------------------------------------------------
+      | UPDATE
+      |--------------------------------------------------------------------------
+      |
+      | ProcessDetail akan menentukan apakah data merupakan
+      | Dyeing Rework atau Dyeing normal.
+      |
+      */
       handleUpdateService: (context, id, item, isLoading) =>
-          Provider.of<DyeingService>(context, listen: false)
-              .updateItem(context, id, item, isLoading),
-      handleDeleteService: (context, id, isLoading) =>
-          Provider.of<DyeingService>(context, listen: false)
-              .deleteItem(context, id, isLoading),
+          Provider.of<DyeingService>(
+        context,
+        listen: false,
+      ).updateItem(
+        context,
+        id,
+        item,
+        isLoading,
+      ),
+
+      /*
+      |--------------------------------------------------------------------------
+      | DELETE
+      |--------------------------------------------------------------------------
+      */
+      handleDeleteService: (
+        context,
+        id,
+        isLoading,
+      ) =>
+          Provider.of<DyeingService>(
+        context,
+        listen: false,
+      ).deleteItem(
+        context,
+        id,
+        isLoading,
+      ),
+
+      /*
+      |--------------------------------------------------------------------------
+      | MODEL BUILDER
+      |--------------------------------------------------------------------------
+      */
       modelBuilder: (form, data) => Dyeing(
-        wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
+        wo_id: int.tryParse(
+          form['wo_id']?.toString() ?? '',
+        ),
         unit_id: form['unit_id'] != null
-            ? int.tryParse(form['unit_id'].toString())
+            ? int.tryParse(
+                form['unit_id'].toString(),
+              )
             : 1,
         length_unit_id: form['length_unit_id'] != null
-            ? int.tryParse(form['length_unit_id'].toString())
+            ? int.tryParse(
+                form['length_unit_id'].toString(),
+              )
             : 3,
         width_unit_id: form['width_unit_id'] != null
-            ? int.tryParse(form['width_unit_id'].toString())
+            ? int.tryParse(
+                form['width_unit_id'].toString(),
+              )
             : 3,
-        machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
+        machine_id: int.tryParse(
+          form['machine_id']?.toString() ?? '',
+        ),
         qty: form['qty'] ?? '0',
         width: form['width'] ?? '0',
         length: form['length'] ?? '0',
         notes: form['notes'] ?? data['notes'],
+        machine_ids: form['machine_ids'],
+        machines: form['machines'],
         attachments: [
-          ...List<Map<String, dynamic>>.from(data['attachments'] ?? []),
-          ...List<Map<String, dynamic>>.from(form['attachments'] ?? []),
+          ...List<Map<String, dynamic>>.from(
+            data['attachments'] ?? [],
+          ),
+          ...List<Map<String, dynamic>>.from(
+            form['attachments'] ?? [],
+          ),
         ],
       ),
       canDelete: widget.canDelete,
       canUpdate: widget.canUpdate,
-      openUpdateOnStart: widget.openUpdateOnStart,
       route: '/dyeings',
       withItemGrade: false,
       withQtyAndWeight: false,
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
-      fetchMachine: (service, _) => service.fetchOptionsDyeing(),
+      fetchMachine: (
+        service,
+        currentMachineIds,
+      ) =>
+          service.fetchOptionsDyeing(
+        currentMachineIds: currentMachineIds,
+      ),
       idProcess: 'dyeing_id',
       processService: _dyeingService,
       forPacking: false,
       fetchFinish: (service) => service.fetchFinishOptions(),
-      handleSubmitToService: (context, id, form, isLoading) async {
+
+      /*
+      |--------------------------------------------------------------------------
+      | FINISH / COMPLETE
+      |--------------------------------------------------------------------------
+      |
+      | Tetap menggunakan finishItem().
+      | Ini TIDAK berkaitan dengan update rework.
+      |
+      */
+      handleSubmitToService: (
+        context,
+        id,
+        form,
+        isLoading,
+      ) async {
         final dyeing = Dyeing(
-          wo_id: int.tryParse(form['wo_id']?.toString() ?? ''),
-          machine_id: int.tryParse(form['machine_id']?.toString() ?? ''),
-          unit_id: int.tryParse(form['unit_id']?.toString() ?? '1'),
-          width_unit_id: int.tryParse(form['width_unit_id']?.toString() ?? '3'),
-          length_unit_id:
-              int.tryParse(form['length_unit_id']?.toString() ?? '3'),
+          wo_id: int.tryParse(
+            form['wo_id']?.toString() ?? '',
+          ),
+          machine_id: int.tryParse(
+            form['machine_id']?.toString() ?? '',
+          ),
+          unit_id: int.tryParse(
+            form['unit_id']?.toString() ?? '1',
+          ),
+          width_unit_id: int.tryParse(
+            form['width_unit_id']?.toString() ?? '3',
+          ),
+          length_unit_id: int.tryParse(
+            form['length_unit_id']?.toString() ?? '3',
+          ),
           qty: form['qty'],
           width: form['width'] =
               (form['width'] == null || form['width'].toString().isEmpty)
@@ -104,25 +185,45 @@ class _DyeingDetailState extends State<DyeingDetail> {
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
+          start_by_id: int.tryParse(
+            form['start_by_id']?.toString() ?? '',
+          ),
+          end_by_id: int.tryParse(
+            form['end_by_id']?.toString() ?? '',
+          ),
+          machines: form['machines'] ?? [],
+          machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],
         );
 
-        final message = await Provider.of<DyeingService>(context, listen: false)
-            .finishItem(context, id, dyeing, isLoading);
+        final message = await Provider.of<DyeingService>(
+          context,
+          listen: false,
+        ).finishItem(
+          context,
+          id,
+          dyeing,
+          isLoading,
+        );
 
-        Navigator.pushNamedAndRemoveUntil(context, '/dyeings', (_) => false);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/dyeings',
+          (_) => false,
+        );
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showAlertDialog(
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            showAlertDialog(
               context: context,
               title: 'Dyeing Selesai',
               child: buildBoldMessage(
                 message: message,
-                prefix: "DYE",
-              ));
-        });
+                prefix: 'DYE',
+              ),
+            );
+          },
+        );
       },
     );
   }

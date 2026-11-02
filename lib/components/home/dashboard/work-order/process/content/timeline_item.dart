@@ -197,17 +197,6 @@ class TimelineItem extends StatelessWidget {
       return process[field]?.toString();
     }
 
-    List<Map<String, dynamic>> getReworkData(dynamic rawProcess) {
-      if (rawProcess is List) {
-        return rawProcess
-            .where((e) => e['rework_dyeing'] == true)
-            .cast<Map<String, dynamic>>()
-            .toList();
-      }
-
-      return [];
-    }
-
     String getStatus(dynamic process) {
       if (process is List && process.isNotEmpty) {
         return process.first['status']?.toString().toLowerCase() ?? '';
@@ -218,10 +207,6 @@ class TimelineItem extends StatelessWidget {
     }
 
     final processNumber = getProcessNumber(processKey, process);
-
-    final reworks = getReworkData(rawProcess);
-
-    final isSpecial = ['dyeing', 'press', 'tumbler'].contains(processKey);
 
     final printing = allProcesses['printing'];
 
@@ -480,115 +465,6 @@ class TimelineItem extends StatelessWidget {
           );
   }
 
-  Widget _buildReworkCard(
-      String processKey, Map<String, dynamic> process, bool isTablet) {
-    String? getProcessNumber(String processKey, Map<String, dynamic> process) {
-      final fieldMap = {
-        'dyeing': 'dyeing_no',
-        'press': 'press_no',
-        'tumbler': 'tumbler_no',
-        'stenter': 'stenter_no',
-        'long_slitting': 'ls_no',
-        'long_hemming': 'lh_no',
-        'cross_cutting': 'cc_no',
-        'sewing': 'sewing_no',
-        'sorting': 'sorting_no',
-        'packing': 'packing_no',
-      };
-
-      final field = fieldMap[processKey];
-      if (field == null) return null;
-
-      return process[field]?.toString();
-    }
-
-    final processNumber = getProcessNumber(processKey, process);
-
-    String value = '-';
-
-    if (process['qty'] != null) {
-      value =
-          '${formatNumber(process['qty'])} ${process['unit']?['code'] ?? ''}';
-    } else if (process['weight'] != null) {
-      value =
-          '${formatNumber(process['weight'])} ${process['weight_unit']?['code'] ?? ''}';
-    }
-
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.refresh, color: Colors.orange),
-          SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rework',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange,
-                  ),
-                ),
-                if (processNumber != null) Text(processNumber),
-                Text(value),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGradesSection(List<dynamic> grades, bool isTablet) {
-    return Container(
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        color: Colors.purple.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: Colors.purple.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.grade_outlined,
-                size: CustomTheme().iconSize(isTablet ? 'lg' : 'md'),
-                color: Colors.purple,
-              ),
-              SizedBox(width: 6),
-              Text(
-                'Grades',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('md'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.purple[700],
-                ),
-              ),
-            ],
-          ),
-          // Wrap(
-          //   spacing: isTablet ? 10 : 8,
-          //   runSpacing: isTablet ? 8 : 6,
-          //   children: grades.map((grade) {
-          //     return _buildGradeChip(grade, isTablet);
-          //   }).toList(),
-          // ),
-        ].separatedBy(CustomTheme().vGap('lg')),
-      ),
-    );
-  }
-
   Widget _buildSortingImprovementSection(
       Map<String, dynamic> process, bool isTablet) {
     final reworkLH = process['rework_long_hemming'] ?? 0;
@@ -691,132 +567,6 @@ class TimelineItem extends StatelessWidget {
               color: Colors.green,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPackingSection(
-    Map<String, dynamic> process,
-    bool isTablet,
-  ) {
-    return Container(
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: Colors.blue.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.scale_outlined,
-                size: CustomTheme().iconSize(isTablet ? 'lg' : 'md'),
-                color: Colors.blue,
-              ),
-              SizedBox(width: 6),
-              Text(
-                'Gramasi & Berat',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('md'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.blue[700],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Wrap(
-            spacing: 16,
-            runSpacing: 12,
-            children: [
-              if (process['weight_per_dozen'] != null)
-                _buildDetailItem(
-                  icon: Icons.line_weight,
-                  label: 'Weight / Dozen',
-                  value: '${process['weight_per_dozen']}',
-                  isTablet: isTablet,
-                ),
-              if (process['gsm'] != null)
-                _buildDetailItem(
-                  icon: Icons.texture,
-                  label: 'GSM',
-                  value: '${process['gsm']}',
-                  isTablet: isTablet,
-                ),
-              if (process['weight_grade_a'] != null)
-                _buildDetailItem(
-                  icon: Icons.verified,
-                  label: 'Berat Grade A',
-                  value: formatNumber(process['weight_grade_a']),
-                  isTablet: isTablet,
-                ),
-              if (process['total_weight'] != null)
-                _buildDetailItem(
-                  icon: Icons.scale,
-                  label: 'Total Berat',
-                  value: formatNumber(process['total_weight']),
-                  isTablet: isTablet,
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGradeChip(dynamic grade, bool isTablet) {
-    final gradeName =
-        grade['item_grade']['code']?.toString() ?? grade.toString();
-    final gradeQty = grade['qty'];
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isTablet ? 12 : 10,
-        vertical: isTablet ? 8 : 6,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.purple.withOpacity(0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            gradeName,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize(isTablet ? 'lg' : 'md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.purple[700],
-            ),
-          ),
-          if (gradeQty != null) ...[
-            SizedBox(width: 8),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 2,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                '${formatNumber(gradeQty)} ${grade['unit']['code'] ?? 'PCS'}',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize(isTablet ? 'md' : 'sm'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  color: Colors.purple,
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );

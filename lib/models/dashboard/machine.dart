@@ -38,8 +38,10 @@ class MachineService extends BaseService {
   get dataList => _dataList;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -52,7 +54,10 @@ class MachineService extends BaseService {
 
   @override
   Future<void> updateItem(
-      String id, item, ValueNotifier<bool> isSubmitting) async {}
+    String id,
+    item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -75,9 +80,10 @@ class MachineService extends BaseService {
       _dataList.clear();
       notifyListeners();
 
-      final response = await http.get(url, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       final responseData = jsonDecode(response.body);
 
@@ -88,7 +94,7 @@ class MachineService extends BaseService {
 
             _dataList = {
               "available": data['available']['data'],
-              "unavailable": data['unavailable']['data']
+              "unavailable": data['unavailable']['data'],
             };
           }
 

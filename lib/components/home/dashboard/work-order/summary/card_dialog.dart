@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/button/pulse_icon.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/util/separated_column.dart';
+import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
 import 'package:textile_tracking/screens/work-order/%5Bwork_order_id%5D.dart';
 
 class CardDialog extends StatelessWidget {
   final title;
   final woList;
-  const CardDialog({super.key, this.title, this.woList});
+  final bool isGreige;
+  const CardDialog({
+    super.key,
+    this.title,
+    this.woList,
+    this.isGreige = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +65,9 @@ class CardDialog extends StatelessWidget {
                 child: woList.isEmpty
                     ? Center(
                         child: Text(
-                          'Tidak ada Work Order',
+                          isGreige
+                              ? 'Tidak ada Order Greige'
+                              : 'Tidak ada Work Order',
                           style: TextStyle(
                             fontSize: CustomTheme().fontSize('lg'),
                             color: Colors.grey[500],
@@ -70,7 +79,9 @@ class CardDialog extends StatelessWidget {
                         separatorBuilder: (_, __) => Divider(),
                         itemBuilder: (context, index) {
                           final wo = woList[index];
-                          final woNo = wo['wo_no'] ?? '-';
+                          final woNo = isGreige
+                              ? wo['og_no'] ?? '-'
+                              : wo['wo_no'] ?? '-';
                           final bool isUrgent = wo['urgent'] == true;
                           final bool isOverdue = wo['overdue'] == true;
                           final String overdueDays =
@@ -151,9 +162,13 @@ class CardDialog extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => WorkOrderDetail(
-                                    id: wo['wo_id'].toString(),
-                                  ),
+                                  builder: (_) => isGreige
+                                      ? GreigeOrderDetail(
+                                          id: wo['og_id'].toString(),
+                                        )
+                                      : WorkOrderDetail(
+                                          id: wo['wo_id'].toString(),
+                                        ),
                                 ),
                               );
                             },

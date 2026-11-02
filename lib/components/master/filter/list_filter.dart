@@ -26,21 +26,15 @@ class DropdownConfig<T> {
 }
 
 class ListFilter<T> extends StatefulWidget {
-  final String title;
-  final bool useDateFilter;
   final params;
   final onHandleFilter;
-  final onSubmitFilter;
   final dariTanggal;
   final sampaiTanggal;
 
   const ListFilter(
       {super.key,
-      required this.title,
-      this.useDateFilter = false,
       this.params,
       this.onHandleFilter,
-      this.onSubmitFilter,
       this.dariTanggal,
       this.sampaiTanggal});
 

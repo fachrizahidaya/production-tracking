@@ -2,10 +2,8 @@
 
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/detail/detail_list.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/text/no_data.dart';
@@ -21,11 +19,7 @@ class Detail extends StatefulWidget {
   final form;
   final isSubmitting;
   final handleChangeInput;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
-  final handleSelectMachine;
   final refetch;
-  final hasMore;
   final fieldControllers;
   final fieldConfigs;
   final weight;
@@ -36,21 +30,14 @@ class Detail extends StatefulWidget {
   final withItemGrade;
   final qty;
   final notes;
-  final handleSelectQtyUnit;
   final withQtyAndWeight;
   final qtyItem;
-  final handleSelectQtyItemUnit;
-  final withMaklon;
   final maklon;
-  final onlySewing;
   final label;
   final forDyeing;
-  final canDelete;
-  final canUpdate;
   final handleDelete;
   final handleRefetch;
   final handleNavigateToUpdate;
-  final handleNavigateToFinish;
   final idProcess;
   final processService;
   final forPacking;
@@ -59,8 +46,7 @@ class Detail extends StatefulWidget {
   final itemGradeOption;
   final fetchItemGrade;
   final getItemGradeOptions;
-  final forSewing;
-  final forHemming;
+  final canDelete;
 
   const Detail(
       {super.key,
@@ -71,34 +57,23 @@ class Detail extends StatefulWidget {
       required this.fieldConfigs,
       this.isSubmitting,
       this.handleChangeInput,
-      this.handleSelectMachine,
       this.refetch,
-      this.hasMore,
       this.length,
       this.note,
       this.weight,
       this.width,
       this.no,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
       this.withItemGrade,
-      this.handleSelectQtyUnit,
       this.qty,
       this.notes,
       this.withQtyAndWeight,
       this.qtyItem,
-      this.handleSelectQtyItemUnit,
-      this.withMaklon,
       this.maklon,
-      this.onlySewing,
       this.label,
       this.forDyeing,
-      this.canDelete,
-      this.canUpdate,
       this.handleNavigateToUpdate,
       this.handleDelete,
       this.handleRefetch,
-      this.handleNavigateToFinish,
       this.idProcess,
       this.processService,
       this.forPacking,
@@ -107,8 +82,7 @@ class Detail extends StatefulWidget {
       this.itemGradeOption,
       this.fetchItemGrade,
       this.getItemGradeOptions,
-      this.forHemming,
-      this.forSewing});
+      this.canDelete});
 
   @override
   State<Detail> createState() => _DetailState();
@@ -193,72 +167,6 @@ class _DetailState extends State<Detail> {
       _initialValues[name] = value;
       widget.fieldControllers[name]?.text = value;
     }
-  }
-
-  Future<void> _downloadImage(
-    BuildContext context,
-    bool isNew,
-    String imagePath,
-  ) async {
-    try {
-      final dir = await getApplicationDocumentsDirectory();
-      final fileName = imagePath.split('/').last;
-      final savePath = '${dir.path}/$fileName';
-
-      if (isNew) {
-        await File(imagePath).copy(savePath);
-      } else {
-        await Dio().download(imagePath, savePath);
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Image downloaded: $fileName')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Download failed')),
-      );
-    }
-  }
-
-  void _showImageDialog(BuildContext context, bool isNew, String filePath) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          insetPadding: CustomTheme().padding('content'),
-          child: Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.6,
-                padding: CustomTheme().padding('process-content'),
-                child: InteractiveViewer(
-                  minScale: 1,
-                  maxScale: 4,
-                  child: isNew
-                      ? Image.file(File(filePath), fit: BoxFit.contain)
-                      : Image.network(filePath, fit: BoxFit.contain),
-                ),
-              ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.download),
-                  label: Text('Download'),
-                  onPressed: () => _downloadImage(context, isNew, filePath),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   List<Widget> _buildAttachmentList(BuildContext context) {
@@ -426,8 +334,6 @@ class _DetailState extends State<Detail> {
     final existingAttachments =
         (widget.data['attachments'] ?? []) as List<dynamic>;
 
-    final existingGrades = (widget.data['grades'] ?? []) as List<dynamic>;
-
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -439,8 +345,6 @@ class _DetailState extends State<Detail> {
           title:
               'Detail Proses ${widget.label == 'Sorting' ? 'Sortir' : widget.label}',
           onReturn: () => Navigator.pop(context),
-          canDelete: widget.canDelete,
-          canUpdate: widget.canUpdate,
           handleDelete: widget.handleDelete,
           handleUpdate: widget.handleNavigateToUpdate,
           id: widget.data['id'],
@@ -510,7 +414,6 @@ class _DetailState extends State<Detail> {
                   : DetailList(
                       data: widget.data,
                       existingAttachment: existingAttachments,
-                      existingGrades: existingGrades,
                       handleBuildAttachment: _buildAttachmentList,
                       no: widget.no,
                       withItemGrade: widget.withItemGrade,
@@ -519,18 +422,7 @@ class _DetailState extends State<Detail> {
                       forDyeing: widget.forDyeing,
                       maklon: widget.maklon,
                       onRefresh: widget.handleRefetch,
-                      handleUpdate: widget.handleNavigateToUpdate,
-                      handleDelete: widget.handleDelete,
-                      idProcess: widget.idProcess,
-                      processService: widget.processService,
-                      forPacking: widget.forPacking,
-                      fetchFinish: widget.fetchFinish,
-                      handleChangeInput: widget.handleChangeInput,
-                      handleSubmit: widget.handleSubmit,
                       form: widget.form,
-                      itemGradeOption: widget.itemGradeOption,
-                      forHemming: widget.forHemming,
-                      forSewing: widget.forSewing,
                     ),
         ),
       ),

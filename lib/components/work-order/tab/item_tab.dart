@@ -46,7 +46,7 @@ class _ItemTabState extends State<ItemTab> {
     return TemplateCard(
       title: 'Material',
       icon: Icons.inventory_2_outlined,
-      child: widget.data.isEmpty
+      child: widget.data.isEmpty || items.isEmpty
           ? NoData()
           : Column(
               children: [
@@ -98,7 +98,7 @@ class _ItemTabState extends State<ItemTab> {
                 child: _buildSummaryBox(
                   title: 'Total Qty',
                   value:
-                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']['code'] ?? ''}',
+                      '${formatNumber(totalQty)} ${widget.data['items'][0]['unit']?['code'] ?? ''}',
                   icon: Icons.format_list_numbered_outlined,
                 ),
               ),
@@ -106,7 +106,7 @@ class _ItemTabState extends State<ItemTab> {
                 child: _buildSummaryBox(
                   title: 'Total Berat',
                   value:
-                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']['code'] ?? ''}',
+                      '${formatNumber(totalBerat)} ${widget.data['greige_unit']?['code'] ?? ''}',
                   icon: Icons.scale_outlined,
                 ),
               ),

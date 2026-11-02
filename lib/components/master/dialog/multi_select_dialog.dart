@@ -7,11 +7,13 @@ import 'package:textile_tracking/components/master/theme.dart';
 class MultiSelectDialog extends StatefulWidget {
   final List<dynamic> items;
   final List<dynamic> initialSelectedIds;
+  final String title;
 
   const MultiSelectDialog({
     super.key,
     required this.items,
     required this.initialSelectedIds,
+    this.title = 'Pilih Status',
   });
 
   @override
@@ -72,7 +74,7 @@ class _MultiSelectDialogState extends State<MultiSelectDialog> {
             Padding(
               padding: EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 8.0),
               child: Text(
-                "Pilih Status",
+                widget.title,
                 style: TextStyle(
                   height: 1,
                   fontSize: CustomTheme().fontSize('xl'),

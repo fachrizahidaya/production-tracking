@@ -18,29 +18,17 @@ class FinishSection extends StatefulWidget {
   final weight;
   final width;
   final length;
-  final weightDozen;
   final gsm;
   final totalWeight;
   final handleSelectWo;
-  final handleSelectUnit;
-  final handleSelectLengthUnit;
-  final handleSelectWidthUnit;
   final handleChangeInput;
   final id;
-  final processId;
   final processData;
-  final isLoading;
   final withItemGrade;
   final itemGradeOption;
-  final handleSelectQtyUnit;
   final qty;
   final withQtyAndWeight;
-  final handleSelectQtyUnitItem;
-  final handleSelectQtyUnitDyeing;
   final data;
-  final forPacking;
-  final forHemming;
-  final forSewing;
 
   final qtyItem;
   final label;
@@ -49,29 +37,24 @@ class FinishSection extends StatefulWidget {
   final weightWarning;
   final validateQty;
   final qtyWarning;
-  final handleTotalItemQty;
-  final handleRemainingQtyForGrade;
-  final onGradeChanged;
-  final dyeingLotNo;
-  final handleSelectFinishedMaterial;
   final weightGood;
   final weightDefect;
   final woData;
   final packingQty;
   final combing;
   final spraying;
-  final reworkLongHemming;
   final itemTypeOption;
   final defects;
   final defectQty;
-  final handleUpdateDefect;
   final weightGradeA;
   final finishedItem;
-  final grades;
   final dyeingQty;
   final finishedItemGrb;
-  final finishedItemGood;
   final isInitializing;
+  final reworkCategoryOption;
+  final onMachineChanged;
+  final handleItemQtyWarning;
+  final onAttachmentChanged;
 
   const FinishSection(
       {super.key,
@@ -82,67 +65,66 @@ class FinishSection extends StatefulWidget {
       this.length,
       this.width,
       this.handleSelectWo,
-      this.handleSelectUnit,
-      this.handleSelectLengthUnit,
-      this.handleSelectWidthUnit,
       this.handleChangeInput,
       this.id,
       this.processData,
-      this.processId,
-      this.isLoading,
       this.withItemGrade,
       this.itemGradeOption,
-      this.handleSelectQtyUnit,
       this.qty,
       this.withQtyAndWeight,
-      this.handleSelectQtyUnitItem,
       this.qtyItem,
       this.label,
       this.forDyeing,
-      this.handleSelectQtyUnitDyeing,
       this.data,
-      this.forPacking,
       this.gsm,
-      this.weightDozen,
       this.totalWeight,
       this.validateWeight,
       this.weightWarning,
       this.qtyWarning,
       this.validateQty,
-      this.handleRemainingQtyForGrade,
-      this.handleTotalItemQty,
-      this.onGradeChanged,
-      this.dyeingLotNo,
-      this.forHemming,
-      this.forSewing,
-      this.handleSelectFinishedMaterial,
       this.weightDefect,
       this.weightGood,
       this.woData,
       this.packingQty,
       this.combing,
       this.spraying,
-      this.reworkLongHemming,
       this.itemTypeOption,
       this.defects,
       this.defectQty,
-      this.handleUpdateDefect,
       this.weightGradeA,
       this.finishedItem,
-      this.grades,
       this.dyeingQty,
-      this.finishedItemGood,
       this.finishedItemGrb,
-      this.isInitializing});
+      this.isInitializing,
+      this.reworkCategoryOption,
+      this.onMachineChanged,
+      this.handleItemQtyWarning,
+      this.onAttachmentChanged});
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
 }
 
 class _FinishSectionState extends State<FinishSection> {
-  bool _isChanged = false;
   late List<Map<String, dynamic>> allAttachments;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  List<Map<String, dynamic>> _mergeAttachments(
+    List<Map<String, dynamic>> existing,
+    List<Map<String, dynamic>> newOnes,
+  ) {
+    final result = <Map<String, dynamic>>[];
+    final keys = <String>{};
+
+    for (final attachment in [...existing, ...newOnes]) {
+      final key = attachment['id'] != null
+          ? 'id:${attachment['id']}'
+          : 'path:${attachment['file_path'] ?? attachment['path'] ?? attachment['name']}';
+      if (keys.add(key)) result.add(attachment);
+    }
+
+    return result;
+  }
 
   @override
   void initState() {
@@ -154,8 +136,7 @@ class _FinishSectionState extends State<FinishSection> {
         (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
     allAttachments = [
-      ...existing,
-      ...newOnes,
+      ..._mergeAttachments(existing, newOnes),
       {'is_add_button': true},
     ];
   }
@@ -172,12 +153,9 @@ class _FinishSectionState extends State<FinishSection> {
             (widget.form['attachments'] ?? []).cast<Map<String, dynamic>>();
 
         allAttachments = [
-          ...existing,
-          ...newOnes,
+          ..._mergeAttachments(existing, newOnes),
           {'is_add_button': true},
         ];
-
-        _isChanged = false;
       });
     }
   }
@@ -200,10 +178,10 @@ class _FinishSectionState extends State<FinishSection> {
     return result != null ? File(result.path) : null;
   }
 
-  Future<void> _pickAttachments() async {
+  Future<void> _pickAttachments(ImageSource source) async {
     try {
       final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image != null) {
         final compressedFile = await compressImage(image.path);
@@ -225,6 +203,8 @@ class _FinishSectionState extends State<FinishSection> {
 
           widget.form['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
+
+          widget.onAttachmentChanged?.call();
         });
       }
     } catch (e) {
@@ -294,6 +274,8 @@ class _FinishSectionState extends State<FinishSection> {
 
           widget.form['attachments'] =
               allAttachments.where((e) => e['is_add_button'] != true).toList();
+
+          widget.onAttachmentChanged?.call();
         });
 
         Navigator.pop(context);
@@ -310,25 +292,17 @@ class _FinishSectionState extends State<FinishSection> {
       formKey: widget.formKey,
       form: widget.form,
       id: widget.id,
-      processId: widget.processId,
       length: widget.length,
       width: widget.width,
       weight: widget.weight,
       note: widget.note,
       handleSelectWo: widget.handleSelectWo,
       handleChangeInput: widget.handleChangeInput,
-      handleSelectUnit: widget.handleSelectUnit,
-      isChanged: _isChanged,
       allAttachments: allAttachments,
       handlePickAttachments: _pickAttachments,
       processData: widget.processData,
-      handleSelectLengthUnit: widget.handleSelectLengthUnit,
-      handleSelectWidthUnit: widget.handleSelectWidthUnit,
-      handleSelectQtyUnitItem: widget.handleSelectQtyUnitItem,
-      handleSelectQtyUnitDyeing: widget.handleSelectQtyUnitDyeing,
       withItemGrade: widget.withItemGrade,
       itemGradeOption: widget.itemGradeOption ?? [],
-      handleSelectQtyUnit: widget.handleSelectQtyUnit,
       qty: widget.qty,
       withQtyAndWeight: widget.withQtyAndWeight,
       qtyItem: widget.qtyItem,
@@ -337,38 +311,29 @@ class _FinishSectionState extends State<FinishSection> {
       label: widget.label,
       forDyeing: widget.forDyeing,
       data: widget.data,
-      forPacking: widget.forPacking,
       gsm: widget.gsm,
-      weightDozen: widget.weightDozen,
       totalWeight: widget.totalWeight,
       validateWeight: widget.validateWeight,
       weightWarning: widget.weightWarning,
       validateQty: widget.validateQty,
       qtyWarning: widget.qtyWarning,
-      handleRemainingQtyForGrade: widget.handleRemainingQtyForGrade,
-      handleTotalItemQty: widget.handleTotalItemQty,
-      onGradeChanged: widget.onGradeChanged,
-      dyeingLotNo: widget.dyeingLotNo,
-      forHemming: widget.forHemming,
-      forSewing: widget.forSewing,
-      handleSelectFinishedMaterial: widget.handleSelectFinishedMaterial,
       weightDefect: widget.weightDefect,
       weightGood: widget.weightGood,
       woData: widget.woData,
       packingQty: widget.packingQty,
       combing: widget.combing,
       spraying: widget.spraying,
-      reworkLongHemming: widget.reworkLongHemming,
       itemTypeOption: widget.itemTypeOption,
       defects: widget.defects,
       defectQty: widget.defectQty,
-      handleUpdateDefect: widget.handleUpdateDefect,
       weightGradeA: widget.weightGradeA,
       finishedItem: widget.finishedItem,
       dyeingQty: widget.dyeingQty,
-      finishedItemGood: widget.finishedItemGood,
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
+      reworkCategoryOption: widget.reworkCategoryOption,
+      onMachineChanged: widget.onMachineChanged,
+      handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }
 }

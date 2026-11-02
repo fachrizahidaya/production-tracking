@@ -28,7 +28,9 @@ class TabSection extends StatefulWidget {
   final isSubmitting;
   final selectMachine;
   final selectWorkOrder;
+  final onFormChanged;
   final spkDocuments;
+  final handleChangeInput;
 
   const TabSection(
       {super.key,
@@ -43,13 +45,15 @@ class TabSection extends StatefulWidget {
       this.maklonName,
       this.selectMachine,
       this.selectWorkOrder,
+      this.onFormChanged,
       this.withMaklonOrMachine,
       this.withNoMaklonOrMachine,
       this.withOnlyMaklon,
       this.woData,
       this.processData,
       this.isMaklon,
-      this.spkDocuments});
+      this.spkDocuments,
+      this.handleChangeInput});
 
   @override
   State<TabSection> createState() => _TabSectionState();
@@ -175,7 +179,11 @@ class _TabSectionState extends State<TabSection> {
     // else if (widget.withMaklonOrMachine == true) {
     //   isDisabled = widget.form?['wo_id'] == null;
     // }
-    else if (widget.label == 'Long Hemming' ||
+    else if (widget.label == 'Dyeing' ||
+        widget.label == 'Press' ||
+        widget.label == 'Tumbler' ||
+        widget.label == 'Long Slitting' ||
+        widget.label == 'Long Hemming' ||
         widget.label == 'Cross Cutting' ||
         widget.label == 'Sewing') {
       isDisabled = widget.form?['wo_id'] == null || machines.isEmpty;
@@ -222,11 +230,13 @@ class _TabSectionState extends State<TabSection> {
                         formKey: widget.formKey,
                         handleSelectMachine: widget.selectMachine,
                         handleSelectWorkOrder: widget.selectWorkOrder,
+                        onFormChanged: widget.onFormChanged,
                         maklonName: widget.maklonName,
                         withMaklonOrMachine: widget.withMaklonOrMachine,
                         withOnlyMaklon: widget.withOnlyMaklon,
                         withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
                         isMaklon: widget.isMaklon,
+                        handleChangeInput: widget.handleChangeInput,
                       ),
                       NoteAttachmentSpk(
                         documents: widget.spkDocuments,

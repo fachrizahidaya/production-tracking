@@ -23,10 +23,7 @@ class OptionItemGrade {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'value': value,
-      'label': label,
-    };
+    return {'value': value, 'label': label};
   }
 }
 
@@ -48,8 +45,10 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
   List<OptionItemGrade> get options => _ig;
 
   @override
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
+  Future<void> fetchItems({
+    bool isInitialLoad = false,
+    String? searchQuery = '',
+  }) async {}
 
   @override
   Future<void> refetchItems() async {
@@ -59,11 +58,16 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
   @override
   Future<void> addItem(
-      OptionItemGrade item, ValueNotifier<bool> isSubmitting) async {}
+    OptionItemGrade item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
-  Future<void> updateItem(String id, OptionItemGrade item,
-      ValueNotifier<bool> isSubmitting) async {}
+  Future<void> updateItem(
+    String id,
+    OptionItemGrade item,
+    ValueNotifier<bool> isSubmitting,
+  ) async {}
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
@@ -90,9 +94,10 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
 
       final uri = Uri.parse('${dotenv.env['API_URL']}/item-grade/option');
 
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
+      final response = await http.get(
+        uri,
+        headers: {'Authorization': 'Bearer $token'},
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -104,9 +109,8 @@ class OptionItemGradeService extends BaseService<OptionItemGrade> {
         throw Exception('Failed to load work order: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
-        SnackBar(content: Text("$e")),
-      );
+      ScaffoldMessenger.of(context as BuildContext)
+          .showSnackBar(SnackBar(content: Text("$e")));
       rethrow;
     } finally {
       _isLoading = false;

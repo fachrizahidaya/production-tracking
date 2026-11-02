@@ -13,6 +13,7 @@ import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:textile_tracking/services/fcm_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -48,14 +49,27 @@ class _LoginState extends State<Login> {
   }
 
   void _proceedLogin(
-      BuildContext context, String username, String name, String token) {
-    Provider.of<UserProvider>(context, listen: false).handleLogin(
-      username,
-      name,
-      token,
-    );
+    BuildContext context,
+    String username,
+    String name,
+    String token,
+  ) {
+    Provider.of<UserProvider>(
+      context,
+      listen: false,
+    ).handleLogin(username, name, token);
 
     Navigator.pushReplacementNamed(context, '/dashboard');
+    FcmService.instance.registerForCurrentUser();
+    _flushPendingNavigationAfterDashboard();
+  }
+
+  void _flushPendingNavigationAfterDashboard() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FcmService.instance.flushPendingNavigation();
+      });
+    });
   }
 
   Future<void> _handleCheckLogin() async {
@@ -73,6 +87,8 @@ class _LoginState extends State<Login> {
       );
 
       Navigator.pushReplacementNamed(context, '/dashboard');
+      FcmService.instance.registerForCurrentUser();
+      _flushPendingNavigationAfterDashboard();
     }
   }
 
@@ -88,10 +104,7 @@ class _LoginState extends State<Login> {
       final res = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': username,
-          'password': password,
-        }),
+        body: jsonEncode({'username': username, 'password': password}),
       );
 
       if (res.statusCode != 200) {
@@ -120,7 +133,11 @@ class _LoginState extends State<Login> {
       if (!context.mounted) return;
 
       _proceedLogin(
-          context, response['username'] ?? '', response['name'] ?? '', token);
+        context,
+        response['username'] ?? '',
+        response['name'] ?? '',
+        token,
+      );
 
       _username.clear();
       _password.clear();
@@ -133,11 +150,7 @@ class _LoginState extends State<Login> {
 
   void _showError(BuildContext context, String message) {
     if (!context.mounted) return;
-    showAlertDialog(
-      context: context,
-      title: 'Error',
-      message: message,
-    );
+    showAlertDialog(context: context, title: 'Error', message: message);
   }
 
   @override
@@ -157,27 +170,47 @@ class _LoginState extends State<Login> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/login-bg.jpg',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/login-bg.jpg', fit: BoxFit.cover),
           ),
           Scaffold(
             backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: true,
             body: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  child: LoginForm(
-                    key: _key,
-                    username: _username,
-                    password: _password,
-                    isDisabled: !_isFormValid,
-                    isLoading: _isLoading,
-                    handlePress: () {
-                      _handleSubmit(context);
-                    },
-                  ),
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final width = constraints.maxWidth;
+                  final height = constraints.maxHeight;
+
+                  final isMobile = width < 600;
+                  final isSmallMobile = width < 400;
+
+                  return SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isMobile ? 20 : 24,
+                      vertical: isMobile ? 20 : 32,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: height - (isMobile ? 40 : 64),
+                      ),
+                      child: Center(
+                        child: LoginForm(
+                          key: _key,
+                          username: _username,
+                          password: _password,
+                          isDisabled: !_isFormValid,
+                          isLoading: _isLoading,
+                          isMobile: isMobile,
+                          isSmallMobile: isSmallMobile,
+                          handlePress: () {
+                            _handleSubmit(context);
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

@@ -8,14 +8,16 @@ class CreateSection extends StatefulWidget {
   final form;
   final selectWorkOrder;
   final selectMachine;
+  final onFormChanged;
   final id;
-  final isLoading;
   final maklonName;
   final isMaklon;
   final withMaklonOrMachine;
   final withOnlyMaklon;
   final withNoMaklonOrMachine;
   final label;
+  final data;
+  final handleChangeInput;
 
   const CreateSection(
       {super.key,
@@ -23,14 +25,16 @@ class CreateSection extends StatefulWidget {
       this.form,
       this.selectWorkOrder,
       this.selectMachine,
+      this.onFormChanged,
       this.id,
-      this.isLoading,
       this.maklonName,
       this.isMaklon,
       this.withMaklonOrMachine,
       this.withOnlyMaklon,
       this.withNoMaklonOrMachine,
-      this.label});
+      this.label,
+      this.data,
+      this.handleChangeInput});
 
   @override
   State<CreateSection> createState() => _CreateSectionState();
@@ -47,10 +51,13 @@ class _CreateSectionState extends State<CreateSection> {
       maklonName: widget.maklonName,
       selectWorkOrder: widget.selectWorkOrder,
       selectMachine: widget.selectMachine,
+      onFormChanged: widget.onFormChanged,
       withMaklonOrMachine: widget.withMaklonOrMachine,
       withOnlyMaklon: widget.withOnlyMaklon,
       withNoMaklonOrMachine: widget.withNoMaklonOrMachine,
       label: widget.label,
+      data: widget.data,
+      handleChangeInput: widget.handleChangeInput,
     );
   }
 }

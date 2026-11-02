@@ -75,7 +75,13 @@ class _CreateProcessState extends State<CreateProcess> {
     'machine_ids': [],
     'semifinished_products': [],
     'items': [],
-    'spk_documents': []
+    'spk_documents': [],
+    /**
+     * Phase 2
+     */
+    'beam_weight': null,
+    'greige_weight': null,
+    'waste_weight': null
   };
 
   @override
@@ -204,6 +210,7 @@ class _CreateProcessState extends State<CreateProcess> {
             widget.label.toString().trim().toLowerCase().replaceAll(' ', '_'),
         baseCodes: params['base_codes'] ?? [],
         colorCodes: params['color_codes'] ?? [],
+        variantCodes: params['variant_codes'] ?? [],
       );
 
       final semiFinishedItems = semiFinishedService.dataListOption;

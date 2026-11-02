@@ -895,6 +895,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                                               items[i]['item_code'] ??
                                               'Item ${i + 1}')
                                           .toString(),
+<<<<<<< HEAD
                                     ),
                                   ),
                               ],
@@ -938,6 +939,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                                     ),
                                     child: Tab(
                                       text: 'Item ${i + 1}',
+=======
+>>>>>>> 143fc05 (long hemming - packing (#36))
                                     ),
                                   ),
                               ],

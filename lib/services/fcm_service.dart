@@ -18,8 +18,6 @@ final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('FCM background data: ${message.data}');
-
   // Notification display is handled by FCM when the app is backgrounded.
   // Data is processed when the user taps the notification.
 }
@@ -109,7 +107,6 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> _showForegroundNotification(RemoteMessage message) async {
-    debugPrint('FCM foreground data: ${message.data}');
     final title =
         message.notification?.title ?? message.data['title']?.toString();
     final body = message.notification?.body ?? message.data['body']?.toString();

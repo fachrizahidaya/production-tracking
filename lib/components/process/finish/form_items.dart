@@ -141,6 +141,7 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
   final Map<dynamic, String?> _packingQtyWarnings = {};
+  final List<String> _itemOrder = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -749,10 +750,38 @@ class _FormItemsState extends State<FormItems>
     final raw = widget.form['items'];
 
     if (raw is List) {
-      return List<Map<String, dynamic>>.from(raw);
+      final items = raw
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+
+      for (final item in items) {
+        final key = _itemKey(item);
+        if (!_itemOrder.contains(key)) {
+          _itemOrder.add(key);
+        }
+      }
+
+      final orderIndex = {
+        for (var i = 0; i < _itemOrder.length; i++) _itemOrder[i]: i,
+      };
+
+      items.sort(
+        (a, b) => (orderIndex[_itemKey(a)] ?? orderIndex.length)
+            .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length),
+      );
+
+      return items;
     }
 
     return [];
+  }
+
+  String _itemKey(Map<String, dynamic> item) {
+    final id = item['id'];
+    if (id != null) return 'id:$id';
+
+    return 'wo:${item['wo_item_id']}|item:${item['item_id']}';
   }
 
   double _gradeAQty(Map gradeItem) {
@@ -1244,6 +1273,13 @@ class _FormItemsState extends State<FormItems>
     final items =
         (widget.form['items'] is List) ? safeItems : <Map<String, dynamic>>[];
 
+    // Keep the shared form payload in the same stable order used by the UI.
+    // This prevents index-based callbacks in Sewing and Sorting from targeting
+    // a different item after the parent receives refreshed process data.
+    if (widget.form['items'] is List) {
+      widget.form['items'] = items;
+    }
+
     final woItems = widget.processData['work_orders']?['items'];
 
     String getSpkNo(Map<String, dynamic> item) {
@@ -1438,6 +1474,7 @@ class _FormItemsState extends State<FormItems>
               handleSelectMachine: widget.handleSelectMachine,
               newMachines: widget.newMachines ?? [],
               withAddMachine: false,
+              columns: 2,
               onMachineChanged: widget.onMachineChanged,
             ),
           ),
@@ -1468,7 +1505,7 @@ class _FormItemsState extends State<FormItems>
                 )
               else if (widget.label == 'Long Hemming')
                 LongHemmingItemsWeightSection(
-                  items: widget.form['items'] ?? [],
+                  items: items,
                   data: widget.processData['work_orders']?['items'],
                   onChange: (index, key, value) {
                     final items =
@@ -1484,7 +1521,7 @@ class _FormItemsState extends State<FormItems>
               else
                 ProcessItemsQtySection(
                   label: widget.label,
-                  items: widget.form['items'] ?? [],
+                  items: items,
                   data: widget.processData['work_orders']?['items'],
                   onChange: (index, key, value) {
                     final items = List<Map<String, dynamic>>.from(

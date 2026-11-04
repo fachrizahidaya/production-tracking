@@ -51,7 +51,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   showFlutterNotification(message);
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  print('Handling a background message ${message.messageId}');
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -93,7 +92,6 @@ Future<void> setupFlutterNotifications() async {
 }
 
 void showFlutterNotification(RemoteMessage message) {
-  print('foreground message received: ${message.messageId}');
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null && !kIsWeb) {
@@ -195,7 +193,6 @@ class _Application extends State<Application> {
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
       Navigator.pushNamed(
         context,
         '/message',
@@ -218,7 +215,6 @@ class _Application extends State<Application> {
         },
         body: constructFCMPayload(_token),
       );
-      print('FCM request for device sent!');
     } catch (e) {
       print(e);
     }
@@ -252,9 +248,7 @@ class _Application extends State<Application> {
         {
           if (defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS) {
-            print('FlutterFire Messaging Example: Getting APNs token...');
             String? token = await FirebaseMessaging.instance.getAPNSToken();
-            print('FlutterFire Messaging Example: Got APNs token: $token');
           } else {
             print(
               'FlutterFire Messaging Example: Getting an APNs token is only supported on iOS and macOS platforms.',

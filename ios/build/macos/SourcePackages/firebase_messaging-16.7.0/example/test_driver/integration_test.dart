@@ -18,11 +18,9 @@ Future<void> main() => integrationDriver(
           final ok = entry.value == 'success';
           ok ? passed++ : failed++;
           // ignore: avoid_print
-          print('${ok ? '✅' : '❌'} ${entry.key}');
         }
         // ignore: avoid_print
-        print('Web e2e summary: $passed passed, $failed failed, '
-            '${results.length} total');
+
         if (results.isEmpty) {
           // ignore: avoid_print
           print('[E] No tests reported by the app - treating as '

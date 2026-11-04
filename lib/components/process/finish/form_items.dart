@@ -140,7 +140,11 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
+<<<<<<< HEAD
   final Map<String, String?> _packingQtyWarnings = {};
+=======
+  final Map<dynamic, String?> _packingQtyWarnings = {};
+>>>>>>> d25c7e0 (Feat/fase 2 (#37))
   final List<String> _itemOrder = [];
 
   @override
@@ -896,6 +900,7 @@ class _FormItemsState extends State<FormItems>
         for (var i = 0; i < _itemOrder.length; i++) _itemOrder[i]: i,
       };
 
+<<<<<<< HEAD
       final workOrderItems = widget.processData['work_orders']?['items'];
       final workOrderIndex = <String, int>{};
       if (workOrderItems is List) {
@@ -920,6 +925,11 @@ class _FormItemsState extends State<FormItems>
           return (orderIndex[_itemKey(a)] ?? orderIndex.length)
               .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length);
         },
+=======
+      items.sort(
+        (a, b) => (orderIndex[_itemKey(a)] ?? orderIndex.length)
+            .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length),
+>>>>>>> d25c7e0 (Feat/fase 2 (#37))
       );
 
       return items;

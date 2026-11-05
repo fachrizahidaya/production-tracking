@@ -279,15 +279,13 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
               final semiFinishedItems = semiFinishedService.dataListOption;
 
               if (widget.label == 'Dyeing') {
-                final baseCodes = params['base_codes'] ?? [];
-                final colorCodes = params['color_codes'] ?? [];
-
                 final List<Map<String, dynamic>> items = [];
 
-                for (int i = 0; i < baseCodes.length; i++) {
-                  final baseCode = baseCodes[i].toString();
-                  final colorCode =
-                      i < colorCodes.length ? colorCodes[i].toString() : '';
+                for (final woItem in (woData['items'] ?? [])) {
+                  final itemCode = woItem['item_code']?.toString() ?? '';
+                  final codeParts = itemCode.split('-');
+                  final baseCode = codeParts.isNotEmpty ? codeParts.first : '';
+                  final colorCode = codeParts.length > 1 ? codeParts.last : '';
 
                   dynamic semiFinishedId;
 
@@ -306,21 +304,20 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                   }
 
                   items.add({
+                    'wo_item_id': woItem['id'],
                     'item_id': semiFinishedId,
                   });
                 }
 
                 widget.form?['semifinished_products'] = items;
               } else {
-                final baseCodes = params['base_codes'] ?? [];
-                final colorCodes = params['color_codes'] ?? [];
-
                 final List<Map<String, dynamic>> items = [];
 
-                for (int i = 0; i < baseCodes.length; i++) {
-                  final baseCode = baseCodes[i].toString();
-                  final colorCode =
-                      i < colorCodes.length ? colorCodes[i].toString() : '';
+                for (final woItem in (woData['items'] ?? [])) {
+                  final itemCode = woItem['item_code']?.toString() ?? '';
+                  final codeParts = itemCode.split('-');
+                  final baseCode = codeParts.isNotEmpty ? codeParts.first : '';
+                  final colorCode = codeParts.length > 1 ? codeParts.last : '';
 
                   dynamic semiFinishedId;
 
@@ -339,6 +336,8 @@ class _CreateProcessManualState extends State<CreateProcessManual> {
                   }
 
                   items.add({
+                    'wo_item_id': woItem['id'],
+                    'item_id': woItem['greige_item_id'] ?? woItem['item_id'],
                     'semifinished_product_id': semiFinishedId,
                   });
                 }

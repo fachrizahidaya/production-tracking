@@ -138,36 +138,41 @@ class FcmService with WidgetsBindingObserver {
   }
 
   Future<void> registerForCurrentUser() async {
-    if (!_initialized) return;
+    try {
+      if (!_initialized) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
-    if (accessToken == null || accessToken.isEmpty) return;
+      final prefs = await SharedPreferences.getInstance();
+      final accessToken = prefs.getString('access_token');
+      if (accessToken == null || accessToken.isEmpty) return;
 
-    final token = await _messaging.getToken();
-    if (token == null || token.isEmpty) return;
+      final token = await _messaging.getToken();
+      if (token == null || token.isEmpty) return;
 
-    final deviceId = await _getDeviceId();
-    final platform = Platform.isIOS ? 'ios' : 'android';
-    final response = await http.post(
-      Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: jsonEncode({
-        'token': token,
-        'platform': platform,
-        'device_id': deviceId,
-      }),
-    );
+      final deviceId = await _getDeviceId();
+      final platform = Platform.isIOS ? 'ios' : 'android';
+      final response = await http.post(
+        Uri.parse('${dotenv.env['API_URL']}/device-tokens'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          'token': token,
+          'platform': platform,
+          'device_id': deviceId,
+        }),
+      );
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      await prefs.setString('fcm_token', token);
-      await prefs.setString('fcm_device_id', deviceId);
-    } else {
-      debugPrint('FCM token registration failed: ${response.statusCode}');
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        await prefs.setString('fcm_token', token);
+        await prefs.setString('fcm_device_id', deviceId);
+      } else {
+        debugPrint('FCM token registration failed: ${response.statusCode}');
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[FCM] Device token registration error: $error');
+      debugPrint('$stackTrace');
     }
   }
 

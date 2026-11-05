@@ -26,8 +26,11 @@ class ProcessItemsQtySection extends StatefulWidget {
 }
 
 class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
-  final Map<int, TextEditingController> _qtyControllers = {};
-  final Map<int, String?> _qtyWarnings = {};
+  final Map<String, TextEditingController> _qtyControllers = {};
+
+  String _itemKey(Map<String, dynamic> item) =>
+      '${item['wo_item_id']}:${item['item_id'] ?? item['finished_product']?['id']}';
+  final Map<String, String?> _qtyWarnings = {};
 
   @override
   void initState() {
@@ -35,12 +38,13 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
 
     for (int i = 0; i < widget.items.length; i++) {
       final item = widget.items[i];
-
-      _qtyControllers[i] = TextEditingController(
+      _qtyControllers[_itemKey(Map<String, dynamic>.from(item))] =
+          TextEditingController(
         text: item['qty']?.toString() ?? '0',
       );
 
-      _qtyWarnings[i] = _validateItemQty(i, item['qty']);
+      _qtyWarnings[_itemKey(Map<String, dynamic>.from(item))] =
+          _validateItemQty(i, item['qty']);
     }
   }
 
@@ -156,7 +160,8 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
     );
 
     setState(() {
-      _qtyWarnings[index] = warning;
+    _qtyWarnings[_itemKey(Map<String, dynamic>.from(widget.items[index]))] =
+        warning;
     });
 
     widget.onChange(
@@ -178,6 +183,8 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
     final semiFinished = item['semifinished_product'];
 
     final finished = item['finished_product'];
+
+    final warningKey = _itemKey(Map<String, dynamic>.from(item));
 
     final woItems = widget.data;
 
@@ -307,7 +314,9 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
               : double.infinity,
           child: TextForm(
             label: 'Qty Hasil ${widget.label} (PCS)',
-            controller: _qtyControllers[index],
+            controller: _qtyControllers[_itemKey(
+              Map<String, dynamic>.from(item),
+            )],
             initialValue: item['qty']?.toString() ?? '0',
             req: false,
             isNumber: true,
@@ -318,7 +327,7 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
             ),
           ),
         ),
-        if (_qtyWarnings[index] != null)
+        if (_qtyWarnings[warningKey] != null)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
@@ -340,7 +349,7 @@ class _ProcessItemsQtySectionState extends State<ProcessItemsQtySection> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    _qtyWarnings[index]!,
+                    _qtyWarnings[warningKey]!,
                     style: TextStyle(
                       color: Colors.orange.shade900,
                       fontWeight: FontWeight.w500,

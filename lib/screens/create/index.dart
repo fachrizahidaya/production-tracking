@@ -215,9 +215,6 @@ class _CreateProcessState extends State<CreateProcess> {
 
       final semiFinishedItems = semiFinishedService.dataListOption;
 
-      final baseCodes = params['base_codes'] ?? [];
-      final colorCodes = params['color_codes'] ?? [];
-
       if (widget.label == 'Dyeing' ||
           widget.label == 'Press' ||
           widget.label == 'Tumbler' ||
@@ -226,10 +223,11 @@ class _CreateProcessState extends State<CreateProcess> {
           widget.label == 'Packing') {
         final List<Map<String, dynamic>> items = [];
 
-        for (int i = 0; i < baseCodes.length; i++) {
-          final baseCode = baseCodes[i].toString();
-          final colorCode =
-              i < colorCodes.length ? colorCodes[i].toString() : '';
+        for (final woItem in (data['items'] ?? [])) {
+          final itemCode = woItem['item_code']?.toString() ?? '';
+          final codeParts = itemCode.split('-');
+          final baseCode = codeParts.isNotEmpty ? codeParts.first : '';
+          final colorCode = codeParts.length > 1 ? codeParts.last : '';
 
           dynamic semiFinishedId;
 
@@ -248,6 +246,7 @@ class _CreateProcessState extends State<CreateProcess> {
           }
 
           items.add({
+            'wo_item_id': woItem['id'],
             'item_id': semiFinishedId,
           });
         }
@@ -256,10 +255,11 @@ class _CreateProcessState extends State<CreateProcess> {
       } else {
         final List<Map<String, dynamic>> items = [];
 
-        for (int i = 0; i < baseCodes.length; i++) {
-          final baseCode = baseCodes[i].toString();
-          final colorCode =
-              i < colorCodes.length ? colorCodes[i].toString() : '';
+        for (final woItem in (data['items'] ?? [])) {
+          final itemCode = woItem['item_code']?.toString() ?? '';
+          final codeParts = itemCode.split('-');
+          final baseCode = codeParts.isNotEmpty ? codeParts.first : '';
+          final colorCode = codeParts.length > 1 ? codeParts.last : '';
 
           dynamic semiFinishedId;
 
@@ -278,6 +278,8 @@ class _CreateProcessState extends State<CreateProcess> {
           }
 
           items.add({
+            'wo_item_id': woItem['id'],
+            'item_id': woItem['greige_item_id'] ?? woItem['item_id'],
             'semifinished_product_id': semiFinishedId,
           });
         }

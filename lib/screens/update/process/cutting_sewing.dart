@@ -24,16 +24,18 @@ class CuttingSewingQtySection extends StatefulWidget {
 }
 
 class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
-  final Map<int, TextEditingController> _qtyControllers = {};
+  final Map<String, TextEditingController> _qtyControllers = {};
+
+  String _itemKey(Map<String, dynamic> item) =>
+      '${item['wo_item_id']}:${item['item_id'] ?? item['finished_product']?['id']}';
 
   @override
   void initState() {
     super.initState();
 
-    for (int i = 0; i < widget.items.length; i++) {
-      final item = widget.items[i];
-
-      _qtyControllers[i] = TextEditingController(
+    for (final item in widget.items) {
+      _qtyControllers[_itemKey(Map<String, dynamic>.from(item))] =
+          TextEditingController(
         text: item['qty']?.toString() ?? '0',
       );
     }
@@ -207,7 +209,9 @@ class _CuttingSewingQtySectionState extends State<CuttingSewingQtySection> {
             req: false,
             isNumber: true,
             isSorting: true,
-            controller: _qtyControllers[index],
+            controller: _qtyControllers[_itemKey(
+              Map<String, dynamic>.from(item),
+            )],
             initialValue: item['qty']?.toString() ?? '0',
             handleChange: (value) => _handleChange(
               index,

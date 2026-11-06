@@ -766,9 +766,30 @@ class _FormItemsState extends State<FormItems>
         for (var i = 0; i < _itemOrder.length; i++) _itemOrder[i]: i,
       };
 
+      final workOrderItems = widget.processData['work_orders']?['items'];
+      final workOrderIndex = <String, int>{};
+      if (workOrderItems is List) {
+        for (var i = 0; i < workOrderItems.length; i++) {
+          final woItem = workOrderItems[i];
+          if (woItem is Map && woItem['id'] != null) {
+            workOrderIndex[woItem['id'].toString()] = i;
+          }
+        }
+      }
+
       items.sort(
-        (a, b) => (orderIndex[_itemKey(a)] ?? orderIndex.length)
-            .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length),
+        (a, b) {
+          final aWoIndex = workOrderIndex[a['wo_item_id']?.toString()];
+          final bWoIndex = workOrderIndex[b['wo_item_id']?.toString()];
+
+          if (aWoIndex != null || bWoIndex != null) {
+            return (aWoIndex ?? workOrderIndex.length)
+                .compareTo(bWoIndex ?? workOrderIndex.length);
+          }
+
+          return (orderIndex[_itemKey(a)] ?? orderIndex.length)
+              .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length);
+        },
       );
 
       return items;

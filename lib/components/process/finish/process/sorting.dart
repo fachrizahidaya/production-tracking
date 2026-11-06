@@ -575,7 +575,32 @@ class _SortingSectionState extends State<SortingSection> {
       }
     }
 
-    _items = groupedItems.values.toList();
+    final orderedItems = <Map<String, dynamic>>[];
+    final usedKeys = <dynamic>{};
+
+    // Preserve the Work Order item sequence instead of the Grade/API order.
+    for (final woItem in woItems) {
+      final matchingKey = groupedItems.keys.cast<dynamic>().firstWhere(
+        (key) {
+          final item = groupedItems[key]!;
+          return item['wo_item_id']?.toString() ==
+              woItem['id']?.toString();
+        },
+        orElse: () => null,
+      );
+
+      if (matchingKey != null && usedKeys.add(matchingKey)) {
+        orderedItems.add(groupedItems[matchingKey]!);
+      }
+    }
+
+    for (final entry in groupedItems.entries) {
+      if (usedKeys.add(entry.key)) {
+        orderedItems.add(entry.value);
+      }
+    }
+
+    _items = orderedItems;
 
     for (final item in _items) {
       final grades = List<Map<String, dynamic>>.from(

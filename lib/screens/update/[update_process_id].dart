@@ -1129,6 +1129,11 @@ class _UpdateProcessState extends State<UpdateProcess>
   Widget build(BuildContext context) {
     super.build(context);
 
+    final formItems = _itemsInWorkOrderOrder();
+    if (formItems != null) {
+      widget.form['items'] = formItems;
+    }
+
     final woItems = widget.data['work_orders']['items'];
 
     String getSpkNo(Map<String, dynamic> item) {
@@ -2061,6 +2066,39 @@ class _UpdateProcessState extends State<UpdateProcess>
             ),
           )),
     );
+  }
+
+  List<Map<String, dynamic>>? _itemsInWorkOrderOrder() {
+    final rawItems = widget.form['items'];
+    final rawWoItems = widget.data['work_orders']?['items'];
+
+    if (rawItems is! List || rawWoItems is! List) return null;
+
+    final items = rawItems
+        .whereType<Map>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+    final ordered = <Map<String, dynamic>>[];
+    final used = <int>{};
+
+    for (final woItem in rawWoItems) {
+      for (var i = 0; i < items.length; i++) {
+        if (used.contains(i)) continue;
+
+        final item = items[i];
+        if (item['wo_item_id']?.toString() == woItem['id']?.toString()) {
+          ordered.add(item);
+          used.add(i);
+          break;
+        }
+      }
+    }
+
+    for (var i = 0; i < items.length; i++) {
+      if (!used.contains(i)) ordered.add(items[i]);
+    }
+
+    return ordered;
   }
 
   Widget _buildSummaryItem(

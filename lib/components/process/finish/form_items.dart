@@ -177,7 +177,7 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
-  final Map<dynamic, String?> _packingQtyWarnings = {};
+  final Map<String, String?> _packingQtyWarnings = {};
   final List<String> _itemOrder = [];
 
   @override
@@ -674,7 +674,7 @@ class _FormItemsState extends State<FormItems>
 
     for (final item in safeItems) {
       final warning = _validatePackingQty(item);
-      _packingQtyWarnings[item['id']] = warning;
+      _packingQtyWarnings[_itemKey(item)] = warning;
 
       if (warning != null) {
         hasWarning = true;
@@ -1920,8 +1920,13 @@ class _FormItemsState extends State<FormItems>
                           return AnimatedBuilder(
                             animation: tabController,
                             builder: (context, _) {
-                              final item = safeItems[tabController.index];
+                              // Use the same list instance that is stored in
+                              // widget.form. Calling safeItems() here creates
+                              // fresh map copies, so editing those copies does
+                              // not update the value used by validation.
+                              final item = items[tabController.index];
                               final itemId = item['id'];
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
                       SizedBox(
@@ -1932,6 +1937,9 @@ class _FormItemsState extends State<FormItems>
 >>>>>>> ccc6b638 (fix: warning selesai packing)
 =======
 >>>>>>> ead5d4b9 (fix: stok di packing)
+=======
+                              final itemKey = _itemKey(item);
+>>>>>>> fe6ddf94 (fix: packing form)
 
                               _packingQtyControllers.putIfAbsent(
                                 itemId,
@@ -2216,12 +2224,12 @@ class _FormItemsState extends State<FormItems>
                                             CustomTheme().hGap('xl'),
                                           ),
                                         ),
-                                        if (_packingQtyWarnings[itemId] != null)
+                                        if (_packingQtyWarnings[itemKey] != null)
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8),
                                             child: _buildPackingQtyWarning(
-                                              _packingQtyWarnings[itemId]!,
+                                              _packingQtyWarnings[itemKey]!,
                                             ),
                                           ),
                                       ],

@@ -619,6 +619,36 @@ class _UpdateProcessState extends State<UpdateProcess>
     );
   }
 
+  Map<String, dynamic>? _findPackingFormItem(
+    Map<String, dynamic> item,
+  ) {
+    final formItems = widget.form['items'];
+    if (formItems is! List) return null;
+
+    for (final raw in formItems) {
+      if (raw is! Map) continue;
+
+      final sameId = item['id'] != null &&
+          raw['id']?.toString() == item['id']?.toString();
+      final sameWoItem = item['wo_item_id'] != null &&
+          raw['wo_item_id']?.toString() == item['wo_item_id']?.toString();
+
+      if (sameId || sameWoItem) {
+        return raw.cast<String, dynamic>();
+      }
+    }
+
+    return null;
+  }
+
+  void _updatePackingFormItem(
+    Map<String, dynamic> item,
+    String key,
+    dynamic value,
+  ) {
+    _findPackingFormItem(item)?[key] = value;
+  }
+
   void calculateLongHemmingWeight() {
     final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
@@ -1813,6 +1843,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                           () {
                                                                         item['qty'] =
                                                                             value;
+                                                                        _updatePackingFormItem(
+                                                                          item,
+                                                                          'qty',
+                                                                          value,
+                                                                        );
 
                                                                         calculateBeratA(
                                                                             item);
@@ -1821,6 +1856,18 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                           widget
                                                                               .data,
                                                                         );
+
+                                                                        final formItem =
+                                                                            _findPackingFormItem(item);
+                                                                        if (formItem !=
+                                                                            null) {
+                                                                          calculateBeratA(
+                                                                              formItem);
+                                                                          calculateTotalBerat(
+                                                                            formItem,
+                                                                            widget.data,
+                                                                          );
+                                                                        }
                                                                       });
                                                                     },
                                                                   ),
@@ -1854,6 +1901,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                   setState(() {
                                                                     item['weight_per_dozen'] =
                                                                         value;
+                                                                      _updatePackingFormItem(
+                                                                        item,
+                                                                        'weight_per_dozen',
+                                                                        value,
+                                                                      );
 
                                                                     calculateGsm(
                                                                         item);
@@ -1864,6 +1916,20 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                       widget
                                                                           .data,
                                                                     );
+
+                                                                    final formItem =
+                                                                        _findPackingFormItem(item);
+                                                                    if (formItem !=
+                                                                        null) {
+                                                                      calculateGsm(
+                                                                          formItem);
+                                                                      calculateBeratA(
+                                                                          formItem);
+                                                                      calculateTotalBerat(
+                                                                        formItem,
+                                                                        widget.data,
+                                                                      );
+                                                                    }
                                                                   });
                                                                 },
                                                               ),

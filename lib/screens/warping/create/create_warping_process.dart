@@ -26,6 +26,7 @@ class CreateWarpingProcess extends StatelessWidget {
       title: title,
       handleSubmitToService: handleSubmitToService,
       formPageBuilder: formPageBuilder,
+      showScanner: false,
       fetchGreigeOrder: (service) => service.fetchWarpingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
     );

@@ -236,6 +236,7 @@ class _FinishSizingProcessState extends State<FinishSizingProcess> {
                 handleChangeInput,
               ),
             ),
+            showScanner: false,
             isLoading: _isLoading,
           ),
         ),

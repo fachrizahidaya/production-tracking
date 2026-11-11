@@ -12,6 +12,7 @@ class FinishSubmitSection extends StatefulWidget {
   final handleRoute;
   final handleChangeInput;
   final isLoading;
+  final bool showScanner;
 
   const FinishSubmitSection(
       {super.key,
@@ -22,7 +23,8 @@ class FinishSubmitSection extends StatefulWidget {
       this.handleSubmit,
       this.handleRoute,
       this.isLoading,
-      this.handleChangeInput});
+      this.handleChangeInput,
+      this.showScanner = true});
 
   @override
   State<FinishSubmitSection> createState() => _FinishSubmitSectionState();
@@ -58,9 +60,10 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
               padding: CustomTheme().padding('content'),
               child: Column(
                 children: [
-                  Expanded(
-                      flex: 2,
-                      child: Center(child: LayoutBuilder(
+                  if (widget.showScanner)
+                    Expanded(
+                        flex: 2,
+                        child: Center(child: LayoutBuilder(
                         builder: (context, constraints) {
                           final isLandscape =
                               orientation == Orientation.landscape;
@@ -124,15 +127,20 @@ class _FinishSubmitSectionState extends State<FinishSubmitSection> {
                             ),
                           ));
                         },
-                      ))),
+                        ))),
                   Expanded(
                       child: Column(
+                    mainAxisAlignment: widget.showScanner
+                        ? MainAxisAlignment.start
+                        : MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        "Scan QR Work Order",
-                        style:
-                            TextStyle(fontSize: CustomTheme().fontSize('xl')),
-                      ),
+                      if (widget.showScanner)
+                        Text(
+                          "Scan QR Work Order",
+                          style: TextStyle(
+                              fontSize: CustomTheme().fontSize('xl')),
+                        ),
                       ElevatedButton.icon(
                         icon: Icon(Icons.edit),
                         label: Text("Isi Manual"),

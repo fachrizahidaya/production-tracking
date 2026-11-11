@@ -26,6 +26,7 @@ class CreateSizingProcess extends StatelessWidget {
       title: title,
       handleSubmitToService: handleSubmitToService,
       formPageBuilder: formPageBuilder,
+      showScanner: false,
       fetchGreigeOrder: (service) => service.fetchSizingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
     );

@@ -17,6 +17,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   List<String> menuOrder = [
     'Dashboard',
+    'Work Order',
     'Warping',
     'Sizing',
     'Weaving',
@@ -68,17 +69,23 @@ class _AppDrawerState extends State<AppDrawer> {
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
 =======
     'Evaluasi GSM',
+<<<<<<< HEAD
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 =======
     'Evaluasi GSM',
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+<<<<<<< HEAD
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
+=======
+=======
+    'Notifikasi'
+>>>>>>> d94a57a (feat:)
+>>>>>>> a5b9c62d (feat:)
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
-    'Work Order',
     'Proses Produksi',
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -99,6 +106,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Persiapan Dyeing',
     'Anomali Data',
     'Desain',
+<<<<<<< HEAD
     'Notifikasi'
 =======
     'Laporan',
@@ -143,6 +151,8 @@ class _AppDrawerState extends State<AppDrawer> {
     'Desain',
     'Notifikasi'
 >>>>>>> 91183a33 (fix: rework)
+=======
+>>>>>>> a5b9c62d (feat:)
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -301,6 +311,8 @@ class _AppDrawerState extends State<AppDrawer> {
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
+                                                                                                                : item.title == 'Notifikasi'
+                                                                                                                    ? Icons.notifications_outlined
                                                                                                                     : Icons.menu,
 =======
 <<<<<<< HEAD
@@ -365,6 +377,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             if (item.title == 'Warping') {
                               Navigator.push(
@@ -408,6 +421,13 @@ class _AppDrawerState extends State<AppDrawer> {
 >>>>>>> a1ea7df (feat: warping)
                             if (item.route != null) {
                               Navigator.pushNamed(context, item.route!);
+=======
+                            final route = item.title == 'Notifikasi'
+                                ? '/anomalies'
+                                : item.route;
+                            if (route != null) {
+                              Navigator.pushNamed(context, route);
+>>>>>>> a5b9c62d (feat:)
                             }
                           },
                         );

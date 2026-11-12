@@ -73,6 +73,7 @@ import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -90,7 +91,18 @@ import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 =======
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+<<<<<<< HEAD
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
+=======
+=======
+import 'package:textile_tracking/screens/report/bs-anomaly/bs_list.dart';
+import 'package:textile_tracking/screens/report/anomaly/index.dart';
+import 'package:textile_tracking/screens/work-order/index.dart';
+import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
+import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
+import 'package:textile_tracking/screens/report/gsm-anomaly/gsm_list.dart';
+>>>>>>> d94a57a (feat:)
+>>>>>>> a5b9c62d (feat:)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 <<<<<<< HEAD
@@ -290,6 +302,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => AuthCheck(),
         '/dashboard': (context) => Home(),
+        '/work-orders': (context) => WorkOrder(),
         '/profile': (context) => Profile(),
         '/notification': (context) => NotificationList(),
         '/dyeings': (context) => DyeingScreen(),
@@ -327,7 +340,11 @@ class MyApp extends StatelessWidget {
         '/report-production': (context) => ReportScreen(),
         '/dyeing-rework-evaluations': (context) => ReworkList(),
         '/bs-evaluations': (context) => BsList(),
+        '/bs-anomalies': (context) => BsAnomalyList(),
+        '/anomalies': (context) => AnomalyScreen(),
+        '/process-anomalies': (context) => ProcessAnomalyList(),
         '/gsm-evaluations': (context) => GsmList(),
+        '/gsm-anomalies': (context) => GsmAnomalyList(),
       },
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)

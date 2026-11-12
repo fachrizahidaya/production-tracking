@@ -25,6 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
+<<<<<<< HEAD
 =======
   final int reworkNotificationCount;
   final VoidCallback? onReworkNotifications;
@@ -37,6 +38,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotifications;
   final String notificationTooltip;
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+  final bool isWithAnomalyNotification;
+  final int anomalyNotificationCount;
+  final VoidCallback? onAnomalyNotifications;
+  final String anomalyNotificationTooltip;
+>>>>>>> d94a57a (feat:)
   final bool isWithAccount;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -114,6 +121,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 >>>>>>> d8439a4 (fix: refactor code)
@@ -153,7 +161,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+<<<<<<< HEAD
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
+=======
+=======
+      this.isWithAnomalyNotification = false,
+      this.anomalyNotificationCount = 0,
+      this.onAnomalyNotifications,
+      this.anomalyNotificationTooltip = 'Notifikasi',
+>>>>>>> d94a57a (feat:)
+>>>>>>> a5b9c62d (feat:)
       this.isWithAccount = false,
       this.handleDelete,
       this.handleUpdate,
@@ -251,6 +268,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onNotifications,
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
           ),
+<<<<<<< HEAD
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
@@ -264,6 +282,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: onNotifications,
           ),
 >>>>>>> 9dacc402 (fix: responsive UI to mobile)
+=======
+        if (isWithAnomalyNotification)
+          _buildNotificationButton(
+            tooltip: anomalyNotificationTooltip,
+            icon: Icons.notifications_outlined,
+            count: anomalyNotificationCount,
+            onPressed: onAnomalyNotifications,
+          ),
+>>>>>>> a5b9c62d (feat:)
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),

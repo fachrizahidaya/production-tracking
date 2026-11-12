@@ -27,12 +27,16 @@ class ProcessButton extends StatefulWidget {
 <<<<<<< HEAD
   final attachments;
   final hasAttachment;
+<<<<<<< HEAD
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
 =======
   final attachments;
   final hasAttachment;
 >>>>>>> eeae9f55 (fix: attachment mandatory for packing)
+=======
+  final bool hasPackingGradeAStocks;
+>>>>>>> 66533988 (fix: finish packing ambil stok)
 
   const ProcessButton(
       {super.key,
@@ -57,6 +61,7 @@ class ProcessButton extends StatefulWidget {
 <<<<<<< HEAD
       this.hasItemQtyWarning = false,
       this.attachments,
+<<<<<<< HEAD
       this.hasAttachment});
 =======
       this.hasItemQtyWarning = false});
@@ -66,6 +71,10 @@ class ProcessButton extends StatefulWidget {
       this.attachments,
       this.hasAttachment});
 >>>>>>> eeae9f55 (fix: attachment mandatory for packing)
+=======
+      this.hasAttachment,
+      this.hasPackingGradeAStocks = false});
+>>>>>>> 66533988 (fix: finish packing ambil stok)
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -224,6 +233,7 @@ class _ProcessButtonState extends State<ProcessButton> {
 <<<<<<< HEAD
 <<<<<<< HEAD
         // hasPackingAttachmentError ||
+<<<<<<< HEAD
 =======
     final bool isDisabled = hasBasicError ||
         hasWeightItemError ||
@@ -241,6 +251,10 @@ class _ProcessButtonState extends State<ProcessButton> {
         // hasPackingAttachmentError ||
 >>>>>>> 6578af90 (fix: button untuk persiapan dyeing)
         widget.hasItemQtyWarning == true;
+=======
+        (widget.hasItemQtyWarning == true &&
+            !widget.hasPackingGradeAStocks);
+>>>>>>> 66533988 (fix: finish packing ambil stok)
 
     return SafeArea(
       child: Padding(

@@ -150,6 +150,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   bool _hasItemQtyWarning = false;
 
+  bool get _hasPackingGradeAStocks {
+    final stocks = woData['packing_grade_a_stocks'] ??
+        data['packing_grade_a_stocks'] ??
+        data['work_orders']?['packing_grade_a_stocks'];
+    return widget.label == 'Packing' && stocks is List && stocks.isNotEmpty;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1716,6 +1723,10 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             hasItemQtyWarning: _hasItemQtyWarning,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            hasPackingGradeAStocks: _hasPackingGradeAStocks,
+>>>>>>> 66533988 (fix: finish packing ambil stok)
             hasAttachment: _hasAttachment,
 =======
 >>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))

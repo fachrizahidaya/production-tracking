@@ -13,6 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
+<<<<<<< HEAD
 =======
   final int reworkNotificationCount;
   final VoidCallback? onReworkNotifications;
@@ -25,6 +26,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onNotifications;
   final String notificationTooltip;
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+  final bool isWithAnomalyNotification;
+  final int anomalyNotificationCount;
+  final VoidCallback? onAnomalyNotifications;
+  final String anomalyNotificationTooltip;
+>>>>>>> d94a57a (feat:)
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -61,6 +68,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
+<<<<<<< HEAD
 =======
       this.reworkNotificationCount = 0,
       this.onReworkNotifications,
@@ -73,6 +81,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+      this.isWithAnomalyNotification = false,
+      this.anomalyNotificationCount = 0,
+      this.onAnomalyNotifications,
+      this.anomalyNotificationTooltip = 'Notifikasi',
+>>>>>>> d94a57a (feat:)
       this.isWithAccount = false,
       this.handleDelete,
       this.handleUpdate,
@@ -141,6 +155,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: notificationCount,
             onPressed: onNotifications,
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+          ),
+        if (isWithAnomalyNotification)
+          _buildNotificationButton(
+            tooltip: anomalyNotificationTooltip,
+            icon: Icons.notifications_outlined,
+            count: anomalyNotificationCount,
+            onPressed: onAnomalyNotifications,
           ),
         if (isDashboardSettingsLoading)
           const Padding(

@@ -17,6 +17,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   List<String> menuOrder = [
     'Dashboard',
+    'Work Order',
     'Warping',
     'Sizing',
     'Weaving',
@@ -40,16 +41,19 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
 <<<<<<< HEAD
     'Evaluasi GSM',
+<<<<<<< HEAD
 =======
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 =======
     'Evaluasi GSM',
 >>>>>>> 07c9d40 (fix: notification all evaluasi)
+=======
+    'Notifikasi'
+>>>>>>> d94a57a (feat:)
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
-    'Work Order',
     'Proses Produksi',
     'Produksi',
     'Pesanan',
@@ -57,7 +61,6 @@ class _AppDrawerState extends State<AppDrawer> {
     'Order Greige',
     'Anomali Data',
     'Desain',
-    'Notifikasi'
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -206,6 +209,8 @@ class _AppDrawerState extends State<AppDrawer> {
 <<<<<<< HEAD
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
+                                                                                                                : item.title == 'Notifikasi'
+                                                                                                                    ? Icons.notifications_outlined
                                                                                                                     : Icons.menu,
 =======
                                                                                                                 : Icons.menu,
@@ -219,8 +224,11 @@ class _AppDrawerState extends State<AppDrawer> {
                           onTap: () {
                             Navigator.pop(context);
 
-                            if (item.route != null) {
-                              Navigator.pushNamed(context, item.route!);
+                            final route = item.title == 'Notifikasi'
+                                ? '/anomalies'
+                                : item.route;
+                            if (route != null) {
+                              Navigator.pushNamed(context, route);
                             }
                           },
                         );

@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
+import 'package:textile_tracking/providers/api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile_tracking/models/report/production_trend.dart';
 import 'package:textile_tracking/models/report/bs.dart';
+import 'package:textile_tracking/models/report/bs_anomaly.dart';
 import 'package:textile_tracking/models/report/gsm.dart';
+import 'package:textile_tracking/models/report/gsm_anomaly.dart';
+import 'package:textile_tracking/models/report/process_anomaly.dart';
 import 'package:textile_tracking/models/report/rework.dart';
 import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
@@ -780,6 +785,64 @@ class ReportService {
     );
   }
 
+  Future<BsAnomalyPage> getBsRateAnomalies({
+    required BuildContext context,
+    int page = 1,
+    int perPage = 20,
+    String search = '',
+  }) async {
+    final query = <String, String>{
+      'status': 'open',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    };
+    if (search.trim().isNotEmpty) query['search'] = search.trim();
+
+    final uri =
+        Uri.parse('$baseUrl/anomalies/bs-rate').replace(queryParameters: query);
+    final response = await ApiClient.instance.get(context, uri);
+
+    if (response.statusCode == 200) {
+      return BsAnomalyPage.fromJson(
+        Map<String, dynamic>.from(jsonDecode(response.body)),
+      );
+    }
+
+    throw Exception(
+      'Failed to load BS rate anomalies: '
+      '${response.statusCode} ${response.body}',
+    );
+  }
+
+  Future<ProcessAnomalyPage> getProcessChainAnomalies({
+    required BuildContext context,
+    int page = 1,
+    int perPage = 20,
+    String search = '',
+  }) async {
+    final query = <String, String>{
+      'status': 'open',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    };
+    if (search.trim().isNotEmpty) query['search'] = search.trim();
+
+    final uri = Uri.parse('$baseUrl/anomalies/process-chain')
+        .replace(queryParameters: query);
+    final response = await ApiClient.instance.get(context, uri);
+
+    if (response.statusCode == 200) {
+      return ProcessAnomalyPage.fromJson(
+        Map<String, dynamic>.from(jsonDecode(response.body)),
+      );
+    }
+
+    throw Exception(
+      'Failed to load process chain anomalies: '
+      '${response.statusCode} ${response.body}',
+    );
+  }
+
   Future<Map<String, dynamic>> getBsDetail(dynamic id) async {
     if (id == null || id.toString().trim().isEmpty) {
       throw Exception('ID BS tidak ditemukan');
@@ -911,6 +974,35 @@ class ReportService {
 
     throw Exception(
       'Failed to load GSM list : '
+      '${response.statusCode} ${response.body}',
+    );
+  }
+
+  Future<GsmAnomalyPage> getPackingGsmAnomalies({
+    required BuildContext context,
+    int page = 1,
+    int perPage = 20,
+    String search = '',
+  }) async {
+    final query = <String, String>{
+      'status': 'open',
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    };
+    if (search.trim().isNotEmpty) query['search'] = search.trim();
+
+    final uri = Uri.parse('$baseUrl/anomalies/packing-gsm')
+        .replace(queryParameters: query);
+    final response = await ApiClient.instance.get(context, uri);
+
+    if (response.statusCode == 200) {
+      return GsmAnomalyPage.fromJson(
+        Map<String, dynamic>.from(jsonDecode(response.body)),
+      );
+    }
+
+    throw Exception(
+      'Failed to load GSM packing anomalies: '
       '${response.statusCode} ${response.body}',
     );
   }

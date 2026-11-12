@@ -30,7 +30,6 @@ class GsmList {
         search: json['search']?.toString() ?? '');
   }
 }
-
 class GsmListItem {
   final id;
   final wo;

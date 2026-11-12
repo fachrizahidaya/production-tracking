@@ -29,7 +29,6 @@ class CreateGreigeOrderProcess extends StatefulWidget {
   final handleSubmitToService;
   final fetchGreigeOrder;
   final getGreigeOrderOptions;
-  final bool showScanner;
 
   const CreateGreigeOrderProcess({
     super.key,
@@ -38,7 +37,6 @@ class CreateGreigeOrderProcess extends StatefulWidget {
     this.handleSubmitToService,
     this.fetchGreigeOrder,
     this.getGreigeOrderOptions,
-    this.showScanner = true,
   });
 
   @override
@@ -304,7 +302,6 @@ class _CreateGreigeOrderProcessState extends State<CreateGreigeOrderProcess> {
                 handleSubmit,
               ),
             ),
-            showScanner: widget.showScanner,
             isLoading: _isLoading,
           ),
         ),

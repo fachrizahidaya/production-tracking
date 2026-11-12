@@ -231,7 +231,6 @@ class _FinishShearingProcessState extends State<FinishShearingProcess> {
                 handleChangeInput,
               ),
             ),
-            showScanner: false,
             isLoading: _isLoading,
           ),
         ),

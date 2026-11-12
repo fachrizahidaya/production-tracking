@@ -233,7 +233,6 @@ class _FinishWeavingProcessState extends State<FinishWeavingProcess> {
                 handleChangeInput,
               ),
             ),
-            showScanner: false,
             isLoading: _isLoading,
           ),
         ),

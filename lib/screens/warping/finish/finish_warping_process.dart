@@ -235,7 +235,6 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
                 handleChangeInput,
               ),
             ),
-            showScanner: false,
             isLoading: _isLoading,
           ),
         ),

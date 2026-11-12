@@ -194,14 +194,14 @@ class _WoInfoTabState extends State<WoInfoTab> {
                       children: [
                         Expanded(
                           child: _buildStockValue(
-                            'Stok sisa disimpan',
+                            'Stok Disimpan',
                             stock['stock_qty'],
                             stock['unit_code'],
                           ),
                         ),
                         Expanded(
                           child: _buildStockValue(
-                            'Sudah digunakan',
+                            'Stok diambil',
                             stock['used_qty'],
                             stock['unit_code'],
                           ),

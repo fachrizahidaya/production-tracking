@@ -619,6 +619,128 @@ class _UpdateProcessState extends State<UpdateProcess>
     );
   }
 
+  List<Map<String, dynamic>> _packingGradeAStocksForItem(
+    Map<String, dynamic> item,
+  ) {
+    final rawStocks = widget.woData?['packing_grade_a_stocks'] ??
+        widget.data?['packing_grade_a_stocks'];
+    if (rawStocks is! List) return [];
+
+    final itemIds = <String>{};
+    final itemCodes = <String>{};
+
+    void addId(dynamic value) {
+      if (value != null && value.toString().trim().isNotEmpty) {
+        itemIds.add(value.toString());
+      }
+    }
+
+    void addCode(dynamic value) {
+      if (value != null && value.toString().trim().isNotEmpty) {
+        itemCodes.add(value.toString());
+      }
+    }
+
+    addId(item['item_id']);
+    addId(item['semifinished_product_id']);
+    addId(item['finished_product_id']);
+    addId(item['semifinished_product']?['id']);
+    addId(item['finished_product']?['id']);
+    addCode(item['item_code']);
+    addCode(item['code']);
+    addCode(item['semifinished_product']?['code']);
+    addCode(item['finished_product']?['code']);
+
+    return rawStocks.whereType<Map>().map((stock) {
+      return Map<String, dynamic>.from(stock);
+    }).where((stock) {
+      final stockItem = stock['item'];
+      final stockItemId = stockItem is Map ? stockItem['id'] : stock['item_id'];
+      final stockItemCode = stockItem is Map
+          ? stockItem['code']
+          : (stock['item_code'] ?? stock['code']);
+
+      return itemIds.contains(stockItemId?.toString()) ||
+          itemCodes.contains(stockItemCode?.toString());
+    }).toList();
+  }
+
+  Widget _buildPackingGradeAStockUsage(Map<String, dynamic> item) {
+    final stocks = _packingGradeAStocksForItem(item);
+    final usages = <Map<String, dynamic>>[];
+
+    for (final stock in stocks) {
+      final rawUsages = stock['usages'];
+      if (rawUsages is List && rawUsages.isNotEmpty) {
+        for (final rawUsage in rawUsages) {
+          if (rawUsage is Map) {
+            usages.add({
+              'qty': rawUsage['qty'],
+              'wo_no': rawUsage['to_work_order']?['wo_no'] ??
+                  rawUsage['wo_no'],
+              'packing_no': rawUsage['to_packing']?['packing_no'] ??
+                  rawUsage['packing_no'],
+              'source_packing_no': stock['from_packing']?['packing_no'],
+            });
+          }
+        }
+      } else if (parseInput(stock['used_qty']) > 0) {
+        usages.add({
+          'qty': stock['used_qty'],
+          'wo_no': null,
+          'packing_no': null,
+          'source_packing_no': stock['from_packing']?['packing_no'],
+        });
+      }
+    }
+
+    if (usages.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.green.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Penggunaan stok Grade A',
+            style: TextStyle(
+              color: Colors.green.shade900,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          ...usages.map((usage) {
+            final woNo = usage['wo_no']?.toString();
+            final packingNo = usage['packing_no']?.toString();
+            final sourcePackingNo = usage['source_packing_no']?.toString();
+            final destination = [
+              if (woNo != null && woNo.isNotEmpty) 'WO $woNo',
+              if (packingNo != null && packingNo.isNotEmpty)
+                'Packing $packingNo',
+            ].join(' • ');
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                'Diambil ${formatNumber(parseInput(usage['qty']))} PCS'
+                '${destination.isNotEmpty ? ' → $destination' : ''}'
+                '${sourcePackingNo != null && sourcePackingNo.isNotEmpty ? ' (sumber: Packing $sourcePackingNo)' : ''}',
+                style: TextStyle(color: Colors.green.shade900, fontSize: 12),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
   Map<String, dynamic>? _findPackingFormItem(
     Map<String, dynamic> item,
   ) {
@@ -1819,6 +1941,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                               ),
                                                             ],
                                                           ),
+                                                        ),
+                                                        _buildPackingGradeAStockUsage(
+                                                          item,
                                                         ),
                                                         Row(
                                                           crossAxisAlignment:

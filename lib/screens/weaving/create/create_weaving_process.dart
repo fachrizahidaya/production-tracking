@@ -26,7 +26,6 @@ class CreateWeavingProcess extends StatelessWidget {
       title: title,
       handleSubmitToService: handleSubmitToService,
       formPageBuilder: formPageBuilder,
-      showScanner: false,
       fetchGreigeOrder: (service) => service.fetchWeavingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
     );

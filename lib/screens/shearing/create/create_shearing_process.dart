@@ -26,7 +26,6 @@ class CreateShearingProcess extends StatelessWidget {
       title: title,
       handleSubmitToService: handleSubmitToService,
       formPageBuilder: formPageBuilder,
-      showScanner: false,
       fetchGreigeOrder: (service) => service.fetchShearingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
     );

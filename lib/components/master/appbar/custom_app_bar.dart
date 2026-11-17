@@ -11,6 +11,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
+  final bool isWithAnomalyNotification;
+  final int anomalyNotificationCount;
+  final VoidCallback? onAnomalyNotifications;
+  final String anomalyNotificationTooltip;
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -44,6 +48,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
+      this.isWithAnomalyNotification = false,
+      this.anomalyNotificationCount = 0,
+      this.onAnomalyNotifications,
+      this.anomalyNotificationTooltip = 'Notifikasi',
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -95,6 +103,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
             onPressed: onNotifications,
+          ),
+        if (isWithAnomalyNotification)
+          _buildNotificationButton(
+            tooltip: anomalyNotificationTooltip,
+            icon: Icons.notifications_outlined,
+            count: anomalyNotificationCount,
+            onPressed: onAnomalyNotifications,
           ),
         if (isDashboardSettingsLoading)
           const Padding(

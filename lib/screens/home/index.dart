@@ -36,6 +36,11 @@ class _HomeState extends State<Home> {
   bool _canViewReworkEvaluation = false;
   bool _canViewBsEvaluation = false;
   bool _canViewGsmEvaluation = false;
+  bool _canViewNotifications = false;
+  int _anomalyNotificationCount = 0;
+  int _bsRateAnomalyCount = 0;
+  int _packingGsmAnomalyCount = 0;
+  int _processInputAnomalyCount = 0;
   late Future<String?> _tokenFuture;
 
   @override
@@ -66,6 +71,7 @@ class _HomeState extends State<Home> {
     );
     final canViewBsEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi BS');
     final canViewGsmEvaluation = _hasMobileMenu(userMenu.menus, 'Evaluasi GSM');
+    final canViewNotifications = _hasMobileMenu(userMenu.menus, 'Notifikasi');
 
     if (!mounted) return;
 
@@ -73,9 +79,13 @@ class _HomeState extends State<Home> {
       _canViewReworkEvaluation = canViewReworkEvaluation;
       _canViewBsEvaluation = canViewBsEvaluation;
       _canViewGsmEvaluation = canViewGsmEvaluation;
+      _canViewNotifications = canViewNotifications;
     });
 
     await _refreshEvaluationNotifications();
+    if (_canViewNotifications) {
+      await _refreshAnomalyNotifications();
+    }
   }
 
   bool _hasMobileMenu(List<dynamic> menus, String targetName) {
@@ -185,6 +195,66 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> _refreshAnomalyNotifications() async {
+    await Future.wait([
+      _fetchAnomalyNotificationCount(),
+      _fetchAnomalySummary(),
+    ]);
+  }
+
+  Future<Map<String, String>> _authorizedHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
+    return {
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+    };
+  }
+
+  Future<void> _fetchAnomalyNotificationCount() async {
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final response = await http.get(
+        Uri.parse('$baseUrl/anomalies/count'),
+        headers: await _authorizedHeaders(),
+      );
+
+      if (response.statusCode != 200 || !mounted) return;
+
+      final responseData = jsonDecode(response.body);
+      final total = responseData['total'];
+      setState(() {
+        _anomalyNotificationCount = int.tryParse(total?.toString() ?? '') ?? 0;
+      });
+    } catch (_) {
+      // Badge tetap tersembunyi jika endpoint anomaly tidak tersedia.
+    }
+  }
+
+  Future<void> _fetchAnomalySummary() async {
+    try {
+      final baseUrl = dotenv.env['API_URL'] ?? '';
+      final response = await http.get(
+        Uri.parse('$baseUrl/anomalies/summary'),
+        headers: await _authorizedHeaders(),
+      );
+
+      if (response.statusCode != 200 || !mounted) return;
+
+      final responseData = jsonDecode(response.body);
+      setState(() {
+        _bsRateAnomalyCount =
+            int.tryParse(responseData['bs_rate']?.toString() ?? '') ?? 0;
+        _packingGsmAnomalyCount =
+            int.tryParse(responseData['packing_gsm']?.toString() ?? '') ?? 0;
+        _processInputAnomalyCount =
+            int.tryParse(responseData['process_input']?.toString() ?? '') ?? 0;
+      });
+    } catch (_) {
+      // Ringkasan tetap kosong jika endpoint anomaly tidak tersedia.
+    }
+  }
+
   int get _authorizedEvaluationCount {
     var count = 0;
     if (_canViewReworkEvaluation) count++;
@@ -233,6 +303,58 @@ class _HomeState extends State<Home> {
       return;
     }
     _openSingleEvaluation();
+  }
+
+  Future<void> _showNotificationChooser() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: Text(
+                  'Jenis Anomali',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.warning_amber_outlined),
+                title: const Text('BS melebihi 3%'),
+                trailing: _buildWaitingCountBadge(_bsRateAnomalyCount),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.pushNamed(context, '/bs-anomalies');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.straighten_outlined),
+                title: const Text('GSM Packing'),
+                trailing: _buildWaitingCountBadge(_packingGsmAnomalyCount),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.pushNamed(context, '/gsm-anomalies');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.input_outlined),
+                title: const Text('Input Proses'),
+                trailing: _buildWaitingCountBadge(_processInputAnomalyCount),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.pushNamed(context, '/process-anomalies');
+                },
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _showEvaluationChooser() async {
@@ -453,6 +575,9 @@ class _HomeState extends State<Home> {
                 notificationCount: _evaluationNotificationCount,
                 notificationTooltip: _singleEvaluationTooltip,
                 onNotifications: _onEvaluationNotificationsTap,
+                isWithAnomalyNotification: _canViewNotifications,
+                anomalyNotificationCount: _anomalyNotificationCount,
+                onAnomalyNotifications: _showNotificationChooser,
                 handleLogout: () => _handleLogout(context),
                 isWithAccount: true,
                 user: user,

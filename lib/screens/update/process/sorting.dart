@@ -604,7 +604,33 @@ class _SortingEditSectionState extends State<SortingEditSection> {
       }
     }
 
-    widget.form['items'] = groupedItems.values.toList();
+    final orderedItems = <Map<String, dynamic>>[];
+    final usedKeys = <dynamic>{};
+
+    // Grades can arrive in a different order than the Work Order items.
+    // Always use the Work Order sequence as the canonical item sequence.
+    for (final woItem in woItems) {
+      final matchingKey = groupedItems.keys.cast<dynamic>().firstWhere(
+        (key) {
+          final item = groupedItems[key]!;
+          return item['wo_item_id']?.toString() ==
+              woItem['id']?.toString();
+        },
+        orElse: () => null,
+      );
+
+      if (matchingKey != null && usedKeys.add(matchingKey)) {
+        orderedItems.add(groupedItems[matchingKey]!);
+      }
+    }
+
+    for (final entry in groupedItems.entries) {
+      if (usedKeys.add(entry.key)) {
+        orderedItems.add(entry.value);
+      }
+    }
+
+    widget.form['items'] = orderedItems;
 
     if (mounted) {
       setState(() {});

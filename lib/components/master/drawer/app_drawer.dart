@@ -17,6 +17,7 @@ class _AppDrawerState extends State<AppDrawer> {
 
   List<String> menuOrder = [
     'Dashboard',
+    'Work Order',
     'Warping',
     'Sizing',
     'Weaving',
@@ -38,11 +39,11 @@ class _AppDrawerState extends State<AppDrawer> {
     'Evaluasi Rework',
     'Evaluasi BS',
     'Evaluasi GSM',
+    'Notifikasi'
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
-    'Work Order',
     'Proses Produksi',
     'Produksi',
     'Pesanan',
@@ -50,7 +51,6 @@ class _AppDrawerState extends State<AppDrawer> {
     'Order Greige',
     'Anomali Data',
     'Desain',
-    'Notifikasi'
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -197,13 +197,18 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                 ? Icons.production_quantity_limits_outlined
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
+                                                                                                                : item.title == 'Notifikasi'
+                                                                                                                    ? Icons.notifications_outlined
                                                                                                                     : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);
 
-                            if (item.route != null) {
-                              Navigator.pushNamed(context, item.route!);
+                            final route = item.title == 'Notifikasi'
+                                ? '/anomalies'
+                                : item.route;
+                            if (route != null) {
+                              Navigator.pushNamed(context, route);
                             }
                           },
                         );

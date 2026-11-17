@@ -150,6 +150,13 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
 
   bool _hasItemQtyWarning = false;
 
+  bool get _hasPackingGradeAStocks {
+    final stocks = woData['packing_grade_a_stocks'] ??
+        data['packing_grade_a_stocks'] ??
+        data['work_orders']?['packing_grade_a_stocks'];
+    return widget.label == 'Packing' && stocks is List && stocks.isNotEmpty;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1682,6 +1689,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
             hasItemQtyWarning: _hasItemQtyWarning,
+            hasPackingGradeAStocks: _hasPackingGradeAStocks,
             hasAttachment: _hasAttachment,
           ),
         ),

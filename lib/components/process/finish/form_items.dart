@@ -140,7 +140,7 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
-  final Map<dynamic, String?> _packingQtyWarnings = {};
+  final Map<String, String?> _packingQtyWarnings = {};
   final List<String> _itemOrder = [];
 
   @override
@@ -463,6 +463,136 @@ class _FormItemsState extends State<FormItems>
     );
   }
 
+  List<Map<String, dynamic>> _packingGradeAStocksForItem(
+    Map<String, dynamic> item,
+  ) {
+    final rawStocks = widget.woData['packing_grade_a_stocks'] ??
+        widget.processData['packing_grade_a_stocks'] ??
+        widget.data?['packing_grade_a_stocks'];
+    if (rawStocks is! List) return [];
+
+    final itemIds = <String>{};
+    final itemCodes = <String>{};
+
+    void addId(dynamic value) {
+      if (value != null && value.toString().trim().isNotEmpty) {
+        itemIds.add(value.toString());
+      }
+    }
+
+    void addCode(dynamic value) {
+      if (value != null && value.toString().trim().isNotEmpty) {
+        itemCodes.add(value.toString());
+      }
+    }
+
+    addId(item['item_id']);
+    addId(item['semifinished_product_id']);
+    addId(item['finished_product_id']);
+    addId(item['semifinished_product']?['id']);
+    addId(item['finished_product']?['id']);
+    addCode(item['item_code']);
+    addCode(item['code']);
+    addCode(item['semifinished_product']?['code']);
+    addCode(item['finished_product']?['code']);
+
+    return rawStocks.whereType<Map>().map((stock) {
+      return Map<String, dynamic>.from(stock);
+    }).where((stock) {
+      final stockItem = stock['item'];
+      final stockItemId = stockItem is Map ? stockItem['id'] : stock['item_id'];
+      final stockItemCode = stockItem is Map
+          ? stockItem['code']
+          : (stock['item_code'] ?? stock['code']);
+
+      return itemIds.contains(stockItemId?.toString()) ||
+          itemCodes.contains(stockItemCode?.toString());
+    }).toList();
+  }
+
+  bool get hasPackingGradeAStocks {
+    final rawStocks = widget.woData['packing_grade_a_stocks'] ??
+        widget.processData['packing_grade_a_stocks'] ??
+        widget.data?['packing_grade_a_stocks'];
+    return rawStocks is List && rawStocks.isNotEmpty;
+  }
+
+  Widget _buildPackingGradeAStockUsage(Map<String, dynamic> item) {
+    final stocks = _packingGradeAStocksForItem(item);
+    final usages = <Map<String, dynamic>>[];
+
+    for (final stock in stocks) {
+      final rawUsages = stock['usages'];
+      if (rawUsages is List && rawUsages.isNotEmpty) {
+        for (final rawUsage in rawUsages) {
+          if (rawUsage is Map) {
+            usages.add({
+              'qty': rawUsage['qty'],
+              'wo_no': rawUsage['to_work_order']?['wo_no'] ??
+                  rawUsage['wo_no'],
+              'packing_no': rawUsage['to_packing']?['packing_no'] ??
+                  rawUsage['packing_no'],
+              'source_packing_no': stock['from_packing']?['packing_no'],
+            });
+          }
+        }
+      } else if (parseInput(stock['used_qty']) > 0) {
+        usages.add({
+          'qty': stock['used_qty'],
+          'wo_no': null,
+          'packing_no': null,
+          'source_packing_no': stock['from_packing']?['packing_no'],
+        });
+      }
+    }
+
+    if (usages.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.green.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Penggunaan stok Grade A',
+            style: TextStyle(
+              color: Colors.green.shade900,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 4),
+          ...usages.map((usage) {
+            final woNo = usage['wo_no']?.toString();
+            final packingNo = usage['packing_no']?.toString();
+            final sourcePackingNo = usage['source_packing_no']?.toString();
+            final destination = [
+              if (woNo != null && woNo.isNotEmpty) 'WO $woNo',
+              if (packingNo != null && packingNo.isNotEmpty)
+                'Packing $packingNo',
+            ].join(' • ');
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                'Diambil ${formatNumber(parseInput(usage['qty']))} PCS'
+                '${destination.isNotEmpty ? ' → $destination' : ''}'
+                '${sourcePackingNo != null && sourcePackingNo.isNotEmpty ? ' (sumber: Packing $sourcePackingNo)' : ''}',
+                style: TextStyle(color: Colors.green.shade900, fontSize: 12),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
   void calculateLongHemmingWeight() {
     final items = List<Map<String, dynamic>>.from(widget.form['items'] ?? []);
 
@@ -637,14 +767,14 @@ class _FormItemsState extends State<FormItems>
 
     for (final item in safeItems) {
       final warning = _validatePackingQty(item);
-      _packingQtyWarnings[item['id']] = warning;
+      _packingQtyWarnings[_itemKey(item)] = warning;
 
       if (warning != null) {
         hasWarning = true;
       }
     }
 
-    widget.handleItemQtyWarning?.call(hasWarning);
+    widget.handleItemQtyWarning?.call(hasWarning && !hasPackingGradeAStocks);
   }
 
   Widget _buildPackingQtyWarning(String warning) {
@@ -766,9 +896,30 @@ class _FormItemsState extends State<FormItems>
         for (var i = 0; i < _itemOrder.length; i++) _itemOrder[i]: i,
       };
 
+      final workOrderItems = widget.processData['work_orders']?['items'];
+      final workOrderIndex = <String, int>{};
+      if (workOrderItems is List) {
+        for (var i = 0; i < workOrderItems.length; i++) {
+          final woItem = workOrderItems[i];
+          if (woItem is Map && woItem['id'] != null) {
+            workOrderIndex[woItem['id'].toString()] = i;
+          }
+        }
+      }
+
       items.sort(
-        (a, b) => (orderIndex[_itemKey(a)] ?? orderIndex.length)
-            .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length),
+        (a, b) {
+          final aWoIndex = workOrderIndex[a['wo_item_id']?.toString()];
+          final bWoIndex = workOrderIndex[b['wo_item_id']?.toString()];
+
+          if (aWoIndex != null || bWoIndex != null) {
+            return (aWoIndex ?? workOrderIndex.length)
+                .compareTo(bWoIndex ?? workOrderIndex.length);
+          }
+
+          return (orderIndex[_itemKey(a)] ?? orderIndex.length)
+              .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length);
+        },
       );
 
       return items;
@@ -1828,8 +1979,13 @@ class _FormItemsState extends State<FormItems>
                           return AnimatedBuilder(
                             animation: tabController,
                             builder: (context, _) {
-                              final item = safeItems[tabController.index];
+                              // Use the same list instance that is stored in
+                              // widget.form. Calling safeItems() here creates
+                              // fresh map copies, so editing those copies does
+                              // not update the value used by validation.
+                              final item = items[tabController.index];
                               final itemId = item['id'];
+                              final itemKey = _itemKey(item);
 
                               _packingQtyControllers.putIfAbsent(
                                 itemId,
@@ -1929,6 +2085,7 @@ class _FormItemsState extends State<FormItems>
                                         ],
                                       ),
                                     ),
+                                    _buildPackingGradeAStockUsage(item),
                                     Container(
                                       width: double.infinity,
                                       padding: EdgeInsets.all(12),
@@ -2113,12 +2270,12 @@ class _FormItemsState extends State<FormItems>
                                             CustomTheme().hGap('xl'),
                                           ),
                                         ),
-                                        if (_packingQtyWarnings[itemId] != null)
+                                        if (_packingQtyWarnings[itemKey] != null)
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8),
                                             child: _buildPackingQtyWarning(
-                                              _packingQtyWarnings[itemId]!,
+                                              _packingQtyWarnings[itemKey]!,
                                             ),
                                           ),
                                       ],

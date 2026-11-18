@@ -65,6 +65,7 @@ class UserProvider with ChangeNotifier {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 38fd9bd2 (fix: logout)
 =======
@@ -79,6 +80,8 @@ class UserProvider with ChangeNotifier {
 =======
 >>>>>>> 8eae832 (fix: logout)
 >>>>>>> 62ea8f9a (fix: logout)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     FcmService.instance.clearPendingNavigation();
 =======
     await FcmService.instance.unregisterCurrentDevice();

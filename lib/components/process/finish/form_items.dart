@@ -177,11 +177,7 @@ class _FormItemsState extends State<FormItems>
   final Map<int, TextEditingController> _gsmControllers = {};
   final Map<int, TextEditingController> _weightGradeAControllers = {};
   final Map<int, TextEditingController> _totalWeightControllers = {};
-<<<<<<< HEAD
   final Map<String, String?> _packingQtyWarnings = {};
-=======
-  final Map<dynamic, String?> _packingQtyWarnings = {};
->>>>>>> d25c7e0 (Feat/fase 2 (#37))
   final List<String> _itemOrder = [];
 
   @override
@@ -569,8 +565,7 @@ class _FormItemsState extends State<FormItems>
           if (rawUsage is Map) {
             usages.add({
               'qty': rawUsage['qty'],
-              'wo_no': rawUsage['to_work_order']?['wo_no'] ??
-                  rawUsage['wo_no'],
+              'wo_no': rawUsage['to_work_order']?['wo_no'] ?? rawUsage['wo_no'],
               'packing_no': rawUsage['to_packing']?['packing_no'] ??
                   rawUsage['packing_no'],
               'source_packing_no': stock['from_packing']?['packing_no'],
@@ -937,7 +932,6 @@ class _FormItemsState extends State<FormItems>
         for (var i = 0; i < _itemOrder.length; i++) _itemOrder[i]: i,
       };
 
-<<<<<<< HEAD
       final workOrderItems = widget.processData['work_orders']?['items'];
       final workOrderIndex = <String, int>{};
       if (workOrderItems is List) {
@@ -962,11 +956,6 @@ class _FormItemsState extends State<FormItems>
           return (orderIndex[_itemKey(a)] ?? orderIndex.length)
               .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length);
         },
-=======
-      items.sort(
-        (a, b) => (orderIndex[_itemKey(a)] ?? orderIndex.length)
-            .compareTo(orderIndex[_itemKey(b)] ?? orderIndex.length),
->>>>>>> d25c7e0 (Feat/fase 2 (#37))
       );
 
       return items;
@@ -2000,9 +1989,10 @@ class _FormItemsState extends State<FormItems>
                                   child: Tab(
                                     text: (safeItems[index]['code'] ??
                                             safeItems[index]
-                                                ['semifinished_product']?['code'] ??
-                                            safeItems[index]
-                                                ['finished_product']?['code'] ??
+                                                    ['semifinished_product']
+                                                ?['code'] ??
+                                            safeItems[index]['finished_product']
+                                                ?['code'] ??
                                             safeItems[index]['item_code'] ??
                                             'Item ${index + 1}')
                                         .toString(),
@@ -2365,7 +2355,8 @@ class _FormItemsState extends State<FormItems>
                                             CustomTheme().hGap('xl'),
                                           ),
                                         ),
-                                        if (_packingQtyWarnings[itemKey] != null)
+                                        if (_packingQtyWarnings[itemKey] !=
+                                            null)
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 8),
@@ -2407,6 +2398,7 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                                     key: ValueKey(
@@ -2693,6 +2685,11 @@ class _FormItemsState extends State<FormItems>
                                       ),
 >>>>>>> 9339670 (fix: keterangan ambil stok)
 >>>>>>> 34eadd95 (fix: keterangan ambil stok)
+=======
+                                      key: ValueKey(
+                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
+                                      ),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']
@@ -2731,18 +2728,8 @@ class _FormItemsState extends State<FormItems>
                                           widget.form['items'],
                                         );
                                       },
-<<<<<<< HEAD
-<<<<<<< HEAD
                                       onExceededChanged:
                                           widget.handleItemQtyWarning,
-=======
-                                    onExceededChanged:
-                                        widget.handleItemQtyWarning,
->>>>>>> 1ae4f78 (fix: stok di packing)
-=======
-                                      onExceededChanged:
-                                          widget.handleItemQtyWarning,
->>>>>>> 9339670 (fix: keterangan ambil stok)
                                     ),
                                   ].separatedBy(
                                     CustomTheme().vGap('xl'),

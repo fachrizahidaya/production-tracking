@@ -45,6 +45,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -53,11 +54,14 @@ class BsListItem {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   final bsRate;
   final material;
   final item;
   final topMaterialCode;
   final topMaterialName;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -78,6 +82,8 @@ class BsListItem {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   final defects;
   final startDate;
   final endDate;
@@ -96,6 +102,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -104,11 +111,14 @@ class BsListItem {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.bsRate,
       this.material,
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -129,6 +139,8 @@ class BsListItem {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.defects,
       this.endDate,
       this.startDate});
@@ -139,6 +151,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
@@ -165,6 +178,11 @@ class BsListItem {
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+    final wo = json['work_order'] ?? {};
+    final woItems = wo is Map ? wo['items'] : null;
+    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return BsListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
@@ -173,6 +191,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         wo: wo,
 =======
         wo: json['work_order'] ?? {},
@@ -194,6 +213,9 @@ class BsListItem {
         wo: wo,
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+        wo: wo,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -207,6 +229,7 @@ class BsListItem {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -215,13 +238,14 @@ class BsListItem {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         bsRate: json['bs_rate'] ?? sorting['bs_rate'] ?? '',
-        material: json['material'] ??
-            json['semi_finished_product'] ??
-            '',
+        material: json['material'] ?? json['semi_finished_product'] ?? '',
         item: woItem ?? json['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -245,6 +269,8 @@ class BsListItem {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         defects: json['defects'] ?? [],
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});

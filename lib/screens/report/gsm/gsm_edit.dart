@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:math' as math;
 
 =======
@@ -25,11 +26,16 @@ import 'dart:math' as math;
 
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+import 'dart:math' as math;
+
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -74,6 +80,11 @@ import 'package:textile_tracking/helpers/util/format_number.dart';
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
+import 'package:textile_tracking/helpers/util/format_number.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/service.dart';
 
 class GsmEditScreen extends StatefulWidget {
@@ -92,6 +103,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
@@ -100,11 +112,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   final TextEditingController _preventivePlanController =
       TextEditingController();
   bool _saving = false;
   int _visibleStep = 1;
   List<Map<String, dynamic>> _attachments = [];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -153,6 +168,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   String get _draftType => 'gsm';
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+
+  String get _draftType => 'gsm';
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   void initState() {
@@ -161,10 +180,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _reasonController.text = _textValue(widget.data['reason']);
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = parseEvaluationAttachments(widget.data['attachments']);
@@ -172,6 +194,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     _reasonController.addListener(_persistDraft);
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
+<<<<<<< HEAD
 =======
     _reasonController.text = widget.data['reason']?.toString() ?? '';
     _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
@@ -203,10 +226,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     _loadDraft();
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 
   @override
   void dispose() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -248,10 +274,16 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+    _reasonController.removeListener(_persistDraft);
+    _preventivePlanController.removeListener(_persistDraft);
+    _reasonController.dispose();
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -264,12 +296,15 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   String _textValue(dynamic value) {
     final text = value?.toString().trim() ?? '';
     return text == '-' ? '' : text;
   }
 
   int _stepFromValues() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -296,6 +331,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return 1;
   }
 
@@ -307,6 +345,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       if (draft.containsKey('reason')) {
         _reasonController.text = draft['reason']?.toString() ?? '';
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -331,10 +370,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -373,12 +415,18 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+      if (draft.containsKey('attachments')) {
+        final parsed = parseEvaluationAttachments(draft['attachments']);
+        _attachments = parsed;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -437,6 +485,9 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
         parsedStep.clamp(1, 2),
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+        parsedStep.clamp(1, 2),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       );
     });
   }
@@ -444,6 +495,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reason': _reasonController.text,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -481,6 +533,11 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+      'attachments': _attachments,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     });
     if (mounted) setState(() {});
   }
@@ -494,6 +551,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
@@ -537,11 +595,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
 
-<<<<<<< HEAD
   Future<void> _save() async {
     if (_saving || !_canSave) return;
 
@@ -569,6 +629,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 
       if (!mounted) return;
       Navigator.pop(context, message);
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -647,6 +708,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
       Navigator.pop(context, message);
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
@@ -667,16 +730,20 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return _reasonController.text.trim().length >= 8 &&
         _preventivePlanController.text.trim().length >= 8;
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _reasonController.text.trim().length >= 8;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     return false;
@@ -739,6 +806,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     if (_visibleStep == 2) return true;
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return false;
   }
 
@@ -769,10 +838,13 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
@@ -793,7 +865,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
-<<<<<<< HEAD
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
@@ -819,6 +890,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
                   child: _buildNextButton(),
                 ),
               ],
+<<<<<<< HEAD
 =======
           padding: const EdgeInsets.all(16),
 <<<<<<< HEAD
@@ -956,6 +1028,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
               ],
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             ],
           ),
         ),
@@ -1033,6 +1107,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
 =======
@@ -1041,6 +1116,8 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ),
     );
   }
@@ -1048,6 +1125,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   Widget _buildNextButton() {
     return SizedBox(
       width: double.infinity,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1060,11 +1138,14 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       child: ElevatedButton(
         onPressed: _canGoNext ? _goNext : null,
         style: _primaryActionButtonStyle.copyWith(
           minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
         ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1094,6 +1175,10 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
           'Selanjutnya',
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+        child: const Text(
+          'Selanjutnya',
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           textAlign: TextAlign.center,
         ),
       ),
@@ -1380,6 +1465,7 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
     return '${local.day} ${months[local.month - 1]} ${local.year}, '
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
+<<<<<<< HEAD
 =======
         onChanged: (_) => setState(() {}),
 <<<<<<< HEAD
@@ -1978,4 +2064,6 @@ class _GsmEditScreenState extends State<GsmEditScreen> {
   }
 >>>>>>> 7c2cdb6 (fix:)
 >>>>>>> 566eb72e (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 }

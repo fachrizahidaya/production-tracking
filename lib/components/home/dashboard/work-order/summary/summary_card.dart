@@ -145,13 +145,15 @@ class _SummaryCardState extends State<SummaryCard>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
 =======
 >>>>>>> d5a67e50 (fix: filter summary)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildCard(bool isTablet) {
     return Container(
-<<<<<<< HEAD
       width: double.infinity,
       decoration: CustomTheme().cardTheme().copyWith(
             border: Border.all(
@@ -181,6 +183,7 @@ class _SummaryCardState extends State<SummaryCard>
           ),
         ],
       ),
+<<<<<<< HEAD
 =======
   Widget _buildCard(bool isMobile) {
 <<<<<<< HEAD
@@ -373,6 +376,8 @@ class _SummaryCardState extends State<SummaryCard>
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 

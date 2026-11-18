@@ -6,6 +6,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 <<<<<<< HEAD
@@ -35,6 +36,10 @@ import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+import 'package:textile_tracking/screens/report/bs/bs_edit.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
@@ -73,10 +78,13 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -85,6 +93,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
         MaterialPageRoute(
           builder: (context) =>
               isWaiting ? BsEditScreen(data: data) : BsDetailScreen(data: data),
+<<<<<<< HEAD
 =======
       final updated = await Navigator.push<bool>(
         context,
@@ -118,11 +127,14 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
               isWaiting ? BsEditScreen(data: data) : BsDetailScreen(data: data),
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ),
       );
 
       if (!mounted) return;
       if (widget.returnToList) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -159,6 +171,11 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
         Navigator.pop(context, message);
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+        _replaceWithBsList(message: message);
+      } else {
+        Navigator.pop(context, message);
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
     } catch (error) {
       if (!mounted) return;
@@ -170,6 +187,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   void _replaceWithBsList({String? message}) {
 =======
   void _replaceWithBsList({bool saved = false, String? woNo}) {
@@ -191,6 +209,9 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
   void _replaceWithBsList({String? message}) {
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+  void _replaceWithBsList({String? message}) {
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -199,6 +220,7 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           savedMessage: message,
 =======
           savedWoNo: saved ? woNo : null,
@@ -220,6 +242,9 @@ class _BsDetailLoadingScreenState extends State<BsDetailLoadingScreen> {
           savedMessage: message,
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+          savedMessage: message,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ),
       ),
     );
@@ -271,6 +296,7 @@ class BsDetailScreen extends StatefulWidget {
 
 class _BsDetailScreenState extends State<BsDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -332,11 +358,16 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+  final TextEditingController _preventivePlanController =
+      TextEditingController();
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -358,6 +389,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -369,6 +402,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     _actionPlanController.dispose();
 >>>>>>> b2b87875 (feat: evaluasi bs)
@@ -386,12 +420,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -404,15 +441,17 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
         status == 'completed';
-<<<<<<< HEAD
   }
 
   Future<void> _openEditScreen() async {
     final message = await Navigator.push<String>(
+<<<<<<< HEAD
 =======
     return status == 'selesai' || status == 'completed';
 <<<<<<< HEAD
@@ -446,12 +485,15 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final message = await Navigator.push<String>(
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       context,
       MaterialPageRoute(
         builder: (context) => BsEditScreen(data: widget.data),
       ),
     );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -539,12 +581,20 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+    if (message != null && message.trim().isNotEmpty && mounted) {
+      Navigator.pop(context, message);
+    }
+  }
+
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Evaluasi BS',
         onReturn: () => Navigator.pop(context),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -570,6 +620,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         onEdit: _isCompleted ? _openEditScreen : null,
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+        onEdit: _isCompleted ? _openEditScreen : null,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -592,6 +645,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d9ba4836 (fix: detail evaluasi)
 =======
@@ -600,10 +654,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -616,14 +673,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 =======
 >>>>>>> a087f712 (fix: bs dan gsm)
-                historyField: 'reason',
 =======
-=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 historyField: 'reason',
->>>>>>> d39c264 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
+<<<<<<< HEAD
 <<<<<<< HEAD
                 'Rencana Tindakan',
                 _actionPlanController.text,
@@ -659,10 +715,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 'Rencana Pencegahan',
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -686,12 +745,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+                historyField: 'preventive_plan',
+              ),
+              const SizedBox(height: 16),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
                   attachments: widget.data['attachments'],
                 ),
               ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -783,10 +848,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             ],
           ),
         ),
       ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -808,6 +876,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 
@@ -838,14 +908,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           _buildQtyBsItem(),
           const SizedBox(height: 12),
           _buildProcessTimeItem(
             label: 'Mulai Sortir',
+<<<<<<< HEAD
 =======
           _buildQtyBsItem(),
           const SizedBox(height: 12),
@@ -869,6 +943,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             label: 'Mulai Sortir',
 >>>>>>> cfa5498 (fix: UI)
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             person: _sorting['start_by'],
             time: _sorting['start_time']?.toString(),
           ),
@@ -878,10 +954,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
 =======
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             label: 'Selesai Sortir',
             person: _sorting['end_by'],
             time: _sorting['end_time']?.toString(),
@@ -896,7 +975,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
-<<<<<<< HEAD
           ),
         ],
       ),
@@ -950,6 +1028,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ],
         ),
       ],
+<<<<<<< HEAD
 =======
           _buildOverviewItem(
             label: 'Qty BS',
@@ -1164,6 +1243,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           ],
         ),
       ],
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 
@@ -1202,6 +1283,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
@@ -1210,6 +1292,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -1231,6 +1315,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
 =======
@@ -1239,6 +1324,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> cfa5498 (fix: UI)
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1259,8 +1346,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ),
               ),
           ],
-<<<<<<< HEAD
         ),
+<<<<<<< HEAD
 =======
         Text(
           name,
@@ -1296,10 +1383,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         ),
 >>>>>>> cfa5498 (fix: UI)
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ],
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1317,6 +1407,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildMaterialItem() {
     final code = _value('topMaterialCode');
     final name = _value('topMaterialName');
@@ -1365,10 +1457,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildCategoryCard() {
     final defects = _defects();
 
@@ -1430,7 +1525,6 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               child: Column(
-<<<<<<< HEAD
                 children: [
                   for (int i = 0; i < defects.length; i += 2) ...[
                     if (i > 0) const SizedBox(height: 10),
@@ -1449,6 +1543,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ],
               ),
             ),
+<<<<<<< HEAD
 =======
   Widget _buildSaveBar() {
     return SafeArea(
@@ -1693,6 +1788,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ],
       ),
     );
@@ -1707,6 +1804,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1726,11 +1824,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> aa02f1b (feat: evaluasi bs)
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
+=======
+  Widget _buildDefectItem(Map<String, dynamic> defect) {
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final name = defect['defect_name']?.toString() ?? '-';
     final qty = defect['qty']?.toString() ?? '-';
 
     return Container(
-<<<<<<< HEAD
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -1752,6 +1852,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
             ),
           ),
           const SizedBox(width: 8),
+<<<<<<< HEAD
 =======
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
@@ -1933,13 +2034,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> b25dc8bc (fix: detail evaluasi)
 =======
 =======
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           Text(
             qty,
             style: TextStyle(
               color: Colors.grey.shade700,
               fontWeight: FontWeight.w700,
+<<<<<<< HEAD
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             ),
           ),
         ],
@@ -1976,15 +2082,19 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       case 'direview':
       case 'reviewed':
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
+<<<<<<< HEAD
 =======
       case 'selesai':
       case 'completed':
@@ -2011,6 +2121,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         return const Color(0xFFF2F7FF);
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -2031,10 +2143,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -2043,6 +2158,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFF955B34);
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2083,11 +2199,14 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         return const Color(0xFF955B34);
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       default:
         return _getStatusColor(status);
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2100,6 +2219,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Map<String, dynamic> get _sorting {
     final sorting = widget.data['sorting'];
     return sorting is Map ? Map<String, dynamic>.from(sorting) : {};
@@ -2170,6 +2291,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b2b87875 (feat: evaluasi bs)
 =======
@@ -2184,6 +2306,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -2206,6 +2330,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2238,10 +2363,13 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
     String? updatedAt,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2254,6 +2382,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     String? historyField,
   }) {
     final hasUpdatedAt =
@@ -2261,6 +2391,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final current = value.isEmpty ? '-' : value;
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2273,6 +2404,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -2281,8 +2414,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
-<<<<<<< HEAD
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
+<<<<<<< HEAD
 =======
   }) {
     final hasUpdatedAt =
@@ -2323,6 +2456,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -2334,6 +2469,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2371,6 +2507,11 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   previous['value'].toString(),
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+              for (final previous in previousVersions) ...[
+                Text(
+                  previous['value'].toString(),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -2379,6 +2520,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2405,6 +2547,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   _historyActorMeta(previous),
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+                  _historyActorMeta(previous),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -2412,9 +2557,9 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 ),
                 const SizedBox(height: 12),
               ],
-<<<<<<< HEAD
               Text(
                 current,
+<<<<<<< HEAD
 =======
               Text(
                 value.isEmpty ? '-' : value,
@@ -2434,6 +2579,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                 current,
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
@@ -2444,14 +2591,18 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
               if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   latestMeta,
+<<<<<<< HEAD
 =======
               if (hasUpdatedAt) ...[
                 const SizedBox(height: 8),
@@ -2477,6 +2628,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
                   latestMeta,
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -2520,6 +2673,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 8f5aac6d (feat: evaluasi bs)
 =======
@@ -2528,6 +2682,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 >>>>>>> bd0b8f00 (fix: evaluasi)
 =======
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -2535,6 +2691,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       final historyField = history['field']?.toString();
       final label = history['label']?.toString().trim().toLowerCase() ?? '';
       if (historyField == field || label == expectedLabel) {
+<<<<<<< HEAD
 =======
   List<Map<String, dynamic>> _previousHistoryItems(String field) {
 <<<<<<< HEAD
@@ -2576,6 +2733,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       if (historyField == field || label == expectedLabel) {
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         group = history;
         break;
       }
@@ -2590,6 +2749,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       return aDate.compareTo(bDate);
     });
     return items;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2615,6 +2775,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -2622,6 +2784,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     if (raw is! List) return [];
     return raw
         .whereType<Map>()
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2649,10 +2812,14 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
         .where((item) => item['new_value'] != null)
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+        .where((item) => item['new_value'] != null)
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2669,6 +2836,8 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
 =======
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -2699,6 +2868,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2970,5 +3140,7 @@ class _BsDetailScreenState extends State<BsDetailScreen> {
     return value.toString().trim();
 >>>>>>> 85966df (fix: detail evaluasi)
 >>>>>>> b25dc8bc (fix: detail evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 }

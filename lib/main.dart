@@ -74,6 +74,7 @@ import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -95,14 +96,19 @@ import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
 =======
 =======
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/bs-anomaly/bs_list.dart';
 import 'package:textile_tracking/screens/report/anomaly/index.dart';
 import 'package:textile_tracking/screens/work-order/index.dart';
 import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/gsm-anomaly/gsm_list.dart';
+<<<<<<< HEAD
 >>>>>>> d94a57a (feat:)
 >>>>>>> a5b9c62d (feat:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 <<<<<<< HEAD
@@ -198,30 +204,28 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InternetListener(
-      child: MaterialApp(
-        title: 'TexTrack',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          appBarTheme: AppBarTheme(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
-              titleTextStyle: TextStyle(
-                  color: CustomTheme().colors('text-primary'),
-                  fontSize: CustomTheme().fontSize('xl'))),
-          drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
-          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
-          scaffoldBackgroundColor: Colors.white,
-          cardTheme: CardThemeData(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            margin: EdgeInsets.all(0),
-            elevation: 0,
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-          useMaterial3: true,
+    return MaterialApp(
+      navigatorKey: appNavigatorKey,
+      title: 'TexTrack',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            titleTextStyle: TextStyle(
+                color: CustomTheme().colors('text-primary'),
+                fontSize: CustomTheme().fontSize('xl'))),
+        drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
+        scaffoldBackgroundColor: Colors.white,
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12))),
+          margin: EdgeInsets.all(0),
+          elevation: 0,
         ),
+<<<<<<< HEAD
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
@@ -270,9 +274,11 @@ class MyApp extends StatelessWidget {
           '/report-production': (context) => ReportScreen(),
           '/dyeing-rework-evaluations': (context) => ReworkList(),
         },
-      ),
-<<<<<<< HEAD
 =======
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        useMaterial3: true,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
 <<<<<<< HEAD
@@ -346,8 +352,11 @@ class MyApp extends StatelessWidget {
         '/gsm-evaluations': (context) => GsmList(),
         '/gsm-anomalies': (context) => GsmAnomalyList(),
       },
+<<<<<<< HEAD
 >>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
 >>>>>>> 92623572 (feat: notifikasi evaluasi bs)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 }

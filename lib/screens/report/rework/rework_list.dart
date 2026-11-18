@@ -144,9 +144,8 @@ class _ReworkListState extends State<ReworkList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
-<<<<<<< HEAD
-<<<<<<< HEAD
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -184,6 +183,12 @@ class _ReworkListState extends State<ReworkList> {
 <<<<<<< HEAD
 =======
 >>>>>>> 9d9abd1e (fix: rework)
+=======
+    _searchController.text = widget.search;
+
+    _scrollController.addListener(_onScroll);
+    _loadReworkList();
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _loadPendingCount();
 =======
 >>>>>>> 41ded02d (fix: rework)
@@ -1290,10 +1295,6 @@ class _ReworkListState extends State<ReworkList> {
                     //   _categories(item),
                     //   maxLines: 1,
                     // ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 12),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -1301,15 +1302,6 @@ class _ReworkListState extends State<ReworkList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
-<<<<<<< HEAD
-=======
-                    if (!_isWaitingStatus(status)) ...[
-                      const SizedBox(height: 12),
-                      _buildLabelValue('Diisi oleh:', _submittedBy(item)),
-                    ],
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1328,15 +1320,7 @@ class _ReworkListState extends State<ReworkList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 _formatDateTime(item.startDate),
-=======
-                                _formatDateTime(date),
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-                                _formatDateTime(item.startDate),
->>>>>>> 59853dc (fix: alasan penyebab rework)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
@@ -1463,6 +1447,7 @@ class _ReworkListState extends State<ReworkList> {
               ),
             ],
           ),
+<<<<<<< HEAD
           const TextSpan(text: ' · dari '),
           TextSpan(text: _reworkReferenceNo(item)),
         ],
@@ -1526,6 +1511,8 @@ class _ReworkListState extends State<ReworkList> {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
 >>>>>>> 5ad2d445 (feat: temporarily)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ),
       ],
     );
@@ -1766,10 +1753,6 @@ class _ReworkListState extends State<ReworkList> {
   String _dyeingNo(ReworkListItem item) =>
       _display(_map(item.dyeing)['dyeing_no'] ?? _map(item.dyeing)['no']);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> aa49533 (fix:)
   Map<String, dynamic> _materialItem(ReworkListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1777,26 +1760,12 @@ class _ReworkListState extends State<ReworkList> {
     }
     return _map(item.item);
   }
-<<<<<<< HEAD
 
   String _itemCode(ReworkListItem item) =>
       _display(_materialItem(item)['code']);
 
   String _itemName(ReworkListItem item) =>
       _display(_materialItem(item)['name']);
-=======
-  String _itemCode(ReworkListItem item) => _display(_map(item.item)['code']);
-
-  String _itemName(ReworkListItem item) => _display(_map(item.item)['name']);
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-
-  String _itemCode(ReworkListItem item) =>
-      _display(_materialItem(item)['code']);
-
-  String _itemName(ReworkListItem item) =>
-      _display(_materialItem(item)['name']);
->>>>>>> aa49533 (fix:)
 
   String _reworkReferenceNo(ReworkListItem item) {
     final reference = _map(item.reworkReference).isNotEmpty
@@ -2151,10 +2120,6 @@ class _ReworkListState extends State<ReworkList> {
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
       case 'reviewed':
       case 'selesai':
       case 'completed':
@@ -2182,9 +2147,6 @@ class _ReworkListState extends State<ReworkList> {
       case 'reviewed':
       case 'selesai':
       case 'completed':
-=======
-      case 'completed':
->>>>>>> d256f82 (fix: UI evaluasi)
         return const Color(0xFFF2F7FF);
       case 'menunggu':
       case 'waiting':

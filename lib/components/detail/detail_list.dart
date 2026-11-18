@@ -704,14 +704,18 @@ Ringkasan Sorting
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1691b544 (fix: sortir)
 =======
 >>>>>>> 655bb899 (fix: detail packing)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
   }) {
+<<<<<<< HEAD
 =======
     dynamic value,
     {
@@ -739,6 +743,8 @@ Ringkasan Sorting
   }) {
 >>>>>>> 80d4e6a (fix: detail packing)
 >>>>>>> 655bb899 (fix: detail packing)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -2155,10 +2161,10 @@ Catatan WO
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Tab(
                                 text: (items[index]['code'] ??
-                                        items[index]['semifinished_product']?
-                                            ['code'] ??
-                                        items[index]['finished_product']?
-                                            ['code'] ??
+                                        items[index]['semifinished_product']
+                                            ?['code'] ??
+                                        items[index]['finished_product']
+                                            ?['code'] ??
                                         'Item ${index + 1}')
                                     .toString(),
                               ),

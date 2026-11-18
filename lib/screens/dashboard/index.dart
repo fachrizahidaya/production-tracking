@@ -78,15 +78,12 @@ class Dashboard extends StatefulWidget {
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
   const Dashboard({
     super.key,
     required this.isMobile,
     this.onRefreshReworkNotifications,
   });
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 025659bb (fix: dashboard mobile)
@@ -102,6 +99,8 @@ class Dashboard extends StatefulWidget {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -165,6 +164,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
@@ -175,6 +175,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -200,6 +202,7 @@ class _DashboardState extends State<Dashboard> {
         'status': params['status']!,
     };
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -263,6 +266,9 @@ class _DashboardState extends State<Dashboard> {
 
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   @override
   void initState() {
     super.initState();
@@ -779,6 +785,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
@@ -787,6 +794,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       (key) {
         if (key == 'page' || key == 'search' || key == 'per_page') {
           return false;
@@ -796,6 +805,7 @@ class _DashboardState extends State<Dashboard> {
         }
         return params[key]!.isNotEmpty;
       },
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -816,6 +826,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 
@@ -1263,6 +1275,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       _isLoadMore = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
     });
 <<<<<<< HEAD
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
@@ -1308,6 +1321,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       if (isReset) {
         _dataList.clear();
         _firstLoading = true;
@@ -1435,6 +1450,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
@@ -1443,6 +1459,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       if (_isMobile) {
         params['search'] = _search;
         params['page'] = '0';
@@ -1450,6 +1468,7 @@ class _DashboardState extends State<Dashboard> {
       } else {
         params = {'search': _search, 'page': '0'};
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1470,6 +1489,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     });
     _loadMore();
   }
@@ -1497,6 +1518,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1541,6 +1563,9 @@ class _DashboardState extends State<Dashboard> {
                   padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [
@@ -1548,14 +1573,7 @@ class _DashboardState extends State<Dashboard> {
                         WorkOrderStats(
                           data: statsList,
                           isFetching: isStatsLoading,
-<<<<<<< HEAD
-<<<<<<< HEAD
                           isMobile: _isMobile,
-=======
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
-                          isMobile: _isMobile,
->>>>>>> ecdad3e (fix: dashboard mobile)
                         ),
                         if (_dashboardWidgets['process_summary'] ?? false)
                           WorkOrderSummary(
@@ -1563,10 +1581,6 @@ class _DashboardState extends State<Dashboard> {
                             greigeData: greigeSummaryList,
                             handleRefetch: _handleFetchSummary,
                             isFetching: isSummaryLoading,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
                             isMobile: _isMobile,
                             dariTanggal: summaryParams['start_date'] ??
                                 dariTanggalSummary,
@@ -1574,11 +1588,6 @@ class _DashboardState extends State<Dashboard> {
                                 sampaiTanggalSummary,
                             onDateRangeSelected:
                                 _isMobile ? _handleSummaryDateRange : null,
-<<<<<<< HEAD
-=======
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
                             filterWidget: SummaryFilter(
                               dariTanggal: dariTanggalSummary,
                               sampaiTanggal: sampaiTanggalSummary,
@@ -1900,14 +1909,7 @@ class _DashboardState extends State<Dashboard> {
                             handleRefetch: _handleFetchMachine,
                             isFetching: isMachineLoading,
                             processNames: menuProcessNames,
-<<<<<<< HEAD
-<<<<<<< HEAD
                             isMobile: _isMobile,
-=======
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
-                            isMobile: _isMobile,
->>>>>>> ecdad3e (fix: dashboard mobile)
                           ),
                         if (_dashboardWidgets['wo_list'] ?? false)
                           WorkOrderProcessScreen(
@@ -1919,24 +1921,12 @@ class _DashboardState extends State<Dashboard> {
                             handleLoadMore: _loadMore,
                             handleRefetch: _refetch,
                             isLoadMore: _isLoadMore,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
                             isMobile: _isMobile,
                             filterWidget: ProcessFilter(
                               params: params,
                               onHandleFilter: _handleProcessFilter,
                               onDateRangeSelected:
                                   _isMobile ? _handleProcessDateRange : null,
-<<<<<<< HEAD
-=======
-                            filterWidget: ProcessFilter(
-                              params: params,
-                              onHandleFilter: _handleProcessFilter,
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
                             ),
                             handleFetchData: (params) async {
                               final service =
@@ -1952,6 +1942,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                       ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2010,6 +2001,9 @@ class _DashboardState extends State<Dashboard> {
                   ),
 >>>>>>> 2dccfd5 (fix: home, dashboard)
 >>>>>>> e16df531 (fix: home, dashboard)
+=======
+                  ),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 ),
               ],
             ),
@@ -2024,6 +2018,7 @@ class _DashboardState extends State<Dashboard> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
@@ -2032,6 +2027,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: InkWell(
@@ -2047,6 +2044,7 @@ class _DashboardState extends State<Dashboard> {
                   'Widget Dashboard',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2073,6 +2071,8 @@ class _DashboardState extends State<Dashboard> {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
               ),
               _isDashboardWidgetsLoading
                   ? SizedBox(

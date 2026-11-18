@@ -19,10 +19,9 @@ class MachineEditSection extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
   final WrapCrossAlignment wrapCrossAxisAlignment;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final int columns;
   final bool compactDisplay;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -43,6 +42,8 @@ class MachineEditSection extends StatefulWidget {
   final bool compactDisplay;
 >>>>>>> dd7ae31 (fix: sortir)
 >>>>>>> 1691b544 (fix: sortir)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   const MachineEditSection(
       {super.key,
@@ -55,11 +56,10 @@ class MachineEditSection extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
       this.onMachineChanged,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.wrapCrossAxisAlignment = WrapCrossAlignment.center,
       this.columns = 4,
       this.compactDisplay = false});
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
       this.onMachineChanged});
@@ -86,6 +86,8 @@ class MachineEditSection extends StatefulWidget {
       this.compactDisplay = false});
 >>>>>>> dd7ae31 (fix: sortir)
 >>>>>>> 1691b544 (fix: sortir)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   State<MachineEditSection> createState() => _MachineEditSectionState();
@@ -229,14 +231,8 @@ class _MachineEditSectionState extends State<MachineEditSection> {
                           /// BADGE
                           if (widget.compactDisplay || status != 'Tersedia')
                             CustomBadge(
-<<<<<<< HEAD
                               status:
                                   status == 'Selesai' ? 'Selesai' : 'Diproses',
-=======
-                              status: status == 'Selesai'
-                                  ? 'Selesai'
-                                  : 'Diproses',
->>>>>>> dd7ae31 (fix: sortir)
                               title: status ?? 'Tersedia',
                             ),
 

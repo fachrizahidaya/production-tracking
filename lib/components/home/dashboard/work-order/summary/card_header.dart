@@ -46,6 +46,7 @@ class CardHeader extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 025659bb (fix: dashboard mobile)
 =======
@@ -56,6 +57,8 @@ class CardHeader extends StatelessWidget {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Row(
       children: [
         Expanded(
@@ -64,6 +67,7 @@ class CardHeader extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -195,11 +199,14 @@ class CardHeader extends StatelessWidget {
 =======
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -456,6 +463,9 @@ class CardHeader extends StatelessWidget {
         if (!isMobile) ...[
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+        if (!isMobile) ...[
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           Text(
             formatNumber(total),
             style: TextStyle(

@@ -549,10 +549,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               )
               .toDouble();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -560,7 +556,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             itemBuilder: (context, index) {
               final mappedItem = _mapApiToSummaryCard(_activeData[index]);
               final isLast = index == _activeData.length - 1;
-<<<<<<< HEAD
 
               return SizedBox(
                 width: cardWidth,
@@ -582,6 +577,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 ),
               );
             },
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 =======
@@ -742,6 +738,8 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             },
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           );
         },
       ),

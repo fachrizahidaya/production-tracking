@@ -1151,23 +1151,14 @@ class GreigeProcessDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 581d9e1c (fix:)
 =======
 >>>>>>> 968ce058 (fix: warping - shearing)
-    return _buildInfoGrid(rows);
 =======
-    return _buildInfoGrid(
-      rows,
-      isTablet,
-      crossAxisAlignment: processName == 'Warping'
-          ? WrapCrossAlignment.start
-          : WrapCrossAlignment.center,
-    );
->>>>>>> 79249c5 (fix:)
-=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return _buildInfoGrid(rows);
->>>>>>> 4407641 (fix: warping - shearing)
   }
 
   Widget _buildBrokenYarns() {
@@ -1354,6 +1345,7 @@ class GreigeProcessDetailList extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> a750f85d (fix: warping - shearing)
 =======
@@ -1362,10 +1354,13 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
 >>>>>>> 4407641 (fix: warping - shearing)
 >>>>>>> 968ce058 (fix: warping - shearing)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final children = items
         .map((item) {
           final infoColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1396,6 +1391,8 @@ class GreigeProcessDetailList extends StatelessWidget {
 =======
 >>>>>>> 4407641 (fix: warping - shearing)
 >>>>>>> 968ce058 (fix: warping - shearing)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
             children: [
               Text(
                 item['label'].toString(),

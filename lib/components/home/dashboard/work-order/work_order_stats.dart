@@ -75,24 +75,16 @@ class _WorkOrderStatsState extends State<WorkOrderStats> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
 =======
 >>>>>>> 8d23ccdc (fix: UI dashboard)
 =======
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     if (widget.data?.length == 0) return const SizedBox();
-=======
-    if (widget.data == null || widget.data.isEmpty) {
-      return const SizedBox.shrink();
-    }
->>>>>>> e61620e (fix: UI mobile dashboard)
-=======
-    if (widget.data?.length == 0) return SizedBox();
->>>>>>> 6330259 (fix: UI dashboard)
-=======
-    if (widget.data?.length == 0) return const SizedBox();
->>>>>>> ecdad3e (fix: dashboard mobile)
 
     if (widget.isFetching) {
       return Padding(

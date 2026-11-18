@@ -143,6 +143,7 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d5a67e50 (fix: filter summary)
 =======
@@ -219,11 +220,15 @@ class CardContent extends StatelessWidget {
   List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+  List<_StatusItem> _filteredItems(Map<String, dynamic> summary) {
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final allItems = [
       _StatusItem(label: 'Selesai', value: summary['completed'] ?? 0),
       _StatusItem(label: 'Dilewati', value: summary['skipped'] ?? 0),
       _StatusItem(label: 'Diproses', value: summary['in_progress'] ?? 0),
       _StatusItem(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -314,6 +319,10 @@ class CardContent extends StatelessWidget {
         value: summary['waiting'] ?? 0,
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+        label: 'Menunggu',
+        value: summary['waiting'] ?? 0,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ),
     ];
 
@@ -335,10 +344,13 @@ class CardContent extends StatelessWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> bc05a2f3 (fix: UI mobile dashboard)
 =======
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 
   Widget _buildInfo(String label, int value) {
@@ -362,6 +374,7 @@ class CardContent extends StatelessWidget {
             fontWeight: FontWeight.w600,
             height: 1.2,
           ),
+<<<<<<< HEAD
 =======
 
 <<<<<<< HEAD
@@ -588,6 +601,8 @@ class CardContent extends StatelessWidget {
           ),
 >>>>>>> ecdad3e (fix: dashboard mobile)
 >>>>>>> 727a4ffa (fix: dashboard mobile)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ),
       ],
     );

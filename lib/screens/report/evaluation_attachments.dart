@@ -22,6 +22,7 @@ List<Map<String, dynamic>> parseEvaluationAttachments(dynamic raw) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
@@ -56,6 +57,8 @@ bool sameEvaluationAttachments(
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 bool evaluationAttachmentIsLocal(Map<String, dynamic> item) =>
     item['isNew'] == true;
 
@@ -205,6 +208,7 @@ class _EvaluationAttachmentEditorState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
@@ -213,12 +217,13 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final fileExtension = image.path.split('.').last.toLowerCase();
     const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
     if (!allowed.contains(fileExtension)) {
       throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
     }
-<<<<<<< HEAD
 
     final File file;
     if (fileExtension == 'gif' || fileExtension == 'webp') {
@@ -238,6 +243,7 @@ class _EvaluationAttachmentEditorState
       'name': name,
       'path': file.path,
       'extension': name.split('.').last.toLowerCase(),
+<<<<<<< HEAD
 =======
     final file = await _compressImage(image.path);
     if (file == null) return null;
@@ -302,6 +308,8 @@ class _EvaluationAttachmentEditorState
       'extension': name.split('.').last.toLowerCase(),
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       'isNew': true,
     };
   }
@@ -327,6 +335,7 @@ class _EvaluationAttachmentEditorState
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -363,6 +372,8 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Future<void> _deleteAttachment(int index) async {
     if (index < 0 || index >= widget.attachments.length) return;
     final confirmed = await showDialog<bool>(
@@ -427,6 +438,7 @@ class _EvaluationAttachmentEditorState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
@@ -463,6 +475,8 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                         child: ElevatedButton.icon(
                           onPressed: () async {
                             Navigator.pop(dialogContext);
@@ -507,6 +521,7 @@ class _EvaluationAttachmentEditorState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 01aa2117 (fix: attachment evaluation)
 =======
@@ -515,6 +530,8 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 child: GestureDetector(
                   onTap: () => Navigator.pop(sheetContext, 'view'),
                   child: ClipRRect(
@@ -527,6 +544,7 @@ class _EvaluationAttachmentEditorState
                           widget.attachments[index],
                           fit: BoxFit.contain,
                         ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -556,12 +574,15 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                       ),
                     ),
                   ),
                 ),
               ),
               ListTile(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -593,6 +614,8 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
                 title: const Text(
                   'Hapus gambar',
@@ -609,6 +632,7 @@ class _EvaluationAttachmentEditorState
 
     if (!mounted || action == null) return;
     if (action == 'view') await _viewAttachment(index);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -630,6 +654,8 @@ class _EvaluationAttachmentEditorState
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     if (action == 'delete') await _deleteAttachment(index);
   }
 
@@ -664,6 +690,7 @@ class _EvaluationAttachmentEditorState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 onTap: () => _viewAttachment(index),
 =======
                 onTap: () => _showAttachmentActions(index),
@@ -685,6 +712,9 @@ class _EvaluationAttachmentEditorState
                 onTap: () => _viewAttachment(index),
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+                onTap: () => _viewAttachment(index),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Stack(
@@ -698,10 +728,13 @@ class _EvaluationAttachmentEditorState
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                       Positioned(
                         right: 6,
                         bottom: 6,
@@ -720,6 +753,7 @@ class _EvaluationAttachmentEditorState
                                 color: Colors.white,
                                 size: 16,
                               ),
+<<<<<<< HEAD
 =======
                       const Positioned(
                         right: 6,
@@ -784,6 +818,8 @@ class _EvaluationAttachmentEditorState
                               ),
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                             ),
                           ),
                         ),

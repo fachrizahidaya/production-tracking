@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import 'dart:io';
 =======
 >>>>>>> e7b9ec75 (fix: UI evaluasi)
@@ -22,6 +23,9 @@ import 'dart:io';
 import 'dart:io';
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+import 'dart:io';
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -129,6 +133,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   String get _draftType => 'rework';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   List<Map<String, dynamic>> _reasonOptions = [];
   List<Map<String, dynamic>> _selectedReasons = [];
@@ -151,10 +156,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 =======
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -163,16 +171,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final reasons = widget.data['reasons'];
     if (reasons is List) {
       _selectedReasons = reasons
 <<<<<<< HEAD
 <<<<<<< HEAD
           .where((reason) => reason.toString().trim().isNotEmpty)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
           .map(
             (reason) => <String, dynamic>{
               'id': reason.toString(),
@@ -180,30 +186,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               'label': reason.toString(),
             },
           )
-<<<<<<< HEAD
           .toList();
     }
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = _parseAttachments(widget.data['attachments']);
 <<<<<<< HEAD
     _visibleStep = _stepFromValues();
-=======
-          .map((reason) => {
-                'value': reason.toString(),
-                'label': reason.toString(),
-              })
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
-          .toList();
-    }
-    _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
-    _attachments = _parseAttachments(widget.data['attachments']);
-    _visibleStep = _stepFromValues();
-<<<<<<< HEAD
-    _actionPlanController.addListener(_persistDraft);
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
 =======
@@ -244,6 +232,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     _preventivePlanController.removeListener(_persistDraft);
 =======
 =======
@@ -271,6 +260,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     _preventivePlanController.removeListener(_persistDraft);
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+    _preventivePlanController.removeListener(_persistDraft);
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -285,6 +277,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   int _stepFromValues() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -311,6 +304,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return 1;
   }
 
@@ -325,6 +321,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4ec508fc (fix: remove rencana tindakan)
 =======
@@ -333,11 +330,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         _selectedReasons = List<Map<String, dynamic>>.from(
           reasons
               .whereType<Map>()
               .map((item) => Map<String, dynamic>.from(item)),
         );
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -365,11 +365,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> c675884 (fix: remove rencana tindakan)
 >>>>>>> 754b7cda (fix: remove rencana tindakan)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -408,12 +411,18 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+      if (draft.containsKey('attachments')) {
+        final parsed = _parseAttachments(draft['attachments']);
+        _attachments = parsed;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -472,6 +481,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         parsedStep.clamp(1, 2),
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+        parsedStep.clamp(1, 2),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       );
     });
   }
@@ -479,6 +491,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reasons': _selectedReasons,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -516,6 +529,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 =======
 >>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
+=======
+      'preventivePlan': _preventivePlanController.text,
+      'visibleStep': _visibleStep,
+      'attachments': _attachments,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     });
     if (mounted) setState(() {});
   }
@@ -529,6 +547,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
 =======
     if (_visibleStep >= 3 || !_canGoNext) return;
@@ -572,6 +591,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     if (_visibleStep >= 2 || !_canGoNext) return;
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+    if (_visibleStep >= 2 || !_canGoNext) return;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -631,17 +653,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
 =======
 >>>>>>> 6f3012ab (fix: attachment evaluation)
-        attachments: _attachments,
 =======
-        attachments: _attachmentsDirty ? _attachments : null,
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         attachments: _attachments,
->>>>>>> dc5b5fe (fix: attachment evaluation)
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -704,13 +723,12 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 <<<<<<< HEAD
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
-<<<<<<< HEAD
-<<<<<<< HEAD
         _preventivePlanController.text.trim().length >= 8;
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
+<<<<<<< HEAD
 <<<<<<< HEAD
     return false;
   }
@@ -745,6 +763,8 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     if (_visibleStep == 2) return true;
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return false;
   }
 
@@ -823,8 +843,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
     if (selected == null || !mounted) return;
     setState(() {
-<<<<<<< HEAD
-<<<<<<< HEAD
       final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
 <<<<<<< HEAD
       for (final value in selected) {
@@ -837,33 +855,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 'label': valueKey,
               },
             );
-=======
-      final nextSelected =
-          List<Map<String, dynamic>>.from(_selectedReasons);
-      for (final value in selected) {
-        final valueKey = value.toString();
-        final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
-          (item) => item['value'].toString() == valueKey,
-          orElse: () => <String, dynamic>{
-            'id': valueKey,
-            'value': valueKey,
-            'label': valueKey,
-          },
-        );
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-      final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
-      for (final value in selected) {
-        final valueKey = value.toString();
-        final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
-              (item) => item['value'].toString() == valueKey,
-              orElse: () => <String, dynamic>{
-                'id': valueKey,
-                'value': valueKey,
-                'label': valueKey,
-              },
-            );
->>>>>>> 59853dc (fix: alasan penyebab rework)
         if (!nextSelected.any(
           (item) => item['value'].toString() == option['value'].toString(),
         )) {
@@ -937,16 +928,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                     (option) =>
                         option['id'].toString() == optionId ||
                         option['value'].toString() == optionId ||
-<<<<<<< HEAD
-<<<<<<< HEAD
                         option['value'].toString() == item['value'].toString(),
-=======
-                        option['value'].toString() ==
-                            item['value'].toString(),
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-                        option['value'].toString() == item['value'].toString(),
->>>>>>> 59853dc (fix: alasan penyebab rework)
                   );
                   selectedIds.remove(item['value'].toString());
                   applyFilter();
@@ -1097,10 +1079,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
 
     final normalized = trimmed.toLowerCase();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 59853dc (fix: alasan penyebab rework)
     Map<String, dynamic>? existingOption;
     for (final option in _reasonOptions) {
       if (option['label'].toString().trim().toLowerCase() == normalized ||
@@ -1122,49 +1100,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         }
       });
       _persistDraft();
-<<<<<<< HEAD
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Alasan sudah ada dan dipilih')),
-      );
-      return;
-    }
-
-    try {
-      final option = await _reportService.createReworkReasonOption(trimmed);
-      if (!mounted) return;
-      setState(() {
-        final mapped = Map<String, dynamic>.from(option);
-        final nextOptions = List<Map<String, dynamic>>.from(_reasonOptions);
-        final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
-        if (!nextOptions.any(
-          (item) => item['value'].toString() == mapped['value'].toString(),
-        )) {
-          nextOptions.add(mapped);
-        }
-        if (!nextSelected.any(
-          (item) => item['value'].toString() == mapped['value'].toString(),
-        )) {
-          nextSelected.add(Map<String, dynamic>.from(mapped));
-        }
-        _reasonOptions = nextOptions;
-        _selectedReasons = nextSelected;
-      });
-      _persistDraft();
-<<<<<<< HEAD
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Alasan berhasil ditambahkan')),
-      );
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-    final alreadyExists = _reasonOptions.any(
-      (option) =>
-          option['label'].toString().trim().toLowerCase() == normalized ||
-          option['value'].toString().trim().toLowerCase() == normalized,
-    );
-    if (alreadyExists) {
-=======
->>>>>>> 59853dc (fix: alasan penyebab rework)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan sudah ada dan dipilih')),
       );
@@ -1195,7 +1130,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan berhasil ditambahkan')),
       );
->>>>>>> c675884 (fix: remove rencana tindakan)
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1558,27 +1492,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildOverviewCard(),
-=======
-              _buildOverviewCard(),
-              const SizedBox(height: 16),
-              _buildCategoryCard(),
-              const SizedBox(height: 16),
-              _buildReasonForm(),
-              const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Tindakan',
-                controller: _actionPlanController,
->>>>>>> 7c2cdb6 (fix:)
-=======
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: _buildOverviewCard(),
->>>>>>> d256f82 (fix: UI evaluasi)
               ),
               const SizedBox(height: 16),
               Padding(
@@ -1595,60 +1511,17 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    label: 'Rencana Tindakan',
-                    controller: _actionPlanController,
-                  ),
-                ),
-              ],
-              if (_visibleStep >= 3) ...[
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildEditorForm(
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildAttachmentCard(),
                 ),
               ],
-<<<<<<< HEAD
               if (_visibleStep < 2) ...[
-=======
-              ],
-<<<<<<< HEAD
-              if (_visibleStep < 3) ...[
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-              if (_visibleStep < 2) ...[
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-              if (_visibleStep >= 3) ...[
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildAttachmentCard(),
-                ),
-              ],
-<<<<<<< HEAD
-              if (_visibleStep < 3) ...[
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
-              if (_visibleStep < 2) ...[
->>>>>>> dc5b5fe (fix: attachment evaluation)
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -3042,6 +2915,7 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
       ),
     );
   }
+<<<<<<< HEAD
 
   List<Map<String, dynamic>> _parseAttachments(dynamic raw) {
     if (raw is! List) return [];
@@ -5035,4 +4909,6 @@ class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
   }
 =======
 >>>>>>> 41ded02d (fix: rework)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 }

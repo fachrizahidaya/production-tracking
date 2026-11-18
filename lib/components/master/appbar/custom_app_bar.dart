@@ -20,30 +20,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showAvatar;
 =======
   final bool isWithNotification;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
-<<<<<<< HEAD
-=======
-  final int reworkNotificationCount;
-  final VoidCallback? onReworkNotifications;
-  final bool isWithBsNotification;
-  final int bsNotificationCount;
-  final VoidCallback? onBsNotifications;
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-  final int notificationCount;
-  final VoidCallback? onNotifications;
-  final String notificationTooltip;
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-=======
   final bool isWithAnomalyNotification;
   final int anomalyNotificationCount;
   final VoidCallback? onAnomalyNotifications;
   final String anomalyNotificationTooltip;
->>>>>>> d94a57a (feat:)
   final bool isWithAccount;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -87,6 +70,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
   final VoidCallback? onEdit;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 7a6aa3b1 (feat: model for report)
 =======
@@ -100,6 +84,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 =======
   final showAvatar;
 >>>>>>> 0721b7ab (chore: update version)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   const CustomAppBar(
       {super.key,
@@ -110,6 +96,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
       this.isWithNotification = false,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -165,13 +152,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 20fcb172 (fix: notification all evaluasi)
 =======
 =======
+=======
+      this.notificationCount = 0,
+      this.onNotifications,
+      this.notificationTooltip = 'Evaluasi',
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.isWithAnomalyNotification = false,
       this.anomalyNotificationCount = 0,
       this.onAnomalyNotifications,
       this.anomalyNotificationTooltip = 'Notifikasi',
+<<<<<<< HEAD
 >>>>>>> d94a57a (feat:)
 >>>>>>> a5b9c62d (feat:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.isWithAccount = false,
+      this.showAvatar = true,
+      this.tab,
+      this.canDelete,
+      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -188,6 +187,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
       this.handleFinish,
       this.isLoading = false,
+<<<<<<< HEAD
 <<<<<<< HEAD
       this.showNameWithAvatar = false});
 =======
@@ -209,11 +209,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 >>>>>>> 6f05bd35 (merge to fase 2  (#27))
 =======
       this.showNameWithAvatar = false,
+=======
+      this.isDashboardSettingsLoading = false,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.onDashboardSettings,
-      this.onEdit,
       this.onReportSettings,
+<<<<<<< HEAD
       this.isDashboardSettingsLoading = false});
 >>>>>>> 0721b7ab (chore: update version)
+=======
+      this.onEdit,
+      this.showNameWithAvatar = false});
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   Widget build(BuildContext context) {
@@ -242,31 +249,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 <<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
-<<<<<<< HEAD
-<<<<<<< HEAD
             tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
             onPressed: onNotifications,
-=======
-            tooltip: 'Evaluasi Rework',
-            icon: Icons.assignment_late_outlined,
-            count: reworkNotificationCount,
-            onPressed: onReworkNotifications,
-          ),
-        if (isWithBsNotification)
-          _buildNotificationButton(
-            tooltip: 'Evaluasi BS',
-            icon: Icons.report_gmailerrorred_outlined,
-            count: bsNotificationCount,
-            onPressed: onBsNotifications,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-            tooltip: notificationTooltip,
-            icon: Icons.assignment_late_outlined,
-            count: notificationCount,
-            onPressed: onNotifications,
->>>>>>> 07c9d40 (fix: notification all evaluasi)
           ),
 <<<<<<< HEAD
 =======

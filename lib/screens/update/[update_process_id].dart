@@ -731,8 +731,7 @@ class _UpdateProcessState extends State<UpdateProcess>
           if (rawUsage is Map) {
             usages.add({
               'qty': rawUsage['qty'],
-              'wo_no': rawUsage['to_work_order']?['wo_no'] ??
-                  rawUsage['wo_no'],
+              'wo_no': rawUsage['to_work_order']?['wo_no'] ?? rawUsage['wo_no'],
               'packing_no': rawUsage['to_packing']?['packing_no'] ??
                   rawUsage['packing_no'],
               'source_packing_no': stock['from_packing']?['packing_no'],
@@ -805,8 +804,8 @@ class _UpdateProcessState extends State<UpdateProcess>
     for (final raw in formItems) {
       if (raw is! Map) continue;
 
-      final sameId = item['id'] != null &&
-          raw['id']?.toString() == item['id']?.toString();
+      final sameId =
+          item['id'] != null && raw['id']?.toString() == item['id']?.toString();
       final sameWoItem = item['wo_item_id'] != null &&
           raw['wo_item_id']?.toString() == item['wo_item_id']?.toString();
 
@@ -925,6 +924,7 @@ class _UpdateProcessState extends State<UpdateProcess>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d6d2ab6 (fix: sortir)
 =======
@@ -933,12 +933,15 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
 >>>>>>> dd7ae31 (fix: sortir)
 >>>>>>> 1691b544 (fix: sortir)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -956,6 +959,8 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
 >>>>>>> dd7ae31 (fix: sortir)
 >>>>>>> 1691b544 (fix: sortir)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1680,6 +1685,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1766,6 +1772,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     ),
 =======
 >>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1849,15 +1857,19 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                     ),
                                                     child: Tab(
                                                       text: ((widget.data['items']
-                                                                  [index]['code'] ??
+                                                                      [index]
+                                                                  ['code'] ??
                                                               widget.data['items']
-                                                                  [index]['semifinished_product']?
-                                                                      ['code'] ??
+                                                                          [index]
+                                                                      ['semifinished_product']
+                                                                  ?['code'] ??
                                                               widget.data['items']
-                                                                  [index]['finished_product']?
-                                                                      ['code'] ??
+                                                                          [index]
+                                                                      ['finished_product']
+                                                                  ?['code'] ??
                                                               widget.data['items']
-                                                                  [index]['item_code'] ??
+                                                                      [index][
+                                                                  'item_code'] ??
                                                               'Item ${index + 1}')
                                                           .toString()),
                                                     ),
@@ -1870,6 +1882,7 @@ class _UpdateProcessState extends State<UpdateProcess>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> ead5d4b9 (fix: stok di packing)
 =======
@@ -1878,6 +1891,8 @@ class _UpdateProcessState extends State<UpdateProcess>
 =======
 >>>>>>> 1ae4f78 (fix: stok di packing)
 >>>>>>> b69af3a7 (fix: stok di packing)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1886,6 +1901,7 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             return AnimatedBuilder(
                                               animation: tabController,
                                               builder: (context, _) {
+<<<<<<< HEAD
 <<<<<<< HEAD
                                                 final item =
                                                     (widget.data['items'] ?? [])[tabController.index];
@@ -1964,6 +1980,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                 widget.data,
                                               );
 =======
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                                 final item = (widget
                                                         .data['items'] ??
                                                     [])[tabController.index];
@@ -1976,13 +1994,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                   item,
                                                   widget.data,
                                                 );
-<<<<<<< HEAD
->>>>>>> d197c3c (fix: alert jika ada ubah qty packing)
-=======
                                                 final gradeAAdditionalQty =
                                                     getPackingGradeAAdditionalQty(
                                                         item);
->>>>>>> 9339670 (fix: keterangan ambil stok)
 
                                                 return Container(
                                                   padding: EdgeInsets.all(12),
@@ -2296,11 +2310,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                   setState(() {
                                                                     item['weight_per_dozen'] =
                                                                         value;
-                                                                      _updatePackingFormItem(
-                                                                        item,
-                                                                        'weight_per_dozen',
-                                                                        value,
-                                                                      );
+                                                                    _updatePackingFormItem(
+                                                                      item,
+                                                                      'weight_per_dozen',
+                                                                      value,
+                                                                    );
 
                                                                     calculateGsm(
                                                                         item);
@@ -2313,7 +2327,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                     );
 
                                                                     final formItem =
-                                                                        _findPackingFormItem(item);
+                                                                        _findPackingFormItem(
+                                                                            item);
                                                                     if (formItem !=
                                                                         null) {
                                                                       calculateGsm(
@@ -2322,7 +2337,8 @@ class _UpdateProcessState extends State<UpdateProcess>
                                                                           formItem);
                                                                       calculateTotalBerat(
                                                                         formItem,
-                                                                        widget.data,
+                                                                        widget
+                                                                            .data,
                                                                       );
                                                                     }
                                                                   });
@@ -2515,6 +2531,7 @@ class _UpdateProcessState extends State<UpdateProcess>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
 =======
@@ -2560,6 +2577,11 @@ class _UpdateProcessState extends State<UpdateProcess>
                               _gradeASourceInvalid,
 >>>>>>> 1ae4f78 (fix: stok di packing)
 >>>>>>> b69af3a7 (fix: stok di packing)
+=======
+                          isDisabled: (widget.label == 'Sorting' ||
+                                  widget.label == 'Packing') &&
+                              _gradeASourceInvalid,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                           onPressed: () {
                             _handleSubmit(context);
                           },

@@ -20,6 +20,7 @@ class GsmList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   final String? savedMessage;
 =======
   final String? savedWoNo;
@@ -41,6 +42,9 @@ class GsmList extends StatefulWidget {
   final String? savedMessage;
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+  final String? savedMessage;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   const GsmList(
       {super.key,
@@ -53,6 +57,7 @@ class GsmList extends StatefulWidget {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.savedMessage});
 =======
       this.savedWoNo});
@@ -74,6 +79,9 @@ class GsmList extends StatefulWidget {
       this.savedMessage});
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+      this.savedMessage});
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   State<GsmList> createState() => _GsmListState();
@@ -116,6 +124,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
     _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
 <<<<<<< HEAD
@@ -147,6 +156,10 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+    _status = widget.status.trim().isEmpty ? 'Menunggu' : widget.status.trim();
+    _showSavedDialogAfterLoad = widget.savedMessage?.trim().isNotEmpty == true;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     _searchController.text = widget.search;
 
     _scrollController.addListener(_onScroll);
@@ -228,6 +241,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           if (mounted) _showSavedDialog(widget.savedMessage!);
 =======
           if (mounted) _showSavedDialog(widget.savedWoNo!);
@@ -249,6 +263,9 @@ class _GsmListState extends State<GsmList> {
           if (mounted) _showSavedDialog(widget.savedMessage!);
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+          if (mounted) _showSavedDialog(widget.savedMessage!);
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         });
       }
     } catch (e) {
@@ -282,6 +299,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         _completedCount = counts['reviewed'];
 =======
         _completedCount = counts['completed'];
@@ -303,6 +321,9 @@ class _GsmListState extends State<GsmList> {
         _completedCount = counts['reviewed'];
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+        _completedCount = counts['reviewed'];
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         _allCount = counts['all'];
       });
     } catch (_) {
@@ -501,6 +522,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
@@ -526,6 +548,10 @@ class _GsmListState extends State<GsmList> {
                 status: 'Direview',
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+                label: 'Direview',
+                status: 'Direview',
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                 count: _completedCountLoading ? null : _completedCount,
               ),
               const SizedBox(width: 8),
@@ -546,6 +572,7 @@ class _GsmListState extends State<GsmList> {
     required String status,
     int? count,
   }) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -572,6 +599,9 @@ class _GsmListState extends State<GsmList> {
     final selected = _status == status;
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+    final selected = _status == status;
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     final color = CustomTheme().colors('primary');
 
     return InkWell(
@@ -620,6 +650,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     final completed = _isCompleted(status);
     final date = completed ? item.endDate : item.startDate;
@@ -639,12 +670,15 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 
     return Padding(
       padding: EdgeInsets.fromLTRB(0, isFirst ? 12 : 0, 0, 12),
       child: InkWell(
         onTap: () => _openGsmDetail(item),
         child: Container(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -657,6 +691,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           decoration: CustomTheme().cardTheme().copyWith(
                 color: _getStatusColor(status),
                 border: Border.all(
@@ -664,6 +700,7 @@ class _GsmListState extends State<GsmList> {
                   width: 1,
                 ),
               ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -684,6 +721,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
           clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
@@ -720,6 +759,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
@@ -728,6 +768,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                     const SizedBox(height: 18),
                     _buildSubmittedByItem(
                       name: _isWaitingStatus(status) ? '-' : _submittedBy(item),
@@ -735,6 +777,7 @@ class _GsmListState extends State<GsmList> {
                           ? null
                           : _formatDateTime(item.endDate),
                     ),
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -759,11 +802,14 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -776,10 +822,13 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -818,6 +867,9 @@ class _GsmListState extends State<GsmList> {
                                 'Tanggal Packing',
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+                                'Tanggal Packing',
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 12,
@@ -826,6 +878,7 @@ class _GsmListState extends State<GsmList> {
                               ),
                               const SizedBox(height: 3),
                               Text(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -851,12 +904,16 @@ class _GsmListState extends State<GsmList> {
                                 _formatDateTime(item.startDate),
 >>>>>>> d39c264 (fix: bs dan gsm)
 >>>>>>> a087f712 (fix: bs dan gsm)
+=======
+                                _formatDateTime(item.startDate),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
                                   fontSize: 16,
                                 ),
                               ),
                             ],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -883,6 +940,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
                           ),
                         ),
                         _buildStatusBadge(status),
@@ -900,6 +959,7 @@ class _GsmListState extends State<GsmList> {
 
   Widget _buildInfoLine(GsmListItem item) {
     return Column(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -923,6 +983,9 @@ class _GsmListState extends State<GsmList> {
       crossAxisAlignment: CrossAxisAlignment.start,
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+      crossAxisAlignment: CrossAxisAlignment.start,
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       children: [
         _buildInfoItem(
           label: 'No Packing',
@@ -943,6 +1006,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
@@ -951,6 +1015,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         const SizedBox(height: 12),
         _buildMaterialItem(item),
       ],
@@ -998,6 +1064,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
@@ -1012,6 +1079,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ],
     );
   }
@@ -1058,6 +1127,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 0e409703 (fix: evaluasi)
 =======
@@ -1066,6 +1136,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildSubmittedByItem({
     required String name,
     String? time,
@@ -1088,6 +1160,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9b746b6d (fix: UI)
 =======
@@ -1096,6 +1169,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> cfa5498 (fix: UI)
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -1116,8 +1191,8 @@ class _GsmListState extends State<GsmList> {
                 ),
               ),
           ],
-<<<<<<< HEAD
         ),
+<<<<<<< HEAD
 =======
         Text(
           name,
@@ -1153,10 +1228,13 @@ class _GsmListState extends State<GsmList> {
         ),
 >>>>>>> cfa5498 (fix: UI)
 >>>>>>> c3018adf (fix: UI)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       ],
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1174,6 +1252,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildLabelValue(
     String label,
     String value, {
@@ -1220,6 +1300,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 5e38e0f3 (fix:)
 =======
@@ -1228,6 +1309,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Map<String, dynamic> _materialItem(GsmListItem item) {
     final woItems = _map(item.wo)['items'];
     if (woItems is List && woItems.isNotEmpty) {
@@ -1246,6 +1329,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b77e0195 (fix: bs, gsm, rework)
 =======
@@ -1260,6 +1344,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> aa49533 (fix:)
 >>>>>>> 0c3d8444 (fix:)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   String _formatGsmNumber(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     final parsed = num.tryParse(value.toString().replaceAll(',', '.'));
@@ -1307,6 +1393,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
@@ -1334,6 +1421,11 @@ class _GsmListState extends State<GsmList> {
         normalized == 'selesai' ||
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+    return normalized == 'direview' ||
+        normalized == 'reviewed' ||
+        normalized == 'selesai' ||
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         normalized == 'completed' ||
         normalized == 'complete';
   }
@@ -1346,6 +1438,7 @@ class _GsmListState extends State<GsmList> {
   Future<void> _openGsmDetail(GsmListItem item) async {
     if (item.id == null || item.id.toString().trim().isEmpty) return;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1371,6 +1464,9 @@ class _GsmListState extends State<GsmList> {
     final message = await Navigator.push<String>(
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+    final message = await Navigator.push<String>(
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       context,
       MaterialPageRoute(
         builder: (context) => GsmDetailLoadingScreen(id: item.id),
@@ -1381,15 +1477,19 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     if (message != null && message.trim().isNotEmpty && mounted) {
       await _loadGsmList();
       await _loadPendingCount();
       if (mounted) {
         await _showSavedDialog(message);
+<<<<<<< HEAD
 =======
     if (updated == true && mounted) {
       await _loadGsmList();
@@ -1418,6 +1518,8 @@ class _GsmListState extends State<GsmList> {
         await _showSavedDialog(message);
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
     }
   }
@@ -1426,15 +1528,19 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 25f345ae (fix: bs, gsm, rework)
 =======
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Future<void> _showSavedDialog(String message) {
     return showAlertDialog(
       context: context,
       title: 'Perubahan Tersimpan',
       message: message,
+<<<<<<< HEAD
 =======
   Future<void> _showSavedDialog(String woNo) {
     return showAlertDialog(
@@ -1463,10 +1569,13 @@ class _GsmListState extends State<GsmList> {
       message: message,
 >>>>>>> dc5b5fe (fix: attachment evaluation)
 >>>>>>> 6f3012ab (fix: attachment evaluation)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 
   Widget _buildStatusBadge(String status) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1490,6 +1599,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -1500,6 +1611,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         color: _getStatusBadgeColor(status),
 =======
         color: backgroundColor,
@@ -1521,6 +1633,9 @@ class _GsmListState extends State<GsmList> {
         color: _getStatusBadgeColor(status),
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+        color: _getStatusBadgeColor(status),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1532,6 +1647,7 @@ class _GsmListState extends State<GsmList> {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           color: _getStatusBadgeTextColor(status),
 =======
           color: _getStatusTextColor(status),
@@ -1553,11 +1669,15 @@ class _GsmListState extends State<GsmList> {
           color: _getStatusBadgeTextColor(status),
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+          color: _getStatusBadgeTextColor(status),
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
         ),
       ),
     );
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1570,6 +1690,8 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
   Color _getStatusBadgeColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1601,6 +1723,7 @@ class _GsmListState extends State<GsmList> {
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
+<<<<<<< HEAD
 =======
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
@@ -1633,6 +1756,8 @@ class _GsmListState extends State<GsmList> {
         return const Color(0xFFF2F7FF);
 >>>>>>> d256f82 (fix: UI evaluasi)
 >>>>>>> db08c830 (fix: UI evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
       case 'menunggu':
       case 'waiting':
         return const Color(0xFFFFFBEA);
@@ -1643,6 +1768,7 @@ class _GsmListState extends State<GsmList> {
         return Colors.grey;
     }
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1697,4 +1823,6 @@ class _GsmListState extends State<GsmList> {
 =======
 >>>>>>> 991dab5 (fix: evaluasi)
 >>>>>>> bd0b8f00 (fix: evaluasi)
+=======
+>>>>>>> 0ba64c26 (chore: adjust fase-2)
 }

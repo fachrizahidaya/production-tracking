@@ -2,19 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/helpers/util/format_number.dart';
 import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-=======
->>>>>>> 85966df (fix: detail evaluasi)
-import 'package:textile_tracking/helpers/util/format_number.dart';
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/gsm/gsm_edit.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -50,8 +39,6 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
       final data = await _reportService.getGsmDetail(widget.id);
       if (!mounted) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
@@ -61,46 +48,14 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
           builder: (context) => isWaiting
               ? GsmEditScreen(data: data)
               : GsmDetailScreen(data: data),
-=======
-      final updated = await Navigator.push<bool>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => GsmDetailScreen(data: data),
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-      final status = data['status']?.toString().toLowerCase() ?? '';
-      final isWaiting = status == 'menunggu' || status == 'waiting';
-
-      final message = await Navigator.push<String>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => isWaiting
-              ? GsmEditScreen(data: data)
-              : GsmDetailScreen(data: data),
->>>>>>> 85966df (fix: detail evaluasi)
         ),
       );
 
       if (!mounted) return;
       if (widget.returnToList) {
-<<<<<<< HEAD
-<<<<<<< HEAD
         _replaceWithGsmList(message: message);
       } else {
         Navigator.pop(context, message);
-=======
-        _replaceWithGsmList(
-          saved: updated == true,
-          woNo: data['woNo']?.toString(),
-        );
-      } else {
-        Navigator.pop(context, updated);
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        _replaceWithGsmList(message: message);
-      } else {
-        Navigator.pop(context, message);
->>>>>>> dc5b5fe (fix: attachment evaluation)
       }
     } catch (error) {
       if (!mounted) return;
@@ -108,28 +63,12 @@ class _GsmDetailLoadingScreenState extends State<GsmDetailLoadingScreen> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   void _replaceWithGsmList({String? message}) {
-=======
-  void _replaceWithGsmList({bool saved = false, String? woNo}) {
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-  void _replaceWithGsmList({String? message}) {
->>>>>>> dc5b5fe (fix: attachment evaluation)
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => GsmList(
-<<<<<<< HEAD
-<<<<<<< HEAD
           savedMessage: message,
-=======
-          savedWoNo: saved ? woNo : null,
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-          savedMessage: message,
->>>>>>> dc5b5fe (fix: attachment evaluation)
         ),
       ),
     );
@@ -181,41 +120,13 @@ class GsmDetailScreen extends StatefulWidget {
 
 class _GsmDetailScreenState extends State<GsmDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
-<<<<<<< HEAD
-<<<<<<< HEAD
   final TextEditingController _preventivePlanController =
       TextEditingController();
-=======
-  final TextEditingController _actionPlanController = TextEditingController();
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
-  final TextEditingController _preventivePlanController =
-      TextEditingController();
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  final ReportService _reportService = ReportService();
-  bool _saving = false;
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-  int _selectedHistoryIndex = 0;
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
 
   @override
   void initState() {
     super.initState();
     _reasonController.text = widget.data['reason']?.toString() ?? '';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    _actionPlanController.text = widget.data['actionPlan']?.toString() ?? '';
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.text =
         widget.data['preventivePlan']?.toString() ?? '';
   }
@@ -223,107 +134,38 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
   @override
   void dispose() {
     _reasonController.dispose();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    _actionPlanController.dispose();
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
         status == 'completed';
-<<<<<<< HEAD
   }
 
   Future<void> _openEditScreen() async {
     final message = await Navigator.push<String>(
-=======
-    return status == 'selesai' || status == 'completed';
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-  }
-
-  Future<void> _openEditScreen() async {
-<<<<<<< HEAD
-    final updated = await Navigator.push<bool>(
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-    final message = await Navigator.push<String>(
->>>>>>> dc5b5fe (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => GsmEditScreen(data: widget.data),
       ),
     );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
-=======
-    if (updated == true && mounted) {
-      Navigator.pop(context, true);
-=======
-    if (message != null && message.trim().isNotEmpty && mounted) {
-      Navigator.pop(context, message);
->>>>>>> dc5b5fe (fix: attachment evaluation)
     }
   }
 
-<<<<<<< HEAD
-  Future<void> _saveWaitingForm() async {
-    if (_saving || !_canSaveWaiting) return;
-    setState(() => _saving = true);
-    try {
-      await _reportService.updateGsmDetail(
-        id: widget.data['id'],
-        reason: _reasonController.text,
-        actionPlan: _actionPlanController.text,
-        preventivePlan: _preventivePlanController.text,
-      );
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _saving = false);
-      await showAlertDialog(
-        context: context,
-        title: 'Gagal Menyimpan',
-        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
-      );
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-    }
-  }
-
-=======
->>>>>>> 85966df (fix: detail evaluasi)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Detail Evaluasi GSM',
         onReturn: () => Navigator.pop(context),
-<<<<<<< HEAD
-<<<<<<< HEAD
         onEdit: _isCompleted ? _openEditScreen : null,
-=======
-        onEdit: _useEditScreen ? _openEditScreen : null,
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        onEdit: _isCompleted ? _openEditScreen : null,
->>>>>>> 85966df (fix: detail evaluasi)
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
@@ -337,122 +179,31 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 child: _buildOverviewCard(),
               ),
               const SizedBox(height: 16),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 85966df (fix: detail evaluasi)
               _buildReadOnlyCard(
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 historyField: 'reason',
-=======
-=======
-                historyField: 'reason',
->>>>>>> d39c264 (fix: bs dan gsm)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
-<<<<<<< HEAD
-                'Rencana Tindakan',
-                _actionPlanController.text,
-                updatedAt: widget.data['action_plan_updated_at']?.toString(),
-<<<<<<< HEAD
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-                historyField: 'action_plan',
->>>>>>> 991dab5 (fix: evaluasi)
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
                 'Rencana Pencegahan',
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: EvaluationAttachmentGallery(
                   attachments: widget.data['attachments'],
                 ),
               ),
-<<<<<<< HEAD
-=======
-              if (_useEditScreen) ...[
-                _buildReadOnlyCard(
-                  'Alasan dan Penyebab',
-                  _reasonController.text,
-                  updatedAt: widget.data['reason_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Tindakan',
-                  _actionPlanController.text,
-                  updatedAt: widget.data['action_plan_updated_at']?.toString(),
-                ),
-                const SizedBox(height: 16),
-                _buildReadOnlyCard(
-                  'Rencana Pencegahan',
-                  _preventivePlanController.text,
-                  updatedAt:
-                      widget.data['preventive_plan_updated_at']?.toString(),
-                ),
-              ] else ...[
-                _buildEditorForm(
-                  label: 'Alasan dan Penyebab',
-                  controller: _reasonController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Tindakan',
-                  controller: _actionPlanController,
-                ),
-                const SizedBox(height: 16),
-                _buildEditorForm(
-                  label: 'Rencana Pencegahan',
-                  controller: _preventivePlanController,
-                ),
-              ],
-=======
-              ),
->>>>>>> 85966df (fix: detail evaluasi)
-              if (_histories.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                _buildHistoryCard(),
-              ],
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-              _buildHistoryCard(),
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-                historyField: 'preventive_plan',
-              ),
->>>>>>> 991dab5 (fix: evaluasi)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),
       ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      bottomNavigationBar: _isWaiting ? _buildSaveBar() : null,
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 85966df (fix: detail evaluasi)
     );
   }
 
@@ -474,8 +225,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ),
           const SizedBox(height: 12),
           _buildOverviewItem(
-<<<<<<< HEAD
-<<<<<<< HEAD
             label: 'No. Packing',
             value: _value('packingNo'),
             valueColor: const Color(0xFF234393),
@@ -489,7 +238,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           const SizedBox(height: 12),
           _buildProcessTimeItem(
             label: 'Mulai Packing',
-<<<<<<< HEAD
             person: _packing['start_by'],
             time: _packing['start_time']?.toString(),
           ),
@@ -509,79 +257,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
-=======
-            label: 'Packing GSM',
-            value: _formatGsmNumber(_raw('packingGsm')),
-=======
-            label: 'No. Packing',
-            value: _value('packingNo'),
-            valueColor: const Color(0xFF234393),
->>>>>>> d256f82 (fix: UI evaluasi)
-          ),
-          const SizedBox(height: 12),
-          _buildOverviewItem(
-            label: 'Packing GSM',
-            value: _formatGsmNumber(_raw('packingGsm')),
-            valueColor: const Color(0xFFB42318),
-          ),
-          const SizedBox(height: 12),
-          _buildProcessTimeItem(
-            label: 'Mulai',
-=======
->>>>>>> cfa5498 (fix: UI)
-            person: _packing['start_by'],
-            time: _packing['start_time']?.toString(),
-          ),
-          const SizedBox(height: 12),
-          _buildProcessTimeItem(
-            label: 'Selesai Packing',
-            person: _packing['end_by'],
-            time: _packing['end_time']?.toString(),
-          ),
-          const SizedBox(height: 12),
-          _buildMaterialItem(),
-          if (_isCompleted) ...[
-            const SizedBox(height: 12),
-            _buildSubmittedByItem(),
-          ],
-          const SizedBox(height: 12),
-<<<<<<< HEAD
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanggal',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _formatDateTime(
-                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(_value('status')),
-            ],
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-          Align(
-            alignment: Alignment.centerRight,
-            child: _buildStatusBadge(_value('status')),
->>>>>>> d39c264 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -619,10 +294,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -640,10 +311,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           ),
         ),
         const SizedBox(height: 3),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cfa5498 (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -664,42 +331,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
               ),
           ],
-<<<<<<< HEAD
         ),
-=======
-        Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-        ),
->>>>>>> cfa5498 (fix: UI)
       ],
     );
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildMaterialItem() {
     final code = _value('topMaterialCode');
     final name = _value('topMaterialName');
@@ -755,58 +391,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return formatNumber(parsed);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildSaveBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
-            style: _primaryActionButtonStyle,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Simpan'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4561DB),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey.shade300,
-        disabledForegroundColor: Colors.grey.shade600,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 85966df (fix: detail evaluasi)
   Widget _buildStatusBadge(String status) {
     final backgroundColor = _getStatusColor(status);
 
@@ -832,25 +416,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-<<<<<<< HEAD
-<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
-=======
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFFEBFDF4);
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFFF2F7FF);
->>>>>>> d256f82 (fix: UI evaluasi)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
@@ -867,8 +437,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
-<<<<<<< HEAD
-<<<<<<< HEAD
       case 'direview':
       case 'reviewed':
       case 'selesai':
@@ -877,31 +445,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFF955B34);
-=======
-=======
-      case 'direview':
-      case 'reviewed':
->>>>>>> d256f82 (fix: UI evaluasi)
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-<<<<<<< HEAD
-        return const Color(0xFFA16207);
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        return const Color(0xFF955B34);
->>>>>>> d256f82 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
   Map<String, dynamic> get _packing {
     final packing = widget.data['packing'];
     return packing is Map ? Map<String, dynamic>.from(packing) : {};
@@ -969,11 +517,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     return _formatDateTime(value);
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -996,31 +539,10 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: child,
-      ),
-    );
-  }
-
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 85966df (fix: detail evaluasi)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
     String? updatedAt,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
     String? historyField,
   }) {
     final hasUpdatedAt =
@@ -1028,10 +550,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final current = value.isEmpty ? '-' : value;
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -1040,27 +558,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
-<<<<<<< HEAD
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
-=======
-  }) {
-    final hasUpdatedAt =
-        updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        : _previousHistoryItems(historyField);
-    final previousItems = historyItems.where((item) {
-      final oldValue = _historyDisplayValue(item['old_value']);
-      return oldValue.isNotEmpty && oldValue != current;
-    }).toList();
-    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
-    final latestMeta = latestItem != null
-        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
-            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
-        : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
->>>>>>> 991dab5 (fix: evaluasi)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1072,22 +570,9 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
-=======
-              for (final previous in previousItems) ...[
-                Text(
-                  _historyDisplayValue(previous['old_value']),
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-              for (final previous in previousVersions) ...[
-                Text(
-                  previous['value'].toString(),
->>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -1096,16 +581,7 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
                   _historyActorMeta(previous),
-=======
-                  'Diubah oleh ${_personName(previous['changed_by'])}, '
-                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-                  _historyActorMeta(previous),
->>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1113,41 +589,18 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
                 ),
                 const SizedBox(height: 12),
               ],
-<<<<<<< HEAD
               Text(
                 current,
-=======
-              Text(
-                value.isEmpty ? '-' : value,
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-              Text(
-                current,
->>>>>>> 991dab5 (fix: evaluasi)
                 style: TextStyle(
                   fontSize: CustomTheme().fontSize('base'),
                   fontWeight: CustomTheme().fontWeight('semibold'),
                   color: Colors.grey[800],
                 ),
               ),
-<<<<<<< HEAD
-<<<<<<< HEAD
               if (latestMeta != null) ...[
                 const SizedBox(height: 8),
                 Text(
                   latestMeta,
-=======
-              if (hasUpdatedAt) ...[
-                const SizedBox(height: 8),
-                Text(
-                  _formatDateTime(updatedAt),
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-              if (latestMeta != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  latestMeta,
->>>>>>> 991dab5 (fix: evaluasi)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1183,10 +636,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1194,23 +643,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       final historyField = history['field']?.toString();
       final label = history['label']?.toString().trim().toLowerCase() ?? '';
       if (historyField == field || label == expectedLabel) {
-=======
-  List<Map<String, dynamic>> _previousHistoryItems(String field) {
-=======
-  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
->>>>>>> d39c264 (fix: bs dan gsm)
-    Map<String, dynamic>? group;
-    final expectedLabel = _historyFieldLabel(field).toLowerCase();
-    for (final history in _histories) {
-      final historyField = history['field']?.toString();
-<<<<<<< HEAD
-      final label = history['label']?.toString().trim() ?? '';
-      if (historyField == field || label == _historyFieldLabel(field)) {
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-      final label = history['label']?.toString().trim().toLowerCase() ?? '';
-      if (historyField == field || label == expectedLabel) {
->>>>>>> d39c264 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -1225,16 +657,6 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       return aDate.compareTo(bDate);
     });
     return items;
-<<<<<<< HEAD
-=======
-  String _historyGroupLabel(Map<String, dynamic> group) {
-    final label = group['label']?.toString().trim() ?? '';
-    return label.isNotEmpty
-        ? label
-        : _historyFieldLabel(group['field']?.toString());
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -1242,26 +664,11 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
     if (raw is! List) return [];
     return raw
         .whereType<Map>()
-<<<<<<< HEAD
-<<<<<<< HEAD
         .where((item) => item['new_value'] != null)
-=======
-        .where(
-          (item) => item['old_value'] != null && item['new_value'] != null,
-        )
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-        .where((item) => item['new_value'] != null)
->>>>>>> d39c264 (fix: bs dan gsm)
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -1292,152 +699,5 @@ class _GsmDetailScreenState extends State<GsmDetailScreen> {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
-=======
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-  Widget _buildHistoryCard() {
-    final histories = _histories
-        .where((history) => _historyItems(history).isNotEmpty)
-        .toList();
-    final selectedIndex =
-        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
-            ? _selectedHistoryIndex
-            : 0;
-    final items = histories.isEmpty
-        ? <Map<String, dynamic>>[]
-        : _historyItems(histories[selectedIndex]);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: 'Riwayat Perubahan',
-        icon: Icons.history_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (histories.isEmpty)
-              const NoData()
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < histories.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text(_historyGroupLabel(histories[i])),
-                        selected: i == selectedIndex,
-                        showCheckmark: false,
-                        onSelected: (_) {
-                          setState(() => _selectedHistoryIndex = i);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty) const SizedBox(height: 12),
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 12),
-                _buildHistoryItem(items[i]),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final oldValue = _historyDisplayValue(history['old_value']);
-    final newValue = _historyDisplayValue(history['new_value']);
-    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
-    final changedBy = history['changed_by'];
-    final changedByName =
-        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
-    final createdAt = history['created_at']?.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasOldValue) ...[
-            Text(
-              oldValue,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('base'),
-                color: Colors.grey.shade500,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
-          Text(
-            newValue.isEmpty ? '-' : newValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('base'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'oleh $changedByName, ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              Text(
-                createdAt == null || createdAt.isEmpty
-                    ? '-'
-                    : _formatDateTime(createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-<<<<<<< HEAD
-  Widget _buildEditorForm({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    return _buildFormCard(
-      label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-=======
->>>>>>> 991dab5 (fix: evaluasi)
-  String _historyDisplayValue(dynamic value) {
-    if (value == null) return '';
-    if (value is List) {
-      return value.map((item) => item.toString()).join(', ').trim();
-    }
-    return value.toString().trim();
->>>>>>> 85966df (fix: detail evaluasi)
   }
 }

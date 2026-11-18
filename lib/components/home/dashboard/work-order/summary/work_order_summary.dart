@@ -386,10 +386,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               )
               .toDouble();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
           return ListView.builder(
             scrollDirection: Axis.horizontal,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -397,7 +393,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             itemBuilder: (context, index) {
               final mappedItem = _mapApiToSummaryCard(_activeData[index]);
               final isLast = index == _activeData.length - 1;
-<<<<<<< HEAD
 
               return SizedBox(
                 width: cardWidth,
@@ -419,51 +414,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 ),
               );
             },
-=======
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: isSingleItem
-          ? NeverScrollableScrollPhysics()
-          : BouncingScrollPhysics(),
-      child: Row(
-        children: _activeData.map<Widget>((item) {
-          final mappedItem = _mapApiToSummaryCard(item);
-
-          return Padding(
-            padding: CustomTheme().padding('card'),
-            child: SizedBox(
-              width: isSingleItem ? screenWidth : 500,
-              child: SummaryCard(
-                data: mappedItem,
-                showProgress: _showProgress,
-                filter: processFilters[selectedIndex],
-                isGreige: _isGreigeActive,
-              ),
-            ),
->>>>>>> e61620e (fix: UI mobile dashboard)
-=======
-
-              return SizedBox(
-                width: cardWidth,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 0, isLast ? 16 : 0, 0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: SummaryCard(
-                      data: mappedItem,
-                      showProgress: _showProgress,
-                      filter: processFilters[selectedIndex],
-                      isGreige: _isGreigeActive,
-                      onTap: () => _navigateToProcess(
-                        context,
-                        mappedItem['name']?.toString(),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
->>>>>>> ecdad3e (fix: dashboard mobile)
           );
         },
       ),

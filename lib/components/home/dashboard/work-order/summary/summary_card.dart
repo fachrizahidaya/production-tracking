@@ -73,11 +73,8 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Widget _buildCard(bool isTablet) {
     return Container(
-<<<<<<< HEAD
       width: double.infinity,
       decoration: CustomTheme().cardTheme().copyWith(
             border: Border.all(
@@ -107,80 +104,6 @@ class _SummaryCardState extends State<SummaryCard>
           ),
         ],
       ),
-=======
-  Widget _buildCard(bool isMobile) {
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> 887d25a (fix: filter summary)
-    final Map<String, dynamic> summary =
-        (widget.data['summary'] as Map<String, dynamic>?) ??
-            {
-              'completed': 0,
-              'in_progress': 0,
-              'waiting': 0,
-              'skipped': 0,
-            };
-
-    final statusColor = _getSummaryColor(summary);
-
-    return AnimatedContainer(
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
-      width: double.infinity,
-      decoration: CustomTheme().cardTheme().copyWith(
-            border: Border.all(
-              color: widget.isSelected
-                  ? CustomTheme().buttonColor('primary')
-                  : Colors.grey[200]!,
-              width: widget.isSelected ? 2 : 1,
-            ),
-          ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CardHeader(
-            data: widget.data,
-            isTablet: isTablet,
-            filter: widget.filter,
-            getTotalCount: _getTotalCount,
-          ),
-          const SizedBox(height: 10),
-          CardContent(
-            data: widget.data,
-            filter: widget.filter,
-            isTablet: isTablet,
-            showProgress: widget.showProgress,
-          ),
-        ],
-      ),
-<<<<<<< HEAD
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CardHeader(
-              data: widget.data,
-              isTablet: isTablet,
-              statusColor: statusColor,
-              filter: widget.filter,
-              getTotalCount: _getTotalCount,
-            ),
-            CardContent(
-              data: widget.data,
-              filter: widget.filter,
-              isTablet: isTablet,
-              showProgress: widget.showProgress,
-              showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
-            ),
-          ],
-        ),
-      ),
->>>>>>> e61620e (fix: UI mobile dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
     );
   }
 

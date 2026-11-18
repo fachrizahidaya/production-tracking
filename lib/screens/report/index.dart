@@ -147,11 +147,6 @@ class _ReportScreenState extends State<ReportScreen> {
   num productionTrendGradeBS = 0;
   num productionTrendTotal = 0;
 
-  num productionTrendGradeA = 0;
-  num productionTrendGradeB = 0;
-  num productionTrendGradeBS = 0;
-  num productionTrendTotal = 0;
-
   @override
   void initState() {
     super.initState();
@@ -180,26 +175,6 @@ class _ReportScreenState extends State<ReportScreen> {
 
   void _onWoScroll() {
     if (!_woScrollController.hasClients) return;
-  }
-
-  void _onSpkScroll() {
-    if (!_spkScrollController.hasClients) return;
-
-    final position = _spkScrollController.position;
-  }
-
-  void _onTopBsScroll() {
-    if (!_sortingScrollController.hasClients) return;
-  }
-
-  void _onWoScroll() {
-    if (!_woScrollController.hasClients) return;
-
-    final position = _woScrollController.position;
-
-    if (position.pixels >= position.maxScrollExtent - 100) {
-      _loadMoreWoList();
-    }
   }
 
   void _onSpkScroll() {
@@ -479,6 +454,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     setState(() {
       _woLoading = true;
+
       _woItems.clear();
     });
 
@@ -496,6 +472,7 @@ class _ReportScreenState extends State<ReportScreen> {
       setState(() {
         woList = result;
         _woItems.addAll(result.data);
+
         _woLoading = false;
       });
     } catch (e) {
@@ -515,6 +492,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
     setState(() {
       _spkLoading = true;
+
       _spkItems.clear();
     });
 
@@ -531,6 +509,7 @@ class _ReportScreenState extends State<ReportScreen> {
       setState(() {
         spkList = result;
         _spkItems.addAll(result.data);
+
         _spkLoading = false;
       });
     } catch (e) {
@@ -1159,197 +1138,6 @@ class _ReportScreenState extends State<ReportScreen> {
           sortingSearch = '';
         });
         await _loadSortingResult();
-      },
-    );
-  }
-
-  Widget _buildTopBS() {
-    return TopBsComp(
-      items: _topBsItems,
-      loading: _topBsLoading,
-      scrollController: _topBsScrollController,
-      dateRangeText: _getDateRangeTopBsText(),
-      formatNumber: formatNumber,
-      onSelectDateRange: () async {
-        final picked = await showDateRangePicker(
-          context: context,
-          firstDate: DateTime(2019),
-          lastDate: DateTime(2045),
-          initialDateRange: DateTimeRange(
-            start: topBsStartDate,
-            end: topBsEndDate,
-          ),
-        );
-
-        if (picked != null) {
-          setState(() {
-            topBsStartDate = picked.start;
-            topBsEndDate = picked.end;
-          });
-
-          await _loadTopBs();
-        }
-      },
-    );
-  }
-
-  Widget _buildSpkSummary() {
-    return SpkSummaryComp(
-      data: spkSummary,
-      dateRangeText: _getDateRangeSpkSummaryText(),
-      formatNumber: formatNumber,
-      onSelectDateRange: () async {
-        final picked = await showDateRangePicker(
-          context: context,
-          firstDate: DateTime(2019),
-          lastDate: DateTime(2045),
-          initialDateRange: DateTimeRange(
-            start: spkSummaryStartDate,
-            end: spkSummaryEndDate,
-          ),
-        );
-
-        if (picked != null) {
-          setState(() {
-            spkSummaryStartDate = picked.start;
-            spkSummaryEndDate = picked.end;
-          });
-
-          await Future.wait([
-            _loadSpkSummary(),
-            _loadSpkList(),
-          ]);
-        }
-      },
-    );
-  }
-
-  Widget _buildProductionTrend() {
-    return ProductionTrendComp(
-      dateRangeText: _getDateRangeProductionTrendText(),
-      gradeA: productionTrendGradeA,
-      gradeB: productionTrendGradeB,
-      gradeBS: productionTrendGradeBS,
-      formatNumber: formatNumber,
-      onSelectDateRange: () async {
-        final picked = await showDateRangePicker(
-          context: context,
-          firstDate: DateTime(2019),
-          lastDate: DateTime(2045),
-          initialDateRange: DateTimeRange(
-            start: productionTrendStartDate,
-            end: productionTrendEndDate,
-          ),
-        );
-
-        if (picked != null) {
-          setState(() {
-            productionTrendStartDate = picked.start;
-            productionTrendEndDate = picked.end;
-          });
-
-          await _loadProductionTrend();
-        }
-      },
-    );
-  }
-
-  Widget _buildNormalAndRework() {
-    return NormalReworkComp(
-      dateRangeText: _getDateRangeReworkComparisonText(),
-      normalCount: productionTrendGradeA,
-      reworkCount: productionTrendGradeB,
-      formatNumber: formatNumber,
-      onSelectDateRange: () async {
-        final picked = await showDateRangePicker(
-          context: context,
-          firstDate: DateTime(2019),
-          lastDate: DateTime(2045),
-          initialDateRange: DateTimeRange(
-            start: reworkComparisonStartDate,
-            end: reworkComparisonEndDate,
-          ),
-        );
-
-        if (picked != null) {
-          setState(() {
-            reworkComparisonStartDate = picked.start;
-            reworkComparisonEndDate = picked.end;
-          });
-
-          await _loadReworkComparison();
-        }
-      },
-    );
-  }
-
-  Widget _buildWoList() {
-    return WoListComp(
-      items: _woItems,
-      loading: _woLoading,
-      loadingMore: _woLoadingMore,
-      searchController: _woSearchController,
-      scrollController: _woScrollController,
-      onSearchChanged: _onWoSearchChanged,
-      showFilter: _showWoFilter,
-      formatDate: _formatDate,
-      formatNumber: formatNumber,
-      onSeeAll: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WoListDetailScreen(
-              startDate: woListStartDate ?? startDate,
-              endDate: woListEndDate ?? endDate,
-              sort: woSort,
-              search: woSearch,
-              formatNumber: formatNumber,
-              formatDate: _formatDate,
-            ),
-          ),
-        );
-      },
-      onClearSearch: () async {
-        _woSearchController.clear();
-        setState(() {
-          woSearch = '';
-        });
-        await _loadWoList();
-      },
-    );
-  }
-
-  Widget _buildSpkList() {
-    return SpkListComp(
-      items: _spkItems,
-      loading: _spkLoading,
-      loadingMore: _spkLoadingMore,
-      searchController: _spkSearchController,
-      scrollController: _spkScrollController,
-      onSearchChanged: _onSpkSearchChanged,
-      formatDate: _formatDate,
-      formatNumber: formatNumber,
-      onSeeAll: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SpkListDetailScreen(
-              startDate: spkListStartDate ?? startDate,
-              endDate: spkListEndDate ?? endDate,
-              sort: spkSort,
-              search: spkSearch,
-              formatNumber: formatNumber,
-              formatDate: _formatDate,
-            ),
-          ),
-        );
-      },
-      onClearSearch: () async {
-        _spkSearchController.clear();
-        setState(() {
-          spkSearch = '';
-        });
-        await _loadSpkList();
       },
     );
   }

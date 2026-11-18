@@ -55,23 +55,12 @@ import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
-=======
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-=======
 import 'package:textile_tracking/screens/report/bs-anomaly/bs_list.dart';
 import 'package:textile_tracking/screens/report/anomaly/index.dart';
 import 'package:textile_tracking/screens/work-order/index.dart';
 import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/gsm-anomaly/gsm_list.dart';
->>>>>>> d94a57a (feat:)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
@@ -147,64 +136,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InternetListener(
-      child: MaterialApp(
-        title: 'TexTrack',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          appBarTheme: AppBarTheme(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
-              titleTextStyle: TextStyle(
-                  color: CustomTheme().colors('text-primary'),
-                  fontSize: CustomTheme().fontSize('xl'))),
-          drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
-          bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
-          scaffoldBackgroundColor: Colors.white,
-          cardTheme: CardThemeData(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            margin: EdgeInsets.all(0),
-            elevation: 0,
-          ),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-          useMaterial3: true,
+    return MaterialApp(
+      navigatorKey: appNavigatorKey,
+      title: 'TexTrack',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            titleTextStyle: TextStyle(
+                color: CustomTheme().colors('text-primary'),
+                fontSize: CustomTheme().fontSize('xl'))),
+        drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
+        bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
+        scaffoldBackgroundColor: Colors.white,
+        cardTheme: CardThemeData(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12))),
+          margin: EdgeInsets.all(0),
+          elevation: 0,
         ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => AuthCheck(),
-          '/dashboard': (context) => Home(),
-          '/profile': (context) => Profile(),
-          '/notification': (context) => NotificationList(),
-          '/dyeings': (context) => DyeingScreen(),
-          '/press': (context) => PressTumblerScreen(),
-          '/tumblers': (context) => TumblerScreen(),
-          '/stenters': (context) => StenterScreen(),
-          '/long-slittings': (context) => LongSittingScreen(),
-          '/long-hemmings': (context) => LongHemmingScreen(),
-          '/cross-cuttings': (context) => CrossCuttingScreen(),
-          '/sewings': (context) => SewingScreen(),
-          '/embroideries': (context) => EmbroideryScreen(),
-          '/sortings': (context) => SortingScreen(),
-          '/packings': (context) => PackingScreen(),
-          '/printings': (context) => PrintingScreen(),
-          '/weavings': (context) => WeavingScreen(),
-          '/sizings': (context) => SizingScreen(),
-          '/warpings': (context) => WarpingScreen(),
-          '/shearings': (context) => ShearingScreen(),
-          '/dyeing-preparations': (context) => DyeingPreparationScreen(),
-          '/account': (context) => Account(),
-          '/eula': (context) => Eula(),
-          '/privacy-policy': (context) => PrivacyPolicy(),
-          '/terms-conditions': (context) => TermsConditions(),
-          '/report-production': (context) => ReportScreen(),
-          '/dyeing-rework-evaluations': (context) => ReworkList(),
-        },
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+        useMaterial3: true,
       ),
-<<<<<<< HEAD
-=======
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       onGenerateRoute: (settings) {
@@ -264,7 +219,6 @@ class MyApp extends StatelessWidget {
         '/gsm-evaluations': (context) => GsmList(),
         '/gsm-anomalies': (context) => GsmAnomalyList(),
       },
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
     );
   }
 }

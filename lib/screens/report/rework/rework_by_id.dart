@@ -3,14 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
-=======
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -50,15 +43,7 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
       final status = data['status']?.toString().toLowerCase() ?? '';
       final isWaiting = status == 'menunggu' || status == 'waiting';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       final message = await Navigator.push<String>(
-=======
-      final updated = await Navigator.push<bool>(
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-      final message = await Navigator.push<String>(
->>>>>>> dc5b5fe (fix: attachment evaluation)
         context,
         MaterialPageRoute(
           builder: (context) => isWaiting
@@ -97,6 +82,10 @@ class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
         title: 'Detail Evaluasi Rework',
         onReturn: widget.returnToList
             ? _replaceWithReworkList
+            : () => Navigator.pop(context),
+      ),
+      backgroundColor: const Color(0xFFf9fafc),
+      body: Center(
         child: _error == null
             ? const CircularProgressIndicator()
             : Padding(
@@ -144,14 +133,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _preventivePlanController.text =
-        widget.data['preventivePlan']?.toString() ?? '';
-  }
-
-  @override
   void dispose() {
     _reasonController.dispose();
     _preventivePlanController.dispose();
@@ -160,133 +141,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
     return status == 'direview' ||
         status == 'reviewed' ||
         status == 'selesai' ||
         status == 'completed';
-<<<<<<< HEAD
-  }
-
-  Future<List<dynamic>?> _showReasonSelectionSheet(
-    List<Map<String, dynamic>> items,
-  ) {
-    return showModalBottomSheet<List<dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        var filteredItems = List<Map<String, dynamic>>.from(items);
-        var selectedIds = <dynamic>[];
-
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return SafeArea(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.72,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      child: Text(
-                        'Pilih Alasan Rework',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Cari alasan',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) {
-                          final query = value.trim().toLowerCase();
-                          setSheetState(() {
-                            filteredItems = items
-                                .where((item) => item['label']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(query))
-                                .toList();
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: filteredItems.isEmpty
-                          ? const Center(child: Text('Tidak ada alasan'))
-                          : ListView.separated(
-                              itemCount: filteredItems.length,
-                              separatorBuilder: (_, __) =>
-                                  const Divider(height: 1),
-                              itemBuilder: (context, index) {
-                                final item = filteredItems[index];
-                                final id = item['value'];
-                                return CheckboxListTile(
-                                  value: selectedIds.contains(id),
-                                  title: Text(item['label'].toString()),
-                                  activeColor: Colors.green,
-                                  onChanged: (_) {
-                                    setSheetState(() {
-                                      if (selectedIds.contains(id)) {
-                                        selectedIds = List.from(selectedIds)
-                                          ..remove(id);
-                                      } else {
-                                        selectedIds = List.from(selectedIds)
-                                          ..add(id);
-                                      }
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.pop(sheetContext),
-                              style: _secondarySheetButtonStyle(),
-                              child: const Text('Batal'),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  Navigator.pop(sheetContext, selectedIds),
-                              style: _primarySheetButtonStyle(),
-                              child: const Text('Terapkan'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-=======
-    return status == 'selesai' || status == 'completed';
->>>>>>> 85966df (fix: detail evaluasi)
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
   }
 
   Future<void> _openEditScreen() async {
@@ -309,11 +167,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
         onEdit: _isCompleted ? _openEditScreen : null,
-<<<<<<< HEAD
-=======
       ),
->>>>>>> 85966df (fix: detail evaluasi)
       backgroundColor: const Color(0xFFf9fafc),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -331,24 +189,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 'Alasan dan Penyebab',
                 _reasonController.text,
                 updatedAt: widget.data['reason_updated_at']?.toString(),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 historyField: 'reason',
-=======
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-                'Rencana Tindakan',
-                _actionPlanController.text,
-                updatedAt: widget.data['action_plan_updated_at']?.toString(),
-<<<<<<< HEAD
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-                historyField: 'action_plan',
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-                historyField: 'reason',
->>>>>>> c675884 (fix: remove rencana tindakan)
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -356,8 +197,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 _preventivePlanController.text,
                 updatedAt:
                     widget.data['preventive_plan_updated_at']?.toString(),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 historyField: 'preventive_plan',
               ),
               const SizedBox(height: 16),
@@ -365,25 +204,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildAttachmentCard(),
               ),
-<<<<<<< HEAD
-=======
-              ),
-<<<<<<< HEAD
-              if (_histories.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                _buildHistoryCard(),
-              ],
->>>>>>> 85966df (fix: detail evaluasi)
-=======
-              const SizedBox(height: 16),
-              _buildHistoryCard(),
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-                historyField: 'preventive_plan',
-              ),
->>>>>>> 991dab5 (fix: evaluasi)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
             ],
           ),
         ),
@@ -509,60 +329,15 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           const SizedBox(height: 12),
           _buildDyeingReferenceLine(),
           const SizedBox(height: 12),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
           _buildMaterialItem(),
           if (_isCompleted) ...[
             const SizedBox(height: 12),
             _buildSubmittedByItem(),
           ],
           const SizedBox(height: 12),
-<<<<<<< HEAD
-<<<<<<< HEAD
           Align(
             alignment: Alignment.centerRight,
             child: _buildStatusBadge(_value('status')),
-=======
-=======
->>>>>>> 991dab5 (fix: evaluasi)
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Tanggal',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      _formatDateTime(
-                        _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                      ),
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildStatusBadge(_value('status')),
-            ],
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-          Align(
-            alignment: Alignment.centerRight,
-            child: _buildStatusBadge(_value('status')),
->>>>>>> d39c264 (fix: bs dan gsm)
           ),
         ],
       ),
@@ -580,29 +355,13 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-<<<<<<< HEAD
-<<<<<<< HEAD
           label: 'Mulai Rework',
-=======
-          label: 'Mulai',
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-          label: 'Mulai Rework',
->>>>>>> cfa5498 (fix: UI)
           person: _dyeing['start_by'],
           time: _dyeing['start_time']?.toString(),
         ),
         const SizedBox(height: 12),
         _buildProcessTimeItem(
-<<<<<<< HEAD
-<<<<<<< HEAD
           label: 'Selesai Rework',
-=======
-          label: 'Selesai',
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-          label: 'Selesai Rework',
->>>>>>> cfa5498 (fix: UI)
           person: _dyeing['end_by'],
           time: _dyeing['end_time']?.toString(),
         ),
@@ -655,10 +414,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   Widget _buildSubmittedByItem() {
     final name = _value('submittedBy');
     final time = _formatDateTime(_value('completedAt'));
@@ -676,10 +431,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           ),
         ),
         const SizedBox(height: 3),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cfa5498 (fix: UI)
         Row(
           children: [
             if (name != '-' || !hasTime)
@@ -700,33 +451,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
               ),
           ],
-<<<<<<< HEAD
         ),
-=======
-        Text(
-          name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        if (hasTime) ...[
-          const SizedBox(height: 2),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-        ),
->>>>>>> cfa5498 (fix: UI)
       ],
     );
   }
@@ -748,15 +473,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         ),
         const SizedBox(height: 3),
         Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
           code == '-' ? _value('material') : code,
-=======
-          code,
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-          code == '-' ? _value('material') : code,
->>>>>>> c675884 (fix: remove rencana tindakan)
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
@@ -781,11 +498,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     );
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   Map<String, dynamic> get _dyeing {
     final dyeing = widget.data['dyeing'];
     return dyeing is Map ? Map<String, dynamic>.from(dyeing) : {};
@@ -855,151 +567,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   String _value(String key) => widget.data[key]?.toString() ?? '-';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildSaveBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: _canSaveWaiting && !_saving ? _saveWaitingForm : null,
-            style: _primaryActionButtonStyle,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Simpan'),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWaitingReasonSection() {
-    return _buildFormCard(
-      label: 'Alasan',
-      child: Column(
-        children: [
-          if (_selectedReasons.isNotEmpty) ...[
-            _buildSelectedReasons(),
-            const SizedBox(height: 12),
-          ],
-          MultiSelectForm(
-            label: 'Alasan Rework',
-            selectedValues:
-                _selectedReasons.map((item) => item['value']).toList(),
-            selectedItems: const [],
-            selectedLabel: '',
-            onTap: _selectReason,
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: _addReasonOption,
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah alasan baru'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectedReasons() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Alasan terpilih',
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _selectedReasons
-                .map(
-                  (item) => InputChip(
-                    label: Text(item['label'].toString()),
-                    onDeleted: () => _removeReason(item),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  ButtonStyle get _primaryActionButtonStyle => ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4561DB),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: Colors.grey.shade300,
-        disabledForegroundColor: Colors.grey.shade600,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      );
-
-  Future<void> _saveWaitingForm() async {
-    if (_saving || !_canSaveWaiting) return;
-    setState(() => _saving = true);
-    try {
-      await _reportService.updateReworkDetail(
-        id: widget.data['id'],
-        reasons: _selectedReasons
-            .map((reason) => reason['value'].toString())
-            .toList(),
-        actionPlan: _actionPlanController.text,
-        preventivePlan: _preventivePlanController.text,
-      );
-      if (!mounted) return;
-      Navigator.pop(context, true);
-    } catch (e) {
-      if (!mounted) return;
-      setState(() => _saving = false);
-      await showAlertDialog(
-        context: context,
-        title: 'Gagal Menyimpan',
-        message: e.toString().replaceFirst(RegExp(r'^Exception:\s*'), ''),
-      );
-    }
-  }
-
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
->>>>>>> 85966df (fix: detail evaluasi)
   Widget _buildCategoryCard() {
     final categories = _reworkCategories();
 
@@ -1210,10 +777,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final current = value.isEmpty ? '-' : value;
     final historyItems = historyField == null
         ? const <Map<String, dynamic>>[]
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
         : _fieldHistoryItems(historyField);
     final versions = _historyVersions(historyItems);
     final previousVersions = versions.length > 1
@@ -1222,20 +785,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     final latestVersion = versions.isNotEmpty ? versions.last : null;
     final latestMeta = latestVersion != null
         ? _historyActorMeta(latestVersion)
-<<<<<<< HEAD
-=======
-        : _previousHistoryItems(historyField);
-    final previousItems = historyItems.where((item) {
-      final oldValue = _historyDisplayValue(item['old_value']);
-      return oldValue.isNotEmpty && oldValue != current;
-    }).toList();
-    final latestItem = historyItems.isNotEmpty ? historyItems.last : null;
-    final latestMeta = latestItem != null
-        ? 'Diubah oleh ${_personName(latestItem['changed_by'])}, '
-            '${_formatDateTime(latestItem['created_at']?.toString() ?? '-')}'
->>>>>>> 991dab5 (fix: evaluasi)
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
         : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
 
     return Padding(
@@ -1248,21 +797,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
               for (final previous in previousVersions) ...[
                 Text(
                   previous['value'].toString(),
-=======
-              for (final previous in previousItems) ...[
-                Text(
-                  _historyDisplayValue(previous['old_value']),
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-              for (final previous in previousVersions) ...[
-                Text(
-                  previous['value'].toString(),
->>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: CustomTheme().fontSize('base'),
                     color: Colors.grey.shade500,
@@ -1271,16 +808,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
                   _historyActorMeta(previous),
-=======
-                  'Diubah oleh ${_personName(previous['changed_by'])}, '
-                  '${_formatDateTime(previous['created_at']?.toString() ?? '-')}',
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-                  _historyActorMeta(previous),
->>>>>>> d39c264 (fix: bs dan gsm)
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -1335,9 +863,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   List<Map<String, dynamic>> _fieldHistoryItems(String field) {
     Map<String, dynamic>? group;
     final expectedLabel = _historyFieldLabel(field).toLowerCase();
@@ -1345,23 +870,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       final historyField = history['field']?.toString();
       final label = history['label']?.toString().trim().toLowerCase() ?? '';
       if (historyField == field || label == expectedLabel) {
-=======
-  List<Map<String, dynamic>> _previousHistoryItems(String field) {
-=======
-  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
->>>>>>> d39c264 (fix: bs dan gsm)
-    Map<String, dynamic>? group;
-    final expectedLabel = _historyFieldLabel(field).toLowerCase();
-    for (final history in _histories) {
-      final historyField = history['field']?.toString();
-<<<<<<< HEAD
-      final label = history['label']?.toString().trim() ?? '';
-      if (historyField == field || label == _historyFieldLabel(field)) {
->>>>>>> 991dab5 (fix: evaluasi)
-=======
-      final label = history['label']?.toString().trim().toLowerCase() ?? '';
-      if (historyField == field || label == expectedLabel) {
->>>>>>> d39c264 (fix: bs dan gsm)
         group = history;
         break;
       }
@@ -1376,15 +884,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       return aDate.compareTo(bDate);
     });
     return items;
-<<<<<<< HEAD
-=======
-  String _historyGroupLabel(Map<String, dynamic> group) {
-    final label = group['label']?.toString().trim() ?? '';
-    return label.isNotEmpty
-        ? label
-        : _historyFieldLabel(group['field']?.toString());
-=======
->>>>>>> 991dab5 (fix: evaluasi)
   }
 
   List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
@@ -1397,75 +896,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         .toList();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Widget _buildHistoryCard() {
-    final histories = _histories
-        .where((history) => _historyItems(history).isNotEmpty)
-        .toList();
-    final selectedIndex =
-        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
-            ? _selectedHistoryIndex
-            : 0;
-    final items = histories.isEmpty
-        ? <Map<String, dynamic>>[]
-        : _historyItems(histories[selectedIndex]);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: 'Riwayat Perubahan',
-        icon: Icons.history_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (histories.isEmpty)
-              const NoData()
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < histories.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text(_historyGroupLabel(histories[i])),
-                        selected: i == selectedIndex,
-                        showCheckmark: false,
-                        onSelected: (_) {
-                          setState(() => _selectedHistoryIndex = i);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty) const SizedBox(height: 12),
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 12),
-                _buildHistoryItem(items[i]),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
->>>>>>> d256f82 (fix: UI evaluasi)
-  }
-
-<<<<<<< HEAD
-  List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
-    final raw = group['items'];
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .where((item) => item['new_value'] != null)
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -1490,172 +920,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         '${_formatDateTime(version['created_at']?.toString() ?? '-')}';
   }
 
-<<<<<<< HEAD
-=======
-  Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final oldValue = _historyDisplayValue(history['old_value']);
-    final newValue = _historyDisplayValue(history['new_value']);
-    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
-    final changedBy = history['changed_by'];
-    final changedByName =
-        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
-    final createdAt = history['created_at']?.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasOldValue) ...[
-            Text(
-              oldValue,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('base'),
-                color: Colors.grey.shade500,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
-          Text(
-            newValue.isEmpty ? '-' : newValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('base'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'oleh $changedByName, ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              Text(
-                createdAt == null || createdAt.isEmpty
-                    ? '-'
-                    : _formatDateTime(createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
->>>>>>> 85966df (fix: detail evaluasi)
-=======
->>>>>>> 991dab5 (fix: evaluasi)
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
-<<<<<<< HEAD
-  }
-}
-
-class _ReasonOptionSheet extends StatefulWidget {
-  const _ReasonOptionSheet();
-
-  @override
-  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
-}
-
-class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
-  final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tambah Alasan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                decoration: CustomTheme()
-                    .inputDecoration('Masukkan alasan rework')
-                    .copyWith(errorText: _errorMessage),
-                onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: _secondarySheetButtonStyle(),
-                      child: const Text('Batal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final value = _controller.text.trim();
-                        if (value.length < 3) {
-                          setState(
-                            () => _errorMessage = 'Minimal 3 karakter',
-                          );
-                          return;
-                        }
-                        Navigator.pop(context, value);
-                      },
-                      style: _primarySheetButtonStyle(),
-                      child: const Text('Tambah'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-=======
->>>>>>> 85966df (fix: detail evaluasi)
   }
 }

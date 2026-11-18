@@ -700,26 +700,10 @@ Ringkasan Sorting
 
   Widget _buildSummaryItem(
     String title,
-<<<<<<< HEAD
-<<<<<<< HEAD
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
   }) {
-=======
-    dynamic value,
-    {
-    String valuePrefix = '',
-    Color? valueColor,
-  }
-  ) {
->>>>>>> dd7ae31 (fix: sortir)
-=======
-    dynamic value, {
-    String valuePrefix = '',
-    Color? valueColor,
-  }) {
->>>>>>> 80d4e6a (fix: detail packing)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -2132,10 +2116,10 @@ Catatan WO
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               child: Tab(
                                 text: (items[index]['code'] ??
-                                        items[index]['semifinished_product']?
-                                            ['code'] ??
-                                        items[index]['finished_product']?
-                                            ['code'] ??
+                                        items[index]['semifinished_product']
+                                            ?['code'] ??
+                                        items[index]['finished_product']
+                                            ?['code'] ??
                                         'Item ${index + 1}')
                                     .toString(),
                               ),

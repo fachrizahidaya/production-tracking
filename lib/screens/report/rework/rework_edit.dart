@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'dart:io';
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-import 'dart:io';
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -56,21 +49,14 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   List<Map<String, dynamic>> _attachments = [];
 
   String get _draftType => 'rework';
-<<<<<<< HEAD
-=======
 
   @override
   void initState() {
     super.initState();
->>>>>>> d256f82 (fix: UI evaluasi)
     final reasons = widget.data['reasons'];
     if (reasons is List) {
       _selectedReasons = reasons
           .where((reason) => reason.toString().trim().isNotEmpty)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
           .map(
             (reason) => <String, dynamic>{
               'id': reason.toString(),
@@ -78,29 +64,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
               'label': reason.toString(),
             },
           )
-<<<<<<< HEAD
           .toList();
     }
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
     _attachments = _parseAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
-=======
-          .map((reason) => {
-                'value': reason.toString(),
-                'label': reason.toString(),
-              })
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
-          .toList();
-    }
-    _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
-    _attachments = _parseAttachments(widget.data['attachments']);
-    _visibleStep = _stepFromValues();
-<<<<<<< HEAD
-    _actionPlanController.addListener(_persistDraft);
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
     _loadReasonOptions();
@@ -108,17 +76,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   @override
   void dispose() {
-<<<<<<< HEAD
-<<<<<<< HEAD
     _preventivePlanController.removeListener(_persistDraft);
-=======
-    _actionPlanController.removeListener(_persistDraft);
-    _preventivePlanController.removeListener(_persistDraft);
-    _actionPlanController.dispose();
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-    _preventivePlanController.removeListener(_persistDraft);
->>>>>>> c675884 (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
@@ -129,16 +87,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   }
 
   int _stepFromValues() {
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
-=======
-    if (_textValue(_preventivePlanController.text).isNotEmpty) return 3;
-    if (_textValue(_actionPlanController.text).isNotEmpty) return 2;
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-    if (_textValue(_preventivePlanController.text).isNotEmpty) return 2;
->>>>>>> c675884 (fix: remove rencana tindakan)
     return 1;
   }
 
@@ -149,76 +98,26 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     setState(() {
       final reasons = draft['reasons'];
       if (reasons is List) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
         _selectedReasons = List<Map<String, dynamic>>.from(
           reasons
               .whereType<Map>()
               .map((item) => Map<String, dynamic>.from(item)),
         );
-<<<<<<< HEAD
-=======
-        _selectedReasons = reasons
-            .whereType<Map>()
-            .map((item) => Map<String, dynamic>.from(item))
-            .toList();
-      }
-      if (draft.containsKey('actionPlan')) {
-        _actionPlanController.text = draft['actionPlan']?.toString() ?? '';
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
       }
       if (draft.containsKey('preventivePlan')) {
         _preventivePlanController.text =
             draft['preventivePlan']?.toString() ?? '';
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
       if (draft.containsKey('attachments')) {
         final parsed = _parseAttachments(draft['attachments']);
         _attachments = parsed;
-=======
-      if (draft.containsKey('attachments')) {
-        final parsed = _parseAttachments(draft['attachments']);
-        _attachments = parsed;
-<<<<<<< HEAD
-        _attachmentsDirty = !_sameAttachments(
-          parsed,
-          _parseAttachments(widget.data['attachments']),
-        );
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
       }
       final savedStep = draft['visibleStep'];
       final parsedStep =
           savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
       _visibleStep = math.max(
         _stepFromValues(),
-<<<<<<< HEAD
-<<<<<<< HEAD
         parsedStep.clamp(1, 2),
-=======
-      final savedStep = draft['visibleStep'];
-      final parsedStep =
-          savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1;
-      _visibleStep = math.max(
-        _stepFromValues(),
-<<<<<<< HEAD
-        savedStep is int ? savedStep : int.tryParse('$savedStep') ?? 1,
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-        parsedStep >= 3 ? 2 : parsedStep.clamp(1, 2),
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-        parsedStep.clamp(1, 3),
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
-        parsedStep.clamp(1, 2),
->>>>>>> dc5b5fe (fix: attachment evaluation)
       );
     });
   }
@@ -226,43 +125,15 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
   Future<void> _persistDraft() async {
     await EvaluationDraft.save(_draftType, widget.data['id'], {
       'reasons': _selectedReasons,
-<<<<<<< HEAD
-<<<<<<< HEAD
       'preventivePlan': _preventivePlanController.text,
       'visibleStep': _visibleStep,
       'attachments': _attachments,
-<<<<<<< HEAD
-=======
-      'actionPlan': _actionPlanController.text,
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
-      'preventivePlan': _preventivePlanController.text,
-      'visibleStep': _visibleStep,
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
     });
     if (mounted) setState(() {});
   }
 
   void _goNext() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (_visibleStep >= 2 || !_canGoNext) return;
-=======
-    if (_visibleStep >= 3 || !_canGoNext) return;
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-    if (_visibleStep >= 2 || !_canGoNext) return;
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-    if (_visibleStep >= 3 || !_canGoNext) return;
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
-    if (_visibleStep >= 2 || !_canGoNext) return;
->>>>>>> dc5b5fe (fix: attachment evaluation)
     setState(() => _visibleStep += 1);
     _persistDraft();
   }
@@ -290,15 +161,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
             .toList(),
         actionPlan: '',
         preventivePlan: _preventivePlanController.text,
-<<<<<<< HEAD
-<<<<<<< HEAD
         attachments: _attachments,
-=======
-        attachments: _attachmentsDirty ? _attachments : null,
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
-        attachments: _attachments,
->>>>>>> dc5b5fe (fix: attachment evaluation)
       );
       await EvaluationDraft.clear(_draftType, widget.data['id']);
 
@@ -321,33 +184,11 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
   bool get _canSave {
     return _selectedReasons.isNotEmpty &&
-<<<<<<< HEAD
-<<<<<<< HEAD
         _preventivePlanController.text.trim().length >= 8;
   }
 
   bool get _canGoNext {
     if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
-<<<<<<< HEAD
-    return false;
-  }
-
-  String? _planLengthWarning() {
-    if (_preventivePlanController.text.trim().length >= 8) return null;
-    return 'Rencana Pencegahan minimal 8 karakter.';
-=======
-        _preventivePlanController.text.trim().isNotEmpty;
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-        _preventivePlanController.text.trim().length >= 8;
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-  }
-
-  bool get _canGoNext {
-    if (_visibleStep == 1) return _selectedReasons.isNotEmpty;
-    if (_visibleStep == 2) return true;
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
     return false;
   }
 
@@ -395,8 +236,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
 
     if (selected == null || !mounted) return;
     setState(() {
-<<<<<<< HEAD
-<<<<<<< HEAD
       final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
       for (final value in selected) {
         final valueKey = value.toString();
@@ -408,33 +247,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 'label': valueKey,
               },
             );
-=======
-      final nextSelected =
-          List<Map<String, dynamic>>.from(_selectedReasons);
-      for (final value in selected) {
-        final valueKey = value.toString();
-        final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
-          (item) => item['value'].toString() == valueKey,
-          orElse: () => <String, dynamic>{
-            'id': valueKey,
-            'value': valueKey,
-            'label': valueKey,
-          },
-        );
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-      final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
-      for (final value in selected) {
-        final valueKey = value.toString();
-        final option = _reasonOptions.cast<Map<String, dynamic>>().firstWhere(
-              (item) => item['value'].toString() == valueKey,
-              orElse: () => <String, dynamic>{
-                'id': valueKey,
-                'value': valueKey,
-                'label': valueKey,
-              },
-            );
->>>>>>> 59853dc (fix: alasan penyebab rework)
         if (!nextSelected.any(
           (item) => item['value'].toString() == option['value'].toString(),
         )) {
@@ -508,16 +320,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                     (option) =>
                         option['id'].toString() == optionId ||
                         option['value'].toString() == optionId ||
-<<<<<<< HEAD
-<<<<<<< HEAD
                         option['value'].toString() == item['value'].toString(),
-=======
-                        option['value'].toString() ==
-                            item['value'].toString(),
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-                        option['value'].toString() == item['value'].toString(),
->>>>>>> 59853dc (fix: alasan penyebab rework)
                   );
                   selectedIds.remove(item['value'].toString());
                   applyFilter();
@@ -668,10 +471,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
     }
 
     final normalized = trimmed.toLowerCase();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 59853dc (fix: alasan penyebab rework)
     Map<String, dynamic>? existingOption;
     for (final option in _reasonOptions) {
       if (option['label'].toString().trim().toLowerCase() == normalized ||
@@ -693,49 +492,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         }
       });
       _persistDraft();
-<<<<<<< HEAD
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Alasan sudah ada dan dipilih')),
-      );
-      return;
-    }
-
-    try {
-      final option = await _reportService.createReworkReasonOption(trimmed);
-      if (!mounted) return;
-      setState(() {
-        final mapped = Map<String, dynamic>.from(option);
-        final nextOptions = List<Map<String, dynamic>>.from(_reasonOptions);
-        final nextSelected = List<Map<String, dynamic>>.from(_selectedReasons);
-        if (!nextOptions.any(
-          (item) => item['value'].toString() == mapped['value'].toString(),
-        )) {
-          nextOptions.add(mapped);
-        }
-        if (!nextSelected.any(
-          (item) => item['value'].toString() == mapped['value'].toString(),
-        )) {
-          nextSelected.add(Map<String, dynamic>.from(mapped));
-        }
-        _reasonOptions = nextOptions;
-        _selectedReasons = nextSelected;
-      });
-      _persistDraft();
-<<<<<<< HEAD
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Alasan berhasil ditambahkan')),
-      );
-=======
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-    final alreadyExists = _reasonOptions.any(
-      (option) =>
-          option['label'].toString().trim().toLowerCase() == normalized ||
-          option['value'].toString().trim().toLowerCase() == normalized,
-    );
-    if (alreadyExists) {
-=======
->>>>>>> 59853dc (fix: alasan penyebab rework)
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan sudah ada dan dipilih')),
       );
@@ -766,7 +522,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Alasan berhasil ditambahkan')),
       );
->>>>>>> c675884 (fix: remove rencana tindakan)
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -788,27 +543,9 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Column(
             children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildOverviewCard(),
-=======
-              _buildOverviewCard(),
-              const SizedBox(height: 16),
-              _buildCategoryCard(),
-              const SizedBox(height: 16),
-              _buildReasonForm(),
-              const SizedBox(height: 16),
-              _buildEditorForm(
-                label: 'Rencana Tindakan',
-                controller: _actionPlanController,
->>>>>>> 7c2cdb6 (fix:)
-=======
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: _buildOverviewCard(),
->>>>>>> d256f82 (fix: UI evaluasi)
               ),
               const SizedBox(height: 16),
               Padding(
@@ -825,60 +562,17 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildEditorForm(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    label: 'Rencana Tindakan',
-                    controller: _actionPlanController,
-                  ),
-                ),
-              ],
-              if (_visibleStep >= 3) ...[
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildEditorForm(
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
->>>>>>> c675884 (fix: remove rencana tindakan)
                     label: 'Rencana Pencegahan',
                     controller: _preventivePlanController,
                   ),
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: _buildAttachmentCard(),
                 ),
               ],
-<<<<<<< HEAD
               if (_visibleStep < 2) ...[
-=======
-              ],
-<<<<<<< HEAD
-              if (_visibleStep < 3) ...[
->>>>>>> d256f82 (fix: UI evaluasi)
-=======
-              if (_visibleStep < 2) ...[
->>>>>>> c675884 (fix: remove rencana tindakan)
-=======
-              if (_visibleStep >= 3) ...[
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildAttachmentCard(),
-                ),
-              ],
-<<<<<<< HEAD
-              if (_visibleStep < 3) ...[
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
-              if (_visibleStep < 2) ...[
->>>>>>> dc5b5fe (fix: attachment evaluation)
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -1031,1001 +725,6 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
         minLines: 6,
         maxLines: 12,
         decoration: CustomTheme().inputDecoration('Masukkan $label'),
-      ),
-    );
-  }
-
-  List<Map<String, dynamic>> _parseAttachments(dynamic raw) {
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .where((item) => _attachmentSource(item) != null)
-        .toList();
-  }
-
-  bool _isLocalAttachment(Map<String, dynamic> item) => item['isNew'] == true;
-
-  String? _attachmentSource(Map<String, dynamic> item) {
-    if (_isLocalAttachment(item)) {
-      final path = item['path']?.toString().trim() ?? '';
-      return path.isEmpty ? null : path;
-    }
-
-    for (final key in ['file_path', 'file_url', 'url', 'path']) {
-      final value = item[key]?.toString().trim() ?? '';
-      if (value.isNotEmpty) return value;
-    }
-    return null;
-  }
-
-  String? _attachmentUrl(Map<String, dynamic> item) {
-    final source = _attachmentSource(item);
-    if (source == null || _isLocalAttachment(item)) return source;
-    if (source.startsWith('http://') || source.startsWith('https://')) {
-      return source;
-    }
-
-    final base = dotenv.env['IMAGE_URL'] ?? '';
-    if (base.isEmpty) return source;
-    if (base.endsWith('/') && source.startsWith('/')) {
-      return '$base${source.substring(1)}';
-    }
-    if (!base.endsWith('/') && !source.startsWith('/')) return '$base/$source';
-    return '$base$source';
-  }
-
-  Widget _attachmentImage(
-    Map<String, dynamic> item, {
-    BoxFit fit = BoxFit.cover,
-  }) {
-    final source = _attachmentUrl(item);
-    if (source == null) {
-      return const Icon(Icons.broken_image_outlined, color: Colors.white70);
-    }
-
-    if (_isLocalAttachment(item)) {
-      return Image.file(
-        File(source),
-        fit: fit,
-        errorBuilder: (_, __, ___) =>
-            const Icon(Icons.broken_image_outlined, color: Colors.white70),
-      );
-    }
-
-    return Image.network(
-      source,
-      fit: fit,
-      errorBuilder: (_, __, ___) =>
-          const Icon(Icons.broken_image_outlined, color: Colors.white70),
-    );
-  }
-
-  Future<File?> _compressImage(String path) async {
-    final dir = await getTemporaryDirectory();
-    final targetPath =
-        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
-    final result = await FlutterImageCompress.compressAndGetFile(
-      path,
-      targetPath,
-      quality: 70,
-    );
-    if (result != null) return File(result.path);
-    return File(path);
-  }
-
-  Future<ImageSource?> _showImageSourceSheet({required String title}) {
-    return showModalBottomSheet<ImageSource>(
-      context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _ImageSourceButton(
-                        icon: Icons.photo_camera_outlined,
-                        label: 'Ambil gambar',
-                        onTap: () =>
-                            Navigator.pop(sheetContext, ImageSource.camera),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _ImageSourceButton(
-                        icon: Icons.photo_library_outlined,
-                        label: 'Dari galeri',
-                        onTap: () =>
-                            Navigator.pop(sheetContext, ImageSource.gallery),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<Map<String, dynamic>?> _pickPhoto(ImageSource source) async {
-    final image = await ImagePicker().pickImage(
-      source: source,
-      imageQuality: 70,
-      maxWidth: 1600,
-    );
-    if (image == null) return null;
-
-    final fileExtension = image.path.split('.').last.toLowerCase();
-    const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
-    if (!allowed.contains(fileExtension)) {
-      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
-    }
-
-    final File file;
-    if (fileExtension == 'gif' || fileExtension == 'webp') {
-      file = File(image.path);
-    } else {
-      final compressed = await _compressImage(image.path);
-      if (compressed == null) return null;
-      file = compressed;
-    }
-
-    if (await file.length() > 10 * 1024 * 1024) {
-      throw Exception('Ukuran foto maksimal 10MB.');
-    }
-
-    final name = file.path.split('/').last;
-    return {
-      'name': name,
-      'path': file.path,
-      'extension': name.split('.').last.toLowerCase(),
-      'isNew': true,
-    };
-  }
-
-  Future<void> _addAttachment() async {
-    try {
-      final source = await _showImageSourceSheet(title: 'Tambah Foto');
-      if (source == null || !mounted) return;
-      final photo = await _pickPhoto(source);
-      if (photo == null || !mounted) return;
-      setState(() {
-        _attachments = [..._attachments, photo];
-      });
-      _persistDraft();
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage(e))),
-      );
-    }
-  }
-
-  Future<void> _replaceAttachment(int index) async {
-    if (index < 0 || index >= _attachments.length) return;
-    try {
-      final source = await _showImageSourceSheet(title: 'Ganti Foto');
-      if (source == null || !mounted) return;
-      final photo = await _pickPhoto(source);
-      if (photo == null || !mounted) return;
-      setState(() {
-        final next = List<Map<String, dynamic>>.from(_attachments);
-        next[index] = photo;
-        _attachments = next;
-      });
-      _persistDraft();
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(_errorMessage(e))),
-      );
-    }
-  }
-
-  Future<void> _deleteAttachment(int index) async {
-    if (index < 0 || index >= _attachments.length) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Hapus Foto'),
-        content: const Text('Hapus lampiran foto ini?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
-    setState(() {
-      final next = List<Map<String, dynamic>>.from(_attachments);
-      next.removeAt(index);
-      _attachments = next;
-    });
-    _persistDraft();
-  }
-
-  Future<void> _viewAttachment(int index) async {
-    if (index < 0 || index >= _attachments.length) return;
-    await showDialog<void>(
-      context: context,
-      barrierColor: Colors.black,
-      builder: (dialogContext) {
-        return Dialog.fullscreen(
-          backgroundColor: Colors.black,
-          child: SafeArea(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    icon: const Icon(Icons.close, color: Colors.white),
-                  ),
-                ),
-                Expanded(
-                  child: InteractiveViewer(
-                    minScale: 1,
-                    maxScale: 4,
-                    child: Center(
-                      child: _attachmentImage(
-                        _attachments[index],
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            Navigator.pop(dialogContext);
-                            await _deleteAttachment(index);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD32F2F),
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.delete_outline),
-                          label: const Text('Hapus'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _showAttachmentActions(int index) async {
-    if (index < 0 || index >= _attachments.length) return;
-    final action = await showModalBottomSheet<String>(
-      context: context,
-      showDragHandle: true,
-      builder: (sheetContext) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(sheetContext, 'view'),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: ColoredBox(
-                        color: Colors.black,
-                        child: _attachmentImage(
-                          _attachments[index],
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete_outline, color: Colors.red),
-                title: const Text(
-                  'Hapus gambar',
-                  style: TextStyle(color: Colors.red),
-                ),
-                onTap: () => Navigator.pop(sheetContext, 'delete'),
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (!mounted || action == null) return;
-    if (action == 'view') await _viewAttachment(index);
-    if (action == 'edit') await _replaceAttachment(index);
-    if (action == 'delete') await _deleteAttachment(index);
-  }
-
-  Widget _buildAttachmentCard() {
-    return TemplateCard(
-      title: 'Lampiran',
-      icon: Icons.photo_library_outlined,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const spacing = 8.0;
-          final columns = constraints.maxWidth < 280 ? 2 : 3;
-          final tileSize =
-              (constraints.maxWidth - spacing * (columns - 1)) / columns;
-          final itemCount = _attachments.length + 1;
-
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: itemCount,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns,
-              crossAxisSpacing: spacing,
-              mainAxisSpacing: spacing,
-            ),
-            itemBuilder: (context, index) {
-              if (index == _attachments.length) {
-                return _AddPhotoTile(
-                  size: tileSize,
-                  onTap: _addAttachment,
-                );
-              }
-
-              return GestureDetector(
-                onTap: () => _viewAttachment(index),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      ColoredBox(
-                        color: Colors.grey.shade200,
-                        child: _attachmentImage(_attachments[index]),
-                      ),
-                      Positioned(
-                        right: 6,
-                        bottom: 6,
-                        child: GestureDetector(
-                          onTap: () => _showAttachmentActions(index),
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: const BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.more_horiz,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildNextButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _canGoNext ? _goNext : null,
-        style: _primaryActionButtonStyle.copyWith(
-          minimumSize: const WidgetStatePropertyAll(Size.fromHeight(48)),
-        ),
-        child: const Text(
-          'Selanjutnya',
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  String _value(String key) => widget.data[key]?.toString() ?? '-';
-
-  Map<String, dynamic> get _dyeing {
-    final dyeing = widget.data['dyeing'];
-    return dyeing is Map ? Map<String, dynamic>.from(dyeing) : {};
-  }
-
-  Widget _buildProcessTimeItem({
-    required String label,
-    required dynamic person,
-    required String? time,
-  }) {
-    final name = _personName(person);
-    final formattedTime = _formatProcessTime(time);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Row(
-          children: [
-            if (name != '-' || formattedTime == null)
-              Text(
-                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
-                style: const TextStyle(
-                  color: Color(0xFF3E3F49),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            if (formattedTime != null)
-              Text(
-                formattedTime,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 16,
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  String _personName(dynamic person) {
-    if (person is Map) {
-      final name = person['name'] ?? person['full_name'];
-      if (name != null && name.toString().trim().isNotEmpty) {
-        return name.toString();
-      }
-    }
-    return '-';
-  }
-
-  String? _formatProcessTime(String? value) {
-    if (value == null || value.trim().isEmpty || value.trim() == '-') {
-      return null;
-    }
-    return _formatDateTime(value);
-  }
-
-  Widget _buildOverviewCard() {
-    return Container(
-      decoration: CustomTheme().cardTheme(),
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _value('woNo'),
-            style: const TextStyle(
-              color: Color(0xFF234393),
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildDyeingReferenceLine(),
-          const SizedBox(height: 12),
-          _buildMaterialItem(),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: _buildStatusBadge(_value('status')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMaterialItem() {
-    final code = _value('topMaterialCode');
-    final name = _value('topMaterialName');
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Material',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          code == '-' ? _value('material') : code,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        if (name != '-') ...[
-          const SizedBox(height: 2),
-          Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildDyeingReferenceLine() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildDyeingReferenceItem(
-          label: 'Rework Dyeing',
-          value: _value('dyeingProcessNo'),
-          valueColor: const Color(0xFF234393),
-        ),
-        const SizedBox(height: 12),
-        _buildProcessTimeItem(
-          label: 'Mulai Rework',
-          person: _dyeing['start_by'],
-          time: _dyeing['start_time']?.toString(),
-        ),
-        const SizedBox(height: 12),
-        _buildProcessTimeItem(
-          label: 'Selesai Rework',
-          person: _dyeing['end_by'],
-          time: _dyeing['end_time']?.toString(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDyeingReferenceItem({
-    required String label,
-    required String value,
-    Color? valueColor,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          value,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: valueColor ?? const Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryCard() {
-    final categories = _reworkCategories();
-
-    return TemplateCard(
-      title: 'Kategori Rework',
-      icon: Icons.local_offer_outlined,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _categoryTitle(categories),
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          if (categories.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            ...categories.asMap().entries.map(
-                  (entry) => _buildCategoryItem(
-                    entry.value,
-                    isLast: entry.key == categories.length - 1,
-                  ),
-                ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  List<Map<String, dynamic>> _reworkCategories() {
-    final dyeing = widget.data['dyeing'];
-    final raw = widget.data['rework_categories'] ??
-        (dyeing is Map ? dyeing['rework_categories'] : null);
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-  String _categoryTitle(List<Map<String, dynamic>> categories) {
-    const repairTypes = {
-      'perbaikan_warna',
-      'perbaikan_noda',
-      'pelemas_ulang',
-    };
-    if (categories.isNotEmpty &&
-        categories.every(
-          (item) => repairTypes.contains(item['type']?.toString()),
-        )) {
-      return 'Perbaikan';
-    }
-    return _value('category');
-  }
-
-  Widget _buildCategoryItem(
-    Map<String, dynamic> category, {
-    required bool isLast,
-  }) {
-    final label = category['label']?.toString() ?? '-';
-    final methods = category['methods'] is List
-        ? (category['methods'] as List)
-            .whereType<Map>()
-            .map((method) => method['label']?.toString() ?? '')
-            .where((method) => method.isNotEmpty)
-            .toList()
-        : <String>[];
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
-      decoration: BoxDecoration(
-        border: isLast
-            ? null
-            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildBulletText(label),
-          for (final method in methods)
-            Padding(
-              padding: const EdgeInsets.only(left: 16, top: 12),
-              child: _buildBulletText(
-                method,
-                color: Colors.grey.shade600,
-                fontSize: 16,
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBulletText(
-    String text, {
-    Color color = const Color(0xFF292A2F),
-    double fontSize = 17,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          width: 18,
-          child: Text('•', style: TextStyle(fontSize: 20)),
-        ),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(color: color, fontSize: fontSize),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatusBadge(String status) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: _getStatusColor(status),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: _getStatusTextColor(status),
-        ),
-      ),
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFFF2F7FF);
-      case 'diproses':
-      case 'in_progress':
-        return Colors.orange;
-      case 'menunggu':
-      case 'waiting':
-        return const Color(0xFFFFFBEA);
-      case 'dilewati':
-      case 'skipped':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  Color _getStatusTextColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-        return const Color(0xFF955B34);
-      default:
-        return _getStatusColor(status);
-    }
-  }
-
-  String _formatDateTime(String value) {
-    final date = DateTime.tryParse(value);
-    if (date == null) return value;
-    final local = date.toLocal();
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ];
-    return '${local.day} ${months[local.month - 1]} ${local.year}, '
-        '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
-  }
-}
-
-class _ImageSourceButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _ImageSourceButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFF4F6FB),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: SizedBox(
-          height: 96,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 28, color: const Color(0xFF4561DB)),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AddPhotoTile extends StatelessWidget {
-  final double size;
-  final VoidCallback onTap;
-
-  const _AddPhotoTile({required this.size, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.grey.shade100,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade400),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add_a_photo_outlined, color: Colors.grey.shade700),
-              const SizedBox(height: 6),
-              Text(
-                'Tambah\nfoto',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1.2,
-                  color: Colors.grey.shade700,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EditReasonOptionSheet extends StatefulWidget {
-  const _EditReasonOptionSheet();
-
-  @override
-  State<_EditReasonOptionSheet> createState() => _EditReasonOptionSheetState();
-}
-
-class _EditReasonOptionSheetState extends State<_EditReasonOptionSheet> {
-  final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _submit() {
-    final value = _controller.text.trim();
-    if (value.length < 8) {
-      setState(() => _errorMessage = 'Minimal 8 karakter');
-      return;
-    }
-    FocusScope.of(context).unfocus();
-    Navigator.pop(context, value);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    final canAdd = _controller.text.trim().length >= 8;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tambah Alasan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(
-                  hintText: 'Masukkan alasan rework (min. 8 karakter)',
-                  border: OutlineInputBorder(),
-                ).copyWith(errorText: _errorMessage),
-                onChanged: (_) {
-                  setState(() {
-                    if (_errorMessage != null) _errorMessage = null;
-                  });
-                },
-                onSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: _secondarySheetButtonStyle(),
-                      child: const Text('Batal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: canAdd ? _submit : null,
-                      style: _primarySheetButtonStyle(),
-                      child: const Text('Tambah'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -38,18 +38,8 @@ class _AppDrawerState extends State<AppDrawer> {
     'Laporan Produksi',
     'Evaluasi Rework',
     'Evaluasi BS',
-<<<<<<< HEAD
-<<<<<<< HEAD
     'Evaluasi GSM',
-<<<<<<< HEAD
-=======
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-    'Evaluasi GSM',
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-=======
     'Notifikasi'
->>>>>>> d94a57a (feat:)
   ];
 
   final List<String> hiddenMenus = [
@@ -205,21 +195,11 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             ? Icons.restart_alt_outlined
                                                                                                             : item.title == 'Evaluasi BS'
                                                                                                                 ? Icons.production_quantity_limits_outlined
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
-                                                                                                                : item.title == 'Notifikasi'
-                                                                                                                    ? Icons.notifications_outlined
-                                                                                                                    : Icons.menu,
-=======
-                                                                                                                : Icons.menu,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-                                                                                                                : item.title == 'Evaluasi GSM'
-                                                                                                                    ? Icons.inventory_outlined
-                                                                                                                    : Icons.menu,
->>>>>>> 07c9d40 (fix: notification all evaluasi)
+                                                                                                                    : item.title == 'Notifikasi'
+                                                                                                                        ? Icons.notifications_outlined
+                                                                                                                        : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

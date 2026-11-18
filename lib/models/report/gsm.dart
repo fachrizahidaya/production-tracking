@@ -30,6 +30,7 @@ class GsmList {
         search: json['search']?.toString() ?? '');
   }
 }
+
 class GsmListItem {
   final id;
   final wo;
@@ -44,18 +45,9 @@ class GsmListItem {
   final materialGsm;
   final qtyBs;
   final material;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final item;
   final topMaterialCode;
   final topMaterialName;
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-  final item;
-  final topMaterialCode;
-  final topMaterialName;
->>>>>>> aa49533 (fix:)
   final startDate;
   final endDate;
 
@@ -73,48 +65,22 @@ class GsmListItem {
       this.materialGsm,
       this.qtyBs,
       this.material,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.item,
       this.topMaterialCode,
       this.topMaterialName,
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-      this.item,
-      this.topMaterialCode,
-      this.topMaterialName,
->>>>>>> aa49533 (fix:)
       this.endDate,
       this.startDate});
 
   factory GsmListItem.fromJson(Map<String, dynamic> json) {
     final packing = json['packing'] ?? {};
-<<<<<<< HEAD
-<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-    final wo = json['work_order'] ?? {};
-    final woItems = wo is Map ? wo['items'] : null;
-    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
->>>>>>> aa49533 (fix:)
     return GsmListItem(
         id: json['id'] ?? '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
-<<<<<<< HEAD
-<<<<<<< HEAD
         wo: wo,
-=======
-        wo: json['work_order'] ?? {},
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        wo: wo,
->>>>>>> aa49533 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reason'] ?? json['reasons'] ?? '',
@@ -127,21 +93,10 @@ class GsmListItem {
         packingGsm: json['packing_gsm'] ?? packing['packing_gsm'] ?? '',
         materialGsm: json['material_gsm'] ?? packing['material_gsm'] ?? '',
         qtyBs: json['qty_bs'] ?? json['bs_qty'] ?? json['qty'] ?? '',
-        material: json['material'] ??
-            json['semi_finished_product'] ??
-            '',
-<<<<<<< HEAD
-<<<<<<< HEAD
+        material: json['material'] ?? json['semi_finished_product'] ?? '',
         item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
         topMaterialCode: json['top_material_code'] ?? '',
         topMaterialName: json['top_material_name'] ?? '',
-=======
->>>>>>> 53bbc04 (fix: bs, gsm, rework)
-=======
-        item: woItem ?? json['item'] ?? json['packing_item']?['item'] ?? {},
-        topMaterialCode: json['top_material_code'] ?? '',
-        topMaterialName: json['top_material_name'] ?? '',
->>>>>>> aa49533 (fix:)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

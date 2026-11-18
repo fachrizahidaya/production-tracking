@@ -8,30 +8,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onReturn;
   final List<Widget>? actions;
   final bool isWithNotification;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final int notificationCount;
   final VoidCallback? onNotifications;
   final String notificationTooltip;
-<<<<<<< HEAD
-=======
-  final int reworkNotificationCount;
-  final VoidCallback? onReworkNotifications;
-  final bool isWithBsNotification;
-  final int bsNotificationCount;
-  final VoidCallback? onBsNotifications;
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-  final int notificationCount;
-  final VoidCallback? onNotifications;
-  final String notificationTooltip;
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-=======
   final bool isWithAnomalyNotification;
   final int anomalyNotificationCount;
   final VoidCallback? onAnomalyNotifications;
   final String anomalyNotificationTooltip;
->>>>>>> d94a57a (feat:)
   final bool isWithAccount;
   final bool showAvatar;
   final bool showNameWithAvatar;
@@ -55,7 +38,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onDashboardSettings;
   final VoidCallback? onReportSettings;
   final VoidCallback? onEdit;
-  final showAvatar;
 
   const CustomAppBar(
       {super.key,
@@ -63,31 +45,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReturn,
       this.actions,
       this.isWithNotification = false,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
-<<<<<<< HEAD
-=======
-      this.reworkNotificationCount = 0,
-      this.onReworkNotifications,
-      this.isWithBsNotification = false,
-      this.bsNotificationCount = 0,
-      this.onBsNotifications,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-      this.notificationCount = 0,
-      this.onNotifications,
-      this.notificationTooltip = 'Evaluasi',
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-=======
       this.isWithAnomalyNotification = false,
       this.anomalyNotificationCount = 0,
       this.onAnomalyNotifications,
       this.anomalyNotificationTooltip = 'Notifikasi',
->>>>>>> d94a57a (feat:)
       this.isWithAccount = false,
+      this.showAvatar = true,
+      this.tab,
+      this.canDelete,
+      this.canUpdate,
       this.handleDelete,
       this.handleUpdate,
       this.id,
@@ -101,11 +70,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.name,
       this.handleFinish,
       this.isLoading = false,
-      this.showNameWithAvatar = false,
+      this.isDashboardSettingsLoading = false,
       this.onDashboardSettings,
-      this.onEdit,
       this.onReportSettings,
-      this.isDashboardSettingsLoading = false});
+      this.onEdit,
+      this.showNameWithAvatar = false});
 
   @override
   Widget build(BuildContext context) {
@@ -130,31 +99,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (isWithNotification)
           _buildNotificationButton(
-<<<<<<< HEAD
-<<<<<<< HEAD
             tooltip: notificationTooltip,
             icon: Icons.assignment_late_outlined,
             count: notificationCount,
             onPressed: onNotifications,
-=======
-            tooltip: 'Evaluasi Rework',
-            icon: Icons.assignment_late_outlined,
-            count: reworkNotificationCount,
-            onPressed: onReworkNotifications,
-          ),
-        if (isWithBsNotification)
-          _buildNotificationButton(
-            tooltip: 'Evaluasi BS',
-            icon: Icons.report_gmailerrorred_outlined,
-            count: bsNotificationCount,
-            onPressed: onBsNotifications,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-            tooltip: notificationTooltip,
-            icon: Icons.assignment_late_outlined,
-            count: notificationCount,
-            onPressed: onNotifications,
->>>>>>> 07c9d40 (fix: notification all evaluasi)
           ),
         if (isWithAnomalyNotification)
           _buildNotificationButton(

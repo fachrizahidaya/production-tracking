@@ -58,8 +58,11 @@ class ProcessButton extends StatefulWidget {
 class _ProcessButtonState extends State<ProcessButton> {
   @override
   Widget build(BuildContext context) {
+    final bool ignoresWarnings =
+        widget.label == 'Sorting' || widget.label == 'Packing';
     final bool hasBasicError =
-        widget.weightWarning != null || widget.qtyWarning != null;
+        !ignoresWarnings &&
+        (widget.weightWarning != null || widget.qtyWarning != null);
 
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
@@ -153,7 +156,8 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasQtyItemError ||
         hasDyeingReworkError() ||
         // hasPackingAttachmentError ||
-        (widget.hasItemQtyWarning == true &&
+        (!ignoresWarnings &&
+            widget.hasItemQtyWarning == true &&
             !widget.hasPackingGradeAStocks);
 
     return SafeArea(

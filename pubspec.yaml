@@ -200,6 +200,7 @@ dependencies:
 <<<<<<< HEAD
   connectivity_plus: ^6.0.5
   internet_connection_checker_plus: ^3.1.1
+<<<<<<< HEAD
 =======
 >>>>>>> 97ee959c (fix: UI dashboard)
   firebase_core: ^4.1.1
@@ -233,6 +234,8 @@ dependencies:
   android_id: ^0.4.0
   flutter_local_notifications: ^19.4.0
 >>>>>>> 9c9cafca (feat: fcm notification)
+=======
+>>>>>>> 9f128e46 (chore: remove unnecessary)
 
 dev_dependencies:
   flutter_test:

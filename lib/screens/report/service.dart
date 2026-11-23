@@ -917,6 +917,27 @@ class ReportService {
     required String preventivePlan,
     List<Map<String, dynamic>>? attachments,
   }) async {
+    final videoCount = (attachments ?? const <Map<String, dynamic>>[]).where(
+      (item) {
+        final value = [
+          item['mime_type'],
+          item['mimeType'],
+          item['type'],
+          item['file_name'],
+          item['name'],
+          item['path'],
+          item['file_path'],
+          item['file_url'],
+          item['url'],
+        ].whereType<String>().join(' ').toLowerCase();
+        return value.contains('video/') ||
+            RegExp(r'\.(mp4|mov|m4v|avi|mkv|webm)(\?|$)').hasMatch(value);
+      },
+    ).length;
+    if (videoCount > 2) {
+      throw Exception('Maksimal 2 video dapat di-upload.');
+    }
+
     return _patchEvaluation(
       id: id,
       missingIdMessage: 'ID BS tidak ditemukan',
@@ -1213,15 +1234,27 @@ class ReportService {
   }
 
   static const _photoExtensions = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
+  static const _videoExtensions = {'mp4', 'mov', 'm4v', 'avi', 'mkv', 'webm'};
   static const _maxPhotoBytes = 10 * 1024 * 1024;
+  static const _maxVideoBytes = 20 * 1024 * 1024;
 
   Future<void> _ensurePhotoAttachment(String path) async {
     final fileExtension = path.split('.').last.toLowerCase();
-    if (!_photoExtensions.contains(fileExtension)) {
-      throw Exception('Lampiran hanya boleh jpg, jpeg, png, gif, atau webp.');
+    if (!_photoExtensions.contains(fileExtension) &&
+        !_videoExtensions.contains(fileExtension)) {
+      throw Exception(
+        'Lampiran hanya boleh foto (jpg, jpeg, png, gif, webp) atau video (mp4, mov, m4v, avi, mkv, webm).',
+      );
     }
-    if (await File(path).length() > _maxPhotoBytes) {
-      throw Exception('Ukuran foto maksimal 10MB.');
+    final maxBytes = _videoExtensions.contains(fileExtension)
+        ? _maxVideoBytes
+        : _maxPhotoBytes;
+    if (await File(path).length() > maxBytes) {
+      throw Exception(
+        _videoExtensions.contains(fileExtension)
+            ? 'Ukuran video maksimal 20MB.'
+            : 'Ukuran foto maksimal 10MB.',
+      );
     }
   }
 

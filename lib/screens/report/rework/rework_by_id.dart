@@ -4,6 +4,7 @@ import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
@@ -202,7 +203,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: _buildAttachmentCard(),
+                child: EvaluationAttachmentGallery(
+                  attachments: widget.data['attachments'],
+                ),
               ),
             ],
           ),

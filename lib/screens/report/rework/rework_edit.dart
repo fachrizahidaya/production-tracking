@@ -13,6 +13,7 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/util/evaluation_draft.dart';
 import 'package:textile_tracking/screens/report/service.dart';
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 
 ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF4561DB),
@@ -67,7 +68,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
           .toList();
     }
     _preventivePlanController.text = _textValue(widget.data['preventivePlan']);
-    _attachments = _parseAttachments(widget.data['attachments']);
+    _attachments = parseEvaluationAttachments(widget.data['attachments']);
     _visibleStep = _stepFromValues();
     _preventivePlanController.addListener(_persistDraft);
     _loadDraft();
@@ -109,7 +110,7 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
             draft['preventivePlan']?.toString() ?? '';
       }
       if (draft.containsKey('attachments')) {
-        final parsed = _parseAttachments(draft['attachments']);
+        final parsed = parseEvaluationAttachments(draft['attachments']);
         _attachments = parsed;
       }
       final savedStep = draft['visibleStep'];
@@ -569,7 +570,13 @@ class _ReworkEditScreenState extends State<ReworkEditScreen> {
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: _buildAttachmentCard(),
+                  child: EvaluationAttachmentEditor(
+                    attachments: _attachments,
+                    onChanged: (attachments) {
+                      setState(() => _attachments = attachments);
+                      _persistDraft();
+                    },
+                  ),
                 ),
               ],
               if (_visibleStep < 2) ...[

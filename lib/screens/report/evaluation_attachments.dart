@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -63,6 +64,12 @@ bool evaluationAttachmentIsVideo(Map<String, dynamic> item) {
   ].whereType<String>().join(' ').toLowerCase();
   return value.contains('video/') ||
       RegExp(r'\.(mp4|mov|m4v|avi|mkv|webm)(\?|$)').hasMatch(value);
+}
+
+String? _formatAttachmentSize(dynamic value) {
+  final bytes = value is num ? value.toDouble() : double.tryParse('$value');
+  if (bytes == null || bytes < 0) return null;
+  return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
 }
 
 class EvaluationAttachmentEditor extends StatefulWidget {
@@ -243,6 +250,12 @@ class _EvaluationAttachmentEditorState
       if (compressed == null) return null;
       final compressedBytes = await compressed.length();
       String toMb(int bytes) => (bytes / (1024 * 1024)).toStringAsFixed(2);
+      debugPrint(
+        '[BS Attachment] Video dipilih: ${video.path} | '
+        'ukuran asli: $originalBytes bytes (${toMb(originalBytes)} MB) | '
+        'ukuran setelah kompresi: $compressedBytes bytes '
+        '(${toMb(compressedBytes)} MB)',
+      );
 
       if (compressedBytes > 20 * 1024 * 1024) {
         throw Exception('Ukuran video maksimal 20MB setelah dikompres.');
@@ -485,6 +498,13 @@ class _EvaluationAttachmentEditorState
                                 _attachmentPreview(widget.attachments[index]),
                           ),
                           Positioned(
+                            left: 6,
+                            bottom: 6,
+                            child: _AttachmentSizeLabel(
+                              item: widget.attachments[index],
+                            ),
+                          ),
+                          Positioned(
                             right: 6,
                             bottom: 6,
                             child: GestureDetector(
@@ -580,18 +600,31 @@ class EvaluationAttachmentGallery extends StatelessWidget {
                           url == null ? null : () => _showViewer(context, item),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: evaluationAttachmentIsVideo(item)
-                            ? _VideoThumbnail(item: item)
-                            : url == null
-                                ? const ColoredBox(
-                                    color: Colors.grey,
-                                    child: Icon(Icons.broken_image_outlined),
-                                  )
-                                : Image.network(url,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            evaluationAttachmentIsVideo(item)
+                                ? _VideoThumbnail(item: item)
+                                : url == null
+                                    ? const ColoredBox(
+                                        color: Colors.grey,
+                                        child: Icon(
                                           Icons.broken_image_outlined,
-                                        )),
+                                        ),
+                                      )
+                                    : Image.network(url,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(
+                                              Icons.broken_image_outlined,
+                                            )),
+                            Positioned(
+                              left: 6,
+                              bottom: 6,
+                              child: _AttachmentSizeLabel(item: item),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -622,6 +655,62 @@ class EvaluationAttachmentGallery extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AttachmentSizeLabel extends StatefulWidget {
+  final Map<String, dynamic> item;
+
+  const _AttachmentSizeLabel({required this.item});
+
+  @override
+  State<_AttachmentSizeLabel> createState() => _AttachmentSizeLabelState();
+}
+
+class _AttachmentSizeLabelState extends State<_AttachmentSizeLabel> {
+  late final Future<int?> _sizeFuture = _loadSize();
+
+  Future<int?> _loadSize() async {
+    if (evaluationAttachmentIsLocal(widget.item)) {
+      final path = widget.item['path']?.toString().trim() ?? '';
+      if (path.isEmpty) return null;
+      final file = File(path);
+      if (!await file.exists()) return null;
+      return file.length();
+    }
+
+    final value = widget.item['file_size'];
+    if (value is num) return value.toInt();
+    return int.tryParse('$value');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<int?>(
+      future: _sizeFuture,
+      builder: (context, snapshot) {
+        final size = snapshot.data;
+        final label = size == null ? null : _formatAttachmentSize(size);
+        if (label == null) return const SizedBox.shrink();
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -797,65 +886,82 @@ class _AttachmentViewerState extends State<_AttachmentViewer> {
     }
     final position = controller.value.position;
     final duration = controller.value.duration;
-    return SingleChildScrollView(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 720),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    VideoPlayer(controller),
-                    IconButton(
-                      iconSize: 64,
-                      color: Colors.white,
-                      icon: Icon(controller.value.isPlaying
-                          ? Icons.pause_circle_filled
-                          : Icons.play_circle_fill),
-                      onPressed: () {
-                        controller.value.isPlaying
-                            ? controller.pause()
-                            : controller.play();
-                      },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const controlsHeight = 58.0;
+          final availableHeight = math.max(
+            100.0,
+            constraints.maxHeight - controlsHeight,
+          );
+          final aspectRatio = controller.value.aspectRatio;
+          final videoHeight = math.min(
+            availableHeight,
+            constraints.maxWidth / aspectRatio,
+          );
+          final videoWidth = videoHeight * aspectRatio;
+
+          return Center(
+            child: SizedBox(
+              width: videoWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AspectRatio(
+                    aspectRatio: aspectRatio,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        VideoPlayer(controller),
+                        IconButton(
+                          iconSize: 64,
+                          color: Colors.white,
+                          icon: Icon(controller.value.isPlaying
+                              ? Icons.pause_circle_filled
+                              : Icons.play_circle_fill),
+                          onPressed: () {
+                            controller.value.isPlaying
+                                ? controller.pause()
+                                : controller.play();
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: VideoProgressIndicator(
-                  controller,
-                  allowScrubbing: true,
-                  colors: const VideoProgressColors(
-                    playedColor: Colors.white,
-                    bufferedColor: Colors.white54,
-                    backgroundColor: Colors.white24,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _formatDuration(position),
-                      style: const TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: VideoProgressIndicator(
+                      controller,
+                      allowScrubbing: true,
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.white,
+                        bufferedColor: Colors.white54,
+                        backgroundColor: Colors.white24,
+                      ),
                     ),
-                    Text(
-                      _formatDuration(duration),
-                      style: const TextStyle(color: Colors.white),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _formatDuration(position),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          _formatDuration(duration),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -51,6 +51,10 @@ class _AppDrawerState extends State<AppDrawer> {
     'Order Greige',
     'Anomali Data',
     'Desain',
+    'PSBR',
+    'SPK Greige',
+    'Persiapan Warping',
+    'Informasi',
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -197,9 +201,11 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                                 ? Icons.production_quantity_limits_outlined
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
-                                                                                                                : item.title == 'Notifikasi'
-                                                                                                                    ? Icons.notifications_outlined
-                                                                                                                    : Icons.menu,
+                                                                                                                    : item.title == 'Notifikasi'
+                                                                                                                        ? Icons.notifications_outlined
+                                                                                                                        : item.title == 'Work Order'
+                                                                                                                            ? Icons.article
+                                                                                                                            : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);

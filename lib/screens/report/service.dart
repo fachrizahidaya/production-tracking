@@ -18,6 +18,7 @@ import 'package:textile_tracking/models/report/rework_comparison.dart';
 import 'package:textile_tracking/models/report/sorting_result.dart';
 import 'package:textile_tracking/models/report/spk_list.dart';
 import 'package:textile_tracking/models/report/spk_summary.dart';
+import 'package:textile_tracking/models/report/stock_usage_anomaly.dart';
 import 'package:textile_tracking/models/report/top_bs.dart';
 import 'package:textile_tracking/models/report/wo_list.dart';
 
@@ -810,6 +811,34 @@ class ReportService {
 
     throw Exception(
       'Failed to load BS rate anomalies: '
+      '${response.statusCode} ${response.body}',
+    );
+  }
+
+  Future<StockUsageAnomalyPage> getPackingGradeAUsageAnomalies({
+    required BuildContext context,
+    int page = 1,
+    int perPage = 20,
+    String search = '',
+  }) async {
+    final query = <String, String>{
+      'page': page.toString(),
+      'per_page': perPage.toString(),
+    };
+    if (search.trim().isNotEmpty) query['search'] = search.trim();
+
+    final uri = Uri.parse('$baseUrl/anomalies/packing-grade-a-usage')
+        .replace(queryParameters: query);
+    final response = await ApiClient.instance.get(context, uri);
+
+    if (response.statusCode == 200) {
+      return StockUsageAnomalyPage.fromJson(
+        Map<String, dynamic>.from(jsonDecode(response.body)),
+      );
+    }
+
+    throw Exception(
+      'Failed to load packing grade A usage anomalies: '
       '${response.statusCode} ${response.body}',
     );
   }

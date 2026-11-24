@@ -10,7 +10,7 @@ class MenuService {
 
   Future<List<dynamic>> handleFetchMenu(BuildContext context) async {
     try {
-      final url = Uri.parse('${dotenv.env['API_URL']}/menus');
+      final url = Uri.parse('${dotenv.env['API_URL']}/user-menus');
 
       final response = await ApiClient.instance.get(context, url);
 

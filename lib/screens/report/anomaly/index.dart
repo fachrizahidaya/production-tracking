@@ -42,6 +42,16 @@ class AnomalyScreen extends StatelessWidget {
               description: 'Lihat daftar anomali input proses.',
               onTap: () => Navigator.pushNamed(context, '/process-anomalies'),
             ),
+            const SizedBox(height: 12),
+            _AnomalyMenuCard(
+              icon: Icons.inventory_2_outlined,
+              iconColor: Colors.red.shade700,
+              iconBackgroundColor: Colors.red.shade50,
+              title: 'Stok Packing dipakai',
+              description: 'Lihat stok hasil packing yang dipakai kembali.',
+              onTap: () =>
+                  Navigator.pushNamed(context, '/stock-usage-anomalies'),
+            ),
           ],
         ),
       ),

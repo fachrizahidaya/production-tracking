@@ -61,6 +61,7 @@ import 'package:textile_tracking/screens/work-order/index.dart';
 import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/gsm-anomaly/gsm_list.dart';
+import 'package:textile_tracking/screens/report/stock-usage-anomaly/stock_usage_list.dart';
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/sewing/index.dart';
@@ -188,7 +189,7 @@ class MyApp extends StatelessWidget {
         '/dashboard': (context) => Home(),
         '/work-orders': (context) => WorkOrder(),
         '/profile': (context) => Profile(),
-        '/notification': (context) => NotificationList(),
+        '/mismatches': (context) => NotificationList(),
         '/dyeings': (context) => DyeingScreen(),
         '/press': (context) => PressTumblerScreen(),
         '/tumblers': (context) => TumblerScreen(),
@@ -218,6 +219,7 @@ class MyApp extends StatelessWidget {
         '/process-anomalies': (context) => ProcessAnomalyList(),
         '/gsm-evaluations': (context) => GsmList(),
         '/gsm-anomalies': (context) => GsmAnomalyList(),
+        '/stock-usage-anomalies': (context) => StockUsageList(),
       },
     );
   }

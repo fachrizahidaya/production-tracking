@@ -41,6 +41,7 @@ class _HomeState extends State<Home> {
   int _bsRateAnomalyCount = 0;
   int _packingGsmAnomalyCount = 0;
   int _processInputAnomalyCount = 0;
+  int _stockPackingAnomalyCount = 0;
   late Future<String?> _tokenFuture;
 
   @override
@@ -249,6 +250,9 @@ class _HomeState extends State<Home> {
             int.tryParse(responseData['packing_gsm']?.toString() ?? '') ?? 0;
         _processInputAnomalyCount =
             int.tryParse(responseData['process_input']?.toString() ?? '') ?? 0;
+        _stockPackingAnomalyCount = int.tryParse(
+                responseData['packing_grade_a_usage']?.toString() ?? '') ??
+            0;
       });
     } catch (_) {
       // Ringkasan tetap kosong jika endpoint anomaly tidak tersedia.
@@ -347,6 +351,15 @@ class _HomeState extends State<Home> {
                 onTap: () {
                   Navigator.pop(sheetContext);
                   Navigator.pushNamed(context, '/process-anomalies');
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.input_outlined),
+                title: const Text('Stok Packing dipakai'),
+                trailing: _buildWaitingCountBadge(_stockPackingAnomalyCount),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  Navigator.pushNamed(context, '/stock-usage-anomalies');
                 },
               ),
               const SizedBox(height: 8),

@@ -61,6 +61,8 @@ class _FinishWarpingProcessManualState
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _sectionController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _wasteController = TextEditingController();
+  final TextEditingController _gemporController = TextEditingController();
   List<Map<String, dynamic>> _brokenYarnTypes = [];
   List<TextEditingController> _brokenYarnQtyControllers = [];
   final List<_CustomBrokenYarnEntry> _customBrokenYarns = [];
@@ -83,6 +85,11 @@ class _FinishWarpingProcessManualState
     processId = widget.processId?.toString();
     woData = Map<String, dynamic>.from(widget.data ?? {});
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+    _lengthController.text = widget.form?['length']?.toString() ?? '';
+    _sectionController.text = widget.form?['section']?.toString() ?? '';
+    _weightController.text = widget.form?['weight']?.toString() ?? '';
+    _wasteController.text = widget.form?['waste']?.toString() ?? '';
+    _gemporController.text = widget.form?['gempor']?.toString() ?? '';
 
     final existing = List<Map<String, dynamic>>.from(
       widget.form?['attachments'] ?? [],
@@ -306,6 +313,8 @@ class _FinishWarpingProcessManualState
         widget.form?['attachments'] = attachments;
         widget.form?['length'] = data['length'];
         widget.form?['weight'] = data['weight'];
+        widget.form?['waste'] = data['waste'];
+        widget.form?['gempor'] = data['gempor'];
 
         allAttachments = [
           ...attachments,
@@ -315,6 +324,10 @@ class _FinishWarpingProcessManualState
         _lengthController.text = data['length']?.toString() ?? '';
 
         _weightController.text = data['weight']?.toString() ?? '';
+
+        _wasteController.text = data['waste']?.toString() ?? '';
+
+        _gemporController.text = data['gempor']?.toString() ?? '';
 
         _sectionController.text = data['section']?.toString() ?? '';
 
@@ -617,6 +630,8 @@ class _FinishWarpingProcessManualState
       entry.dispose();
     }
     _weightController.dispose();
+    _wasteController.dispose();
+    _gemporController.dispose();
     _sectionController.dispose();
     super.dispose();
   }
@@ -683,7 +698,8 @@ class _FinishWarpingProcessManualState
                                           ?.toString() ??
                                       '',
                                   badge: _formatWarpingType(
-                                    _readWarpingType(widget.form?['warping_type']) ??
+                                    _readWarpingType(
+                                            widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
@@ -780,46 +796,78 @@ class _FinishWarpingProcessManualState
       icon: Icons.rule,
       child: Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
             children: [
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Panjang (M)',
-                  controller: _lengthController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('length', value);
-                  },
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Panjang (M)',
+                      controller: _lengthController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('length', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Berat (KG)',
+                      controller: _weightController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('weight', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Section',
+                      controller: _sectionController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('section', value);
+                      },
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl')),
               ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Berat (KG)',
-                  controller: _weightController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('weight', value);
-                  },
-                ),
-              ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Section',
-                  controller: _sectionController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('section', value);
-                  },
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextForm(
+                      label: 'Waste',
+                      controller: _wasteController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('waste', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Gempor',
+                      controller: _gemporController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('gempor', value);
+                      },
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl')),
+              )
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ],
       ),
@@ -855,23 +903,16 @@ class _FinishWarpingProcessManualState
                 ),
               ),
               Wrap(
-                spacing: spacing,
-                runSpacing: 16,
+                spacing: 12,
+                runSpacing: 12,
                 children: List.generate(
                   _brokenYarnTypes.length,
                   (index) => SizedBox(
                     width: itemWidth,
-                    child: TextForm(
+                    child: _buildBrokenYarnQtyField(
                       label:
                           _brokenYarnTypes[index]['label']?.toString() ?? '-',
                       controller: _brokenYarnQtyControllers[index],
-                      req: false,
-                      isNumber: true,
-                      isSorting: true,
-                      handleChange: (_) {
-                        _syncBrokenYarns();
-                        setState(() {});
-                      },
                     ),
                   ),
                 ),
@@ -894,16 +935,9 @@ class _FinishWarpingProcessManualState
                       ),
                     ),
                     Expanded(
-                      child: TextForm(
+                      child: _buildBrokenYarnQtyField(
                         label: 'Qty',
                         controller: item.qtyController,
-                        req: false,
-                        isNumber: true,
-                        isSorting: true,
-                        handleChange: (_) {
-                          _syncBrokenYarns();
-                          setState(() {});
-                        },
                       ),
                     ),
                     IconButton(
@@ -927,6 +961,71 @@ class _FinishWarpingProcessManualState
         },
       ),
     );
+  }
+
+  Widget _buildBrokenYarnQtyField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        // _buildQuantityButton(
+        //   icon: Icons.remove,
+        //   tooltip: 'Kurangi $label',
+        //   onPressed: () => _adjustBrokenYarnQty(controller, -1),
+        // ),
+        Expanded(
+          child: TextForm(
+            label: label,
+            controller: controller,
+            req: false,
+            isNumber: true,
+            isSorting: true,
+            handleChange: (_) {
+              _syncBrokenYarns();
+              setState(() {});
+            },
+          ),
+        ),
+        // _buildQuantityButton(
+        //   icon: Icons.add,
+        //   tooltip: 'Tambah $label',
+        //   onPressed: () => _adjustBrokenYarnQty(controller, 1),
+        // ),
+      ],
+    );
+  }
+
+  Widget _buildQuantityButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+  }) {
+    return IconButton(
+      icon: Icon(icon, size: 20),
+      tooltip: tooltip,
+      visualDensity: VisualDensity.compact,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 28, minHeight: 48),
+      onPressed: onPressed,
+    );
+  }
+
+  void _adjustBrokenYarnQty(TextEditingController controller, num delta) {
+    final current = _parseBrokenYarnQty(controller.text) ?? 0;
+    final next = (current + delta).clamp(0, double.infinity);
+
+    controller.text = next == 0 ? '' : _formatQuantity(next);
+    controller.selection = TextSelection.collapsed(
+      offset: controller.text.length,
+    );
+    _syncBrokenYarns();
+    setState(() {});
+  }
+
+  String _formatQuantity(num value) {
+    return value % 1 == 0 ? value.toInt().toString() : value.toString();
   }
 }
 

@@ -1034,6 +1034,7 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildYarnItems(bool isTablet) {
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
+    final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
     final yarnItems = _listValue(orderGreige['yarn_items']);
 
     if (yarnItems.isEmpty) {
@@ -1041,7 +1042,9 @@ class GreigeProcessDetailList extends StatelessWidget {
     }
 
     final warpingTypeLabel = _formatWarpingType(
-      design['warping_type'] ?? orderGreige['warping_type'],
+      warpingPreparation['warping_type'] ??
+          design['warping_type'] ??
+          orderGreige['warping_type'],
     );
 
     return Column(
@@ -1062,7 +1065,11 @@ class GreigeProcessDetailList extends StatelessWidget {
                   ),
                 _buildInfoLine(
                   'Lot Benang',
-                  _formatYarnLot(design['yarn_lot']),
+                  _formatYarnLot(
+                    warpingPreparation['yarn_lot'] ??
+                        orderGreige['yarn_lot'] ??
+                        design['yarn_lot'],
+                  ),
                 ),
               ],
             );
@@ -1075,6 +1082,7 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildLoomBeams(bool isTablet) {
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
+    final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
     final loomBeams = _listValue(orderGreige['loom_beams']);
 
     if (loomBeams.isEmpty) {
@@ -1089,9 +1097,23 @@ class GreigeProcessDetailList extends StatelessWidget {
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine(
-                    'Lebar Beam', _withUnit(design['beam_width'], 'M')),
-                _buildInfoLine('No. MC', _display(design['machine_no'])),
-                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
+                    'Lebar Beam',
+                    _withUnit(
+                      warpingPreparation['beam_width'] ??
+                          orderGreige['beam_width'] ??
+                          design['beam_width'],
+                      'M',
+                    )),
+                _buildInfoLine(
+                    'No. MC',
+                    _display(warpingPreparation['machine_no'] ??
+                        orderGreige['machine_no'] ??
+                        design['machine_no'])),
+                _buildInfoLine(
+                    'Beam A/B',
+                    _display(warpingPreparation['beam_ab'] ??
+                        orderGreige['beam_ab'] ??
+                        design['beam_ab'])),
                 // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
@@ -1248,10 +1270,15 @@ class GreigeProcessDetailList extends StatelessWidget {
 
   List<Map<String, dynamic>> _resultRows() {
     if (processName == 'Warping') {
+      final orderGreige = _mapValue(data['order_greige']);
+      final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
+
       return [
         {
           'label': 'Jenis Warping',
-          'value': _formatType(data['order_greige']['warping_type']),
+          'value': _formatType(
+            warpingPreparation['warping_type'] ?? orderGreige['warping_type'],
+          ),
           'icon': Icons.category_outlined
         },
         {
@@ -1267,6 +1294,16 @@ class GreigeProcessDetailList extends StatelessWidget {
         {
           'label': 'Jumlah Berat',
           'value': _withUnit(data['weight'], 'KG'),
+          'icon': Icons.layers_outlined
+        },
+        {
+          'label': 'Waste',
+          'value': _withUnit(data['waste'], 'KG'),
+          'icon': Icons.layers_outlined
+        },
+        {
+          'label': 'Gempor',
+          'value': _withUnit(data['gempor'], 'KG'),
           'icon': Icons.layers_outlined
         },
       ];

@@ -15,8 +15,8 @@ class MenuService {
       final response = await ApiClient.instance.get(context, url);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final List<dynamic> menus = data['data'] ?? [];
+        final decoded = jsonDecode(response.body);
+        final List<dynamic> menus = _normalizeMenus(decoded);
 
         await Storage.instance.insertMenus(menus);
         return menus;
@@ -26,6 +26,19 @@ class MenuService {
     } catch (e) {
       throw Exception('Error fetching menus: $e');
     }
+  }
+
+  List<dynamic> _normalizeMenus(dynamic decoded) {
+    if (decoded is List) return decoded;
+    if (decoded is! Map) return [];
+
+    final data = decoded['data'];
+    if (data is List) return data;
+    if (data is Map) return [data];
+
+    // /user-menus may return a single root menu object.
+    if (decoded['name'] != null) return [decoded];
+    return [];
   }
 }
 
@@ -46,18 +59,28 @@ class UserMenu {
     }
   }
 
-  bool _searchMenu(List<dynamic> menuList, String name, String action) {
-    for (var menu in menuList) {
+  bool _searchMenu(dynamic menuList, String name, String action) {
+    if (menuList is Map) {
+      return _searchMenu([menuList], name, action);
+    }
+    if (menuList is! List) return false;
+
+    for (final menu in menuList) {
+      if (menu is! Map) continue;
+
       if (menu['name'] == name) {
-        final List<dynamic> actions = menu['actions'] ?? [];
-        return actions.contains(action);
+        return _hasAction(menu['actions'], action);
       }
 
-      if (menu['children'] != null && menu['children'].isNotEmpty) {
-        bool found = _searchMenu(menu['children'], name, action);
-        if (found) return true;
-      }
+      final children = menu['children'];
+      if (_searchMenu(children, name, action)) return true;
     }
+    return false;
+  }
+
+  bool _hasAction(dynamic actions, String action) {
+    if (actions is Map) return actions[action] == true;
+    if (actions is List) return actions.contains(action);
     return false;
   }
 }

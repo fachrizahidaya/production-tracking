@@ -58,6 +58,8 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'section': null,
     'length': null,
     'weight': null,
+    'waste': null,
+    'gempor': null,
     'broken_yarns': [],
     'machines': [],
   };

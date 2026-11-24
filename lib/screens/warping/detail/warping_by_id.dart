@@ -79,10 +79,16 @@ class _WarpingDetailScreenState extends State<WarpingDetailScreen> {
         await _greigeOrderService.getDataView(orderGreigeId.toString());
 
         final response = _greigeOrderService.dataView;
-
-        _greigeOrder = response['data'] is Map<String, dynamic>
+        final fetchedOrderGreige = response['data'] is Map<String, dynamic>
             ? Map<String, dynamic>.from(response['data'])
             : Map<String, dynamic>.from(response);
+
+        // Keep fields returned by the warping detail response, such as
+        // order_greige.warping_type, when the second endpoint omits them.
+        _greigeOrder = Map<String, dynamic>.from(orderGreige);
+        fetchedOrderGreige.forEach((key, value) {
+          if (value != null) _greigeOrder[key] = value;
+        });
       } else {
         _greigeOrder = {};
       }

@@ -22,6 +22,8 @@ class Warping {
   final machine_ids;
   final length;
   final weight;
+  final waste;
+  final gempor;
   final brokenYarns;
 
   Warping(
@@ -40,6 +42,8 @@ class Warping {
       this.machines,
       this.length,
       this.weight,
+      this.waste,
+      this.gempor,
       this.brokenYarns});
 
   factory Warping.fromJson(Map<String, dynamic> json) {
@@ -60,6 +64,8 @@ class Warping {
       machine_ids: json['machine_ids'] ?? [],
       length: json['length'],
       weight: json['weight'],
+      waste: json['waste'],
+      gempor: json['gempor'],
       brokenYarns: json['broken_yarns'] ?? [],
     );
   }
@@ -81,6 +87,8 @@ class Warping {
       'machine_ids': machine_ids,
       'length': length,
       'weight': weight,
+      'waste': waste,
+      'gempor': gempor,
       'broken_yarns': brokenYarns,
     };
 

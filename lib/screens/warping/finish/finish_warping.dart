@@ -38,6 +38,8 @@ class _FinishWarpingState extends State<FinishWarping> {
     'section': null,
     'length': null,
     'weight': null,
+    'waste': null,
+    'gempor': null,
     'broken_yarns': [],
     'machines': [],
     'attachments': []
@@ -75,6 +77,8 @@ class _FinishWarpingState extends State<FinishWarping> {
           ),
           attachments: form['attachments'],
           weight: num.tryParse(form['weight']?.toString() ?? '0') ?? 0,
+          waste: num.tryParse(form['waste']?.toString() ?? ''),
+          gempor: num.tryParse(form['gempor']?.toString() ?? ''),
         );
 
         final message =

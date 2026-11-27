@@ -848,10 +848,9 @@ packages:
   quill_html_editor_v3:
     dependency: "direct main"
     description:
-      name: quill_html_editor_v3
-      sha256: "9ef1e504bb5c556a855291b4476ce9fc8496285d04805b70bffb78f1583975ad"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/quill_html_editor_v3"
+      relative: true
+    source: path
     version: "2.2.13"
   redux:
     dependency: "direct main"

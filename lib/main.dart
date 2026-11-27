@@ -57,6 +57,7 @@ import 'package:textile_tracking/screens/profile/index.dart';
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
 import 'package:textile_tracking/screens/report/bs-anomaly/bs_list.dart';
 import 'package:textile_tracking/screens/report/anomaly/index.dart';
+import 'package:textile_tracking/screens/report/stock-usage-anomaly/stock_usage_list.dart';
 import 'package:textile_tracking/screens/work-order/index.dart';
 import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';

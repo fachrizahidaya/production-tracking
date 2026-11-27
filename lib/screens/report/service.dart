@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:textile_tracking/models/report/stock_usage_anomaly.dart';
 import 'package:textile_tracking/providers/api_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:textile_tracking/models/report/production_summary.dart';

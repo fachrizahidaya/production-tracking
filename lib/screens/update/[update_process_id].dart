@@ -31,21 +31,7 @@ import 'package:textile_tracking/screens/update/process/cutting_sewing.dart';
 import 'package:textile_tracking/screens/update/process/long_hemming.dart';
 import 'package:textile_tracking/screens/update/process/machine.dart';
 import 'package:textile_tracking/screens/update/process/sorting.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/screens/update/process/packing_grade_a_source.dart';
-=======
-import 'package:textile_tracking/screens/update/process/warping.dart';
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> e03dd57 (chore: remove unnecessary)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-import 'package:textile_tracking/screens/update/process/packing_grade_a_source.dart';
->>>>>>> ead5d4b9 (fix: stok di packing)
 
 class UpdateProcess extends StatefulWidget {
   final id;
@@ -62,13 +48,6 @@ class UpdateProcess extends StatefulWidget {
   final length;
   final width;
   final weight;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
->>>>>>> bf8a2c0 (fix: update process)
   final isSubmitting;
   final forDyeing;
   final grades;
@@ -79,13 +58,6 @@ class UpdateProcess extends StatefulWidget {
   final itemGradeOption;
   final itemTypeOption;
   final defects;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
->>>>>>> bf8a2c0 (fix: update process)
   final reworkLongHemming;
   final combing;
   final spraying;
@@ -97,18 +69,9 @@ class UpdateProcess extends StatefulWidget {
   final weightGradeA;
   final finishedItemGrb;
   final finishedItemGood;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final finishedItemMaterial;
   final handleSelectReworkCategory;
   final reworkCategoryOption;
-=======
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
-  final finishedItemMaterial;
-  final handleSelectReworkCategory;
-  final reworkCategoryOption;
->>>>>>> ae9b2985 (fix: rework dyeing)
 
   const UpdateProcess(
       {super.key,
@@ -591,27 +554,9 @@ class _UpdateProcessState extends State<UpdateProcess>
 
       final gradeItems = grade['items'] ?? [];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       for (final gradeItem in gradeItems) {
         if (gradeItem is! Map) continue;
         if (gradeItem['wo_item_id'] != woItemId) continue;
-=======
-      final matched = gradeItems.cast<Map<String, dynamic>?>().firstWhere(
-        (gradeItem) {
-          return gradeItem?['wo_item_id'] == woItemId;
-        },
-        orElse: () => null,
-      );
-
-      if (matched != null) {
-        final qty = parseInput(matched['qty']);
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
-      for (final gradeItem in gradeItems) {
-        if (gradeItem is! Map) continue;
-        if (gradeItem['wo_item_id'] != woItemId) continue;
->>>>>>> 1d6d2ab6 (fix: sortir)
 
         if (gradeCode == 'A') {
           gradeA += _gradeAQty(gradeItem);
@@ -920,47 +865,12 @@ class _UpdateProcessState extends State<UpdateProcess>
     return int.tryParse(value?.toString() ?? '') ?? value;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   double _gradeAQty(Map gradeItem) {
     return parseInput(gradeItem['qty']) +
         parseInput(gradeItem['qty_in']) -
         parseInput(gradeItem['qty_out']);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   double get totalGradeASorting {
     final grades = widget.data?['sorting']?['grades'] ?? [];
 
@@ -1671,10 +1581,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                     updateTotalSorting: _updateTotalSorting,
                                     itemTypeOption: widget.itemTypeOption,
                                     data: widget.data,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                                     onSourceQtyInvalid: (invalid) {
                                       if (_gradeASourceInvalid == invalid) {
                                         return;
@@ -1683,97 +1589,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                         () => _gradeASourceInvalid = invalid,
                                       );
                                     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                  ),
-                                if (isReworkDyeing) _buildDyeingReworkForm(),
-                                if (widget.label == 'Packing')
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: Colors.blue.shade100,
-                                      ),
-                                    ),
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 12,
-                                      children: [
-                                        _buildSummaryItem(
-                                          'Total Grade A Sortir',
-                                          formatNumber(totalGradeASorting),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Keseluruhan Sortir',
-                                          formatNumber(totalAllSorting),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Packing',
-                                          formatNumber(totalPackingInput),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Berat Grade A',
-                                          formatId(totalWeightGradeAAll),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Berat Keseluruhan',
-                                          formatId(totalWeightAll),
-                                        ),
-                                      ],
-                                    ),
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-                                  ),
-                                if (isReworkDyeing) _buildDyeingReworkForm(),
-                                if (widget.label == 'Packing')
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.shade50,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: Colors.blue.shade100,
-                                      ),
-                                    ),
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 12,
-                                      children: [
-                                        _buildSummaryItem(
-                                          'Total Grade A Sortir',
-                                          formatNumber(totalGradeASorting),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Keseluruhan Sortir',
-                                          formatNumber(totalAllSorting),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Packing',
-                                          formatNumber(totalPackingInput),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Berat Grade A',
-                                          formatId(totalWeightGradeAAll),
-                                        ),
-                                        _buildSummaryItem(
-                                          'Total Berat Keseluruhan',
-                                          formatId(totalWeightAll),
-                                        ),
-                                      ],
-                                    ),
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                                   ),
                                 if (isReworkDyeing) _buildDyeingReworkForm(),
                                 if (widget.label == 'Packing')
@@ -1878,21 +1693,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             ),
                                           ),
                                         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ead5d4b9 (fix: stok di packing)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
-=======
->>>>>>> 1ae4f78 (fix: stok di packing)
->>>>>>> b69af3a7 (fix: stok di packing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                                         Builder(
                                           builder: (context) {
                                             final tabController =
@@ -1901,87 +1701,6 @@ class _UpdateProcessState extends State<UpdateProcess>
                                             return AnimatedBuilder(
                                               animation: tabController,
                                               builder: (context, _) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                                final item =
-                                                    (widget.data['items'] ?? [])[tabController.index];
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> b69af3a7 (fix: stok di packing)
-=======
-                                        Container(
-                                          width: double.infinity,
-                                          padding: EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color: Colors.blue.shade100,
-                                            ),
-                                          ),
-                                          child: Wrap(
-                                            spacing: 12,
-                                            runSpacing: 12,
-                                            children: [
-                                              _buildSummaryItem(
-                                                'Total Grade A Sortir',
-                                                formatNumber(
-                                                    totalGradeASorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Keseluruhan Sortir',
-                                                formatNumber(totalAllSorting),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Packing',
-                                                formatNumber(totalPackingInput),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Grade A',
-                                                formatId(totalWeightGradeAAll),
-                                              ),
-                                              _buildSummaryItem(
-                                                'Total Berat Keseluruhan',
-                                                formatId(totalWeightAll),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 500,
-                                          child: TabBarView(
-                                            children:
-                                                (widget.data['items'] ?? [])
-                                                    .map<Widget>((item) {
-<<<<<<< HEAD
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> ead5d4b9 (fix: stok di packing)
-=======
->>>>>>> dd7ae31 (fix: sortir)
-<<<<<<< HEAD
->>>>>>> 1691b544 (fix: sortir)
-=======
-=======
->>>>>>> 1ae4f78 (fix: stok di packing)
->>>>>>> b69af3a7 (fix: stok di packing)
-                                              final itemId = item['id'];
-                                              final sortingQty =
-                                                  getSortingGradeQty(
-                                                      item, widget.data);
-                                              final totalPerbaikan =
-                                                  getTotalPerbaikanPerItem(
-                                                item,
-                                                widget.data,
-                                              );
-=======
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                                                 final item = (widget
                                                         .data['items'] ??
                                                     [])[tabController.index];
@@ -2526,62 +2245,9 @@ class _UpdateProcessState extends State<UpdateProcess>
                         Expanded(
                             child: FormButton(
                           label: 'Simpan',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 1d094006 (fix: alert jika ada ubah qty packing)
-                          isDisabled:
-                              (widget.label == 'Sorting' ||
-=======
-                          isDisabled: (widget.label == 'Sorting' ||
->>>>>>> d197c3c (fix: alert jika ada ubah qty packing)
-                                  widget.label == 'Packing') &&
-=======
-                          isDisabled: widget.label == 'Sorting' &&
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-                              _gradeASourceInvalid,
-=======
-                          isDisabled:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                              widget.label == 'Sorting' && _gradeASourceInvalid,
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-                              (widget.label == 'Sorting' ||
-                                  widget.label == 'Packing') &&
-                              _gradeASourceInvalid,
->>>>>>> ead5d4b9 (fix: stok di packing)
-=======
-                              widget.label == 'Sorting' && _gradeASourceInvalid,
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-                              widget.label == 'Sorting' && _gradeASourceInvalid,
->>>>>>> dd7ae31 (fix: sortir)
-=======
-                              (widget.label == 'Sorting' ||
-                                  widget.label == 'Packing') &&
-                              _gradeASourceInvalid,
->>>>>>> 1ae4f78 (fix: stok di packing)
->>>>>>> b69af3a7 (fix: stok di packing)
-=======
                           isDisabled: (widget.label == 'Sorting' ||
                                   widget.label == 'Packing') &&
                               _gradeASourceInvalid,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                           onPressed: () {
                             _handleSubmit(context);
                           },

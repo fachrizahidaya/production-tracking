@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously
 
-=======
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-// ignore_for_file: use_build_context_synchronously
-
->>>>>>> d8439a4 (fix: refactor code)
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -22,22 +14,9 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 import 'package:textile_tracking/screens/sizing/create/create_sizing.dart';
 import 'package:textile_tracking/screens/sizing/detail/edit_sizing.dart';
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/helpers/util/item_field.dart';
-import 'package:textile_tracking/models/process/press_tumbler.dart';
-=======
->>>>>>> d8439a4 (fix: refactor code)
-import 'package:textile_tracking/screens/auth/user_menu.dart';
-import 'package:textile_tracking/screens/sizing/create/create_sizing.dart';
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
 import 'package:textile_tracking/screens/sizing/detail/sizing_by_id.dart';
 import 'package:textile_tracking/screens/sizing/finish/finish_sizing.dart';
 import 'package:textile_tracking/screens/sizing/model/sizing.dart';
@@ -61,14 +40,7 @@ class _SizingScreenState extends State<SizingScreen> {
   bool _canUpdate = false;
   bool _isLoadMore = false;
   bool _showFab = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
   bool _menuLoaded = false;
-=======
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-  bool _menuLoaded = false;
->>>>>>> d8439a4 (fix: refactor code)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -85,10 +57,6 @@ class _SizingScreenState extends State<SizingScreen> {
   void initState() {
     super.initState();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d8439a4 (fix: refactor code)
     params = {
       'search': _search,
       'page': '0',
@@ -96,22 +64,6 @@ class _SizingScreenState extends State<SizingScreen> {
       'end_date': '',
     };
 
-<<<<<<< HEAD
-=======
-    setState(() {
-      params = {
-        'search': _search,
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-    Future.delayed(Duration.zero, () {
-      _loadMore();
-    });
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> d8439a4 (fix: refactor code)
     _intializeMenus();
   }
 
@@ -133,8 +85,6 @@ class _SizingScreenState extends State<SizingScreen> {
   }
 
   Future<void> _intializeMenus() async {
-<<<<<<< HEAD
-<<<<<<< HEAD
     await _menuService.handleFetchMenu(context);
     await _userMenu.handleLoadMenu();
 
@@ -151,38 +101,6 @@ class _SizingScreenState extends State<SizingScreen> {
         _loadMore();
       }
     });
-=======
-    try {
-      await _menuService.handleFetchMenu(context);
-      await _userMenu.handleLoadMenu();
-
-      setState(() {
-        _canRead = _userMenu.checkMenu('Sizing', 'read');
-        _canDelete = _userMenu.checkMenu('Sizing', 'delete');
-        _canUpdate = _userMenu.checkMenu('Sizing', 'update');
-      });
-    } catch (e) {
-      throw Exception('Error initializing menus: $e');
-    }
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-    await _menuService.handleFetchMenu(context);
-    await _userMenu.handleLoadMenu();
-
-    if (!mounted) return;
-
-    setState(() {
-      _canRead = _userMenu.checkMenu('Sizing', 'read');
-      _canDelete = _userMenu.checkMenu('Sizing', 'delete');
-      _canUpdate = _userMenu.checkMenu('Sizing', 'update');
-
-      _menuLoaded = true;
-
-      if (_canRead) {
-        _loadMore();
-      }
-    });
->>>>>>> d8439a4 (fix: refactor code)
   }
 
   Future<void> _handleSearch(String value) async {
@@ -213,25 +131,7 @@ class _SizingScreenState extends State<SizingScreen> {
     _loadMore();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Future<void> _loadMore() async {
-=======
-  Future<void> _submitFilter() async {
-    Navigator.pop(context);
-    setState(() {
-      _isFiltered = _checkIsFiltered();
-    });
-    _loadMore();
-  }
-
-  Future<void> _loadMore() async {
-    _isLoadMore = true;
-
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-  Future<void> _loadMore() async {
->>>>>>> d8439a4 (fix: refactor code)
     if (params['page'] == '0') {
       setState(() {
         _dataList.clear();
@@ -254,33 +154,17 @@ class _SizingScreenState extends State<SizingScreen> {
     if (loadData.isEmpty) {
       setState(() {
         _firstLoading = false;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        _isLoadMore = false;
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> d8439a4 (fix: refactor code)
         _hasMore = false;
       });
     } else {
       setState(() {
         _dataList.addAll(loadData);
         _firstLoading = false;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        _isLoadMore = false;
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> d8439a4 (fix: refactor code)
       });
     }
   }
 
   _refetch() {
-<<<<<<< HEAD
-<<<<<<< HEAD
     _debounce?.cancel();
     setState(() {
       _search = '';
@@ -296,28 +180,6 @@ class _SizingScreenState extends State<SizingScreen> {
       };
     });
 
-=======
-=======
-    _debounce?.cancel();
->>>>>>> d8439a4 (fix: refactor code)
-    setState(() {
-      _search = '';
-      dariTanggal = '';
-      sampaiTanggal = '';
-      _isFiltered = false;
-
-      params = {
-        'search': '',
-        'page': '0',
-        'start_date': '',
-        'end_date': '',
-      };
-    });
-<<<<<<< HEAD
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-
->>>>>>> d8439a4 (fix: refactor code)
     _loadMore();
   }
 
@@ -325,8 +187,6 @@ class _SizingScreenState extends State<SizingScreen> {
     dynamic item, {
     bool openUpdateOnStart = false,
   }) async {
-<<<<<<< HEAD
-<<<<<<< HEAD
     final status = item['status']?.toString().toLowerCase() ?? '';
     final isInProgress = status == 'diproses' || status.contains('diproses');
 
@@ -348,40 +208,6 @@ class _SizingScreenState extends State<SizingScreen> {
             openUpdateOnStart: openUpdateOnStart,
           );
         },
-=======
-    final value = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SizingDetailScreen(
-          id: item['id'].toString(),
-          no: item['sizing_no'].toString(),
-          canDelete: _canDelete,
-          canUpdate: _canUpdate,
-        ),
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-    final status = item['status']?.toString().toLowerCase() ?? '';
-    final isInProgress = status == 'diproses' || status.contains('diproses');
-
-    final value = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          if (isInProgress) {
-            return EditSizingScreen(
-              id: item['id'].toString(),
-            );
-          }
-
-          return SizingDetailScreen(
-            id: item['id'].toString(),
-            no: item['sizing_no'].toString(),
-            canDelete: _canDelete,
-            canUpdate: _canUpdate,
-            openUpdateOnStart: openUpdateOnStart,
-          );
-        },
->>>>>>> 5d1f483f (fix: warping, sizing)
       ),
     );
 
@@ -419,15 +245,7 @@ class _SizingScreenState extends State<SizingScreen> {
 
           await showAlertDialog(
             context: context,
-<<<<<<< HEAD
-<<<<<<< HEAD
             title: 'Sizing Dihapus',
-=======
-            title: 'Sizing Deleted',
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-            title: 'Sizing Dihapus',
->>>>>>> d8439a4 (fix: refactor code)
             message: message,
           );
           _refetch();
@@ -471,10 +289,6 @@ class _SizingScreenState extends State<SizingScreen> {
             }
           },
         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -509,30 +323,10 @@ class _SizingScreenState extends State<SizingScreen> {
                       label: 'No. Sizing',
                       item: item,
                       titleKey: 'sizing_no',
-<<<<<<< HEAD
-<<<<<<< HEAD
                       subtitleKey: 'order_greige',
                       subtitleField: 'og_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-<<<<<<< HEAD
-=======
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
-=======
-                      subtitleKey: 'order_greige',
-                      subtitleField: 'og_no',
->>>>>>> 5d1f483f (fix: warping, sizing)
-                      canUpdate: _canUpdate,
-                      canDelete: _canDelete,
-                      onUpdate: () => _openProcessDetail(
-                        item,
-                        openUpdateOnStart: true,
-                      ),
-                      onDelete: () => _handleDeleteItem(item),
->>>>>>> d8439a4 (fix: refactor code)
-=======
->>>>>>> 5afc921a (fix: detail proses)
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -567,90 +361,7 @@ class _SizingScreenState extends State<SizingScreen> {
                     dataList: _dataList,
                   ),
                 ),
-<<<<<<< HEAD
               ),
-=======
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<SizingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              isLoadMore: _isLoadMore,
-              canRead: _canRead,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Sizing',
-                item: item,
-                titleKey: 'sizing_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () =>
-                    _openProcessDetail(item, openUpdateOnStart: true),
-                onDelete: () => _handleDeleteItem(item),
-              ),
-              onItemTap: (context, item) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SizingDetailScreen(
-                        id: item['id'].toString(),
-                        no: item['sizing_no'].toString(),
-                        canDelete: _canDelete,
-                        canUpdate: _canUpdate,
-                      ),
-                    )).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  } else {
-                    return null;
-                  }
-                });
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-              ),
->>>>>>> d8439a4 (fix: refactor code)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

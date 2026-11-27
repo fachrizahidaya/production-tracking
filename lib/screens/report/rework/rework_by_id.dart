@@ -1,204 +1,14 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/components/master/form/multi_select_form.dart';
->>>>>>> 264bcd0f (fix: evaluasi rework)
-=======
-import 'package:textile_tracking/components/master/text/no_data.dart';
->>>>>>> e7b9ec75 (fix: UI evaluasi)
-=======
->>>>>>> 0e409703 (fix: evaluasi)
-=======
-import 'package:textile_tracking/components/master/text/no_data.dart';
->>>>>>> db08c830 (fix: UI evaluasi)
-=======
->>>>>>> bd0b8f00 (fix: evaluasi)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/components/master/theme.dart';
->>>>>>> d9ba4836 (fix: detail evaluasi)
-=======
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> 85966df (fix: detail evaluasi)
-<<<<<<< HEAD
->>>>>>> b25dc8bc (fix: detail evaluasi)
-=======
-=======
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
+import 'package:textile_tracking/screens/report/evaluation_attachments.dart';
 import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
 import 'package:textile_tracking/screens/report/service.dart';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-class ReworkDetailLoadingScreen extends StatefulWidget {
-  final dynamic id;
-  final bool returnToList;
-
-  const ReworkDetailLoadingScreen({
-    super.key,
-    required this.id,
-    this.returnToList = false,
-  });
-
-  @override
-  State<ReworkDetailLoadingScreen> createState() =>
-      _ReworkDetailLoadingScreenState();
-}
-
-class _ReworkDetailLoadingScreenState extends State<ReworkDetailLoadingScreen> {
-  final ReportService _reportService = ReportService();
-  Object? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadDetail();
-  }
-
-  Future<void> _loadDetail() async {
-    setState(() => _error = null);
-
-    try {
-      final data = await _reportService.getReworkDetail(widget.id);
-      if (!mounted) return;
-
-      final status = data['status']?.toString().toLowerCase() ?? '';
-      final isWaiting = status == 'menunggu' || status == 'waiting';
-
-      final message = await Navigator.push<String>(
-        context,
-        MaterialPageRoute(
-          builder: (context) => isWaiting
-              ? ReworkEditScreen(data: data)
-              : ReworkDetailScreen(data: data),
-        ),
-      );
-
-      if (!mounted) return;
-      if (widget.returnToList) {
-        _replaceWithReworkList(message: message);
-      } else {
-        Navigator.pop(context, message);
-      }
-    } catch (error) {
-      if (!mounted) return;
-      setState(() => _error = error);
-    }
-  }
-
-  void _replaceWithReworkList({String? message}) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ReworkList(
-          savedMessage: message,
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Detail Evaluasi Rework',
-        onReturn: widget.returnToList
-            ? _replaceWithReworkList
-            : () => Navigator.pop(context),
-      ),
-      backgroundColor: const Color(0xFFf9fafc),
-      body: Center(
-        child: _error == null
-            ? const CircularProgressIndicator()
-            : Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Gagal mengambil detail rework',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: _loadDetail,
-                      child: const Text('Coba Lagi'),
-                    ),
-                  ],
-                ),
-              ),
-      ),
-    );
-  }
-}
-=======
-import 'package:flutter_html/flutter_html.dart';
-=======
->>>>>>> 41ded02d (fix: rework)
-import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/form/multi_select_form.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'package:textile_tracking/helpers/util/text_editor.dart';
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-=======
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
->>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
-import 'package:textile_tracking/screens/report/rework/rework_edit.dart';
-import 'package:textile_tracking/screens/report/rework/rework_list.dart';
-import 'package:textile_tracking/screens/report/service.dart';
->>>>>>> 41ded02d (fix: rework)
-
-=======
->>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
-ButtonStyle _primarySheetButtonStyle() => ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF4561DB),
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
-
-ButtonStyle _secondarySheetButtonStyle() => OutlinedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    );
-
-<<<<<<< HEAD
-=======
->>>>>>> d9ba4836 (fix: detail evaluasi)
-=======
->>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
-=======
->>>>>>> b25dc8bc (fix: detail evaluasi)
 class ReworkDetailLoadingScreen extends StatefulWidget {
   final dynamic id;
   final bool returnToList;
@@ -312,13 +122,6 @@ class ReworkDetailScreen extends StatefulWidget {
 
 class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   final TextEditingController _reasonController = TextEditingController();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  final TextEditingController _actionPlanController = TextEditingController();
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 4ec508fc (fix: remove rencana tindakan)
   final TextEditingController _preventivePlanController =
       TextEditingController();
 
@@ -331,42 +134,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   @override
-<<<<<<< HEAD
-  void initState() {
-    super.initState();
-    _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _preventivePlanController.text =
-        widget.data['preventivePlan']?.toString() ?? '';
-  }
-
-  @override
-<<<<<<< HEAD
-  void initState() {
-    super.initState();
-    _reasonController.text = widget.data['reason']?.toString() ?? '';
-    _preventivePlanController.text =
-        widget.data['preventivePlan']?.toString() ?? '';
-  }
-
-  @override
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   void dispose() {
     _reasonController.dispose();
-=======
-  void dispose() {
-    _reasonController.dispose();
-<<<<<<< HEAD
-    _actionPlanController.dispose();
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 4ec508fc (fix: remove rencana tindakan)
     _preventivePlanController.dispose();
     super.dispose();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   bool get _isCompleted {
     final status = widget.data['status']?.toString().toLowerCase();
     return status == 'direview' ||
@@ -377,102 +150,29 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
   Future<void> _openEditScreen() async {
     final message = await Navigator.push<String>(
-=======
-  bool get _isCompleted {
-    final status = widget.data['status']?.toString().toLowerCase();
-    return status == 'direview' ||
-        status == 'reviewed' ||
-        status == 'selesai' ||
-        status == 'completed';
-  }
-
-  Future<void> _openEditScreen() async {
-<<<<<<< HEAD
-    final updated = await Navigator.push<bool>(
->>>>>>> 41ded02d (fix: rework)
-=======
-    final message = await Navigator.push<String>(
->>>>>>> 01aa2117 (fix: attachment evaluation)
       context,
       MaterialPageRoute(
         builder: (context) => ReworkEditScreen(data: widget.data),
       ),
     );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (message != null && message.trim().isNotEmpty && mounted) {
       Navigator.pop(context, message);
     }
   }
 
-=======
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-    if (updated == true && mounted) {
-      Navigator.pop(context, true);
-=======
-    if (message != null && message.trim().isNotEmpty && mounted) {
-      Navigator.pop(context, message);
->>>>>>> 01aa2117 (fix: attachment evaluation)
-    }
-  }
-
->>>>>>> 41ded02d (fix: rework)
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        title: 'Detail Evaluasi Rework',
-=======
-        title: 'Evaluasi Rework',
->>>>>>> 82bef6eb (fix: hide unnecessary)
-        onReturn: () => Navigator.pop(context),
-        onEdit: _isCompleted ? _openEditScreen : null,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-        title: 'Evaluasi Rework',
-=======
-        title: 'Detail Rework',
->>>>>>> a7b8052a (feat: rework report)
-        onReturn: () => Navigator.pop(context),
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
         title: 'Detail Evaluasi Rework',
         onReturn: () => Navigator.pop(context),
-<<<<<<< HEAD
-        onEdit: _useEditScreen ? _openEditScreen : null,
->>>>>>> 41ded02d (fix: rework)
-=======
         onEdit: _isCompleted ? _openEditScreen : null,
->>>>>>> d9ba4836 (fix: detail evaluasi)
-      ),
-=======
-      ),
->>>>>>> 85966df (fix: detail evaluasi)
->>>>>>> b25dc8bc (fix: detail evaluasi)
-      backgroundColor: const Color(0xFFf9fafc),
-      body: SafeArea(
-        child: SingleChildScrollView(
-<<<<<<< HEAD
-<<<<<<< HEAD
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
-=======
-      backgroundColor: const Color(0xFFf9fafc),
->>>>>>> 91183a33 (fix: rework)
-=======
       ),
       backgroundColor: const Color(0xFFf9fafc),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -484,7 +184,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: _buildCategoryCard(),
-<<<<<<< HEAD
               ),
               const SizedBox(height: 16),
               _buildReadOnlyCard(
@@ -504,7 +203,9 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: _buildAttachmentCard(),
+                child: EvaluationAttachmentGallery(
+                  attachments: widget.data['attachments'],
+                ),
               ),
             ],
           ),
@@ -896,386 +597,10 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
                 ),
           ],
         ],
-=======
-          padding: const EdgeInsets.all(16),
-=======
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
->>>>>>> 41ded02d (fix: rework)
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: Container(
-                  decoration: CustomTheme().cardTheme(),
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: _buildSummaryRow(
-                              'WO / Lot',
-                              _value('woNo'),
-                              valueColor: const Color(0xFF234393),
-                              valueWeight: FontWeight.w600,
-                            ),
-                          ),
-                          // if (_useEditScreen) _buildEditButton(),
-                        ],
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Dyeing',
-                        _value('dyeingProcessNo'),
-                        valueColor: const Color(0xFF234393),
-                        valueWeight: FontWeight.w600,
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Tgl rework',
-                        _formatDateTime(
-                          _value(_isCompleted ? 'completedAt' : 'startedAt'),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Status',
-                        '',
-                        trailing: _buildStatusBadge(_value('status')),
-                      ),
-                      const SizedBox(height: 18),
-                      _buildSummaryRow(
-                        'Diisi oleh',
-                        _value('submittedBy'),
-                      ),
-                      const SizedBox(height: 26),
-                      _buildCategoryCard(),
-                    ],
-                  ),
-                ),
-=======
->>>>>>> bf6ce5bc (fix: rework)
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-                'Alasan dan Penyebab',
-                _reasonController.text,
-                updatedAt: widget.data['reason_updated_at']?.toString(),
-                historyField: 'reason',
-              ),
-              const SizedBox(height: 16),
-              _buildReadOnlyCard(
-                'Rencana Pencegahan',
-                _preventivePlanController.text,
-                updatedAt:
-                    widget.data['preventive_plan_updated_at']?.toString(),
-                historyField: 'preventive_plan',
-              ),
-            ],
-          ),
-        ),
->>>>>>> 5ad2d445 (feat: temporarily)
       ),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-  Widget _buildOverviewCard() {
-    return Container(
-      decoration: CustomTheme().cardTheme(),
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _value('woNo'),
-            style: const TextStyle(
-              color: Color(0xFF234393),
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildDyeingReferenceLine(),
-          const SizedBox(height: 12),
-          _buildMaterialItem(),
-          if (_isCompleted) ...[
-            const SizedBox(height: 12),
-            _buildSubmittedByItem(),
-          ],
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: _buildStatusBadge(_value('status')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDyeingReferenceLine() {
-    return Column(
-      children: [
-        _buildDyeingReferenceItem(
-          icon: Icons.replay_outlined,
-          label: 'Rework Dyeing',
-          value: _value('dyeingProcessNo'),
-          valueColor: const Color(0xFF234393),
-        ),
-        const SizedBox(height: 12),
-        _buildProcessTimeItem(
-          label: 'Mulai Rework',
-          person: _dyeing['start_by'],
-          time: _dyeing['start_time']?.toString(),
-        ),
-        const SizedBox(height: 12),
-        _buildProcessTimeItem(
-          label: 'Selesai Rework',
-          person: _dyeing['end_by'],
-          time: _dyeing['end_time']?.toString(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDyeingReferenceItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    Color? valueColor,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Icon(
-        //   icon,
-        //   size: 19,
-        //   color: Colors.grey.shade500,
-        // ),
-        // const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: valueColor ?? const Color(0xFF3E3F49),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSubmittedByItem() {
-    final name = _value('submittedBy');
-    final time = _formatDateTime(_value('completedAt'));
-    final hasTime = time.trim().isNotEmpty && time != '-';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Diisi oleh',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Row(
-          children: [
-            if (name != '-' || !hasTime)
-              Text(
-                name == '-' ? '-' : '$name${hasTime ? ', ' : ''}',
-                style: const TextStyle(
-                  color: Color(0xFF3E3F49),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            if (hasTime)
-              Text(
-                time,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 16,
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMaterialItem() {
-    final code = _value('topMaterialCode');
-    final name = _value('topMaterialName');
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Material',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          code == '-' ? _value('material') : code,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Color(0xFF3E3F49),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        if (name != '-') ...[
-          const SizedBox(height: 2),
-          Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 13,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Map<String, dynamic> get _dyeing {
-    final dyeing = widget.data['dyeing'];
-    return dyeing is Map ? Map<String, dynamic>.from(dyeing) : {};
-  }
-
-  Widget _buildProcessTimeItem({
-    required String label,
-    required dynamic person,
-    required String? time,
-  }) {
-    final name = _personName(person);
-    final formattedTime = _formatProcessTime(time);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Row(
-          children: [
-            if (name != '-' || formattedTime == null)
-              Text(
-                name == '-' ? '-' : '$name${formattedTime != null ? ', ' : ''}',
-                style: const TextStyle(
-                  color: Color(0xFF3E3F49),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            if (formattedTime != null)
-              Text(
-                formattedTime,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 16,
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  String _personName(dynamic person) {
-    if (person is Map) {
-      final name = person['name'] ?? person['full_name'];
-      if (name != null && name.toString().trim().isNotEmpty) {
-        return name.toString();
-      }
-    }
-    return '-';
-  }
-
-  String? _formatProcessTime(String? value) {
-    if (value == null || value.trim().isEmpty || value.trim() == '-') {
-      return null;
-    }
-    return _formatDateTime(value);
-  }
-
->>>>>>> bf6ce5bc (fix: rework)
-  String _value(String key) => widget.data[key]?.toString() ?? '-';
-
-  Widget _buildCategoryCard() {
-    final categories = _reworkCategories();
-
-    return TemplateCard(
-      title: 'Kategori Rework',
-      icon: Icons.local_offer_outlined,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _categoryTitle(categories),
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          if (categories.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            ...categories.asMap().entries.map(
-                  (entry) => _buildCategoryItem(
-                    entry.value,
-                    isLast: entry.key == categories.length - 1,
-                  ),
-                ),
-          ],
-        ],
-      ),
-    );
-  }
-
->>>>>>> 41ded02d (fix: rework)
   List<Map<String, dynamic>> _reworkCategories() {
     final dyeing = widget.data['dyeing'];
     final raw = widget.data['rework_categories'] ??
@@ -1317,15 +642,7 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
 
     return Container(
       width: double.infinity,
-<<<<<<< HEAD
-<<<<<<< HEAD
       padding: EdgeInsets.fromLTRB(12, 8, 12, 4),
-=======
-      padding: const EdgeInsets.symmetric(vertical: 18),
->>>>>>> 41ded02d (fix: rework)
-=======
-      padding: EdgeInsets.fromLTRB(12, 8, 12, 4),
->>>>>>> 264bcd0f (fix: evaluasi rework)
       decoration: BoxDecoration(
         border: isLast
             ? null
@@ -1354,7 +671,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     Color color = const Color(0xFF292A2F),
     double fontSize = 17,
   }) {
-<<<<<<< HEAD
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1366,28 +682,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
           child: Text(
             text,
             style: TextStyle(color: color, fontSize: fontSize),
-=======
-  Widget _buildInfoItem(String label, String value) {
-=======
->>>>>>> 41ded02d (fix: rework)
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          width: 18,
-          child: Text('•', style: TextStyle(fontSize: 20)),
-        ),
-        Expanded(
-          child: Text(
-<<<<<<< HEAD
-            value,
-            textAlign: TextAlign.end,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-            text,
-            style: TextStyle(color: color, fontSize: fontSize),
->>>>>>> 41ded02d (fix: rework)
           ),
         ),
       ],
@@ -1395,11 +689,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
   }
 
   Widget _buildStatusBadge(String status) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f248a3d8 (fix: rework)
     final backgroundColor = _getStatusColor(status);
 
     return Container(
@@ -1409,28 +698,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       ),
       decoration: BoxDecoration(
         color: backgroundColor,
-<<<<<<< HEAD
-=======
-    final color =
-        status.toLowerCase() == 'selesai' ? Colors.green : Colors.orange;
-=======
-    final color = _getStatusColor(status);
->>>>>>> 41ded02d (fix: rework)
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 5,
-      ),
-      decoration: BoxDecoration(
-<<<<<<< HEAD
-        color: color.withValues(alpha: 0.1),
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-        color: color.withOpacity(0.1),
->>>>>>> 41ded02d (fix: rework)
-=======
->>>>>>> f248a3d8 (fix: rework)
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -1438,53 +705,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-<<<<<<< HEAD
-<<<<<<< HEAD
           color: _getStatusTextColor(status),
-=======
-          color: color,
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-          color: _getStatusTextColor(status),
->>>>>>> f248a3d8 (fix: rework)
         ),
       ),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          color: color,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
->>>>>>> b2a4613b (fix: rework)
-=======
->>>>>>> 1de1dd1b (fix: flow submit form evaluasi rework)
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1492,64 +718,12 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       case 'selesai':
       case 'completed':
         return const Color(0xFFF2F7FF);
-=======
-=======
-  Widget _buildWorkOrderBadge(String woNo) {
-    const color = Color(0xFF234393);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 4,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        woNo,
-        style: const TextStyle(
-          color: color,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-
->>>>>>> bf6ce5bc (fix: rework)
-=======
->>>>>>> 7f4b7b66 (fix: flow submit form evaluasi rework)
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-<<<<<<< HEAD
-<<<<<<< HEAD
-        return Colors.green;
->>>>>>> 41ded02d (fix: rework)
-=======
-        return const Color(0xFFEBFDF4);
->>>>>>> f248a3d8 (fix: rework)
-=======
-        return const Color(0xFFF2F7FF);
->>>>>>> e7b9ec75 (fix: UI evaluasi)
       case 'diproses':
       case 'in_progress':
         return Colors.orange;
       case 'menunggu':
       case 'waiting':
-<<<<<<< HEAD
-<<<<<<< HEAD
         return const Color(0xFFFFFBEA);
-=======
-        return Colors.blue;
->>>>>>> 41ded02d (fix: rework)
-=======
-        return const Color(0xFFFFFBEA);
->>>>>>> f248a3d8 (fix: rework)
       case 'dilewati':
       case 'skipped':
         return Colors.grey;
@@ -1558,8 +732,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Color _getStatusTextColor(String status) {
     switch (status.toLowerCase()) {
       case 'direview':
@@ -1570,32 +742,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
       case 'menunggu':
       case 'waiting':
         return const Color(0xFF955B34);
-=======
-  Color _getStatusTextColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'direview':
-      case 'reviewed':
-      case 'selesai':
-      case 'completed':
-        return const Color(0xFF8697C6);
-      case 'menunggu':
-      case 'waiting':
-<<<<<<< HEAD
-        return const Color(0xFFA16207);
->>>>>>> f248a3d8 (fix: rework)
-=======
-        return const Color(0xFF955B34);
->>>>>>> e7b9ec75 (fix: UI evaluasi)
       default:
         return _getStatusColor(status);
     }
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
->>>>>>> f248a3d8 (fix: rework)
   String _formatDateTime(String value) {
     final date = DateTime.tryParse(value);
     if (date == null) return value;
@@ -1618,110 +769,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         '${local.hour.toString().padLeft(2, '0')}.${local.minute.toString().padLeft(2, '0')}';
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Widget _buildReadOnlyCard(
-    String label,
-    String value, {
-    String? updatedAt,
-    String? historyField,
-  }) {
-    final hasUpdatedAt =
-        updatedAt != null && updatedAt.trim().isNotEmpty && updatedAt != '-';
-    final current = value.isEmpty ? '-' : value;
-    final historyItems = historyField == null
-        ? const <Map<String, dynamic>>[]
-        : _fieldHistoryItems(historyField);
-    final versions = _historyVersions(historyItems);
-    final previousVersions = versions.length > 1
-        ? versions.sublist(0, versions.length - 1)
-        : const <Map<String, dynamic>>[];
-    final latestVersion = versions.isNotEmpty ? versions.last : null;
-    final latestMeta = latestVersion != null
-        ? _historyActorMeta(latestVersion)
-        : (hasUpdatedAt ? _formatDateTime(updatedAt!) : null);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final previous in previousVersions) ...[
-                Text(
-                  previous['value'].toString(),
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('base'),
-                    color: Colors.grey.shade500,
-                    decoration: TextDecoration.lineThrough,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _historyActorMeta(previous),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-              ],
-              Text(
-                current,
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('base'),
-                  fontWeight: CustomTheme().fontWeight('semibold'),
-                  color: Colors.grey[800],
-                ),
-              ),
-              if (latestMeta != null) ...[
-                const SizedBox(height: 8),
-                Text(
-                  latestMeta,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-=======
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Container(
-      width: double.infinity,
-      decoration: CustomTheme().cardTheme(),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 12),
-          child,
-        ],
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-  Widget _buildFormCard({required String label, required Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: label,
-        icon: Icons.description_outlined,
-        child: child,
-      ),
-    );
-  }
-
-=======
->>>>>>> d9ba4836 (fix: detail evaluasi)
   Widget _buildReadOnlyCard(
     String label,
     String value, {
@@ -1852,272 +899,6 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         .toList();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Widget _buildHistoryCard() {
-    final histories = _histories
-        .where((history) => _historyItems(history).isNotEmpty)
-        .toList();
-    final selectedIndex =
-        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
-            ? _selectedHistoryIndex
-            : 0;
-    final items = histories.isEmpty
-        ? <Map<String, dynamic>>[]
-        : _historyItems(histories[selectedIndex]);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: 'Riwayat Perubahan',
-        icon: Icons.history_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (histories.isEmpty)
-              const NoData()
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < histories.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text(_historyGroupLabel(histories[i])),
-                        selected: i == selectedIndex,
-                        showCheckmark: false,
-                        onSelected: (_) {
-                          setState(() => _selectedHistoryIndex = i);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty) const SizedBox(height: 12),
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 12),
-                _buildHistoryItem(items[i]),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
->>>>>>> d256f82 (fix: UI evaluasi)
-  }
-
-<<<<<<< HEAD
-  List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
-    final raw = group['items'];
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .where((item) => item['new_value'] != null)
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Widget _buildHistoryCard() {
-    final histories = _histories
-        .where((history) => _historyItems(history).isNotEmpty)
-        .toList();
-    final selectedIndex =
-        _selectedHistoryIndex >= 0 && _selectedHistoryIndex < histories.length
-            ? _selectedHistoryIndex
-            : 0;
-    final items = histories.isEmpty
-        ? <Map<String, dynamic>>[]
-        : _historyItems(histories[selectedIndex]);
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-      child: TemplateCard(
-        title: 'Riwayat Perubahan',
-        icon: Icons.history_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (histories.isEmpty)
-              const NoData()
-            else ...[
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (int i = 0; i < histories.length; i++) ...[
-                      if (i > 0) const SizedBox(width: 8),
-                      ChoiceChip(
-                        label: Text(_historyGroupLabel(histories[i])),
-                        selected: i == selectedIndex,
-                        showCheckmark: false,
-                        onSelected: (_) {
-                          setState(() => _selectedHistoryIndex = i);
-                        },
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty) const SizedBox(height: 12),
-              for (int i = 0; i < items.length; i++) ...[
-                if (i > 0) const SizedBox(height: 12),
-                _buildHistoryItem(items[i]),
-              ],
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final oldValue = _historyDisplayValue(history['old_value']);
-    final newValue = _historyDisplayValue(history['new_value']);
-    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
-    final changedBy = history['changed_by'];
-    final changedByName =
-        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
-    final createdAt = history['created_at']?.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasOldValue) ...[
-            Text(
-              oldValue,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('base'),
-                color: Colors.grey.shade500,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
-          Text(
-            newValue.isEmpty ? '-' : newValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('base'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'oleh $changedByName, ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-<<<<<<< HEAD
-            ),
-            const SizedBox(height: 12),
-            Text(
-              value.isEmpty ? '-' : value,
-              style: const TextStyle(fontSize: 17, color: Colors.black87),
-            ),
-          ],
-        ),
->>>>>>> 41ded02d (fix: rework)
-=======
-              Text(
-                createdAt == null || createdAt.isEmpty
-                    ? '-'
-                    : _formatDateTime(createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ],
->>>>>>> 264bcd0f (fix: evaluasi rework)
-      ),
-    );
-  }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-  List<Map<String, dynamic>> get _histories {
-    final raw = widget.data['histories'];
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-  String _historyFieldLabel(String? field) {
-    switch (field) {
-      case 'reason':
-        return 'Alasan dan Penyebab';
-      case 'action_plan':
-        return 'Rencana Tindakan';
-      case 'preventive_plan':
-        return 'Rencana Pencegahan';
-      default:
-        return field?.toString() ?? '-';
-    }
-  }
-
-  List<Map<String, dynamic>> _fieldHistoryItems(String field) {
-    Map<String, dynamic>? group;
-    final expectedLabel = _historyFieldLabel(field).toLowerCase();
-    for (final history in _histories) {
-      final historyField = history['field']?.toString();
-      final label = history['label']?.toString().trim().toLowerCase() ?? '';
-      if (historyField == field || label == expectedLabel) {
-        group = history;
-        break;
-      }
-    }
-    if (group == null) return [];
-
-    final items = List<Map<String, dynamic>>.from(_historyItems(group));
-    items.sort((a, b) {
-      final aDate = DateTime.tryParse(a['created_at']?.toString() ?? '');
-      final bDate = DateTime.tryParse(b['created_at']?.toString() ?? '');
-      if (aDate == null || bDate == null) return 0;
-      return aDate.compareTo(bDate);
-    });
-    return items;
-  }
-
-  List<Map<String, dynamic>> _historyItems(Map<String, dynamic> group) {
-    final raw = group['items'];
-    if (raw is! List) return [];
-    return raw
-        .whereType<Map>()
-        .where((item) => item['new_value'] != null)
-        .map((item) => Map<String, dynamic>.from(item))
-        .toList();
-  }
-
-=======
->>>>>>> 8eee7be2 (fix: bs dan gsm)
-=======
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
->>>>>>> a087f712 (fix: bs dan gsm)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   List<Map<String, dynamic>> _historyVersions(
     List<Map<String, dynamic>> historyItems,
   ) {
@@ -2142,303 +923,11 @@ class _ReworkDetailScreenState extends State<ReworkDetailScreen> {
         '${_formatDateTime(version['created_at']?.toString() ?? '-')}';
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d9ba4836 (fix: detail evaluasi)
-=======
->>>>>>> 0e409703 (fix: evaluasi)
-=======
->>>>>>> 8eee7be2 (fix: bs dan gsm)
-=======
-=======
->>>>>>> a087f712 (fix: bs dan gsm)
-=======
-  Widget _buildHistoryItem(Map<String, dynamic> history) {
-    final oldValue = _historyDisplayValue(history['old_value']);
-    final newValue = _historyDisplayValue(history['new_value']);
-    final hasOldValue = history['old_value'] != null && oldValue.isNotEmpty;
-    final changedBy = history['changed_by'];
-    final changedByName =
-        changedBy is Map ? (changedBy['name']?.toString() ?? '-') : '-';
-    final createdAt = history['created_at']?.toString();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (hasOldValue) ...[
-            Text(
-              oldValue,
-              style: TextStyle(
-                fontSize: CustomTheme().fontSize('base'),
-                color: Colors.grey.shade500,
-                decoration: TextDecoration.lineThrough,
-              ),
-            ),
-            const SizedBox(height: 4),
-          ],
-          Text(
-            newValue.isEmpty ? '-' : newValue,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('base'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'oleh $changedByName, ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              Text(
-                createdAt == null || createdAt.isEmpty
-                    ? '-'
-                    : _formatDateTime(createdAt),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
->>>>>>> 85966df (fix: detail evaluasi)
-<<<<<<< HEAD
->>>>>>> b25dc8bc (fix: detail evaluasi)
-=======
-=======
->>>>>>> 991dab5 (fix: evaluasi)
-<<<<<<< HEAD
->>>>>>> bd0b8f00 (fix: evaluasi)
-=======
-=======
->>>>>>> d39c264 (fix: bs dan gsm)
->>>>>>> a087f712 (fix: bs dan gsm)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   String _historyDisplayValue(dynamic value) {
     if (value == null) return '';
     if (value is List) {
       return value.map((item) => item.toString()).join(', ').trim();
     }
     return value.toString().trim();
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildEditorForm({
-    required String label,
-    required TextEditingController controller,
-  }) {
-    return _buildFormCard(
-      label: label,
-      child: TextField(
-        controller: controller,
-        minLines: 6,
-        maxLines: 12,
-        decoration: CustomTheme().inputDecoration('Masukkan $label'),
-        onChanged: (_) => setState(() {}),
-      ),
-    );
->>>>>>> 5ad2d445 (feat: temporarily)
-  }
-}
-
-class _ReasonOptionSheet extends StatefulWidget {
-  const _ReasonOptionSheet();
-
-  @override
-  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
-}
-
-class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
-  final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tambah Alasan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                decoration: CustomTheme()
-                    .inputDecoration('Masukkan alasan rework')
-                    .copyWith(errorText: _errorMessage),
-                onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: _secondarySheetButtonStyle(),
-                      child: const Text('Batal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final value = _controller.text.trim();
-                        if (value.length < 3) {
-                          setState(
-                            () => _errorMessage = 'Minimal 3 karakter',
-                          );
-                          return;
-                        }
-                        Navigator.pop(context, value);
-                      },
-                      style: _primarySheetButtonStyle(),
-                      child: const Text('Tambah'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-=======
->>>>>>> d9ba4836 (fix: detail evaluasi)
-=======
->>>>>>> b25dc8bc (fix: detail evaluasi)
-  }
-}
-
-class _ReasonOptionSheet extends StatefulWidget {
-  const _ReasonOptionSheet();
-
-  @override
-  State<_ReasonOptionSheet> createState() => _ReasonOptionSheetState();
-}
-
-class _ReasonOptionSheetState extends State<_ReasonOptionSheet> {
-  final TextEditingController _controller = TextEditingController();
-  String? _errorMessage;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Tambah Alasan',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _controller,
-                autofocus: true,
-                textInputAction: TextInputAction.done,
-                decoration: CustomTheme()
-                    .inputDecoration('Masukkan alasan rework')
-                    .copyWith(errorText: _errorMessage),
-                onChanged: (_) {
-                  if (_errorMessage != null) {
-                    setState(() => _errorMessage = null);
-                  }
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: _secondarySheetButtonStyle(),
-                      child: const Text('Batal'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final value = _controller.text.trim();
-                        if (value.length < 3) {
-                          setState(
-                            () => _errorMessage = 'Minimal 3 karakter',
-                          );
-                          return;
-                        }
-                        Navigator.pop(context, value);
-                      },
-                      style: _primarySheetButtonStyle(),
-                      child: const Text('Tambah'),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-=======
->>>>>>> 85966df (fix: detail evaluasi)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 }

@@ -181,37 +181,6 @@ class OptionMachineService extends BaseService<OptionMachine> {
       process: 'sewing',
       currentMachineIds: currentMachineIds,
     );
-<<<<<<< HEAD
-  }
-
-  Future<void> fetchOptionsSizing({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-      process: 'sizing',
-      currentMachineIds: currentMachineIds,
-    );
-  }
-
-  Future<void> fetchOptionsWeaving({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-      process: 'weaving',
-      currentMachineIds: currentMachineIds,
-    );
-  }
-
-  Future<void> fetchOptionsShearing({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-      process: 'shearing',
-      currentMachineIds: currentMachineIds,
-    );
-  }
-
-  Future<void> fetchOptionsWarping({List<dynamic>? currentMachineIds}) async {
-    await _fetchOptionsGeneric(
-      process: 'warping',
-      currentMachineIds: currentMachineIds,
-    );
-=======
->>>>>>> 4d9d5b40 (fix: model)
   }
 
   Future<void> fetchOptionsSizing({List<dynamic>? currentMachineIds}) async {

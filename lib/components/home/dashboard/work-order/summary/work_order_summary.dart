@@ -16,10 +16,6 @@ class WorkOrderSummary extends StatefulWidget {
   final bool isMobile;
   final void Function(String startDate, String endDate)? onDateRangeSelected;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
   const WorkOrderSummary({
     super.key,
     this.data,
@@ -32,20 +28,6 @@ class WorkOrderSummary extends StatefulWidget {
     this.isMobile = true,
     this.onDateRangeSelected,
   });
-<<<<<<< HEAD
-=======
-  const WorkOrderSummary(
-      {super.key,
-      this.data,
-      this.greigeData,
-      this.handleRefetch,
-      this.dariTanggal,
-      this.filterWidget,
-      this.sampaiTanggal,
-      this.isFetching});
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
 
   @override
   State<WorkOrderSummary> createState() => _WorkOrderSummaryState();
@@ -56,15 +38,7 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
   String selectedProcess = 'All';
   late TabController _tabController;
   int selectedIndex = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
   String selectedCategory = 'production';
-=======
-  int selectedSummaryIndex = 0;
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
-  String selectedCategory = 'production';
->>>>>>> 025659bb (fix: dashboard mobile)
 
   @override
   void initState() {
@@ -222,9 +196,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     super.dispose();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   bool get _isGreigeActive => selectedCategory == 'greige';
 
   bool get _isDateFiltered {
@@ -267,58 +238,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     );
   }
 
-=======
-=======
-  bool get _hasProductionData => widget.data is List && widget.data.isNotEmpty;
-=======
-  bool get _isGreigeActive => selectedCategory == 'greige';
->>>>>>> 025659bb (fix: dashboard mobile)
-
-  bool get _isDateFiltered {
-    final now = DateTime.now();
-    final defaultStart = DateTime(now.year, now.month, 1);
-    final start = _parseDate(widget.dariTanggal);
-    final end = _parseDate(widget.sampaiTanggal);
-
-    if (start == null || end == null) return false;
-
-    final sameStart = start.year == defaultStart.year &&
-        start.month == defaultStart.month &&
-        start.day == defaultStart.day;
-    final sameEnd =
-        end.year == now.year && end.month == now.month && end.day == now.day;
-
-    return !(sameStart && sameEnd);
-  }
-
->>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
-  List<dynamic> get _activeData {
-    final data = _isGreigeActive ? widget.greigeData : widget.data;
-    return data is List ? data : [];
-  }
-
-<<<<<<< HEAD
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
-  Widget _buildHeaderIconButton({
-    required Widget icon,
-    required VoidCallback? onPressed,
-    required bool isMobile,
-  }) {
-    return IconButton(
-      onPressed: onPressed,
-      icon: icon,
-      iconSize: isMobile ? 20 : 24,
-      padding: EdgeInsets.zero,
-      constraints: const BoxConstraints(
-        minWidth: 32,
-        minHeight: 32,
-      ),
-      visualDensity: VisualDensity.compact,
-    );
-  }
-
->>>>>>> 025659bb (fix: dashboard mobile)
   bool get _showProgress {
     final filter = processFilters[selectedIndex];
     return filter == 'Semua';
@@ -386,21 +305,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     return waiting.any((wo) => wo['overdue'] == true);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  bool _isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < 600;
-  }
-
-  bool _isTablet(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return width >= 600 && width < 1024;
-  }
-
->>>>>>> 260d45ce (fix: dashboard)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
   String _formatDate(dynamic date) {
     if (date == null) return '-';
 
@@ -421,8 +325,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       'Feb',
       'Mar',
       'Apr',
-<<<<<<< HEAD
-<<<<<<< HEAD
       'Mei',
       'Jun',
       'Jul',
@@ -446,62 +348,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     if (date == null) return null;
     if (date is DateTime) return date;
     return DateTime.tryParse(date.toString());
-=======
-      'May',
-=======
-      'Mei',
->>>>>>> 025659bb (fix: dashboard mobile)
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ];
-
-    return '${parsedDate.day} ${months[parsedDate.month - 1]} ${parsedDate.year}';
-  }
-
-<<<<<<< HEAD
-  Widget _buildDateRange() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.calendar_month_outlined,
-          size: 30,
-          color: CustomTheme().colors('text-secondary'),
-        ),
-        const SizedBox(width: 12),
-        Flexible(
-          child: Text(
-            '${_formatDate(widget.dariTanggal)} - '
-            '${_formatDate(widget.sampaiTanggal)}',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('lg'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: CustomTheme().colors('text-primary'),
-            ),
-          ),
-        ),
-      ],
-    );
->>>>>>> 260d45ce (fix: dashboard)
-=======
-  String _toApiDate(DateTime date) {
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '${date.year}-$month-$day';
-  }
-
-  DateTime? _parseDate(dynamic date) {
-    if (date == null) return null;
-    if (date is DateTime) return date;
-    return DateTime.tryParse(date.toString());
->>>>>>> 025659bb (fix: dashboard mobile)
   }
 
   Widget _buildSwipeContent() {
@@ -523,21 +369,12 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
     }
 
     if (_activeData.isEmpty) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
       return const SizedBox(
         height: 120,
         child: NoData(),
       );
-<<<<<<< HEAD
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     return SizedBox(
       height: listHeight,
       child: LayoutBuilder(
@@ -577,169 +414,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
                 ),
               );
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-
-    final items = widget.data!.map<Widget>((item) {
-      final mappedItem = _mapApiToSummaryCard(item);
-
-      return SummaryCard(
-        data: mappedItem,
-        showProgress: _showProgress,
-        filter: processFilters[selectedIndex],
-        isMobile: isMobile,
-      );
-    }).toList();
-
-    // =========================
-    // MOBILE
-    // =========================
-    if (isMobile) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-        child: Column(
-          children: [
-            for (int i = 0; i < items.length; i++) ...[
-              if (i > 0) const SizedBox(height: 12),
-              items[i],
-            ],
-          ],
-        ),
-      );
-    }
-
-    // =========================
-    // TABLET
-    // =========================
-<<<<<<< HEAD
-=======
->>>>>>> 3bba1171 (fix: filter summary)
-=======
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
->>>>>>> 51527bb3 (fix: filter summary)
-    final isSingleItem = widget.data!.length == 1;
-=======
-      return NoData();
-    }
-
-    final isSingleItem = _activeData.length == 1;
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-    final screenWidth = MediaQuery.of(context).size.width * 0.95;
-=======
-    }
-
-    return SizedBox(
-      height: listHeight,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final cardWidth = (constraints.maxWidth * (isTablet ? 0.55 : 0.68))
-              .clamp(
-                isTablet ? 360.0 : 220.0,
-                isTablet ? 440.0 : 260.0,
-              )
-              .toDouble();
->>>>>>> 025659bb (fix: dashboard mobile)
-
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: _activeData.length,
-            itemBuilder: (context, index) {
-              final mappedItem = _mapApiToSummaryCard(_activeData[index]);
-              final isLast = index == _activeData.length - 1;
-
-<<<<<<< HEAD
-          return Padding(
-            padding: CustomTheme().padding('card'),
-            child: SizedBox(
-              width: isSingleItem ? screenWidth : 500,
-=======
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: isSingleItem
-          ? NeverScrollableScrollPhysics()
-          : BouncingScrollPhysics(),
-      child: Row(
-        children: _activeData.map<Widget>((item) {
-          final mappedItem = _mapApiToSummaryCard(item);
-
-          return Padding(
-            padding: CustomTheme().padding('card'),
-            child: SizedBox(
-<<<<<<< HEAD
-              width: isSingleItem ? screenWidthTablet : 500,
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-              width: isSingleItem ? screenWidth : 500,
->>>>>>> d5a67e50 (fix: filter summary)
-              child: SummaryCard(
-                data: mappedItem,
-                showProgress: _showProgress,
-                filter: processFilters[selectedIndex],
-                isGreige: _isGreigeActive,
-              ),
-            ),
-<<<<<<< HEAD
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-=======
-              return SizedBox(
-                width: cardWidth,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 0, isLast ? 16 : 0, 0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: SummaryCard(
-                      data: mappedItem,
-                      showProgress: _showProgress,
-                      filter: processFilters[selectedIndex],
-                      isGreige: _isGreigeActive,
-                      onTap: () => _navigateToProcess(
-                        context,
-                        mappedItem['name']?.toString(),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> e61620e (fix: UI mobile dashboard)
-<<<<<<< HEAD
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-=======
-
-              return SizedBox(
-                width: cardWidth,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, 0, isLast ? 16 : 0, 0),
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: SummaryCard(
-                      data: mappedItem,
-                      showProgress: _showProgress,
-                      filter: processFilters[selectedIndex],
-                      isGreige: _isGreigeActive,
-                      onTap: () => _navigateToProcess(
-                        context,
-                        mappedItem['name']?.toString(),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
           );
         },
       ),
@@ -756,7 +430,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             _buildHeader(isMobile: widget.isMobile),
             _buildCategoryTabs(),
           ],
-<<<<<<< HEAD
         ),
         const SizedBox(height: 12),
         _buildSwipeContent(),
@@ -771,225 +444,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-      ),
-      enableDrag: true,
-      isDismissible: true,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return widget.filterWidget!;
-      },
-    );
-  }
-
-  Widget _buildHeader({required bool isMobile}) {
-    if (!isMobile) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Perkembangan Proses Produksi',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: CustomTheme().fontWeight('bold'),
-                      color: CustomTheme().colors('text-primary'),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                _buildTabletActionButtons(),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              !_isGreigeActive
-                  ? 'Status tahapan work order'
-                  : 'Status tahapan order greige',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 14,
-                color: CustomTheme().colors('text-secondary'),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-<<<<<<< HEAD
-              Text(
-                'Perkembangan Proses Produksi',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  color: CustomTheme().colors('text-primary'),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                !_isGreigeActive
-                    ? 'Status tahapan work order'
-                    : 'Status tahapan order greige',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: CustomTheme().colors('text-secondary'),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              _buildHeaderIconButton(
-                isMobile: true,
-                onPressed: _openDateFilterSheet,
-                icon: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(Icons.tune_outlined),
-                    if (_isDateFiltered)
-                      Positioned(
-                        right: -2,
-                        top: -2,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: CustomTheme().buttonColor('danger'),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              _buildHeaderIconButton(
-                isMobile: true,
-                onPressed: widget.handleRefetch,
-                icon: const Icon(Icons.refresh_outlined),
-              ),
-=======
-              _buildHeader(
-                context,
-                isMobile: isMobile,
-                isTablet: isTablet,
-              ),
-              if (_hasProductionData && _hasGreigeData) _buildSummaryTabs(),
-              const Divider(),
-              _buildSwipeContent(),
->>>>>>> 260d45ce (fix: dashboard)
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabletActionButtons() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          height: 40,
-          child: OutlinedButton.icon(
-            onPressed: _openFilter,
-            icon: const Icon(Icons.tune_outlined, size: 20),
-            label: const Text('Filter', style: TextStyle(fontSize: 14)),
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        SizedBox(
-          height: 40,
-          child: OutlinedButton.icon(
-            onPressed: widget.handleRefetch,
-            icon: const Icon(Icons.refresh_outlined, size: 20),
-            label: const Text('Refresh', style: TextStyle(fontSize: 14)),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              side: BorderSide(color: Colors.grey.shade300),
-            ),
-          ),
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-        ),
-        const SizedBox(height: 12),
-        _buildSwipeContent(),
-      ],
-    );
-  }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-  Widget _buildCategoryTabs() {
-    return SizedBox(
-      width: double.infinity,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: Row(
-            children: [
-              _buildCategoryTab(
-                label: 'Produksi',
-                value: 'production',
-              ),
-              const SizedBox(width: 8),
-              _buildCategoryTab(
-                label: 'Greige',
-                value: 'greige',
-              ),
-            ],
-          ),
-=======
-  Widget _buildHeader(
-    BuildContext context, {
-    required bool isMobile,
-    required bool isTablet,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
-        isMobile ? 16 : 20,
-=======
-  void _openFilter() {
-    if (widget.filterWidget == null) return;
-
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
->>>>>>> 025659bb (fix: dashboard mobile)
       ),
       enableDrag: true,
       isDismissible: true,
@@ -1171,43 +625,11 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
               ),
             ],
           ),
-<<<<<<< HEAD
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilterButton() {
-    return OutlinedButton.icon(
-      onPressed: _openFilter,
-      icon: const Icon(
-        Icons.tune_outlined,
-        size: 20,
-      ),
-      label: const Text('Filter'),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(120, 44),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        side: BorderSide(
-          color: Colors.grey.shade300,
->>>>>>> 260d45ce (fix: dashboard)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
         ),
       ),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
   Widget _buildCategoryTab({
     required String label,
     required String value,
@@ -1229,7 +651,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
         decoration: BoxDecoration(
           color: selected ? color : Colors.white,
           borderRadius: BorderRadius.circular(24),
-<<<<<<< HEAD
         ),
         child: Text(
           label,
@@ -1237,36 +658,6 @@ class _WorkOrderSummaryState extends State<WorkOrderSummary>
             color: selected ? Colors.white : Colors.grey.shade700,
             fontWeight: FontWeight.w600,
           ),
-=======
-  Widget _buildRefreshButton() {
-    return OutlinedButton.icon(
-      onPressed: widget.handleRefetch,
-      icon: const Icon(
-        Icons.refresh_outlined,
-        size: 20,
-      ),
-      label: const Text('Refresh'),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(120, 44),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 10,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        side: BorderSide(
-          color: Colors.grey.shade300,
->>>>>>> 260d45ce (fix: dashboard)
-=======
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.white : Colors.grey.shade700,
-            fontWeight: FontWeight.w600,
-          ),
->>>>>>> 025659bb (fix: dashboard mobile)
         ),
       ),
     );

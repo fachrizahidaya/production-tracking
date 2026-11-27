@@ -23,31 +23,9 @@ class TopBsComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 130.0 : 150.0;
-=======
-    const double listHeight = 120;
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 130.0 : 150.0;
->>>>>>> 5ea4dfbf (fix: responsive size for report)
 
-=======
->>>>>>> ad8e0407 (fix: laporan)
-=======
-    const double listHeight = 120;
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 130.0 : 150.0;
->>>>>>> b01fb0fd (fix: responsive size for report)
-
->>>>>>> 65038198 (feat:)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(

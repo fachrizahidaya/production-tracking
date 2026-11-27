@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d0509dba (fix: mulai warping - shearing)
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 import 'package:textile_tracking/providers/api_client.dart';
 
@@ -27,176 +22,10 @@ class Warping {
   final machine_ids;
   final length;
   final weight;
+  final waste;
+  final gempor;
   final brokenYarns;
 
-  Warping(
-      {this.id,
-      this.warpingNo,
-      this.machineId,
-      this.orderGreigeId,
-      this.warpingType,
-      this.yarnQty,
-      this.notes,
-      this.lengths,
-      this.section,
-<<<<<<< HEAD
-<<<<<<< HEAD
-      this.beamQty,
-      this.attachments,
-      this.machine_ids,
-      this.machines,
-      this.length,
-      this.weight,
-      this.brokenYarns});
-=======
-=======
->>>>>>> d0509dba (fix: mulai warping - shearing)
-import 'package:textile_tracking/helpers/service/base_crud_service.dart';
-import 'package:textile_tracking/providers/api_client.dart';
-
-class Warping {
-  final id;
-  final warpingNo;
-  final orderGreigeId;
-  final machineId;
-  final warpingType;
-  final notes;
-  final yarnQty;
-  final beamQty;
-  final lengths;
-  final section;
-  final attachments;
-  final machines;
-  final machine_ids;
-  final length;
-  final weight;
-  final brokenYarns;
-
-<<<<<<< HEAD
-  final bool? canDelete;
-  final bool? canUpdate;
-  final bool? canRework;
-
-  final List<dynamic> attachments;
-  final List<dynamic> semifinishedProducts;
-
-  final dynamic workOrders;
-  final dynamic machine;
-  final dynamic startBy;
-  final dynamic endBy;
-  final dynamic unit;
-  final dynamic reworkReference;
-
-  Warping({
-    this.id,
-    this.warpingNo,
-    this.woId,
-    this.machineId,
-    this.startTime,
-    this.endTime,
-    this.startById,
-    this.endById,
-    this.unitId,
-    this.qty,
-    this.notes,
-    this.status,
-    this.rework,
-    this.reworkReferenceId,
-    this.lotCelupNo,
-    this.greigeItemId,
-    this.cycleNo,
-    this.canDelete,
-    this.canUpdate,
-    this.canRework,
-    this.attachments = const [],
-    this.semifinishedProducts = const [],
-    this.workOrders,
-    this.machine,
-    this.startBy,
-    this.endBy,
-    this.unit,
-    this.reworkReference,
-  });
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-
-  factory Warping.fromJson(Map<String, dynamic> json) {
-    return Warping(
-      id: json['id'],
-      warpingNo: json['warping_no'],
-<<<<<<< HEAD
-      machineId: json['machine_id'],
-      orderGreigeId: json['order_greige_id'],
-      warpingType: json['warping_type'],
-      yarnQty: json['yarn_qty'],
-      notes: json['notes'],
-      lengths:
-          json['lengths'] != null ? List<dynamic>.from(json['lengths']) : null,
-      section: json['section'],
-      beamQty: json['beam_qty'],
-      attachments: json['attachments'] ?? [],
-      machines: json['machines'] ?? [],
-      machine_ids: json['machine_ids'] ?? [],
-      length: json['length'],
-      weight: json['weight'],
-      brokenYarns: json['broken_yarns'] ?? [],
-=======
-      woId: json['wo_id'],
-      machineId: json['machine_id'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      startById: json['start_by_id'],
-      endById: json['end_by_id'],
-      unitId: json['unit_id'],
-      qty: json['qty'],
-      notes: json['notes'],
-      status: json['status'],
-      rework: json['rework'],
-      reworkReferenceId: json['rework_reference_id'],
-      lotCelupNo: json['lot_celup_no'],
-      greigeItemId: json['greige_item_id'],
-      cycleNo: json['cycle_no'],
-      canDelete: json['can_delete'],
-      canUpdate: json['can_update'],
-      canRework: json['can_rework'],
-      attachments: json['attachments'] ?? [],
-      semifinishedProducts: json['semifinished_products'] ?? [],
-      workOrders: json['work_orders'],
-      machine: json['machine'],
-      startBy: json['start_by'],
-      endBy: json['end_by'],
-      unit: json['unit'],
-      reworkReference: json['rework_reference'],
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-<<<<<<< HEAD
-    final data = {
-      'id': id,
-      'warping_no': warpingNo,
-      'machine_id': machineId,
-      'order_greige_id': orderGreigeId,
-      'warping_type': warpingType,
-      'yarn_qty': yarnQty,
-      'notes': notes,
-      'lengths': lengths,
-      'section': section,
-      'beam_qty': beamQty,
-      'attachments': attachments,
-      'machines': machines,
-      'machine_ids': machine_ids,
-      'length': length,
-      'weight': weight,
-      'broken_yarns': brokenYarns,
-    };
-
-    data.removeWhere((key, value) => value == null);
-
-    return data;
-=======
-    return {
-=======
   Warping(
       {this.id,
       this.warpingNo,
@@ -213,19 +42,9 @@ class Warping {
       this.machines,
       this.length,
       this.weight,
+      this.waste,
+      this.gempor,
       this.brokenYarns});
-=======
-      this.beamQty});
->>>>>>> a0d8b327 (fix: create warping)
-=======
-      this.beamQty,
-      this.brokenYarns,
-      this.attachments,
-      this.length,
-      this.machine_ids,
-      this.machines,
-      this.weight});
->>>>>>> 11f11e32 (fix: finish warping)
 
   factory Warping.fromJson(Map<String, dynamic> json) {
     return Warping(
@@ -245,13 +64,14 @@ class Warping {
       machine_ids: json['machine_ids'] ?? [],
       length: json['length'],
       weight: json['weight'],
+      waste: json['waste'],
+      gempor: json['gempor'],
       brokenYarns: json['broken_yarns'] ?? [],
     );
   }
 
   Map<String, dynamic> toJson() {
     final data = {
->>>>>>> 5d1f483f (fix: warping, sizing)
       'id': id,
       'warping_no': warpingNo,
       'machine_id': machineId,
@@ -267,24 +87,20 @@ class Warping {
       'machine_ids': machine_ids,
       'length': length,
       'weight': weight,
+      'waste': waste,
+      'gempor': gempor,
       'broken_yarns': brokenYarns,
     };
-<<<<<<< HEAD
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
 
     data.removeWhere((key, value) => value == null);
 
     return data;
->>>>>>> 5d1f483f (fix: warping, sizing)
   }
 }
 
 class WarpingService extends BaseCrudService<Warping> {
   WarpingService()
       : super(
-<<<<<<< HEAD
-<<<<<<< HEAD
           endpoint: 'warpings',
           fromJson: (json) => Warping.fromJson(json),
           toJson: (item) => item.toJson(),
@@ -305,16 +121,4 @@ class WarpingService extends BaseCrudService<Warping> {
 
     throw decoded['message'] ?? 'Gagal mengambil jenis benang putus';
   }
-<<<<<<< HEAD
-=======
-          endpoint: 'warping',
-=======
-          endpoint: 'warpings',
->>>>>>> a1ea7df (feat: warping)
-          fromJson: (json) => Warping.fromJson(json),
-          toJson: (item) => item.toJson(),
-        );
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> d0509dba (fix: mulai warping - shearing)
 }

@@ -53,14 +53,7 @@ class _FinishSizingProcessState extends State<FinishSizingProcess> {
     'machine_id': null,
     'roll_length': null,
     'notes': '',
-<<<<<<< HEAD
-<<<<<<< HEAD
     'machines': [],
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-    'machines': [],
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   };
 
   @override

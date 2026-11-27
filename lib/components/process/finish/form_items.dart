@@ -9,25 +9,8 @@ import 'package:textile_tracking/components/master/form/group_form.dart';
 import 'package:textile_tracking/components/master/form/packing_number_form.dart';
 import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/components/master/text/no_data.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
-<<<<<<< HEAD
-=======
->>>>>>> e98896b (fix: finish)
-=======
-import 'package:textile_tracking/components/master/text/no_data.dart';
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> 37a5a200 (fix: selesai dyeing)
-=======
->>>>>>> cb30986c (fix: finish dyeing)
-=======
-import 'package:textile_tracking/components/process/finish/process/form_helpers.dart';
->>>>>>> 48469958 (fix: selesai dyeing)
 import 'package:textile_tracking/components/process/finish/process/long_hemming_weight.dart';
 import 'package:textile_tracking/components/process/finish/process/process_item_qty.dart';
 import 'package:textile_tracking/components/process/finish/process/qty_weight.dart';
@@ -86,18 +69,8 @@ class FormItems extends StatefulWidget {
   final getMachineStatus;
   final handleSelectMachine;
   final newMachines;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
   final onMachineChanged;
   final reworkCategoryOption;
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-  final reworkCategoryOption;
->>>>>>> ae9b2985 (fix: rework dyeing)
   final handleItemQtyWarning;
 
   const FormItems(
@@ -145,18 +118,8 @@ class FormItems extends StatefulWidget {
       this.getMachineStatus,
       this.handleSelectMachine,
       this.newMachines,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
       this.onMachineChanged,
       this.reworkCategoryOption,
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-      this.reworkCategoryOption,
->>>>>>> ae9b2985 (fix: rework dyeing)
       this.handleItemQtyWarning});
 
   @override
@@ -1553,21 +1516,7 @@ class _FormItemsState extends State<FormItems>
                 (widget.label != 'Dyeing' &&
                     widget.label != 'Press' &&
                     widget.label != 'Tumbler' &&
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     widget.label != 'Long Slitting' &&
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
-                    widget.label != 'Long Slitting' &&
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
-                    widget.label != 'Long Slitting' &&
->>>>>>> 7429ce6e (fix: rework dyeing)
                     widget.label != 'Long Hemming' &&
                     widget.label != 'Cross Cutting' &&
                     widget.label != 'Sewing' &&
@@ -1694,23 +1643,7 @@ class _FormItemsState extends State<FormItems>
                 widget.label != 'Long Slitting' &&
                 widget.label != 'Embroidery' &&
                 widget.label != 'Printing' &&
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 widget.label != 'Sorting')
-=======
-                widget.label != 'Sorting' &&
-                widget.label != 'Warping' &&
-                widget.label != 'Sizing' &&
-                widget.label != 'Weaving' &&
-                widget.label != 'Shearing')
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-                widget.label != 'Sorting')
->>>>>>> e03dd57 (chore: remove unnecessary)
-=======
-                widget.label != 'Sorting')
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
               if (isLoadingSemiFinished)
                 Expanded(
                   child: SizedBox(
@@ -2039,10 +1972,6 @@ class _FormItemsState extends State<FormItems>
                           ],
                         ),
                       ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ead5d4b9 (fix: stok di packing)
                       Builder(
                         builder: (context) {
                           final tabController =
@@ -2056,20 +1985,7 @@ class _FormItemsState extends State<FormItems>
                               // not update the value used by validation.
                               final item = items[tabController.index];
                               final itemId = item['id'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                      SizedBox(
-                        height: 520,
-                        child: TabBarView(
-                          children: (safeItems).map<Widget>((item) {
-                            final itemId = item['id'];
->>>>>>> ccc6b638 (fix: warning selesai packing)
-=======
->>>>>>> ead5d4b9 (fix: stok di packing)
-=======
                               final itemKey = _itemKey(item);
->>>>>>> fe6ddf94 (fix: packing form)
 
                               _packingQtyControllers.putIfAbsent(
                                 itemId,
@@ -2168,7 +2084,6 @@ class _FormItemsState extends State<FormItems>
                                           ),
                                         ],
                                       ),
-<<<<<<< HEAD
                                     ),
                                     _buildPackingGradeAStockUsage(item),
                                     Container(
@@ -2366,7 +2281,6 @@ class _FormItemsState extends State<FormItems>
                                           ),
                                       ],
                                     ),
-<<<<<<< HEAD
                                     Row(
                                       children: [
                                         Expanded(
@@ -2398,298 +2312,9 @@ class _FormItemsState extends State<FormItems>
                                       ),
                                     ),
                                     PackingGradeASourceSection(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                    key: ValueKey(
-                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
-=======
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-=======
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade50,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                          color: Colors.blue.shade100,
-                                        ),
-                                      ),
-                                      child: Row(
->>>>>>> ead5d4b9 (fix: stok di packing)
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Grade A',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  formatNumber(
-                                                      sortingQty['grade_a']),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Grade B',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  formatNumber(
-                                                      sortingQty['grade_b']),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Tipe BS',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  formatNumber(
-                                                    sortingQty['grade_bs'],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Total Perbaikan',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  formatNumber(totalPerbaikan),
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.orange,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Total Keseluruhan',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4),
-                                                Text(
-                                                  formatNumber(
-                                                    parseInput(
-                                                          sortingQty['grade_a'],
-                                                        ) +
-                                                        parseInput(
-                                                          sortingQty['grade_b'],
-                                                        ) +
-                                                        parseInput(
-                                                          sortingQty[
-                                                              'grade_bs'],
-                                                        ) +
-                                                        totalPerbaikan,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: PackingNumberForm(
-                                                label: 'Total Packing (PCS)',
-                                                controller:
-                                                    _packingQtyControllers[
-                                                        itemId]!,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    item['qty'] = value;
-
-                                                    calculateBeratA(item);
-                                                    calculateTotalBerat(
-                                                      item,
-                                                      widget.processData,
-                                                    );
-
-                                                    _validateAllPackingQty();
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: PackingNumberForm(
-                                                label: 'Berat per Lusin (KG)',
-                                                controller:
-                                                    _weightPerDozenControllers[
-                                                        itemId]!,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    item['weight_per_dozen'] =
-                                                        value;
-
-                                                    calculateGsm(item);
-                                                    calculateBeratA(item);
-                                                    calculateTotalBerat(
-                                                      item,
-                                                      widget.processData,
-                                                    );
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ].separatedBy(
-                                            CustomTheme().hGap('xl'),
-                                          ),
-                                        ),
-<<<<<<< HEAD
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: TextForm(
-                                          label: 'Gramasi (GSM)',
-                                          isDisabled: true,
-                                          controller: _gsmControllers[itemId],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextForm(
-                                          label: 'Berat Grade A (KG)',
-                                          isDisabled: true,
-                                          controller:
-                                              _weightGradeAControllers[itemId],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextForm(
-                                          label: 'Total Berat (KG)',
-                                          isDisabled: true,
-                                          controller:
-                                              _totalWeightControllers[itemId],
-                                        ),
-                                      ),
-                                    ].separatedBy(
-                                      CustomTheme().hGap('xl'),
->>>>>>> ccc6b638 (fix: warning selesai packing)
-                                    ),
-=======
-                                        if (_packingQtyWarnings[itemId] != null)
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8),
-                                            child: _buildPackingQtyWarning(
-                                              _packingQtyWarnings[itemId]!,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextForm(
-                                            label: 'Gramasi (GSM)',
-                                            isDisabled: true,
-                                            controller: _gsmControllers[itemId],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextForm(
-                                            label: 'Berat Grade A (KG)',
-                                            isDisabled: true,
-                                            controller:
-                                                _weightGradeAControllers[
-                                                    itemId],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: TextForm(
-                                            label: 'Total Berat (KG)',
-                                            isDisabled: true,
-                                            controller:
-                                                _totalWeightControllers[itemId],
-                                          ),
-                                        ),
-                                      ].separatedBy(
-                                        CustomTheme().hGap('xl'),
-                                      ),
-                                    ),
-                                    PackingGradeASourceSection(
-<<<<<<< HEAD
-                                    key: ValueKey(
-                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                    ),
->>>>>>> ead5d4b9 (fix: stok di packing)
-=======
                                       key: ValueKey(
                                         'packing-grade-a-${widget.form['wo_id']}-$itemId',
                                       ),
->>>>>>> cb30986c (fix: finish dyeing)
-=======
-=======
->>>>>>> 34eadd95 (fix: keterangan ambil stok)
-<<<<<<< HEAD
-                                      key: ValueKey(
-                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                      ),
-=======
-                                    key: ValueKey(
-                                      'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                    ),
->>>>>>> 1ae4f78 (fix: stok di packing)
-<<<<<<< HEAD
->>>>>>> b69af3a7 (fix: stok di packing)
-=======
-=======
-                                      key: ValueKey(
-                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                      ),
->>>>>>> 9339670 (fix: keterangan ambil stok)
->>>>>>> 34eadd95 (fix: keterangan ambil stok)
-=======
-                                      key: ValueKey(
-                                        'packing-grade-a-${widget.form['wo_id']}-$itemId',
-                                      ),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                                       initialUsages:
                                           (item['grade_a_stock_usages'] is List)
                                               ? (item['grade_a_stock_usages']

@@ -22,18 +22,7 @@ class OptionGreigeOrder {
   }
 
   Map<String, dynamic> toJson() {
-<<<<<<< HEAD
-<<<<<<< HEAD
     return {'value': value, 'label': label};
-=======
-    return {
-      'value': value,
-      'label': label,
-    };
->>>>>>> a1ea7df (feat: warping)
-=======
-    return {'value': value, 'label': label};
->>>>>>> 4d9d5b40 (fix: model)
   }
 }
 
@@ -44,14 +33,7 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   bool _hasMoreData = true;
   final List<dynamic> _listOption = [];
   List<dynamic> _dataListOption = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
   Map<String, dynamic> _dataView = {};
-=======
->>>>>>> a1ea7df (feat: warping)
-=======
-  Map<String, dynamic> _dataView = {};
->>>>>>> 230afad3 (feat: greige order detail)
 
   final List<OptionGreigeOrder> _wo = [];
 
@@ -59,33 +41,15 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
   bool get hasMoreData => _hasMoreData;
   List<dynamic> get listOption => _listOption;
   List<dynamic> get dataListOption => _dataListOption;
-<<<<<<< HEAD
-<<<<<<< HEAD
   Map<String, dynamic> get dataView => _dataView;
-=======
->>>>>>> a1ea7df (feat: warping)
-=======
-  Map<String, dynamic> get dataView => _dataView;
->>>>>>> 230afad3 (feat: greige order detail)
 
   List<OptionGreigeOrder> get options => _wo;
 
   @override
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4d9d5b40 (fix: model)
   Future<void> fetchItems({
     bool isInitialLoad = false,
     String? searchQuery = '',
   }) async {}
-<<<<<<< HEAD
-=======
-  Future<void> fetchItems(
-      {bool isInitialLoad = false, String? searchQuery = ''}) async {}
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 4d9d5b40 (fix: model)
 
   @override
   Future<void> refetchItems() async {
@@ -95,8 +59,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
 
   @override
   Future<void> addItem(
-<<<<<<< HEAD
-<<<<<<< HEAD
     OptionGreigeOrder item,
     ValueNotifier<bool> isSubmitting,
   ) async {}
@@ -107,33 +69,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
     OptionGreigeOrder item,
     ValueNotifier<bool> isSubmitting,
   ) async {}
-=======
-      OptionGreigeOrder item, ValueNotifier<bool> isSubmitting) async {}
-
-  @override
-  Future<void> updateItem(String id, OptionGreigeOrder item,
-      ValueNotifier<bool> isSubmitting) async {}
->>>>>>> a1ea7df (feat: warping)
-=======
-    OptionGreigeOrder item,
-    ValueNotifier<bool> isSubmitting,
-  ) async {}
-
-  @override
-  Future<void> updateItem(
-    String id,
-    OptionGreigeOrder item,
-    ValueNotifier<bool> isSubmitting,
-  ) async {}
->>>>>>> 4d9d5b40 (fix: model)
 
   @override
   Future<void> deleteItem(String id, ValueNotifier<bool> isSubmitting) async {}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
   Future<void> getDataView(dynamic id) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -145,22 +84,10 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _dataView = {};
       notifyListeners();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4d9d5b40 (fix: model)
       final response = await http.get(
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
-<<<<<<< HEAD
-=======
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 4d9d5b40 (fix: model)
 
       final decoded = jsonDecode(response.body);
 
@@ -178,26 +105,11 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4d9d5b40 (fix: model)
   Future<void> _fetchOptionsGeneric({
     bool isInitialLoad = false,
     String searchQuery = '',
     required String endpoint,
   }) async {
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-  Future<void> _fetchOptionsGeneric(
-      {bool isInitialLoad = false,
-      String searchQuery = '',
-      required String endpoint}) async {
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 4d9d5b40 (fix: model)
     if (_isLoading || (!_hasMoreData && !isInitialLoad)) return;
 
     if (isInitialLoad) {
@@ -213,48 +125,19 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       final token = prefs.getString('access_token');
       if (token == null) throw Exception('Access token is missing');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       final uri =
           Uri.parse('${dotenv.env['API_URL']}/order-greige/option').replace(
         queryParameters: {
           'per_page': '100',
           'type': endpoint,
-=======
-      final uri = Uri.parse(
-        '${dotenv.env['API_URL']}/order-greige/option',
-      ).replace(
-=======
-      final uri =
-          Uri.parse('${dotenv.env['API_URL']}/order-greige/option').replace(
->>>>>>> 4d9d5b40 (fix: model)
-        queryParameters: {
-          'per_page': '100',
-<<<<<<< HEAD
->>>>>>> a1ea7df (feat: warping)
-=======
-          'type': endpoint,
->>>>>>> 230afad3 (feat: greige order detail)
           if (searchQuery.isNotEmpty) 'search': searchQuery,
         },
       );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4d9d5b40 (fix: model)
       final response = await http.get(
         uri,
         headers: {'Authorization': 'Bearer $token'},
       );
-<<<<<<< HEAD
-=======
-      final response = await http.get(uri, headers: {
-        'Authorization': 'Bearer $token',
-      });
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 4d9d5b40 (fix: model)
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -287,10 +170,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
         endpoint: 'warping',
       );
 
@@ -302,12 +181,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
         endpoint: 'warping_finish',
-<<<<<<< HEAD
-=======
-        endpoint: 'warping-option',
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 230afad3 (feat: greige order detail)
       );
 
   Future<void> fetchWeavingOptions({
@@ -317,10 +190,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
         endpoint: 'weaving',
       );
   Future<void> fetchWeavingFinishOptions({
@@ -350,12 +219,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
         endpoint: 'sizing_finish',
-<<<<<<< HEAD
-=======
-        endpoint: 'weaving-option',
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 230afad3 (feat: greige order detail)
       );
 
   Future<void> fetchShearingOptions({
@@ -365,10 +228,6 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
       _fetchOptionsGeneric(
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
         endpoint: 'shearing',
       );
   Future<void> fetchShearingFinishOptions({
@@ -379,11 +238,5 @@ class OptionGreigeOrderService extends BaseService<OptionGreigeOrder> {
         isInitialLoad: isInitialLoad,
         searchQuery: searchQuery,
         endpoint: 'shearing_finish',
-<<<<<<< HEAD
-=======
-        endpoint: 'shearing-option',
->>>>>>> a1ea7df (feat: warping)
-=======
->>>>>>> 230afad3 (feat: greige order detail)
       );
 }

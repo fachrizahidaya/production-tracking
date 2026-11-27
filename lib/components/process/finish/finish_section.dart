@@ -51,24 +51,10 @@ class FinishSection extends StatefulWidget {
   final dyeingQty;
   final finishedItemGrb;
   final isInitializing;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
-<<<<<<< HEAD
-=======
-  final reworkCategoryOption;
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
   final onAttachmentChanged;
-<<<<<<< HEAD
-=======
-  final handleItemQtyWarning;
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   const FinishSection(
       {super.key,
@@ -82,16 +68,6 @@ class FinishSection extends StatefulWidget {
       this.handleChangeInput,
       this.id,
       this.processData,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      this.isLoading,
->>>>>>> e98896b (fix: finish)
-=======
->>>>>>> e03dd57 (chore: remove unnecessary)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
       this.withItemGrade,
       this.itemGradeOption,
       this.qty,
@@ -120,26 +96,10 @@ class FinishSection extends StatefulWidget {
       this.dyeingQty,
       this.finishedItemGrb,
       this.isInitializing,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
-=======
-=======
-      this.reworkCategoryOption,
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
-      this.handleItemQtyWarning});
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-      this.handleItemQtyWarning,
-      this.onAttachmentChanged});
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   @override
   State<FinishSection> createState() => _FinishSectionState();
@@ -371,18 +331,8 @@ class _FinishSectionState extends State<FinishSection> {
       dyeingQty: widget.dyeingQty,
       finishedItemGrb: widget.finishedItemGrb,
       isInitializing: widget.isInitializing,
-<<<<<<< HEAD
-<<<<<<< HEAD
       reworkCategoryOption: widget.reworkCategoryOption,
       onMachineChanged: widget.onMachineChanged,
-<<<<<<< HEAD
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-      reworkCategoryOption: widget.reworkCategoryOption,
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
       handleItemQtyWarning: widget.handleItemQtyWarning,
     );
   }

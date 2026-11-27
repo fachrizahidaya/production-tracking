@@ -34,14 +34,7 @@ class CreateWarpingProcessManual extends StatelessWidget {
       handleSubmit: handleSubmit,
       fetchGreigeOrder: (service) => service.fetchWarpingOptions(),
       getGreigeOrderOptions: (service) => service.dataListOption,
-<<<<<<< HEAD
-<<<<<<< HEAD
       optionBadgeKey: 'warping_type',
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-      optionBadgeKey: 'warping_type',
->>>>>>> c940e94a (fix:)
       fetchMachine: (service) => service.fetchOptionsWarping(),
       getMachineOptions: (service) => service.dataListOption,
     );

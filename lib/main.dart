@@ -3,22 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:firebase_core/firebase_core.dart';
-=======
->>>>>>> b8a5267 (chore: internet checker)
-=======
-import 'package:firebase_core/firebase_core.dart';
->>>>>>> 16778356 (feat: fcm notification)
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-=======
->>>>>>> 6663ddcf (chore: main)
-=======
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
->>>>>>> 5f7a4c3d (Release/version 1.2.1 (#30))
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/auth/auth_check.dart';
 import 'package:textile_tracking/models/dashboard/machine.dart';
@@ -68,55 +54,15 @@ import 'package:textile_tracking/screens/packing/index.dart';
 import 'package:textile_tracking/screens/press-tumbler/index.dart';
 import 'package:textile_tracking/screens/printing/index.dart';
 import 'package:textile_tracking/screens/profile/index.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/screens/report/bs/bs_list.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/screens/report/bs/bs_list.dart';
->>>>>>> 58857212 (feat: notifikasi evaluasi bs)
-=======
->>>>>>> e2884b8b (fix: notification all evaluasi)
-=======
-=======
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-<<<<<<< HEAD
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
-=======
-import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-<<<<<<< HEAD
->>>>>>> 20fcb172 (fix: notification all evaluasi)
-=======
-=======
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/bs-anomaly/bs_list.dart';
 import 'package:textile_tracking/screens/report/anomaly/index.dart';
 import 'package:textile_tracking/screens/work-order/index.dart';
 import 'package:textile_tracking/screens/report/process-anomaly/process_list.dart';
 import 'package:textile_tracking/screens/report/gsm/gsm_list.dart';
 import 'package:textile_tracking/screens/report/gsm-anomaly/gsm_list.dart';
-<<<<<<< HEAD
->>>>>>> d94a57a (feat:)
->>>>>>> a5b9c62d (feat:)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 import 'package:textile_tracking/screens/report/index.dart';
 import 'package:textile_tracking/screens/report/rework/rework_list.dart';
-<<<<<<< HEAD
-=======
-import 'package:textile_tracking/screens/report/index.dart';
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
->>>>>>> 41ded02d (fix: rework)
 import 'package:textile_tracking/screens/sewing/index.dart';
 import 'package:textile_tracking/screens/shearing/list/index.dart';
 import 'package:textile_tracking/screens/shearing/model/shearing.dart';
@@ -129,14 +75,7 @@ import 'package:textile_tracking/screens/tumbler/index.dart';
 import 'package:textile_tracking/screens/warping/list/index.dart';
 import 'package:textile_tracking/screens/warping/model/warping.dart';
 import 'package:textile_tracking/screens/weaving/list/index.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/services/fcm_service.dart';
-=======
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-import 'package:textile_tracking/services/fcm_service.dart';
->>>>>>> 16778356 (feat: fcm notification)
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 void main() async {
@@ -169,14 +108,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SizingService()),
     ChangeNotifierProvider(create: (_) => WarpingService()),
     ChangeNotifierProvider(create: (_) => ShearingService()),
-<<<<<<< HEAD
-<<<<<<< HEAD
     ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
-=======
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-    ChangeNotifierProvider(create: (_) => DyeingPreparationService()),
->>>>>>> 57f45d55 (feat: persiapan dyeing)
     ChangeNotifierProvider(create: (_) => UnitService()),
     ChangeNotifierProvider(create: (_) => OptionUnitService()),
     ChangeNotifierProvider(create: (_) => OptionMachineService()),
@@ -225,64 +157,11 @@ class MyApp extends StatelessWidget {
           margin: EdgeInsets.all(0),
           elevation: 0,
         ),
-<<<<<<< HEAD
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => AuthCheck(),
-          '/dashboard': (context) => Home(),
-          '/profile': (context) => Profile(),
-          '/notification': (context) => NotificationList(),
-          '/dyeings': (context) => DyeingScreen(),
-          '/press': (context) => PressTumblerScreen(),
-          '/tumblers': (context) => TumblerScreen(),
-          '/stenters': (context) => StenterScreen(),
-          '/long-slittings': (context) => LongSittingScreen(),
-          '/long-hemmings': (context) => LongHemmingScreen(),
-          '/cross-cuttings': (context) => CrossCuttingScreen(),
-          '/sewings': (context) => SewingScreen(),
-          '/embroideries': (context) => EmbroideryScreen(),
-          '/sortings': (context) => SortingScreen(),
-          '/packings': (context) => PackingScreen(),
-          '/printings': (context) => PrintingScreen(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 41ded02d (fix: rework)
-          '/weavings': (context) => WeavingScreen(),
-          '/sizings': (context) => SizingScreen(),
-          '/warpings': (context) => WarpingScreen(),
-          '/shearings': (context) => ShearingScreen(),
-          '/dyeing-preparations': (context) => DyeingPreparationScreen(),
-<<<<<<< HEAD
-=======
-          '/weaving': (context) => WeavingScreen(),
-          '/sizing': (context) => SizingScreen(),
-          '/warping': (context) => WarpingScreen(),
-          '/shearing': (context) => ShearingScreen(),
->>>>>>> b8a5267 (chore: internet checker)
-=======
->>>>>>> 41ded02d (fix: rework)
-          '/account': (context) => Account(),
-          '/eula': (context) => Eula(),
-          '/privacy-policy': (context) => PrivacyPolicy(),
-          '/terms-conditions': (context) => TermsConditions(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 41ded02d (fix: rework)
-          '/report-production': (context) => ReportScreen(),
-          '/dyeing-rework-evaluations': (context) => ReworkList(),
-        },
-=======
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-<<<<<<< HEAD
-=======
       onGenerateRoute: (settings) {
         final name = settings.name ?? '';
         final reworkMatch = RegExp(
@@ -304,13 +183,12 @@ class MyApp extends StatelessWidget {
         }
         return null;
       },
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
       routes: {
         '/': (context) => AuthCheck(),
         '/dashboard': (context) => Home(),
         '/work-orders': (context) => WorkOrder(),
         '/profile': (context) => Profile(),
-        '/notification': (context) => NotificationList(),
+        '/mismatches': (context) => NotificationList(),
         '/dyeings': (context) => DyeingScreen(),
         '/press': (context) => PressTumblerScreen(),
         '/tumblers': (context) => TumblerScreen(),
@@ -327,22 +205,11 @@ class MyApp extends StatelessWidget {
         '/sizings': (context) => SizingScreen(),
         '/warpings': (context) => WarpingScreen(),
         '/shearings': (context) => ShearingScreen(),
-<<<<<<< HEAD
-=======
         '/dyeing-preparations': (context) => DyeingPreparationScreen(),
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
         '/account': (context) => Account(),
         '/eula': (context) => Eula(),
         '/privacy-policy': (context) => PrivacyPolicy(),
         '/terms-conditions': (context) => TermsConditions(),
-<<<<<<< HEAD
-      },
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-        },
-      ),
->>>>>>> b8a5267 (chore: internet checker)
-=======
         '/report-production': (context) => ReportScreen(),
         '/dyeing-rework-evaluations': (context) => ReworkList(),
         '/bs-evaluations': (context) => BsList(),
@@ -351,12 +218,8 @@ class MyApp extends StatelessWidget {
         '/process-anomalies': (context) => ProcessAnomalyList(),
         '/gsm-evaluations': (context) => GsmList(),
         '/gsm-anomalies': (context) => GsmAnomalyList(),
+        '/stock-usage-anomalies': (context) => StockUsageList(),
       },
-<<<<<<< HEAD
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 }

@@ -98,17 +98,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   num _gradeAInput(int itemIndex) {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     final item = items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -130,89 +119,11 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     for (final transfer in transfers) {
       if (transfer is Map) {
         total += parseSafe(transfer['qty']);
-<<<<<<< HEAD
-=======
-    final grades = items[itemIndex]['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += num.tryParse(grade['qty'].toString()) ?? 0;
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-    final item = items[itemIndex];
-    final grades = item['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += parseSafe(grade['qty']);
-      }
-    }
-
-    return total +
-        _transferQty(item['transfers_in']) -
-        _transferQty(item['transfers_out']);
-  }
-
-  num _transferQty(dynamic transfers) {
-    if (transfers is! List) return 0;
-
-    num total = 0;
-    for (final transfer in transfers) {
-      if (transfer is Map) {
-        total += parseSafe(transfer['qty']);
->>>>>>> d176fb50 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-    final item = items[itemIndex];
-    final grades = item['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += parseSafe(grade['qty']);
-      }
-    }
-
-    return total +
-        _transferQty(item['transfers_in']) -
-        _transferQty(item['transfers_out']);
-  }
-
-  num _transferQty(dynamic transfers) {
-    if (transfers is! List) return 0;
-
-    num total = 0;
-    for (final transfer in transfers) {
-      if (transfer is Map) {
-        total += parseSafe(transfer['qty']);
->>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
->>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
     }
     return total;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   num? _maxGradeASourceQty(int itemIndex) {
     final items = widget.form['items'] ?? [];
     if (itemIndex < 0 || itemIndex >= items.length) return null;
@@ -237,26 +148,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     return null;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   dynamic get _currentWoId {
     final workOrder = widget.data['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -470,38 +361,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
           'code': itemGrade['code'],
           'spk_no': spkNoMap[item['wo_item_id']],
           'qty': item['qty'] ?? 0,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           'qty_in': item['qty_in'] ?? 0,
           'qty_out': item['qty_out'] ?? 0,
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-          'qty_in': item['qty_in'] ?? 0,
-          'qty_out': item['qty_out'] ?? 0,
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 1691b544 (fix: sortir)
-          'qty_in': item['qty_in'] ?? 0,
-          'qty_out': item['qty_out'] ?? 0,
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-          'qty_in': item['qty_in'] ?? 0,
-          'qty_out': item['qty_out'] ?? 0,
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-          'qty_in': item['qty_in'] ?? 0,
-          'qty_out': item['qty_out'] ?? 0,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
           'source_qty': item['qty'] ?? 0,
           'available_qty': item['available_qty'],
           'notes': grade['notes'],
@@ -883,21 +744,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                     CustomTheme().vGap('xl'),
                   ],
                   _buildGlobalSummary(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                   SizedBox(
                     height: 16,
                   ),
@@ -950,59 +796,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                       ].separatedBy(CustomTheme().vGap('xl')),
                     ),
                   ),
-<<<<<<< HEAD
-=======
-                  KeyedSubtree(
-                    key: const ValueKey('sorting-edit-body'),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: TabBar(
-                              isScrollable: true,
-                              dividerColor: Colors.transparent,
-                              labelColor: Colors.white,
-                              unselectedLabelColor: Colors.black,
-                              indicatorColor: Colors.white,
-                              indicator: BoxDecoration(
-                                color: Colors.blue[800],
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              tabAlignment: TabAlignment.start,
-                              tabs: [
-                                for (int i = 0; i < items.length; i++)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                      horizontal: 8,
-                                    ),
-                                    child: Tab(
-                                      text: 'Item ${i + 1}',
-=======
->>>>>>> 143fc05 (long hemming - packing (#36))
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        _buildItemCard(itemIndex),
-                      ].separatedBy(CustomTheme().vGap('xl')),
-                    ),
-                  ),
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                 ],
               );
             },
@@ -1074,33 +867,7 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   excludeWoId: _currentWoId,
                   sortingId: widget.data['id'],
                   gradeAInput: _gradeAInput(itemIndex),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   maxTakenQty: _maxGradeASourceQty(itemIndex),
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-                  maxTakenQty: _maxGradeASourceQty(itemIndex),
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-                  maxTakenQty: _maxGradeASourceQty(itemIndex),
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-                  maxTakenQty: _maxGradeASourceQty(itemIndex),
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
-                  maxTakenQty: _maxGradeASourceQty(itemIndex),
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-                  maxTakenQty: _maxGradeASourceQty(itemIndex),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                   onTotalChanged: (total) {
                     setState(() => _absorbedQty[itemIndex] = total);
                   },
@@ -1280,36 +1047,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
                     grade['qty'] = parsed;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
-                    _getGradeController(
-                      itemIndex,
-                      gradeIndex,
-                      parsed,
-                    ).text = value;
-
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                     setState(() {});
 
                     widget.updateTotalSorting();
@@ -1343,21 +1080,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   }
 
   Widget? _transferOutNote(Map item, Map grade) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     final transferInRows = item['absorbed_work_orders'] is List
         ? item['absorbed_work_orders']
         : item['transfers_in'];
@@ -1394,101 +1116,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
     }
 
     final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
-<<<<<<< HEAD
-=======
-    final rows = item['transfers_out'];
-    if (rows is! List) return null;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-
-    final transfersIn = transferInRows is List
-        ? transferInRows.whereType<Map>().toList()
-        : <Map>[];
-    final transfersOut = transferOutRows is List
-        ? transferOutRows.whereType<Map>().toList()
-        : <Map>[];
-
-    if (transfersIn.isEmpty && transfersOut.isEmpty) return null;
-
-    var totalIn = 0.0;
-    var totalOut = 0.0;
-    final sourceWoNos = <String>[];
-    final targetWoNos = <String>[];
-
-    for (final row in transfersIn) {
-      totalIn += parseSafe(row['qty']);
-      final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
-      if (woNo.isNotEmpty && !sourceWoNos.contains(woNo)) {
-        sourceWoNos.add(woNo);
-      }
-    }
-
-<<<<<<< HEAD
-    final target = woNos.join(', ');
-    final remaining = parseSafe(grade['qty']) - total;
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-    for (final row in transfersOut) {
-      totalOut += parseSafe(row['qty']);
-      final woNo = row['to_wo_no']?.toString() ?? '';
-      if (woNo.isNotEmpty && !targetWoNos.contains(woNo)) {
-        targetWoNos.add(woNo);
-      }
-    }
-
-    final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-
-    final transfersIn = transferInRows is List
-        ? transferInRows.whereType<Map>().toList()
-        : <Map>[];
-    final transfersOut = transferOutRows is List
-        ? transferOutRows.whereType<Map>().toList()
-        : <Map>[];
-
-    if (transfersIn.isEmpty && transfersOut.isEmpty) return null;
-
-    var totalIn = 0.0;
-    var totalOut = 0.0;
-    final sourceWoNos = <String>[];
-    final targetWoNos = <String>[];
-
-    for (final row in transfersIn) {
-      totalIn += parseSafe(row['qty']);
-      final woNo = (row['from_wo_no'] ?? row['wo_no'] ?? '').toString();
-      if (woNo.isNotEmpty && !sourceWoNos.contains(woNo)) {
-        sourceWoNos.add(woNo);
-      }
-    }
-
-<<<<<<< HEAD
-    final target = woNos.join(', ');
-    final remaining = parseSafe(grade['qty']) - total;
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-    for (final row in transfersOut) {
-      totalOut += parseSafe(row['qty']);
-      final woNo = row['to_wo_no']?.toString() ?? '';
-      if (woNo.isNotEmpty && !targetWoNos.contains(woNo)) {
-        targetWoNos.add(woNo);
-      }
-    }
-
-    final accumulatedTotal = parseSafe(grade['qty']) + totalIn - totalOut;
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     const black = TextStyle(color: Colors.black);
     const blackBold = TextStyle(
       color: Colors.black,
@@ -1505,17 +1132,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
               fontSize: 12,
             ),
             children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
               if (totalIn > 0) ...[
                 const TextSpan(
                   text: 'Qty ',
@@ -1563,172 +1179,13 @@ class _SortingEditSectionState extends State<SortingEditSection> {
                   text: 'Tidak ada transfer',
                   style: black,
                 ),
-<<<<<<< HEAD
-=======
-              const TextSpan(
-                text: 'Qty diambil ',
-                style: black,
-              ),
-              TextSpan(
-                text: '-${formatNumber(total)}',
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              if (target.isNotEmpty) ...[
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-              if (totalIn > 0) ...[
->>>>>>> 1d6d2ab6 (fix: sortir)
-                const TextSpan(
-                  text: 'Qty ',
-                  style: black,
-                ),
-                TextSpan(
-                  text: '+${formatNumber(totalIn)}',
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (sourceWoNos.isNotEmpty) ...[
-                  const TextSpan(text: ' dari ', style: black),
-                  TextSpan(text: sourceWoNos.join(', '), style: black),
-                ],
-              ],
-              if (totalIn > 0 && totalOut > 0)
-                const TextSpan(text: '\n', style: black),
-              if (totalOut > 0) ...[
-                const TextSpan(
-                  text: 'Qty ',
-                  style: black,
-                ),
-                TextSpan(
-                  text: '-${formatNumber(totalOut)}',
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (targetWoNos.isNotEmpty) ...[
-                  const TextSpan(
-                    text: ' untuk ',
-                    style: black,
-                  ),
-                  TextSpan(
-                    text: targetWoNos.join(', '),
-                    style: black,
-                  ),
-                ],
-              ],
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-              if (totalIn == 0 && totalOut == 0)
-                const TextSpan(
-                  text: 'Tidak ada transfer',
-                  style: black,
-                ),
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
-=======
-              if (totalIn > 0) ...[
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-                const TextSpan(
-                  text: 'Qty ',
-                  style: black,
-                ),
-                TextSpan(
-                  text: '+${formatNumber(totalIn)}',
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (sourceWoNos.isNotEmpty) ...[
-                  const TextSpan(text: ' dari ', style: black),
-                  TextSpan(text: sourceWoNos.join(', '), style: black),
-                ],
-              ],
-              if (totalIn > 0 && totalOut > 0)
-                const TextSpan(text: '\n', style: black),
-              if (totalOut > 0) ...[
-                const TextSpan(
-                  text: 'Qty ',
-                  style: black,
-                ),
-                TextSpan(
-                  text: '-${formatNumber(totalOut)}',
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (targetWoNos.isNotEmpty) ...[
-                  const TextSpan(
-                    text: ' untuk ',
-                    style: black,
-                  ),
-                  TextSpan(
-                    text: targetWoNos.join(', '),
-                    style: black,
-                  ),
-                ],
-              ],
-<<<<<<< HEAD
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-              if (totalIn == 0 && totalOut == 0)
-                const TextSpan(
-                  text: 'Tidak ada transfer',
-                  style: black,
-                ),
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
             ],
           ),
           textAlign: TextAlign.right,
         ),
         const SizedBox(height: 4),
         Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           'Total akumulasi: ${formatNumber(accumulatedTotal)}',
-=======
-          'Total: ${formatNumber(remaining)}',
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 1691b544 (fix: sortir)
-          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
-=======
-          'Total: ${formatNumber(remaining)}',
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-          'Total akumulasi: ${formatNumber(accumulatedTotal)}',
->>>>>>> 0ba64c26 (chore: adjust fase-2)
           textAlign: TextAlign.right,
           style: blackBold,
         ),
@@ -2307,38 +1764,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(grade);
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(grade);
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 1691b544 (fix: sortir)
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(grade);
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(grade);
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(grade);
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -2402,17 +1829,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
   }
 
   double _summaryGradeA(Map item, Map grade, int itemIndex) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     return parseSafe(grade['qty']) +
         _gradeAAdditional(item, grade, itemIndex) -
         _gradeATaken(grade);
@@ -2428,74 +1844,6 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
   double _gradeATaken(Map grade) {
     return parseSafe(grade['qty_out']);
-<<<<<<< HEAD
-=======
-    final input = parseSafe(grade['qty']);
-    final absorbed = _absorbedQty[itemIndex] ?? 0;
-    if (grade['available_qty'] == null) {
-      return input + absorbed;
-    }
-
-    final savedTransferIn = _savedTransferInQty(item);
-    return parseSafe(grade['available_qty']) +
-        input -
-        parseSafe(grade['source_qty']) +
-        absorbed -
-        savedTransferIn;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
-    return parseSafe(grade['qty']) +
-        _gradeAAdditional(item, grade, itemIndex) -
-        _gradeATaken(grade);
-<<<<<<< HEAD
->>>>>>> 1d6d2ab6 (fix: sortir)
-  }
-
-  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
-    if (_absorbedQty.containsKey(itemIndex)) {
-      return (_absorbedQty[itemIndex] ?? 0).toDouble();
-    }
-<<<<<<< HEAD
-    return total;
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-
-    return parseSafe(grade['qty_in']);
-  }
-
-  double _gradeATaken(Map grade) {
-    return parseSafe(grade['qty_out']);
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-  }
-
-  double _gradeAAdditional(Map item, Map grade, int itemIndex) {
-    if (_absorbedQty.containsKey(itemIndex)) {
-      return (_absorbedQty[itemIndex] ?? 0).toDouble();
-    }
-<<<<<<< HEAD
-    return total;
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-
-    return parseSafe(grade['qty_in']);
-  }
-
-  double _gradeATaken(Map grade) {
-    return parseSafe(grade['qty_out']);
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   }
 
   Widget _summaryBox(
@@ -2563,41 +1911,8 @@ class _SortingEditSectionState extends State<SortingEditSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-          totalGradeATaken += _gradeATaken(grade);
-=======
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-          totalGradeATaken += _gradeATaken(grade);
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-          totalGradeATaken += _gradeATaken(grade);
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
           totalGradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
           totalGradeATaken += _gradeATaken(grade);
->>>>>>> 0ba64c26 (chore: adjust fase-2)
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {

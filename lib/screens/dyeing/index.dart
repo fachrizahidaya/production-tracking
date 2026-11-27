@@ -42,13 +42,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
   bool _canUpdate = false;
   bool _showFab = true;
   bool _menuLoaded = false;
-<<<<<<< HEAD
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-=======
->>>>>>> d8439a4 (fix: refactor code)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -204,17 +197,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
           no: item['dyeing_no'].toString(),
           canDelete: _canDelete,
           canUpdate: _canUpdate,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          openUpdateOnStart: openUpdateOnStart,
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
-          openUpdateOnStart: openUpdateOnStart,
->>>>>>> 8bc14cd (fix: card navigate to update)
-=======
->>>>>>> ddaf785b (fix: index dyeing - long slitting)
         ),
       ),
     );
@@ -297,10 +279,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
             }
           },
         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -339,9 +317,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
                       subtitleField: 'wo_no',
                       canUpdate: _canUpdate,
                       canDelete: _canDelete,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -360,46 +335,6 @@ class _DyeingScreenState extends State<DyeingScreen> {
                           return null;
                         }
                       });
-=======
-                      onUpdate: () => _openProcessDetail(
-                        item,
-                        openUpdateOnStart: true,
-                      ),
-                      onDelete: () => _handleDeleteItem(item),
-                    ),
-                    onItemTap: (context, item) {
-                      _openProcessDetail(
-                        item,
-                        openUpdateOnStart: item['status'] == 'Diproses',
-                      );
->>>>>>> d8439a4 (fix: refactor code)
-=======
-                    ),
-                    onItemTap: (context, item) {
-=======
-                    ),
-                    onItemTap: (context, item) {
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DyeingDetail(
-                              id: item['id'].toString(),
-                              no: item['dyeing_no'].toString(),
-                              canDelete: _canDelete,
-                              canUpdate: _canUpdate,
-                            ),
-                          )).then((value) {
-                        if (value == true) {
-                          _refetch();
-                        } else {
-                          return null;
-                        }
-                      });
-<<<<<<< HEAD
->>>>>>> 56d6598 (fix: loading dan cta to detail proses)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
                     },
                     filterWidget: ListFilter(
                       params: params,
@@ -415,82 +350,8 @@ class _DyeingScreenState extends State<DyeingScreen> {
                     handleSearch: _handleSearch,
                     dataList: _dataList,
                   ),
-<<<<<<< HEAD
                 ),
               ),
-=======
-        body: SafeArea(
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<DyeingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Dyeing',
-                item: item,
-                titleKey: 'dyeing_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                itemField: ItemField.get,
-                nestedField: ItemField.nested,
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () => _openProcessDetail(
-                  item,
-                  openUpdateOnStart: true,
-=======
->>>>>>> d8439a4 (fix: refactor code)
-                ),
-              ),
-<<<<<<< HEAD
-              onItemTap: (context, item) {
-                _openProcessDetail(
-                  item,
-                  openUpdateOnStart: item['status'] == 'Diproses',
-                );
-              },
-              filterWidget: ListFilter(
-                title: 'Filter',
-                params: params,
-                onHandleFilter: _handleFilter,
-                onSubmitFilter: () {
-                  _submitFilter();
-                },
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
->>>>>>> d8439a4 (fix: refactor code)
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

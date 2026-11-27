@@ -13,22 +13,6 @@ class DyeingDetail extends StatefulWidget {
   final canDelete;
   final canUpdate;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
-=======
->>>>>>> 585d6eac (fix: rework dyeing)
-=======
->>>>>>> 15b10462 (fix: rework dyeing)
   const DyeingDetail({
     super.key,
     required this.id,
@@ -36,62 +20,6 @@ class DyeingDetail extends StatefulWidget {
     this.canDelete,
     this.canUpdate,
   });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 7d345bda (fix: card navigate to update)
-=======
->>>>>>> f10f856a (fix: card navigate to update)
-  const DyeingDetail(
-      {super.key,
-      required this.id,
-      required this.no,
-      this.canDelete,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      this.canUpdate,
-      this.openUpdateOnStart = false});
-<<<<<<< HEAD
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
->>>>>>> 8bc14cd (fix: card navigate to update)
-=======
-      this.canUpdate});
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
-      this.canUpdate});
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
-=======
-      this.canUpdate,
-      this.openUpdateOnStart = false});
->>>>>>> 7d345bda (fix: card navigate to update)
-=======
-      this.canUpdate});
->>>>>>> cbfab539 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 585d6eac (fix: rework dyeing)
-=======
-      this.canUpdate,
-      this.openUpdateOnStart = false});
->>>>>>> f10f856a (fix: card navigate to update)
-=======
-      this.canUpdate});
->>>>>>> a7feb67b (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 15b10462 (fix: rework dyeing)
 
   @override
   State<DyeingDetail> createState() => _DyeingDetailState();
@@ -108,14 +36,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
       label: 'Dyeing',
       prefix: 'DYE',
       isMultiMachine: true,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
       service: Provider.of<DyeingService>(
         context,
         listen: false,
@@ -130,18 +50,6 @@ class _DyeingDetailState extends State<DyeingDetail> {
       | Dyeing Rework atau Dyeing normal.
       |
       */
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      service: Provider.of<DyeingService>(context, listen: false),
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
-      service: Provider.of<DyeingService>(context, listen: false),
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
       handleUpdateService: (context, id, item, isLoading) =>
           Provider.of<DyeingService>(
         context,
@@ -222,31 +130,11 @@ class _DyeingDetailState extends State<DyeingDetail> {
       withMaklon: false,
       forDyeing: true,
       getMachineOptions: (service) => service.dataListOption,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
       fetchMachine: (
         service,
         currentMachineIds,
       ) =>
           service.fetchOptionsDyeing(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
-      fetchMachine: (service, currentMachineIds) => service.fetchOptionsDyeing(
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
         currentMachineIds: currentMachineIds,
       ),
       idProcess: 'dyeing_id',
@@ -297,34 +185,12 @@ class _DyeingDetailState extends State<DyeingDetail> {
           notes: form['notes'],
           start_time: form['start_time'],
           end_time: form['end_time'],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
           start_by_id: int.tryParse(
             form['start_by_id']?.toString() ?? '',
           ),
           end_by_id: int.tryParse(
             form['end_by_id']?.toString() ?? '',
           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
-          start_by_id: int.tryParse(form['start_by_id']?.toString() ?? ''),
-          end_by_id: int.tryParse(form['end_by_id']?.toString() ?? ''),
->>>>>>> 2187e9a5 (feat: multi mesin dyeing - long slitting)
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
           machines: form['machines'] ?? [],
           machine_ids: form['machine_ids'] ?? [],
           attachments: form['attachments'],

@@ -37,22 +37,10 @@ class Dyeing {
   final semifinished_products;
   final machines;
   final machine_ids;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final String? rework_category;
   final rework_type;
   final rework_method;
   final rework_categories;
-<<<<<<< HEAD
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
-  final String? rework_category;
-  final rework_type;
-  final rework_method;
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
->>>>>>> 20db5580 (fix: rework dyeing in process detail)
 
   Dyeing(
       {this.id,
@@ -84,27 +72,11 @@ class Dyeing {
       this.greige_item_id,
       this.semifinished_products,
       this.machine_ids,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.machines,
       this.rework_category,
       this.rework_type,
       this.rework_method,
       this.rework_categories});
-=======
-      this.machines});
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
-      this.machines,
-      this.rework_category,
-      this.rework_type,
-<<<<<<< HEAD
-      this.rework_method});
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
-      this.rework_method,
-      this.rework_categories});
->>>>>>> 20db5580 (fix: rework dyeing in process detail)
 
   factory Dyeing.fromJson(Map<String, dynamic> json) {
     return Dyeing(
@@ -138,22 +110,10 @@ class Dyeing {
       semifinished_products: json['semifinished_products'] ?? [],
       machines: json['machines'] ?? [],
       machine_ids: json['machine_ids'] ?? [],
-<<<<<<< HEAD
-<<<<<<< HEAD
       rework_category: json['rework_category'],
       rework_type: json['rework_type'] ?? [],
       rework_method: json['rework_method'] ?? [],
       rework_categories: json['rework_categories'] ?? [],
-<<<<<<< HEAD
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
-      rework_category: json['rework_category'],
-      rework_type: json['rework_type'] ?? [],
-      rework_method: json['rework_method'] ?? [],
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
->>>>>>> 20db5580 (fix: rework dyeing in process detail)
     );
   }
 
@@ -189,22 +149,10 @@ class Dyeing {
       'semifinished_products': semifinished_products,
       'machines': machines,
       'machine_ids': machine_ids,
-<<<<<<< HEAD
-<<<<<<< HEAD
       'rework_category': rework_category,
       'rework_type': rework_type,
       'rework_method': rework_method,
       'rework_categories': rework_categories,
-<<<<<<< HEAD
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
-=======
-      'rework_category': rework_category,
-      'rework_type': rework_type,
-      'rework_method': rework_method,
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
->>>>>>> 20db5580 (fix: rework dyeing in process detail)
     };
   }
 }

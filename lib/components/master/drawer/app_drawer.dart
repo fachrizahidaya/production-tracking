@@ -22,14 +22,7 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sizing',
     'Weaving',
     'Shearing',
-<<<<<<< HEAD
-<<<<<<< HEAD
     'Persiapan Dyeing',
-=======
->>>>>>> a1ea7df (feat: warping)
-=======
-    'Persiapan Dyeing',
->>>>>>> 57f45d55 (feat: persiapan dyeing)
     'Dyeing',
     'Press',
     'Tumbler',
@@ -43,121 +36,25 @@ class _AppDrawerState extends State<AppDrawer> {
     'Sorting',
     'Packing',
     'Laporan Produksi',
-<<<<<<< HEAD
-<<<<<<< HEAD
     'Evaluasi Rework',
     'Evaluasi BS',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    'Evaluasi GSM',
-=======
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
-    'Evaluasi Rework',
->>>>>>> 41ded02d (fix: rework)
-=======
->>>>>>> 58857212 (feat: notifikasi evaluasi bs)
-=======
-    'Evaluasi GSM',
->>>>>>> e2884b8b (fix: notification all evaluasi)
-=======
-    'Evaluasi GSM',
-=======
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
-    'Evaluasi GSM',
-<<<<<<< HEAD
-=======
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
-    'Evaluasi GSM',
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-<<<<<<< HEAD
->>>>>>> 20fcb172 (fix: notification all evaluasi)
-=======
-=======
-    'Notifikasi'
->>>>>>> d94a57a (feat:)
->>>>>>> a5b9c62d (feat:)
-=======
     'Evaluasi GSM',
     'Notifikasi'
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   ];
 
   final List<String> hiddenMenus = [
     'SPK',
     'Proses Produksi',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     'Produksi',
     'Pesanan',
-<<<<<<< HEAD
-=======
     'Laporan',
->>>>>>> a9344ef9 (fix: notification dan evaluasi rework)
-    'Order Greige',
-    'Desain',
-    'Warping',
-    'Sizing',
-    'Weaving',
-    'Shearing',
-    'Persiapan Dyeing',
-    'Anomali Data',
-    'Desain',
-<<<<<<< HEAD
-    'Notifikasi'
-=======
-    'Laporan',
-<<<<<<< HEAD
-    'Persiapan Dyeing'
->>>>>>> a1ea7df (feat: warping)
-=======
-=======
->>>>>>> 7a6aa3b1 (feat: model for report)
-    'Produksi',
-    'Pesanan',
-    'Order Greige',
-    'Desain',
-    'Warping',
-    'Sizing',
-    'Weaving',
-    'Shearing',
-    'Persiapan Dyeing',
-<<<<<<< HEAD
-    'Anomali Data'
->>>>>>> f6b18dcd (fix: adjust drawer)
-=======
-    'Anomali Data',
-    'Notifikasi'
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
-    'Laporan',
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-    'Produksi',
-    'Pesanan',
-    // 'Laporan',
-<<<<<<< HEAD
->>>>>>> 44aea830 (fix: dashboard)
-=======
     'Order Greige',
     'Anomali Data',
-<<<<<<< HEAD
-    'Desain'
->>>>>>> bce73725 (fix: hidden in drawer)
-=======
     'Desain',
-    'Notifikasi'
->>>>>>> 91183a33 (fix: rework)
-=======
->>>>>>> a5b9c62d (feat:)
+    'PSBR',
+    'SPK Greige',
+    'Persiapan Warping',
+    'Informasi',
   ];
 
   List<MenuItem> flattenMenus(List<MenuItem> menus) {
@@ -287,8 +184,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                             : item.title == 'Tumbler'
                                                                                 ? Icons.dry_cleaning_outlined
                                                                                 : item.title == 'Warping'
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                                                     ? Icons.join_inner_outlined
                                                                                     : item.title == 'Sizing'
                                                                                         ? Icons.straighten_outlined
@@ -296,8 +191,6 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                             ? Icons.grid_on
                                                                                             : item.title == 'Shearing'
                                                                                                 ? Icons.content_cut_outlined
-<<<<<<< HEAD
-<<<<<<< HEAD
                                                                                                 : item.title == 'Persiapan Dyeing'
                                                                                                     ? Icons.format_color_fill_outlined
                                                                                                     : item.title == 'Laporan Produksi'
@@ -306,141 +199,22 @@ class _AppDrawerState extends State<AppDrawer> {
                                                                                                             ? Icons.restart_alt_outlined
                                                                                                             : item.title == 'Evaluasi BS'
                                                                                                                 ? Icons.production_quantity_limits_outlined
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
->>>>>>> 20fcb172 (fix: notification all evaluasi)
-                                                                                                                : item.title == 'Evaluasi GSM'
-                                                                                                                    ? Icons.inventory_outlined
-                                                                                                                : item.title == 'Notifikasi'
-                                                                                                                    ? Icons.notifications_outlined
-                                                                                                                    : Icons.menu,
-=======
-<<<<<<< HEAD
-                                                                                    ? Icons.straighten_outlined
-=======
-                                                                                    ? Icons.join_inner_outlined
->>>>>>> a1ea7df (feat: warping)
-                                                                                    : item.title == 'Sizing'
-                                                                                        ? Icons.straighten_outlined
-                                                                                        : item.title == 'Weaving'
-                                                                                            ? Icons.grid_on
-                                                                                            : item.title == 'Shearing'
-                                                                                                ? Icons.content_cut_outlined
-                                                                                                : Icons.menu,
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-                                                                                                : item.title == 'Laporan Produksi'
-                                                                                                    ? Icons.file_copy_outlined
-<<<<<<< HEAD
-                                                                                                    : Icons.menu,
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
-                                                                                                    : item.title == 'Persiapan Dyeing'
-                                                                                                        ? Icons.format_color_fill_outlined
-=======
-                                                                                                : item.title == 'Persiapan Dyeing'
-                                                                                                    ? Icons.format_color_fill_outlined
-                                                                                                    : item.title == 'Laporan Produksi'
-                                                                                                        ? Icons.file_copy_outlined
-<<<<<<< HEAD
->>>>>>> 260d45ce (fix: dashboard)
-                                                                                                        : Icons.menu,
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-                                                                                                        : item.title == 'Evaluasi Rework'
-                                                                                                            ? Icons.restart_alt_outlined
-                                                                                                            : Icons.menu,
->>>>>>> 41ded02d (fix: rework)
-=======
-                                                                                                                : Icons.menu,
->>>>>>> 58857212 (feat: notifikasi evaluasi bs)
-=======
-                                                                                                                : item.title == 'Evaluasi GSM'
-                                                                                                                    ? Icons.inventory_outlined
-                                                                                                                    : Icons.menu,
->>>>>>> e2884b8b (fix: notification all evaluasi)
-=======
-                                                                                                                : Icons.menu,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-<<<<<<< HEAD
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
-=======
-                                                                                                                : item.title == 'Evaluasi GSM'
-                                                                                                                    ? Icons.inventory_outlined
-                                                                                                                    : Icons.menu,
->>>>>>> 07c9d40 (fix: notification all evaluasi)
->>>>>>> 20fcb172 (fix: notification all evaluasi)
-=======
                                                                                                                 : item.title == 'Evaluasi GSM'
                                                                                                                     ? Icons.inventory_outlined
                                                                                                                     : item.title == 'Notifikasi'
                                                                                                                         ? Icons.notifications_outlined
-                                                                                                                        : Icons.menu,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
+                                                                                                                        : item.title == 'Work Order'
+                                                                                                                            ? Icons.article
+                                                                                                                            : Icons.menu,
                           ),
                           onTap: () {
                             Navigator.pop(context);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                            if (item.title == 'Warping') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const WarpingScreen(),
-                                ),
-                              );
-                              return;
-                            }
-                            if (item.title == 'Sizing') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const SizingScreen(),
-                                ),
-                              );
-                              return;
-                            }
-                            if (item.title == 'Weaving') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const WeavingScreen(),
-                                ),
-                              );
-                              return;
-                            }
-                            if (item.title == 'Shearing') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const ShearingScreen(),
-                                ),
-                              );
-                              return;
-                            }
-
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> a1ea7df (feat: warping)
-                            if (item.route != null) {
-                              Navigator.pushNamed(context, item.route!);
-=======
                             final route = item.title == 'Notifikasi'
                                 ? '/anomalies'
                                 : item.route;
                             if (route != null) {
                               Navigator.pushNamed(context, route);
->>>>>>> a5b9c62d (feat:)
                             }
                           },
                         );

@@ -456,10 +456,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -482,11 +478,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     }
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> ca871cd (fix: loading finish)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   void _setNumberControllerText(
     TextEditingController controller,
     dynamic value,
@@ -1177,10 +1168,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5de4d29 (fix: alert jika ada proses sebelumnya belum selesai)
   bool canStartCurrentProcess(
     List<dynamic> processes,
     String currentProcess,
@@ -1210,11 +1197,6 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
     return true;
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> e98896b (fix: finish)
-=======
->>>>>>> 5de4d29 (fix: alert jika ada proses sebelumnya belum selesai)
   double _getTotalItemQty() {
     final workOrders = data['work_orders'];
     if (workOrders == null) return 0;
@@ -1649,15 +1631,7 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               validateWeight: _validateWeight,
                               weightWarning: _weightWarningValidationMessage,
                               validateQty: _validateQty,
-<<<<<<< HEAD
-<<<<<<< HEAD
                               // qtyWarning: _itemWarningValidationMessage,
-=======
-                              qtyWarning: _itemWarningValidationMessage,
->>>>>>> e98896b (fix: finish)
-=======
-                              // qtyWarning: _itemWarningValidationMessage,
->>>>>>> e96383b4 (fix: warning cross cutting, sewing)
                               weightDefect: _weightDefectController,
                               combing: _combingController,
                               spraying: _sprayingController,
@@ -1669,6 +1643,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                               finishedItem: finishedItemOption,
                               finishedItemGrb: finishedItemGrb,
                               isInitializing: _isInitializingSorting,
+                              reworkCategoryOption: reworkCategoryOption,
+                              onMachineChanged: () => setState(() {}),
+                              qtyWarning: _itemWarningValidationMessage,
                               handleItemQtyWarning: (hasWarning) {
                                 if (!mounted) return;
 
@@ -1676,18 +1653,9 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
                                   _hasItemQtyWarning = hasWarning;
                                 });
                               },
-<<<<<<< HEAD
-<<<<<<< HEAD
                               onAttachmentChanged: () {
                                 _updateAttachmentStatus();
                               },
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-                              onAttachmentChanged: () {
-                                _updateAttachmentStatus();
-                              },
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
                             ),
                       WorkOrderInfoTab(
                         data: data['work_orders'],
@@ -1721,18 +1689,8 @@ class _FinishProcessManualState extends State<FinishProcessManual> {
             isAllMachineDone: isAllMachineDone,
             label: widget.label,
             hasItemQtyWarning: _hasItemQtyWarning,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
             hasPackingGradeAStocks: _hasPackingGradeAStocks,
->>>>>>> 66533988 (fix: finish packing ambil stok)
             hasAttachment: _hasAttachment,
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-            hasAttachment: _hasAttachment,
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
           ),
         ),
       ),

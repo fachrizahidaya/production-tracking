@@ -5,33 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import connectivity_plus
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-import device_info_plus
-=======
->>>>>>> b8a5267 (chore: internet checker)
-=======
->>>>>>> d6bd8c2f (chore: package)
-=======
-import connectivity_plus
->>>>>>> 94db6889 (fix: card navigate to update)
-=======
-import device_info_plus
->>>>>>> 16778356 (feat: fcm notification)
-=======
->>>>>>> 7731bab3 (chore: install package)
-=======
->>>>>>> 50d777c9 (chore: package)
-=======
 import connectivity_plus
 import device_info_plus
->>>>>>> 97ee959c (fix: UI dashboard)
 import file_picker
 import file_selector_macos
 import firebase_core
@@ -43,36 +18,13 @@ import path_provider_foundation
 import shared_preferences_foundation
 import sqflite_darwin
 import url_launcher_macos
+import video_compress
+import video_player_avfoundation
 import webview_flutter_wkwebview
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
-=======
->>>>>>> b8a5267 (chore: internet checker)
-=======
->>>>>>> d6bd8c2f (chore: package)
-=======
-  ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
->>>>>>> 94db6889 (fix: card navigate to update)
-=======
-  DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
->>>>>>> 16778356 (feat: fcm notification)
-=======
->>>>>>> 7731bab3 (chore: install package)
-=======
->>>>>>> 50d777c9 (chore: package)
-=======
   ConnectivityPlusPlugin.register(with: registry.registrar(forPlugin: "ConnectivityPlusPlugin"))
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
->>>>>>> 97ee959c (fix: UI dashboard)
   FilePickerPlugin.register(with: registry.registrar(forPlugin: "FilePickerPlugin"))
   FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
@@ -84,5 +36,7 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
+  VideoCompressPlugin.register(with: registry.registrar(forPlugin: "VideoCompressPlugin"))
+  VideoPlayerPlugin.register(with: registry.registrar(forPlugin: "VideoPlayerPlugin"))
   WebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "WebViewFlutterPlugin"))
 }

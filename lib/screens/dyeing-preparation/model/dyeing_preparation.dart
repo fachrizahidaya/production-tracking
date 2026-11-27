@@ -1,35 +1,13 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
-=======
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-import 'package:flutter/material.dart';
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 import 'package:textile_tracking/helpers/service/base_crud_service.dart';
 
 class DyeingPreparation {
   final id;
   final woId;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final items;
   final notes;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final attachments;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   final attachmentIds;
-=======
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
-=======
-  final attachments;
->>>>>>> e467a136 (fix: attachment for dyeing preparation)
-=======
-  final attachmentIds;
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
   DyeingPreparation(
       {this.id,
@@ -51,59 +29,6 @@ class DyeingPreparation {
   }
 
   Map<String, dynamic> toJson() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e467a136 (fix: attachment for dyeing preparation)
-    final data = {
-      'id': id,
-      'wo_id': woId,
-      'items': items,
-      'notes': notes,
-<<<<<<< HEAD
-<<<<<<< HEAD
-      'attachments': attachments,
-      'attachment_ids': attachmentIds,
-    };
-=======
-=======
-  final items;
-  final notes;
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
->>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
-=======
-  final attachmentIds;
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-
-  DyeingPreparation(
-      {this.id,
-      this.woId,
-      this.items,
-      this.notes,
-      this.attachments,
-      this.attachmentIds});
-
-  factory DyeingPreparation.fromJson(Map<String, dynamic> json) {
-    return DyeingPreparation(
-      id: json['id'],
-      woId: json['wo_id'],
-      items: json['items'] ?? [],
-      notes: json['notes'],
-      attachments: json['attachments'] ?? [],
-      attachmentIds: json['attachment_ids'] ?? [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    final data = {'id': id, 'wo_id': woId};
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-    final data = {'id': id, 'wo_id': woId, 'items': items, 'notes': notes};
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
     final data = {
       'id': id,
       'wo_id': woId,
@@ -112,18 +37,6 @@ class DyeingPreparation {
       'attachments': attachments,
       'attachment_ids': attachmentIds,
     };
->>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
-=======
-    final data = {'id': id, 'wo_id': woId, 'items': items, 'notes': notes};
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
-=======
-      'attachments': attachments
-=======
-      'attachments': attachments,
-      'attachment_ids': attachmentIds,
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
-    };
->>>>>>> e467a136 (fix: attachment for dyeing preparation)
 
     data.removeWhere((key, value) => value == null);
 
@@ -138,10 +51,6 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
           fromJson: (json) => DyeingPreparation.fromJson(json),
           toJson: (item) => item.toJson(),
         );
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 
   Future<void> fetchPreparationList(
     BuildContext context,
@@ -188,9 +97,4 @@ class DyeingPreparationService extends BaseCrudService<DyeingPreparation> {
       isSubmitting,
     );
   }
-<<<<<<< HEAD
-=======
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
 }

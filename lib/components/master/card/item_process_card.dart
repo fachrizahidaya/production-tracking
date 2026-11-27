@@ -156,22 +156,6 @@ class ItemProcessCard extends StatelessWidget {
                 status: item['status'],
                 withStatus: true,
               ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> bfc08f8 (update version 1.2.2 (#21))
-=======
->>>>>>> 827c1f7 (fix: hilangkan icon delete)
-=======
->>>>>>> 25aada69 (update version 1.2.2 (#21))
-=======
->>>>>>> d0f1b854 (update version 1.2.2 (#21))
             // if (canShowDelete && onDelete != null)
             //   IconButton(
             //     tooltip: 'Hapus',
@@ -187,47 +171,6 @@ class ItemProcessCard extends StatelessWidget {
             //     ),
             //     onPressed: onDelete,
             //   ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> cec4230 (chore: update app version)
-=======
->>>>>>> 94db6889 (fix: card navigate to update)
-            if (canShowDelete && onDelete != null)
-              IconButton(
-                tooltip: 'Hapus',
-                visualDensity: VisualDensity.compact,
-                constraints: BoxConstraints(
-                  minWidth: 36,
-                  minHeight: 36,
-                ),
-                icon: Icon(
-                  Icons.delete_outline,
-                  size: 20,
-                  color: Colors.red,
-                ),
-                onPressed: onDelete,
-              ),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 8bc14cd (fix: card navigate to update)
-=======
->>>>>>> bfc08f8 (update version 1.2.2 (#21))
-=======
->>>>>>> cec4230 (chore: update app version)
-=======
->>>>>>> 827c1f7 (fix: hilangkan icon delete)
-=======
->>>>>>> bb29b60 (fix: clear warning)
-=======
->>>>>>> 94db6889 (fix: card navigate to update)
-=======
->>>>>>> 25aada69 (update version 1.2.2 (#21))
-=======
->>>>>>> d0f1b854 (update version 1.2.2 (#21))
           ].separatedBy(CustomTheme().hGap('md')),
         ),
       ].separatedBy(CustomTheme().hGap('xl')),

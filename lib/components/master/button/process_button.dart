@@ -23,20 +23,9 @@ class ProcessButton extends StatefulWidget {
   final isAllMachineDone;
   final label;
   final hasItemQtyWarning;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final attachments;
   final hasAttachment;
-<<<<<<< HEAD
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-  final attachments;
-  final hasAttachment;
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
-=======
   final bool hasPackingGradeAStocks;
->>>>>>> 66533988 (fix: finish packing ambil stok)
 
   const ProcessButton(
       {super.key,
@@ -57,24 +46,10 @@ class ProcessButton extends StatefulWidget {
       this.withItemQtyAndWeight,
       this.isAllMachineDone,
       this.label,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.hasItemQtyWarning = false,
       this.attachments,
-<<<<<<< HEAD
-      this.hasAttachment});
-=======
-      this.hasItemQtyWarning = false});
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-      this.hasItemQtyWarning = false,
-      this.attachments,
-      this.hasAttachment});
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
-=======
       this.hasAttachment,
       this.hasPackingGradeAStocks = false});
->>>>>>> 66533988 (fix: finish packing ambil stok)
 
   @override
   State<ProcessButton> createState() => _ProcessButtonState();
@@ -83,41 +58,14 @@ class ProcessButton extends StatefulWidget {
 class _ProcessButtonState extends State<ProcessButton> {
   @override
   Widget build(BuildContext context) {
-    final bool hasBasicError =
-        widget.weightWarning != null || widget.qtyWarning != null;
+    final bool ignoresWarnings =
+        widget.label == 'Sorting' || widget.label == 'Packing';
+    final bool hasBasicError = !ignoresWarnings &&
+        (widget.weightWarning != null || widget.qtyWarning != null);
 
-<<<<<<< HEAD
     final bool isDyeingRework =
         widget.label == 'Dyeing' && widget.data?['rework'] == true;
-    final bool isNeedMachineValidation = [
-      'dyeing',
-      'press',
-      'tumbler',
-      'long slitting',
-      'long hemming',
-      'sewing',
-      'cross cutting'
-    ].contains(widget.label.toLowerCase());
 
-<<<<<<< HEAD
-=======
-    final machines = widget.data?['machines'] ?? widget.form?['machines'] ?? [];
-    final result = widget.isAllMachineDone(machines);
-=======
->>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
-    final bool isDyeingRework =
-        widget.label == 'Dyeing' && widget.data?['rework'] == true;
-    final bool isNeedMachineValidation = [
-      'dyeing',
-      'press',
-      'tumbler',
-      'long slitting',
-      'long hemming',
-      'sewing',
-      'cross cutting'
-    ].contains(widget.label.toLowerCase());
-
->>>>>>> b2f13701 (fix: kondisi button finish process)
     bool hasDyeingReworkError() {
       if (!isDyeingRework) {
         return false;
@@ -132,25 +80,7 @@ class _ProcessButtonState extends State<ProcessButton> {
           (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
           (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
     }
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-    bool hasMachineError() {
-      if (!isNeedMachineValidation) {
-        return false;
-      }
-
-      if (isDyeingRework) {
-        return machines.isNotEmpty && !result;
-      }
-
-      return !result;
-    }
->>>>>>> b2f13701 (fix: kondisi button finish process)
-
-=======
->>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
     double parseSafeWeight(dynamic value) {
       if (value == null) return 0;
 
@@ -213,10 +143,6 @@ class _ProcessButtonState extends State<ProcessButton> {
             ? hasInvalidQtyItems()
             : false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
     final bool hasPackingAttachmentError = widget.label == 'Packing' &&
         ((widget.attachments == null) ||
             (widget.attachments is! List) ||
@@ -228,33 +154,10 @@ class _ProcessButtonState extends State<ProcessButton> {
         hasWeightItemError ||
         hasQtyItemError ||
         hasDyeingReworkError() ||
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         // hasPackingAttachmentError ||
-<<<<<<< HEAD
-=======
-    final bool isDisabled = hasBasicError ||
-        hasWeightItemError ||
-        hasQtyItemError ||
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-        hasMachineError() ||
->>>>>>> b2f13701 (fix: kondisi button finish process)
-=======
->>>>>>> 9965df4b (fix: hilangkan cek status mesin saat selesai)
-=======
-        hasPackingAttachmentError ||
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
-=======
-        // hasPackingAttachmentError ||
->>>>>>> 6578af90 (fix: button untuk persiapan dyeing)
-        widget.hasItemQtyWarning == true;
-=======
-        (widget.hasItemQtyWarning == true &&
+        (!ignoresWarnings &&
+            widget.hasItemQtyWarning == true &&
             !widget.hasPackingGradeAStocks);
->>>>>>> 66533988 (fix: finish packing ambil stok)
 
     return SafeArea(
       child: Padding(

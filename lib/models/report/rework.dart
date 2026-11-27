@@ -43,14 +43,7 @@ class ReworkListItem {
   final dyeing;
   final reworkReference;
   final reworkCategories;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final item;
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
-  final item;
->>>>>>> 0e409703 (fix: evaluasi)
   final startDate;
   final endDate;
 
@@ -66,30 +59,14 @@ class ReworkListItem {
       this.dyeing,
       this.reworkReference,
       this.reworkCategories,
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.item,
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
-      this.item,
->>>>>>> 0e409703 (fix: evaluasi)
       this.endDate,
       this.startDate});
 
   factory ReworkListItem.fromJson(Map<String, dynamic> json) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     final wo = json['work_order'] ?? {};
     final woItems = wo is Map ? wo['items'] : null;
     final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
-    final wo = json['work_order'] ?? {};
-    final woItems = wo is Map ? wo['items'] : null;
-    final woItem = woItems is List && woItems.isNotEmpty ? woItems.first : null;
->>>>>>> 5e38e0f3 (fix:)
     return ReworkListItem(
         id: json['id'] ?? '',
         reworkNo: json['rework_no'] ??
@@ -99,15 +76,7 @@ class ReworkListItem {
             '',
         startDate: json['created_at'] ?? '',
         endDate: json['completed_at'] ?? '',
-<<<<<<< HEAD
-<<<<<<< HEAD
         wo: wo,
-=======
-        wo: json['work_order'] ?? {},
->>>>>>> 41ded02d (fix: rework)
-=======
-        wo: wo,
->>>>>>> 5e38e0f3 (fix:)
         actionPlan: json['action_plan'] ?? '',
         preventivePlan: json['preventive_plan'] ?? '',
         reason: json['reasons'] ?? [],
@@ -116,38 +85,7 @@ class ReworkListItem {
         reworkCategories: json['rework_categories'] ??
             json['dyeing']?['rework_categories'] ??
             [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
-        item: json['item'] ?? json['dyeing']?['item'] ?? {},
->>>>>>> 0e409703 (fix: evaluasi)
-=======
-        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
->>>>>>> 5e38e0f3 (fix:)
-=======
-=======
->>>>>>> 0c3d8444 (fix:)
-        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
-=======
-        item: json['item'] ?? json['dyeing']?['item'] ?? {},
->>>>>>> 991dab5 (fix: evaluasi)
-<<<<<<< HEAD
->>>>>>> bd0b8f00 (fix: evaluasi)
-=======
-=======
-        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
->>>>>>> aa49533 (fix:)
->>>>>>> 0c3d8444 (fix:)
-=======
-        item: woItem ?? json['item'] ?? json['dyeing']?['item'] ?? {},
->>>>>>> 0ba64c26 (chore: adjust fase-2)
         status: json['status'] ?? '',
         submitted: json['submitted_by'] ?? {});
   }

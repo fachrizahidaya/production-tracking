@@ -1,45 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'dart:io';
 
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-import 'dart:io';
-
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
->>>>>>> 96e137ef (feat: persiapan dyeing detail)
-import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
->>>>>>> fa574d36 (fix: detail persiapan dyeing)
-=======
-import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
->>>>>>> f93a876f (fix: detail persiapan dyeing)
-=======
-import 'package:textile_tracking/components/master/container/template.dart';
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
@@ -47,42 +14,8 @@ import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_bytes.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
 import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-=======
-=======
-import 'dart:io';
-
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/detail/dyeing_preparation_detail_list.dart';
-import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
-import 'package:textile_tracking/components/master/container/template.dart';
-=======
->>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
-import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/screens/dyeing-preparation/detail/edit_dyeing_preparation.dart';
-import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_preparation.dart';
-<<<<<<< HEAD
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
-import 'package:url_launcher/url_launcher.dart';
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
 class DyeingPreparationDetailScreen extends StatefulWidget {
   final id;
@@ -110,34 +43,7 @@ class _DyeingPreparationDetailScreenState
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   bool _isLoading = true;
   String? _errorMessage;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   Map<String, dynamic> _data = {};
-=======
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-  final OptionGreigeOrderService _greigeOrderService =
-      OptionGreigeOrderService();
-
-  Map<String, dynamic> _greigeOrder = {};
-<<<<<<< HEAD
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
->>>>>>> bdffbd30 (fix: detail persiapan dyeing)
-=======
-  Map<String, dynamic> _data = {};
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
->>>>>>> fa574d36 (fix: detail persiapan dyeing)
-=======
-  Map<String, dynamic> _data = {};
->>>>>>> f93a876f (fix: detail persiapan dyeing)
 
   @override
   void initState() {
@@ -163,113 +69,10 @@ class _DyeingPreparationDetailScreenState
       final dyeingPreparationService =
           Provider.of<DyeingPreparationService>(context, listen: false);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       await dyeingPreparationService.fetchPreparationDetail(
         context,
         widget.id,
       );
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      await dyeingPreparationService.getDataView(context, widget.id);
->>>>>>> b70754b7 (feat: persiapan dyeing)
-
-      final detail = _detailData(dyeingPreparationService.dataView);
-=======
-      await warpingService.getDataView(context, widget.id);
-
-      final detail = _detailData(warpingService.dataView);
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-
-      final detail = _detailData(dyeingPreparationService.dataView);
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-
-      final orderGreige = detail['order_greige'] is Map
-          ? Map<String, dynamic>.from(detail['order_greige'])
-          : <String, dynamic>{};
-
-<<<<<<< HEAD
-        _isLoading = false;
-      });
-<<<<<<< HEAD
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted && _isLoading) {
-=======
-      await dyeingPreparationService.getDataView(context, widget.id);
-
-      final detail = _detailData(dyeingPreparationService.dataView);
-
-      final orderGreige = detail['order_greige'] is Map
-          ? Map<String, dynamic>.from(detail['order_greige'])
-          : <String, dynamic>{};
-
-      final orderGreigeId = orderGreige['id'];
-
-      if (orderGreigeId != null) {
-        await _greigeOrderService.getDataView(orderGreigeId.toString());
-
-        final response = _greigeOrderService.dataView;
-
-        _greigeOrder = response['data'] is Map<String, dynamic>
-            ? Map<String, dynamic>.from(response['data'])
-            : Map<String, dynamic>.from(response);
-      } else {
-        _greigeOrder = {};
-      }
-=======
-      await service.getDataView(context, widget.id);
->>>>>>> 252dc540 (feat: persiapan dyeing detail)
-=======
-      await service.getDataView(context, widget.id);
->>>>>>> 96e137ef (feat: persiapan dyeing detail)
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted) {
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted && _isLoading) {
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-      final orderGreigeId = orderGreige['id'];
-
-      if (orderGreigeId != null) {
-        await _greigeOrderService.getDataView(orderGreigeId.toString());
-
-        final response = _greigeOrderService.dataView;
-
-        _greigeOrder = response['data'] is Map<String, dynamic>
-            ? Map<String, dynamic>.from(response['data'])
-            : Map<String, dynamic>.from(response);
-      } else {
-        _greigeOrder = {};
-      }
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted) {
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-      await warpingService.getDataView(context, widget.id);
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
       final detail = _detailData(dyeingPreparationService.dataView);
 
@@ -282,7 +85,6 @@ class _DyeingPreparationDetailScreenState
       _errorMessage = e.toString();
     } finally {
       if (mounted && _isLoading) {
->>>>>>> f93a876f (fix: detail persiapan dyeing)
         setState(() {
           _isLoading = false;
         });
@@ -296,16 +98,6 @@ class _DyeingPreparationDetailScreenState
     return response;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   int _fileSize(dynamic value) {
     if (value is int) return value;
     if (value is num) return value.toInt();
@@ -460,64 +252,9 @@ class _DyeingPreparationDetailScreenState
     }).toList();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
-  Widget _buildAttachmentSection(BuildContext context) {
-    final attachments = (_data['attachments'] ?? []) as List<dynamic>;
-
-    if (attachments.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: CustomTheme().padding('content'),
-      child: TemplateCard(
-        icon: Icons.attachment_outlined,
-        title: 'Lampiran',
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 260),
-          child: SingleChildScrollView(
-            child: Column(
-              children: _buildAttachmentList(context),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-<<<<<<< HEAD
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> e46ec579 (fix: rumus persiapan dyeing untuk qty dan berat)
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
-=======
-  Future<void> _handleDelete(Map<String, dynamic> data) async {
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-  Future _handleDelete(dynamic _) async {
-    final data = _data;
-
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-  Future<void> _handleDelete(Map<String, dynamic> data) async {
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-  Future _handleDelete(dynamic _) async {
-    final data = _data;
-
->>>>>>> f93a876f (fix: detail persiapan dyeing)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -534,54 +271,18 @@ class _DyeingPreparationDetailScreenState
     showConfirmationDialog(
       context: context,
       title: 'Hapus Data',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
-=======
-      message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-      message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-      message: 'Apakah Anda yakin ingin menghapus proses persiapan dyeing?',
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-      message: 'Apakah Anda yakin ingin menghapus proses Persiapan Dyeing?',
->>>>>>> f93a876f (fix: detail persiapan dyeing)
       isLoading: _deleteLoading,
       buttonBackground: CustomTheme().buttonColor('danger'),
       onConfirm: () async {
         try {
           final message = await Provider.of<DyeingPreparationService>(context,
                   listen: false)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
->>>>>>> f93a876f (fix: detail persiapan dyeing)
               .deleteItem(
             context,
             widget.id.toString(),
             _deleteLoading,
           );
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-              .deleteItem(context, widget.id.toString(), _deleteLoading);
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-              .deleteItem(context, widget.id.toString(), _deleteLoading);
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
->>>>>>> f93a876f (fix: detail persiapan dyeing)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -613,14 +314,6 @@ class _DyeingPreparationDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
->>>>>>> f93a876f (fix: detail persiapan dyeing)
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -639,125 +332,6 @@ class _DyeingPreparationDetailScreenState
                   id: widget.id,
                 ),
               ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: SafeArea(
-        child: Consumer<DyeingPreparationService>(
-          builder: (context, service, _) {
-            if (_isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (_errorMessage != null) {
-              return _ErrorView(
-                message: _errorMessage!,
-                onRetry: _fetchDetail,
-              );
-            }
-
-            final data = Map<String, dynamic>.from(
-              _detailData(service.dataView),
->>>>>>> b70754b7 (feat: persiapan dyeing)
-            );
-
-<<<<<<< HEAD
-            if (_greigeOrder.isNotEmpty) {
-              data['order_greige'] = _greigeOrder;
-            }
-<<<<<<< HEAD
-          },
-          id: widget.id,
-          updateStatus:
-              widget.canUpdate == true && (_data['can_update'] != false),
-          deleteStatus:
-              widget.canDelete == true && (_data['can_delete'] != false),
-          label: 'Persiapan Dyeing',
-        ),
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: SafeArea(
-          child: Consumer<DyeingPreparationService>(
-            builder: (context, service, _) {
-              if (_isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (_errorMessage != null) {
-                return _ErrorView(
-                  message: _errorMessage!,
-                  onRetry: _fetchDetail,
-                );
-              }
-
-              final data = Map<String, dynamic>.from(
-                _detailData(service.dataView),
-              );
-
-              return Column(
-                children: [
-                  Expanded(
-                    child: DyeingPreparationDetailList(
-                      data: data,
-                      processName: 'Persiapan Dyeing',
-                      processNoKey: 'prep_no',
-                      onRefresh: _fetchDetail,
-                      canDelete: widget.canDelete,
-                      canUpdate: widget.canUpdate,
-                      onDelete: () => _handleDelete(data),
-<<<<<<< HEAD
-<<<<<<< HEAD
-                      handleBuildAttachment: _buildAttachmentList,
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
-                      handleBuildAttachment: _buildAttachmentList,
->>>>>>> 52b21ae2 (fix: rumus persiapan dyeing untuk qty dan berat)
-                      onEdit: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditDyeingPreparationScreen(
-                              id: widget.id,
-                            ),
-                          ),
-                        );
-
-                        if (!mounted) return;
-
-                        if (result == true) {
-                          Navigator.pop(context, true);
-                        }
-                      },
-<<<<<<< HEAD
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-=======
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: SafeArea(
-        child: Consumer<DyeingPreparationService>(
-          builder: (context, service, _) {
-            if (_isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (_errorMessage != null) {
-              return _ErrorView(
-                message: _errorMessage!,
-                onRetry: _fetchDetail,
-              );
-            }
-
-            final data = Map<String, dynamic>.from(
-              _detailData(service.dataView),
-=======
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
             );
 
             if (!mounted) return;
@@ -766,93 +340,6 @@ class _DyeingPreparationDetailScreenState
               Navigator.pop(context, true);
             }
           },
-<<<<<<< HEAD
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-          id: widget.id,
-          updateStatus:
-              widget.canUpdate == true && (_data['can_update'] != false),
-          deleteStatus:
-              widget.canDelete == true && (_data['can_delete'] != false),
-          label: 'Persiapan Dyeing',
-        ),
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: SafeArea(
-          child: Consumer<DyeingPreparationService>(
-            builder: (context, service, _) {
-              if (_isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (_errorMessage != null) {
-                return _ErrorView(
-                  message: _errorMessage!,
-                  onRetry: _fetchDetail,
-                );
-              }
-
-              final data = Map<String, dynamic>.from(
-                _detailData(service.dataView),
-              );
-
-              return DyeingPreparationDetailList(
-                data: data,
-                processName: 'Persiapan Dyeing',
-                processNoKey: 'prep_no',
-                onRefresh: _fetchDetail,
-                canDelete: widget.canDelete,
-                canUpdate: widget.canUpdate,
-                onDelete: () => _handleDelete(data),
-                onEdit: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditDyeingPreparationScreen(
-                        id: widget.id,
-                      ),
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
->>>>>>> 27570e76 (fix: detail persiapan dyeing)
-=======
-            return GreigeProcessDetailList(
-=======
-            return DyeingPreparationDetailList(
->>>>>>> 96e137ef (feat: persiapan dyeing detail)
-              data: data,
-              processName: 'Persiapan Dyeing',
-              processNoKey: 'prep_no',
-              onRefresh: _fetchDetail,
-              canDelete: widget.canDelete,
-              canUpdate: widget.canUpdate,
-              onDelete: () => _handleDelete(data),
-              onEdit: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => EditDyeingPreparationScreen(
-                      id: widget.id,
-                    ),
-                  ),
-                );
-=======
-            );
-
-            if (!mounted) return;
->>>>>>> f93a876f (fix: detail persiapan dyeing)
-
-            if (result == true) {
-              Navigator.pop(context, true);
-            }
-          },
-<<<<<<< HEAD
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
           id: widget.id,
           updateStatus:
               widget.canUpdate == true && (_data['can_update'] != false),
@@ -913,7 +400,6 @@ class _DyeingPreparationDetailScreenState
               );
             },
           ),
->>>>>>> f93a876f (fix: detail persiapan dyeing)
         ),
       ),
     );

@@ -79,24 +79,10 @@ class FinishFormTab extends StatefulWidget {
   final finishedItemGrb;
   final finishedItemGood;
   final isInitializing;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final reworkCategoryOption;
   final onMachineChanged;
-<<<<<<< HEAD
-=======
-  final reworkCategoryOption;
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
   final handleItemQtyWarning;
   final onAttachmentChanged;
-<<<<<<< HEAD
-=======
-  final handleItemQtyWarning;
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
 
   const FinishFormTab(
       {super.key,
@@ -175,31 +161,10 @@ class FinishFormTab extends StatefulWidget {
       this.finishedItemGood,
       this.finishedItemGrb,
       this.isInitializing,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.reworkCategoryOption,
       this.onMachineChanged,
       this.handleItemQtyWarning,
       this.onAttachmentChanged});
-=======
-      this.handleItemQtyWarning});
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-      this.handleItemQtyWarning,
-<<<<<<< HEAD
-      this.reworkCategoryOption});
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
-      this.reworkCategoryOption,
-      this.onMachineChanged});
->>>>>>> b2f13701 (fix: kondisi button finish process)
-=======
-      this.reworkCategoryOption,
-      this.onMachineChanged,
-      this.handleItemQtyWarning,
-      this.onAttachmentChanged});
->>>>>>> 222a4547 (fix: necessary)
 
   @override
   State<FinishFormTab> createState() => _FinishFormTabState();
@@ -233,16 +198,6 @@ class _FinishFormTabState extends State<FinishFormTab>
                   handleChangeInput: widget.handleChangeInput,
                   id: widget.id,
                   processData: widget.processData,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                  isLoading: widget.isLoading,
->>>>>>> e98896b (fix: finish)
-=======
->>>>>>> e03dd57 (chore: remove unnecessary)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
                   withItemGrade: widget.withItemGrade,
                   itemGradeOption: widget.itemGradeOption,
                   qty: widget.qty,
@@ -271,24 +226,10 @@ class _FinishFormTabState extends State<FinishFormTab>
                   dyeingQty: widget.dyeingQty,
                   finishedItemGrb: widget.finishedItemGrb,
                   isInitializing: widget.isInitializing,
-<<<<<<< HEAD
-<<<<<<< HEAD
                   reworkCategoryOption: widget.reworkCategoryOption,
                   onMachineChanged: widget.onMachineChanged,
-<<<<<<< HEAD
-=======
-                  reworkCategoryOption: widget.reworkCategoryOption,
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> b2f13701 (fix: kondisi button finish process)
                   handleItemQtyWarning: widget.handleItemQtyWarning,
                   onAttachmentChanged: widget.onAttachmentChanged,
-<<<<<<< HEAD
-=======
-                  handleItemQtyWarning: widget.handleItemQtyWarning,
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> eeae9f55 (fix: attachment mandatory for packing)
                 ),
               ],
             ),

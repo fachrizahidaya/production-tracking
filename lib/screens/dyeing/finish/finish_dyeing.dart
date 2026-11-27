@@ -101,27 +101,9 @@ class _FinishDyeingState extends State<FinishDyeing> {
           'qty': form['qty'],
           'notes': form['notes'] ?? '',
           'rework': form['rework'] == true ? 1 : 0,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           'rework_category': form['rework_category'],
           'rework_type': form['rework_type'] ?? [],
           'rework_method': form['rework_method'] ?? [],
-=======
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-          'rework_category': form['rework_category'],
-          'rework_type': form['rework_type'] ?? [],
-          'rework_method': form['rework_method'] ?? [],
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> cb30986c (fix: finish dyeing)
-=======
-          'rework_category': form['rework_category'],
-          'rework_type': form['rework_type'] ?? [],
-          'rework_method': form['rework_method'] ?? [],
->>>>>>> d50080d8 (fix: rework dyeing)
           '_method': 'PATCH',
           'attachments': form['attachments'],
         };

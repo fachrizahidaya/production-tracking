@@ -47,17 +47,6 @@ class SortingSection extends StatefulWidget {
 class _SortingSectionState extends State<SortingSection> {
   num _gradeAInput(int itemIndex) {
     if (itemIndex < 0 || itemIndex >= _items.length) return 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     final item = _items[itemIndex];
     final grades = item['grades'] ?? [];
     num total = 0;
@@ -79,89 +68,11 @@ class _SortingSectionState extends State<SortingSection> {
     for (final transfer in transfers) {
       if (transfer is Map) {
         total += parseSafe(transfer['qty']);
-<<<<<<< HEAD
-=======
-    final grades = _items[itemIndex]['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += num.tryParse(grade['qty'].toString()) ?? 0;
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-    final item = _items[itemIndex];
-    final grades = item['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += parseSafe(grade['qty']);
-      }
-    }
-
-    return total +
-        _transferQty(item['transfers_in']) -
-        _transferQty(item['transfers_out']);
-  }
-
-  num _transferQty(dynamic transfers) {
-    if (transfers is! List) return 0;
-
-    num total = 0;
-    for (final transfer in transfers) {
-      if (transfer is Map) {
-        total += parseSafe(transfer['qty']);
->>>>>>> d176fb50 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-    final item = _items[itemIndex];
-    final grades = item['grades'] ?? [];
-    num total = 0;
-    for (final grade in grades) {
-      if ((grade['code'] ?? '').toString().toUpperCase() == 'A') {
-        total += parseSafe(grade['qty']);
-      }
-    }
-
-    return total +
-        _transferQty(item['transfers_in']) -
-        _transferQty(item['transfers_out']);
-  }
-
-  num _transferQty(dynamic transfers) {
-    if (transfers is! List) return 0;
-
-    num total = 0;
-    for (final transfer in transfers) {
-      if (transfer is Map) {
-        total += parseSafe(transfer['qty']);
->>>>>>> d8b3b57 (fix: warning for qty grade A diambil)
->>>>>>> 17d98b41 (fix: warning for qty grade A diambil)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       }
     }
     return total;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   num? _maxGradeASourceQty(int itemIndex) {
     if (itemIndex < 0 || itemIndex >= _items.length) return null;
 
@@ -182,26 +93,6 @@ class _SortingSectionState extends State<SortingSection> {
     return null;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   dynamic get _currentWoId {
     final workOrder = widget.processData?['work_orders'];
     if (workOrder is Map && workOrder['id'] != null) return workOrder['id'];
@@ -1033,8 +924,6 @@ class _SortingSectionState extends State<SortingSection> {
     double gradeB = 0;
     double gradeBS = 0;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     for (final grade in grades) {
       if (grade is! Map) continue;
       final code = (grade['code'] ?? '').toString().toUpperCase();
@@ -1042,32 +931,11 @@ class _SortingSectionState extends State<SortingSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
-=======
-    double spraying = 0;
-    double combing = 0;
-    double reworkLongHemming = 0;
-
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-    for (final grade in grades) {
-      if (grade is! Map) continue;
-      final code = (grade['code'] ?? '').toString().toUpperCase();
-      final qty = _parseQty(grade['qty']);
-
-      if (code == 'A') {
-<<<<<<< HEAD
-        gradeA += qty;
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-        gradeA += _summaryGradeA(item, grade, itemIndex);
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
         gradeBS += qty;
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
     }
 
     final repair = grades.isEmpty
@@ -1076,26 +944,6 @@ class _SortingSectionState extends State<SortingSection> {
             _parseQty(grades[0]['rework_long_hemming']) +
             _parseQty(grades[0]['combing']);
     final totalSorting = gradeA + gradeB + gradeBS + repair;
-=======
-
-      spraying += _parseQty(grade['spraying']);
-      combing += _parseQty(grade['combing']);
-      reworkLongHemming += _parseQty(grade['rework_long_hemming']);
-    }
-
-    final totalSorting =
-        gradeA + gradeB + gradeBS + spraying + combing + reworkLongHemming;
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-    }
-
-    final repair = grades.isEmpty
-        ? 0.0
-        : _parseQty(grades[0]['spraying']) +
-            _parseQty(grades[0]['rework_long_hemming']) +
-            _parseQty(grades[0]['combing']);
-    final totalSorting = gradeA + gradeB + gradeBS + repair;
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 
     final lowerLimit = referenceQty * 0.90;
     final upperLimit = referenceQty * 1.10;
@@ -1106,18 +954,8 @@ class _SortingSectionState extends State<SortingSection> {
 
       return 'Total hasil sortir ${totalSorting < referenceQty ? 'kurang' : 'lebih'} '
           '${differencePercent.abs().toStringAsFixed(2)}% '
-<<<<<<< HEAD
-<<<<<<< HEAD
           '(Batas: ${formatNumber(lowerLimit)} – '
           '${formatNumber(upperLimit)})';
-=======
-          '(Batas: ${lowerLimit.toStringAsFixed(0)} – '
-          '${upperLimit.toStringAsFixed(0)})';
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-          '(Batas: ${formatNumber(lowerLimit)} – '
-          '${formatNumber(upperLimit)})';
->>>>>>> 87510740 (fix: finish proses)
     }
 
     return null;
@@ -1135,22 +973,10 @@ class _SortingSectionState extends State<SortingSection> {
       }
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
 
     widget.onQtyWarning?.call(
       warning != null || sourceExceeded,
-=======
-    widget.onQtyWarning?.call(
-      warning != null,
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
-    final sourceExceeded = _sourceQtyExceeded.values.any((value) => value);
-
-    widget.onQtyWarning?.call(
-      warning != null || sourceExceeded,
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
     );
   }
 
@@ -1191,10 +1017,6 @@ class _SortingSectionState extends State<SortingSection> {
 
     return DefaultTabController(
       length: items.length,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -1214,44 +1036,9 @@ class _SortingSectionState extends State<SortingSection> {
                     CustomTheme().vGap('xl'),
                   ],
                   _buildGlobalSummary(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
                   const SizedBox(height: 16),
                   KeyedSubtree(
                     key: const ValueKey('sorting-edit-body'),
-=======
-                  KeyedSubtree(
-                    key: const ValueKey('sorting-finish-body'),
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-                  const SizedBox(height: 16),
-                  KeyedSubtree(
-                    key: const ValueKey('sorting-edit-body'),
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-                  const SizedBox(height: 16),
-                  KeyedSubtree(
-                    key: const ValueKey('sorting-edit-body'),
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-                  const SizedBox(height: 16),
-                  KeyedSubtree(
-                    key: const ValueKey('sorting-edit-body'),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                     child: Column(
                       children: [
                         Container(
@@ -1297,52 +1084,6 @@ class _SortingSectionState extends State<SortingSection> {
                         ),
                         _buildItemCard(itemIndex),
                       ].separatedBy(CustomTheme().vGap('xl')),
-<<<<<<< HEAD
-=======
-      child: Column(
-        children: [
-          /*
-|--------------------------------------------------------------------------
-| TAB HEADER
-|--------------------------------------------------------------------------
-*/
-          _buildGlobalSummary(),
-          SizedBox(height: 16),
-          _buildSortingWarning(),
-          SizedBox(height: 16),
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(
-                12,
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: List.generate(
-                  items.length,
-                  (index) => Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4,
-                      horizontal: 8,
-                    ),
-                    child: Tab(
-                      text: 'Item ${index + 1}',
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
                     ),
                   ),
                 ],
@@ -1371,57 +1112,15 @@ class _SortingSectionState extends State<SortingSection> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
         color: Colors.white,
         border: Border.all(
           width: 0.5,
           color: CustomTheme().colors('text-primary').withOpacity(0.2),
         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        color: Colors.grey[100],
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
-        color: Colors.grey[100],
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-        color: Colors.grey[100],
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
           if (qtyWarning != null) ...[
             _buildQtyWarning(qtyWarning),
             const SizedBox(height: 16),
@@ -1430,28 +1129,7 @@ class _SortingSectionState extends State<SortingSection> {
             key: ValueKey('sorting-item-fields-$itemIndex'),
             child: Column(
               children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          if (qtyWarning != null) _buildQtyWarning(qtyWarning),
->>>>>>> 87510740 (fix: finish proses)
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-          /*
-=======
                 /*
->>>>>>> 288ca806 (fix: warning qty sorting)
-=======
-                /*
-=======
-          /*
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-                /*
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       |--------------------------------------------------------------------------
       | GRADES
       |--------------------------------------------------------------------------
@@ -1471,45 +1149,6 @@ class _SortingSectionState extends State<SortingSection> {
                       SizedBox(height: 12),
                     ),
                   ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-              ].separatedBy(
-                SizedBox(height: 12),
-              ),
-            ),
-          ),
-          SortingGradeASourceSection(
-            key: ValueKey('grade-a-source-$itemIndex'),
-            initialTransfers: _gradeATransfers(itemIndex),
-            itemId: _gradeAItemId(itemIndex),
-            excludeWoId: _currentWoId,
-            sortingId: widget.processData?['id'],
-            gradeAInput: _gradeAInput(itemIndex),
-<<<<<<< HEAD
-<<<<<<< HEAD
-            maxTakenQty: _maxGradeASourceQty(itemIndex),
-            onTotalChanged: (total) {
-              setState(() => _absorbedQty[itemIndex] = total);
-=======
-            onTotalChanged: (total) {
-              _absorbedQty[itemIndex] = total;
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-            maxTakenQty: _maxGradeASourceQty(itemIndex),
-            onTotalChanged: (total) {
-              setState(() => _absorbedQty[itemIndex] = total);
->>>>>>> 1d6d2ab6 (fix: sortir)
-            },
-            onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
-            onExceededChanged: (exceeded) =>
-                _setSourceQtyExceeded(itemIndex, exceeded),
-          ),
-=======
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                 ),
                 SortingGradeASourceSection(
                   key: ValueKey('grade-a-source-$itemIndex'),
@@ -1526,35 +1165,6 @@ class _SortingSectionState extends State<SortingSection> {
                   onExceededChanged: (exceeded) =>
                       _setSourceQtyExceeded(itemIndex, exceeded),
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 288ca806 (fix: warning qty sorting)
-=======
-=======
-              ].separatedBy(
-                SizedBox(height: 12),
-              ),
-            ),
-          ),
-          SortingGradeASourceSection(
-            key: ValueKey('grade-a-source-$itemIndex'),
-            initialTransfers: _gradeATransfers(itemIndex),
-            itemId: _gradeAItemId(itemIndex),
-            excludeWoId: _currentWoId,
-            sortingId: widget.processData?['id'],
-            gradeAInput: _gradeAInput(itemIndex),
-            maxTakenQty: _maxGradeASourceQty(itemIndex),
-            onTotalChanged: (total) {
-              setState(() => _absorbedQty[itemIndex] = total);
-            },
-            onRowsChanged: (rows) => _setAbsorbedRows(itemIndex, rows),
-            onExceededChanged: (exceeded) =>
-                _setSourceQtyExceeded(itemIndex, exceeded),
-          ),
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 
                 /*
       |--------------------------------------------------------------------------
@@ -2356,38 +1966,8 @@ class _SortingSectionState extends State<SortingSection> {
 
       if (code == 'A') {
         gradeA += _summaryGradeA(item, grade, itemIndex);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
         gradeATaken += _gradeATaken(item, grade);
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(item, grade);
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 1691b544 (fix: sortir)
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(item, grade);
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(item, grade);
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
-        gradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
-        gradeATaken += _gradeATaken(item, grade);
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       } else if (code == 'B') {
         gradeB += qty;
       } else if (code == 'BS') {
@@ -2478,21 +2058,6 @@ class _SortingSectionState extends State<SortingSection> {
     return total;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   double _gradeAAdditional(Map item, Map grade, int itemIndex) {
     if (_absorbedQty.containsKey(itemIndex)) {
       return (_absorbedQty[itemIndex] ?? 0).toDouble();
@@ -2514,22 +2079,6 @@ class _SortingSectionState extends State<SortingSection> {
     return parseSafe(grade['qty_out']);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _summaryBox(
     String title,
     dynamic value, {
@@ -2591,46 +2140,8 @@ class _SortingSectionState extends State<SortingSection> {
 
         if (code == 'A') {
           totalGradeA += _summaryGradeA(item, grade, itemIndex);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-=======
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
           totalGradeAAdditional += _gradeAAdditional(item, grade, itemIndex);
->>>>>>> 288ca806 (fix: warning qty sorting)
           totalGradeATaken += _gradeATaken(item, grade);
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-          totalGradeATaken += _gradeATaken(item, grade);
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
-<<<<<<< HEAD
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
-=======
-          totalGradeAAdditional +=
-              _gradeAAdditional(item, grade, itemIndex);
-          totalGradeATaken += _gradeATaken(item, grade);
->>>>>>> dd7ae31 (fix: sortir)
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
         } else if (code == 'B') {
           totalGradeB += qty;
         } else if (code == 'BS') {
@@ -2699,26 +2210,7 @@ class _SortingSectionState extends State<SortingSection> {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Widget _buildQtyWarning(String warning) {
-=======
-  Widget _buildQtyWarning() {
-    String? warning;
-
-    for (int i = 0; i < _items.length; i++) {
-      warning = _validateSortingQty(i);
-
-      if (warning != null) {
-        break;
-      }
-    }
-
-    if (warning == null) {
-      return const SizedBox.shrink();
-    }
-
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -2750,88 +2242,4 @@ class _SortingSectionState extends State<SortingSection> {
       ),
     );
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 16aa2dc3 (chore)
-=======
-
->>>>>>> 4694f297 (chore)
-  Widget _buildSortingWarning() {
-    String? warning;
-
-    for (int i = 0; i < _items.length; i++) {
-      warning = _validateSortingQty(i);
-
-      if (warning != null) {
-        break;
-      }
-    }
-
-    if (warning == null) {
-      return const SizedBox.shrink();
-    }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildQtyWarning(String warning) {
->>>>>>> 87510740 (fix: finish proses)
-=======
->>>>>>> 16aa2dc3 (chore)
-=======
->>>>>>> 4694f297 (chore)
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Colors.orange.shade200,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: Colors.orange.shade700,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              warning,
-              style: TextStyle(
-                color: Colors.orange.shade900,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 6451ceb8 (Release/version 1.2.1 (#30))
-=======
->>>>>>> 16aa2dc3 (chore)
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 288ca806 (fix: warning qty sorting)
-=======
->>>>>>> 4694f297 (chore)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 }

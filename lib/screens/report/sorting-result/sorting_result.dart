@@ -39,31 +39,9 @@ class SortingResultComp extends StatefulWidget {
 class _SortingResultCompState extends State<SortingResultComp> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 210.0 : 200.0;
-=======
-    const double listHeight = 180;
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 210.0 : 200.0;
->>>>>>> 5ea4dfbf (fix: responsive size for report)
 
-=======
->>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
-=======
-    const double listHeight = 180;
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 210.0 : 200.0;
->>>>>>> b01fb0fd (fix: responsive size for report)
-
->>>>>>> 65038198 (feat:)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Container(
@@ -96,10 +74,6 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     )
                   ],
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 65038198 (feat:)
               ),
               SizedBox(
                 height: 8,
@@ -155,67 +129,21 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 height:
                     widget.loading || widget.items.isEmpty ? 120 : listHeight,
                 child: widget.loading
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     ? const Center(
-=======
-                    ? Center(
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-                    ? const Center(
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                    ? Center(
->>>>>>> 65038198 (feat:)
-=======
-                    ? const Center(
->>>>>>> 14df3077 (fix: report)
                         child: CircularProgressIndicator(),
                       )
                     : widget.items.isEmpty
                         ? NoData()
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
->>>>>>> 14df3077 (fix: report)
                         : LayoutBuilder(
                             builder: (context, constraints) {
                               // Keep the next card partially visible so the
                               // horizontal scrolling behavior is discoverable.
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
                               final cardWidth = (constraints.maxWidth *
                                       (isTablet ? 0.65 : 0.8))
                                   .clamp(
                                     isTablet ? 440.0 : 260.0,
                                     isTablet ? 520.0 : 300.0,
                                   )
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                              final cardWidth = (constraints.maxWidth * 0.8)
-                                  .clamp(260.0, 300.0)
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
-                              final cardWidth = (constraints.maxWidth * 0.8)
-                                  .clamp(260.0, 300.0)
->>>>>>> 14df3077 (fix: report)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
                                   .toDouble();
 
                               return ListView.builder(
@@ -233,88 +161,12 @@ class _SortingResultCompState extends State<SortingResultComp> {
                                     ),
                                   );
                                 },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 65038198 (feat:)
-                        : ListView.builder(
-                            controller: widget.scrollController,
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: widget.items.length,
-                            padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                            itemBuilder: (context, index) {
-                              return SizedBox(
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                width: 360,
-                                child: _buildSortingResultCard(
-                                    widget.items[index],
-                                    isLast: index == widget.items?.length - 1),
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                                width: 280,
-=======
-                                width: 360,
->>>>>>> 183ac4f1 (fix: report)
-                                child: _buildSortingResultCard(
-                                    widget.items[index],
-                                    isLast: index == widget.items?.length - 1),
->>>>>>> 65038198 (feat:)
-=======
->>>>>>> 14df3077 (fix: report)
                               );
                             },
                           ),
               ),
               const SizedBox(height: 4),
             ],
-<<<<<<< HEAD
-=======
-                SizedBox(
-                  height: 8,
-                ),
-                SizedBox(
-                  height: widget.loading || widget.items.isEmpty
-                      ? 120
-                      : (widget.items.length.clamp(1, 3).toDouble() * 106) + 6,
-                  child: widget.loading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : widget.items.isEmpty
-                          ? NoData()
-                          : ListView.builder(
-                              controller: widget.scrollController,
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: widget.items.length +
-                                  (widget.loadingMore ? 1 : 0),
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                              itemBuilder: (context, index) {
-                                if (index >= widget.items.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-                                }
-
-                                final item = widget.items[index];
-
-                                return _buildSortingResultCard(item);
-                              },
-                            ),
-                )
-              ],
-            ),
->>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
-=======
->>>>>>> 65038198 (feat:)
           )),
     );
   }
@@ -346,51 +198,19 @@ class _SortingResultCompState extends State<SortingResultComp> {
                     'Grade A',
                     '${widget.formatNumber(item.gradeA)} PCS',
                   ),
-<<<<<<< HEAD
-                ],
-              ),
-<<<<<<< HEAD
-            ),
-            const SizedBox(height: 14),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildSortingInfo(
-                    'Grade A',
-                    '${widget.formatNumber(item.gradeA)} PCS',
-                  ),
-=======
->>>>>>> 65038198 (feat:)
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade B',
-<<<<<<< HEAD
-<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeB)} PCS',
-=======
-                    widget.formatNumber(item.gradeB),
->>>>>>> 65038198 (feat:)
-=======
-                    '${widget.formatNumber(item.gradeB)} PCS',
->>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Grade BS',
-<<<<<<< HEAD
-<<<<<<< HEAD
                     '${widget.formatNumber(item.gradeBS)} PCS',
-=======
-                    widget.formatNumber(item.gradeBS),
->>>>>>> 65038198 (feat:)
-=======
-                    '${widget.formatNumber(item.gradeBS)} PCS',
->>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
               ],
@@ -402,107 +222,26 @@ class _SortingResultCompState extends State<SortingResultComp> {
                 Expanded(
                   child: _buildSortingInfo(
                     'Total Qty',
-<<<<<<< HEAD
-<<<<<<< HEAD
                     '${widget.formatNumber(item.totalQty)} PCS',
-=======
-                    widget.formatNumber(item.totalQty),
->>>>>>> 65038198 (feat:)
-=======
-                    '${widget.formatNumber(item.totalQty)} PCS',
->>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildSortingInfo(
                     'Qty WO',
-<<<<<<< HEAD
-<<<<<<< HEAD
                     '${widget.formatNumber(item.woQty)} PCS',
                   ),
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 const SizedBox(width: 12),
-=======
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-                const SizedBox(width: 12),
->>>>>>> 2261585c (fix: report axis horizontal)
                 Expanded(
                   child: _buildSortingInfo(
                     'Selisih',
                     '${widget.formatNumber(item.diff)}',
-=======
-                    widget.formatNumber(item.woQty),
-=======
-                    '${widget.formatNumber(item.woQty)} PCS',
->>>>>>> 183ac4f1 (fix: report)
-                  ),
-                ),
-=======
-                const SizedBox(width: 12),
->>>>>>> 14df3077 (fix: report)
-                Expanded(
-                  child: _buildSortingInfo(
-                    'Selisih',
-<<<<<<< HEAD
-                    widget.formatNumber(item.diff),
->>>>>>> 65038198 (feat:)
-=======
-                    '${widget.formatNumber(item.diff)}',
->>>>>>> 183ac4f1 (fix: report)
                   ),
                 ),
               ],
             ),
           ],
-<<<<<<< HEAD
-=======
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow('Grade A', item.gradeA),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Grade B',
-                item.gradeB,
-              ),
-              SizedBox(height: 8),
-              _buildSortingRow(
-                'Grade BS',
-                item.gradeBS,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Total Qty',
-                item.totalQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Qty WO',
-                item.woQty,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              _buildSortingRow(
-                'Selisih',
-                item.diff,
-              ),
-            ],
-          ),
->>>>>>> 0cdc2803 (feat: top bs, sorting per grade)
-=======
->>>>>>> 65038198 (feat:)
         ),
       ),
     );

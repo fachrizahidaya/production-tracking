@@ -1,10 +1,6 @@
 {
   "pins" : [
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "abseil-cpp-binary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/abseil-cpp-binary.git",
@@ -23,11 +19,6 @@
       }
     },
     {
-<<<<<<< HEAD
-=======
->>>>>>> 593bbd5e (chore: for iOS)
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "dkcamera",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/zhangao0086/DKCamera",
@@ -55,12 +46,6 @@
       }
     },
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk",
@@ -142,13 +127,6 @@
       }
     },
     {
-<<<<<<< HEAD
-=======
->>>>>>> 593bbd5e (chore: for iOS)
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "libwebp-xcode",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/libwebp-Xcode.git",
@@ -158,11 +136,6 @@
       }
     },
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "nanopb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
@@ -181,15 +154,6 @@
       }
     },
     {
-<<<<<<< HEAD
-=======
->>>>>>> 593bbd5e (chore: for iOS)
-=======
->>>>>>> fe56e883 (chore: update necessary)
-=======
->>>>>>> 41ded02d (fix: rework)
-=======
->>>>>>> 16778356 (feat: fcm notification)
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage",

@@ -25,56 +25,6 @@ import 'package:textile_tracking/models/dashboard/work_order_summary.dart';
 import 'package:textile_tracking/screens/auth/user_menu.dart';
 
 class Dashboard extends StatefulWidget {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  final bool isMobile;
-=======
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-  final Future<void> Function()? onRefreshReworkNotifications;
-
-<<<<<<< HEAD
-  const Dashboard({
-    super.key,
-<<<<<<< HEAD
-    required this.isMobile,
-    this.onRefreshReworkNotifications,
-=======
-  final bool showWorkOrderSummary;
-  final bool showActiveMachine;
-  final bool showWorkOrderProcess;
-
-  const Dashboard({
-    super.key,
-    this.showWorkOrderSummary = true,
-    this.showActiveMachine = true,
-    this.showWorkOrderProcess = true,
->>>>>>> 5e1caa7c (feat: widget controller)
-=======
-  final bool showProcessSummary;
-  final bool showMachineStatus;
-  final bool showWorkOrderList;
-
-  const Dashboard({
-    super.key,
-    this.showProcessSummary = true,
-    this.showMachineStatus = true,
-    this.showWorkOrderList = true,
->>>>>>> 5e1b7ecb (fix: dashboard)
-  });
-=======
-  const Dashboard({super.key});
->>>>>>> 1155687b (fix: widget dashboard)
-=======
-    this.onRefreshReworkNotifications,
-  });
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
-  const Dashboard({super.key, this.onRefreshReworkNotifications});
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
   final bool isMobile;
   final Future<void> Function()? onRefreshReworkNotifications;
 
@@ -83,24 +33,6 @@ class Dashboard extends StatefulWidget {
     required this.isMobile,
     this.onRefreshReworkNotifications,
   });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-=======
-  const Dashboard({super.key, this.onRefreshReworkNotifications});
->>>>>>> 2dccfd5 (fix: home, dashboard)
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
-  const Dashboard({super.key, this.onRefreshReworkNotifications});
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -150,33 +82,6 @@ class _DashboardState extends State<Dashboard> {
   bool isMachineLoading = false;
   bool isSummaryLoading = false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
->>>>>>> 8d23ccdc (fix: UI dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   bool get _isMobile => widget.isMobile;
 
   void _applyMobileProcessParams() {
@@ -202,73 +107,7 @@ class _DashboardState extends State<Dashboard> {
         'status': params['status']!,
     };
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  bool get isMobile => MediaQuery.of(context).size.width < 600;
-=======
-=======
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
-  bool get isMobile => MediaQuery.of(context).size.width < 600;
 
-  bool get isTablet => MediaQuery.of(context).size.width >= 600;
->>>>>>> e61620e (fix: UI mobile dashboard)
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-
-<<<<<<< HEAD
-  bool get isTablet => MediaQuery.of(context).size.width >= 600;
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-
-=======
->>>>>>> 46f4802b (fix: UI dashboard)
-=======
-=======
->>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
-=======
->>>>>>> 62cb1f4a (fix: UI mobile dashboard)
-=======
->>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
-  bool get isMobile => MediaQuery.of(context).size.width < 600;
-
-  bool get isTablet => MediaQuery.of(context).size.width >= 600;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
->>>>>>> 0f73a2e7 (fix: UI dashboard)
-=======
->>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
-=======
->>>>>>> a6b1bf80 (fix: UI dashboard)
-=======
->>>>>>> 62cb1f4a (fix: UI mobile dashboard)
-=======
->>>>>>> e29a2ffd (fix: UI dashboard)
-=======
->>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
-=======
->>>>>>> 908fd21b (fix: UI dashboard)
-=======
-
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-=======
->>>>>>> 6330259 (fix: UI dashboard)
-<<<<<<< HEAD
->>>>>>> 8d23ccdc (fix: UI dashboard)
-=======
-=======
-
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
-
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   @override
   void initState() {
     super.initState();
@@ -287,17 +126,6 @@ class _DashboardState extends State<Dashboard> {
     };
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> 727a4ffa (fix: dashboard mobile)
       if (!mounted) return;
 
       setState(() {
@@ -309,215 +137,10 @@ class _DashboardState extends State<Dashboard> {
       });
 
       _fetchDashboardWidgets();
-=======
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-      _fetchDashboardWidgets();
->>>>>>> 1155687b (fix: widget dashboard)
-=======
->>>>>>> b1c3b09b (fix: user name di appbar)
-=======
-      _fetchDashboardWidgets();
->>>>>>> 145bc47c (fix: widget dashboard)
       if (mounted) {
         _loadDashboardData();
       }
     });
-<<<<<<< HEAD
-<<<<<<< HEAD
-  }
-
-  @override
-  void didUpdateWidget(covariant Dashboard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.isMobile == widget.isMobile) return;
-
-    setState(() {
-      if (_isMobile) {
-        _applyMobileProcessParams();
-      } else {
-        _applyTabletProcessParams();
-      }
-    });
-    _loadMore();
-  }
-
-  Future<Map<String, String>> _getAuthHeaders() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-
-    if (token == null) throw Exception('Unauthenticated');
-
-    return {
-      'Authorization': 'Bearer $token',
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-  }
-
-  Future<void> _fetchDashboardWidgets() async {
-    if (mounted) setState(() => _isDashboardWidgetsLoading = true);
-
-    try {
-      final baseUrl = dotenv.env['API_URL'] ?? '';
-      final headers = await _getAuthHeaders();
-      final keysResponse = await http.get(
-        Uri.parse('$baseUrl/dashboard/widget-keys'),
-        headers: headers,
-      );
-      final widgetsResponse = await http.get(
-        Uri.parse('$baseUrl/dashboard/widgets'),
-        headers: headers,
-      );
-
-      if (keysResponse.statusCode != 200 || widgetsResponse.statusCode != 200) {
-        throw Exception('Gagal mengambil pengaturan widget dashboard');
-      }
-
-      final keyData = List<Map<String, dynamic>>.from(
-        jsonDecode(keysResponse.body)['data'] ?? [],
-      );
-      final widgetData = List<Map<String, dynamic>>.from(
-        jsonDecode(widgetsResponse.body)['data'] ?? [],
-      );
-      final visibilityByValue = {
-        for (final widget in widgetData)
-          widget['value']?.toString() ?? '': widget['is_visible'] == true,
-      };
-      final supportedOptions = keyData
-          .where(
-            (widget) => _supportedDashboardWidgets.contains(
-              widget['value']?.toString(),
-            ),
-          )
-          .toList();
-
-      if (!mounted) return;
-      setState(() {
-        _dashboardWidgetOptions = supportedOptions;
-        for (final option in supportedOptions) {
-          final value = option['value']?.toString();
-          if (value != null) {
-            _dashboardWidgets[value] = visibilityByValue[value] ?? false;
-          }
-        }
-      });
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    } finally {
-      if (mounted) setState(() => _isDashboardWidgetsLoading = false);
-    }
-  }
-
-  Future<void> _updateDashboardWidget(
-    String widgetValue,
-    bool isVisible,
-  ) async {
-    final baseUrl = dotenv.env['API_URL'] ?? '';
-    final response = await http.patch(
-      Uri.parse('$baseUrl/dashboard/widgets'),
-      headers: await _getAuthHeaders(),
-      body: jsonEncode({
-        'widgets': [
-          {'value': widgetValue, 'is_visible': isVisible},
-        ],
-      }),
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      dynamic responseData;
-      try {
-        responseData = jsonDecode(response.body);
-      } catch (_) {
-        responseData = null;
-      }
-      throw Exception(
-        responseData is Map
-            ? responseData['message'] ?? 'Gagal mengubah widget dashboard'
-            : 'Gagal mengubah widget dashboard',
-      );
-    }
-  }
-
-  void _showDashboardWidgetSettings() {
-    if (_dashboardWidgetOptions.isEmpty) {
-      _fetchDashboardWidgets();
-      return;
-    }
-
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (modalContext) => StatefulBuilder(
-        builder: (modalContext, setModalState) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    'Widget Dashboard',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('lg'),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ..._dashboardWidgetOptions.map((option) {
-                  final value = option['value']?.toString() ?? '';
-                  return SwitchListTile(
-                    title: Text(option['label']?.toString() ?? ''),
-                    value: _dashboardWidgets[value] ?? false,
-                    onChanged: _isDashboardWidgetsUpdating
-                        ? null
-                        : (isVisible) async {
-                            final previousValue =
-                                _dashboardWidgets[value] ?? false;
-                            setState(() {
-                              _dashboardWidgets[value] = isVisible;
-                              _isDashboardWidgetsUpdating = true;
-                            });
-                            setModalState(() {});
-                            try {
-                              await _updateDashboardWidget(value, isVisible);
-                            } catch (e) {
-                              if (!mounted) return;
-                              setState(
-                                () => _dashboardWidgets[value] = previousValue,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())),
-                              );
-                            } finally {
-                              if (mounted) {
-                                setState(
-                                  () => _isDashboardWidgetsUpdating = false,
-                                );
-                                if (modalContext.mounted) setModalState(() {});
-                              }
-                            }
-                          },
-                  );
-                }),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-=======
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
   }
 
   @override
@@ -710,27 +333,6 @@ class _DashboardState extends State<Dashboard> {
   bool get shouldHideActiveMachine {
     bool checkMenus(List<dynamic> menuList) {
       for (final menu in menuList) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 17fd914c (fix: dashboard)
-        final name = (menu['name'] ?? '').toString().toLowerCase();
-
-        // if (name == 'sorting' || name == 'packing') {
-        //   return true;
-        // }
-
-<<<<<<< HEAD
->>>>>>> 6a9e309 (fix: show machine)
-=======
->>>>>>> 1155687b (fix: widget dashboard)
-=======
->>>>>>> 17fd914c (fix: dashboard)
-=======
->>>>>>> 145bc47c (fix: widget dashboard)
         final children = menu['children'];
 
         if (children != null && children is List && checkMenus(children)) {
@@ -781,21 +383,6 @@ class _DashboardState extends State<Dashboard> {
 
   bool _checkIsFiltered() {
     return params.keys.any(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       (key) {
         if (key == 'page' || key == 'search' || key == 'per_page') {
           return false;
@@ -805,29 +392,6 @@ class _DashboardState extends State<Dashboard> {
         }
         return params[key]!.isNotEmpty;
       },
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-=======
-      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
->>>>>>> 2dccfd5 (fix: home, dashboard)
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
-      (key) => key != 'page' && key != 'search' && params[key]!.isNotEmpty,
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 
@@ -836,19 +400,8 @@ class _DashboardState extends State<Dashboard> {
 
     setState(() => isLoading = true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     await _safeFetch(_handleFetchMenu);
 
-=======
->>>>>>> 17fd914c (fix: dashboard)
-=======
-    await _safeFetch(_handleFetchMenu);
-
->>>>>>> 7c88ecf5 (fix: filter dashboard data by accessible processes)
     await Future.wait([
       _safeFetch(_handleFetchStats),
       _safeFetch(_handleFetchPie),
@@ -857,31 +410,6 @@ class _DashboardState extends State<Dashboard> {
       _safeFetch(_loadMore),
     ]);
 
-=======
-=======
-    await _safeFetch(_handleFetchMenu);
-
->>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
-    await Future.wait([
-      _safeFetch(_handleFetchStats),
-      _safeFetch(_handleFetchPie),
-      _safeFetch(_handleFetchMachine),
-      _safeFetch(_handleFetchSummary),
-      _safeFetch(_loadMore),
-    ]);
-
->>>>>>> 45ea02f (fix: dashboard)
-=======
-    await Future.wait([
-      _safeFetch(_handleFetchMenu),
-      _safeFetch(_handleFetchStats),
-      _safeFetch(_handleFetchPie),
-      _safeFetch(_handleFetchMachine),
-      _safeFetch(_handleFetchSummary),
-      _safeFetch(_loadMore),
-    ]);
-
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
     if (!mounted) return;
 
     setState(() => isLoading = false);
@@ -890,50 +418,10 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _safeFetch(Future<void> Function() callback) async {
     try {
       await callback();
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     } catch (e) {
       if (mounted) {
         debugPrint('Dashboard request failed: $e');
       }
-=======
-    } catch (e, s) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: s);
->>>>>>> 45ea02f (fix: dashboard)
-=======
-    } catch (e, s) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: s);
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-    } catch (e) {
-<<<<<<< HEAD
-      throw (e.toString());
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
-      if (mounted) {
-        debugPrint('Dashboard request failed: $e');
-      }
->>>>>>> e30538ab (fix: notification dan evaluasi rework)
-=======
-    } catch (e, s) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: s);
->>>>>>> 17fd914c (fix: dashboard)
-=======
-    } catch (e) {
-<<<<<<< HEAD
-      throw (e.toString());
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
-=======
-      if (mounted) {
-        debugPrint('Dashboard request failed: $e');
-      }
->>>>>>> a9344ef9 (fix: notification dan evaluasi rework)
     }
   }
 
@@ -967,39 +455,7 @@ class _DashboardState extends State<Dashboard> {
       setState(() {
         machineList = service.dataList;
       });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     } catch (e) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-    } catch (e, s) {
-=======
-    } catch (e) {
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-      debugPrint('Machine Error: $e');
-
-<<<<<<< HEAD
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
->>>>>>> 16778356 (feat: fcm notification)
-=======
-    } catch (e, s) {
-=======
-    } catch (e) {
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
-      debugPrint('Machine Error: $e');
-
->>>>>>> b1c3b09b (fix: user name di appbar)
-=======
->>>>>>> 9c9cafca (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {
@@ -1032,19 +488,7 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       isSummaryLoading = true;
       summaryList = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
       greigeSummaryList = [];
-=======
->>>>>>> 17fd914c (fix: dashboard)
-=======
-      greigeSummaryList = [];
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
     });
 
     try {
@@ -1053,116 +497,24 @@ class _DashboardState extends State<Dashboard> {
         listen: false,
       );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
       await Future.wait([
         service.getDataList(context, summaryParams),
         service.getPreDataList(context, summaryParams),
       ]);
-<<<<<<< HEAD
-<<<<<<< HEAD
       service.filterByProcessNames(menuProcessNames);
-<<<<<<< HEAD
-=======
-    });
-
-    try {
-=======
-    });
-
-    try {
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-      final service =
-          Provider.of<WorkOrderSummaryService>(context, listen: false);
-
-<<<<<<< HEAD
-      await service.getDataList(context, summaryParams);
-<<<<<<< HEAD
->>>>>>> 45ea02f (fix: dashboard)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-      await Future.wait([
-        service.getDataList(context, summaryParams),
-        service.getPreDataList(context, summaryParams),
-      ]);
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
->>>>>>> 04b6e1a6 (fix: filter dashboard data by accessible processes)
-=======
-      await service.getDataList(context, summaryParams);
->>>>>>> 17fd914c (fix: dashboard)
-=======
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
-=======
-      service.filterByProcessNames(menuProcessNames);
->>>>>>> 7c88ecf5 (fix: filter dashboard data by accessible processes)
 
       if (!mounted) return;
 
       setState(() {
         summaryList = service.dataList;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         greigeSummaryList = service.preDataList;
       });
     } catch (e) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-        greigeSummaryList = service.preDataList;
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-      });
-    } catch (e) {
-      debugPrint('Summary Error: $e');
-
-<<<<<<< HEAD
->>>>>>> 45ea02f (fix: dashboard)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
->>>>>>> 16778356 (feat: fcm notification)
-=======
-=======
-        greigeSummaryList = service.preDataList;
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
-      });
-    } catch (e) {
-      debugPrint('Summary Error: $e');
-
->>>>>>> 17fd914c (fix: dashboard)
-=======
->>>>>>> 9c9cafca (feat: fcm notification)
       if (!mounted) return;
 
       setState(() {
         summaryList = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         greigeSummaryList = [];
-=======
->>>>>>> 45ea02f (fix: dashboard)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-        greigeSummaryList = [];
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
->>>>>>> 17fd914c (fix: dashboard)
-=======
-        greigeSummaryList = [];
->>>>>>> 048e231d (fix: dashboard work order summary untuk greige)
       });
     } finally {
       if (!mounted) return;
@@ -1247,17 +599,6 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> _loadMore() async {
     if (!mounted) return;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if (_isLoadMore) return;
-=======
-=======
-=======
->>>>>>> 17fd914c (fix: dashboard)
-=======
     if (_isLoadMore) return;
 
     final isReset = params['page'] == '0';
@@ -1270,59 +611,9 @@ class _DashboardState extends State<Dashboard> {
       params.remove('start_date');
       params.remove('end_date');
     }
->>>>>>> 727a4ffa (fix: dashboard mobile)
 
     setState(() {
       _isLoadMore = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
-    });
-<<<<<<< HEAD
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-
-    setState(() {
-      _isLoadMore = true;
-    });
->>>>>>> 45ea02f (fix: dashboard)
-
-    final isReset = params['page'] == '0';
-    if (!isReset && !_hasMore) return;
-
-    if (_isMobile) {
-      params['per_page'] = '10';
-    } else {
-      params.remove('per_page');
-      params.remove('start_date');
-      params.remove('end_date');
-    }
-
-    setState(() {
-      _isLoadMore = true;
-=======
-<<<<<<< HEAD
-    if (_isLoadMore) return;
-=======
->>>>>>> 17fd914c (fix: dashboard)
-
-    final isReset = params['page'] == '0';
-    if (!isReset && !_hasMore) return;
-
-    if (_isMobile) {
-      params['per_page'] = '10';
-    } else {
-      params.remove('per_page');
-      params.remove('start_date');
-      params.remove('end_date');
-    }
-
-    setState(() {
-      _isLoadMore = true;
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       if (isReset) {
         _dataList.clear();
         _firstLoading = true;
@@ -1334,37 +625,10 @@ class _DashboardState extends State<Dashboard> {
     params['page'] = (currentPage + 1).toString();
 
     try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
       final service = Provider.of<WorkOrderProcessService>(
         context,
         listen: false,
       );
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      final service =
-          Provider.of<WorkOrderProcessService>(context, listen: false);
->>>>>>> 45ea02f (fix: dashboard)
-=======
-      final service =
-          Provider.of<WorkOrderProcessService>(context, listen: false);
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
-      final service =
-          Provider.of<WorkOrderProcessService>(context, listen: false);
->>>>>>> 17fd914c (fix: dashboard)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
 
       await service.getDataList(context, params);
 
@@ -1378,59 +642,15 @@ class _DashboardState extends State<Dashboard> {
         }
 
         _dataList.addAll(loadData);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
-=======
-        _hasMore = loadData.isNotEmpty;
->>>>>>> 45ea02f (fix: dashboard)
-=======
-        _hasMore = loadData.isNotEmpty;
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-        _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-        _hasMore = loadData.isNotEmpty;
->>>>>>> 17fd914c (fix: dashboard)
-=======
-        _hasMore = _isMobile ? loadData.length >= 10 : loadData.isNotEmpty;
->>>>>>> 727a4ffa (fix: dashboard mobile)
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (isReset) {
           _dataList.clear();
         }
-=======
-        _dataList.clear();
->>>>>>> 45ea02f (fix: dashboard)
-=======
-        _dataList.clear();
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-        if (isReset) {
-          _dataList.clear();
-        }
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-        _dataList.clear();
->>>>>>> 17fd914c (fix: dashboard)
-=======
-        if (isReset) {
-          _dataList.clear();
-        }
->>>>>>> 727a4ffa (fix: dashboard mobile)
         _hasMore = false;
       });
     } finally {
@@ -1446,21 +666,6 @@ class _DashboardState extends State<Dashboard> {
   _refetch() {
     if (!mounted) return;
     setState(() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       if (_isMobile) {
         params['search'] = _search;
         params['page'] = '0';
@@ -1468,29 +673,6 @@ class _DashboardState extends State<Dashboard> {
       } else {
         params = {'search': _search, 'page': '0'};
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      params = {'search': _search, 'page': '0'};
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
-=======
-      params = {'search': _search, 'page': '0'};
->>>>>>> 2dccfd5 (fix: home, dashboard)
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
-      params = {'search': _search, 'page': '0'};
->>>>>>> 2dccfd5 (fix: home, dashboard)
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     });
     _loadMore();
   }
@@ -1518,54 +700,7 @@ class _DashboardState extends State<Dashboard> {
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverPadding(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
-=======
-                  padding: EdgeInsets.zero,
->>>>>>> 97ee959c (fix: UI dashboard)
-=======
-=======
->>>>>>> 8d23ccdc (fix: UI dashboard)
-=======
->>>>>>> 727a4ffa (fix: dashboard mobile)
-                  padding: EdgeInsets.zero,
-=======
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 12 : 24,
-                    vertical: isMobile ? 12 : 20,
-                  ),
->>>>>>> e61620e (fix: UI mobile dashboard)
-<<<<<<< HEAD
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-=======
-                  padding: CustomTheme().padding('content'),
->>>>>>> 6330259 (fix: UI dashboard)
-<<<<<<< HEAD
->>>>>>> 8d23ccdc (fix: UI dashboard)
-=======
-=======
-                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
-                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [
@@ -1575,311 +710,6 @@ class _DashboardState extends State<Dashboard> {
                           isFetching: isStatsLoading,
                           isMobile: _isMobile,
                         ),
-                        if (_dashboardWidgets['process_summary'] ?? false)
-                          WorkOrderSummary(
-                            data: summaryList,
-                            greigeData: greigeSummaryList,
-                            handleRefetch: _handleFetchSummary,
-                            isFetching: isSummaryLoading,
-                            isMobile: _isMobile,
-                            dariTanggal: summaryParams['start_date'] ??
-                                dariTanggalSummary,
-                            sampaiTanggal: summaryParams['end_date'] ??
-                                sampaiTanggalSummary,
-                            onDateRangeSelected:
-                                _isMobile ? _handleSummaryDateRange : null,
-                            filterWidget: SummaryFilter(
-                              dariTanggal: dariTanggalSummary,
-                              sampaiTanggal: sampaiTanggalSummary,
-                              onHandleFilter: _handleSummaryFilter,
-                              params: summaryParams,
-                            ),
-                          ),
-                        if ((_dashboardWidgets['machine_status'] ?? false) &&
-                            !shouldHideActiveMachine)
-=======
-=======
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
->>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
-=======
->>>>>>> 62cb1f4a (fix: UI mobile dashboard)
-=======
->>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 12 : 24,
-                    vertical: isMobile ? 12 : 20,
-                  ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        WorkOrderStats(
-                          data: statsList,
-                          isFetching: isStatsLoading,
-                        ),
-                        SizedBox(height: sectionGap),
-                        WorkOrderSummary(
-                          data: summaryList,
-                          handleRefetch: _handleFetchSummary,
-                          isFetching: isSummaryLoading,
-                          filterWidget: SummaryFilter(
-                            dariTanggal: dariTanggalSummary,
-                            sampaiTanggal: sampaiTanggalSummary,
-                            onHandleFilter: _handleSummaryFilter,
-                            params: summaryParams,
-                          ),
-                        ),
-                        if (!shouldHideActiveMachine) ...[
-                          SizedBox(height: sectionGap),
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-                          ActiveMachine(
-                            data: machineList,
-                            available: machineList['available'],
-                            unavailable: machineList['unavailable'],
-                            handleRefetch: _handleFetchMachine,
-                            isFetching: isMachineLoading,
-<<<<<<< HEAD
-                            processNames: menuProcessNames,
-                            isMobile: _isMobile,
-                          ),
-                        if (_dashboardWidgets['wo_list'] ?? false)
-                          WorkOrderProcessScreen(
-                            data: _dataList,
-                            search: _search,
-                            handleSearch: _handleSearch,
-                            firstLoading: _firstLoading,
-                            hasMore: _hasMore,
-                            handleLoadMore: _loadMore,
-                            handleRefetch: _refetch,
-                            isLoadMore: _isLoadMore,
-                            isMobile: _isMobile,
-                            filterWidget: ProcessFilter(
-                              params: params,
-                              onHandleFilter: _handleProcessFilter,
-                              onDateRangeSelected:
-                                  _isMobile ? _handleProcessDateRange : null,
-                            ),
-                            handleFetchData: (params) async {
-                              final service =
-                                  Provider.of<WorkOrderProcessService>(
-                                context,
-                                listen: false,
-                              );
-                              await service.getDataList(context, params);
-                              return service.items;
-                            },
-                            service: WorkOrderProcessService(),
-                            isFiltered: _isFiltered,
-                          ),
-                      ].separatedBy(CustomTheme().vGap('2xl')),
-=======
-                          ),
-                        ],
-                        SizedBox(height: sectionGap),
-                        WorkOrderProcessScreen(
-                          data: _dataList,
-                          search: _search,
-                          handleSearch: _handleSearch,
-                          firstLoading: _firstLoading,
-                          hasMore: _hasMore,
-                          handleLoadMore: _loadMore,
-                          handleRefetch: _refetch,
-                          isLoadMore: _isLoadMore,
-                          filterWidget: ProcessFilter(
-                            params: params,
-                            onHandleFilter: _handleProcessFilter,
-                          ),
-                          handleFetchData: (params) async {
-                            final service =
-                                Provider.of<WorkOrderProcessService>(
-                              context,
-                              listen: false,
-                            );
-
-                            await service.getDataList(
-                              context,
-                              params,
-                            );
-
-                            return service.items;
-                          },
-                          service: WorkOrderProcessService(),
-                          isFiltered: _isFiltered,
-                        ),
-                      ],
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-=======
-                  padding: CustomTheme().padding('content'),
-=======
->>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
-                  sliver: SliverList(
-=======
-                  padding: CustomTheme().padding('content'),
-                  sliver: SliverList(
->>>>>>> a6b1bf80 (fix: UI dashboard)
-                      delegate: SliverChildListDelegate([
-                    WorkOrderStats(data: statsList, isFetching: isStatsLoading),
-                    WorkOrderSummary(
-                      data: summaryList,
-                      handleRefetch: _handleFetchSummary,
-                      isFetching: isSummaryLoading,
-                      filterWidget: SummaryFilter(
-                        dariTanggal: dariTanggalSummary,
-                        sampaiTanggal: sampaiTanggalSummary,
-                        onHandleFilter: _handleSummaryFilter,
-                        params: summaryParams,
-                      ),
-<<<<<<< HEAD
->>>>>>> 46f4802b (fix: UI dashboard)
-=======
-                  sliver: SliverList(
-=======
-                  sliver: SliverList(
->>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
-                    delegate: SliverChildListDelegate(
-                      [
-                        WorkOrderStats(
-                          data: statsList,
-                          isFetching: isStatsLoading,
-                        ),
-                        SizedBox(height: sectionGap),
-                        WorkOrderSummary(
-                          data: summaryList,
-                          handleRefetch: _handleFetchSummary,
-                          isFetching: isSummaryLoading,
-                          filterWidget: SummaryFilter(
-                            dariTanggal: dariTanggalSummary,
-                            sampaiTanggal: sampaiTanggalSummary,
-                            onHandleFilter: _handleSummaryFilter,
-                            params: summaryParams,
-                          ),
-                        ),
-                        if (!shouldHideActiveMachine) ...[
-                          SizedBox(height: sectionGap),
-                          ActiveMachine(
-                            data: machineList,
-                            available: machineList['available'],
-                            unavailable: machineList['unavailable'],
-                            handleRefetch: _handleFetchMachine,
-                            isFetching: isMachineLoading,
-                          ),
-                        ],
-                        SizedBox(height: sectionGap),
-                        WorkOrderProcessScreen(
-                          data: _dataList,
-                          search: _search,
-                          handleSearch: _handleSearch,
-                          firstLoading: _firstLoading,
-                          hasMore: _hasMore,
-                          handleLoadMore: _loadMore,
-                          handleRefetch: _refetch,
-                          isLoadMore: _isLoadMore,
-                          filterWidget: ProcessFilter(
-                            params: params,
-                            onHandleFilter: _handleProcessFilter,
-                          ),
-                          handleFetchData: (params) async {
-                            final service =
-                                Provider.of<WorkOrderProcessService>(
-                              context,
-                              listen: false,
-                            );
-
-                            await service.getDataList(
-                              context,
-                              params,
-                            );
-
-                            return service.items;
-                          },
-                          service: WorkOrderProcessService(),
-                          isFiltered: _isFiltered,
-                        ),
-                      ],
-<<<<<<< HEAD
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
-                  padding: CustomTheme().padding('content'),
-=======
->>>>>>> 62cb1f4a (fix: UI mobile dashboard)
-=======
-                  padding: CustomTheme().padding('content'),
->>>>>>> e29a2ffd (fix: UI dashboard)
-=======
-                  padding: CustomTheme().padding('content'),
->>>>>>> 908fd21b (fix: UI dashboard)
-=======
-                  padding: EdgeInsetsGeometry.fromLTRB(0, 0, 0, 0),
->>>>>>> 025659bb (fix: dashboard mobile)
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        _buildDashboardSettingsButton(),
-                        WorkOrderStats(
-                          data: statsList,
-                          isFetching: isStatsLoading,
-                          isMobile: _isMobile,
-                        ),
-<<<<<<< HEAD
-                      ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 0f73a2e7 (fix: UI dashboard)
-=======
->>>>>>> 8d5fb5bc (fix: UI mobile dashboard)
-=======
->>>>>>> a6b1bf80 (fix: UI dashboard)
-                    ),
-                    if (!shouldHideActiveMachine)
-=======
-                    if (widget.showActiveMachine && !shouldHideActiveMachine)
->>>>>>> 5e1caa7c (feat: widget controller)
-=======
-                    if (widget.showMachineStatus && !shouldHideActiveMachine)
->>>>>>> 5e1b7ecb (fix: dashboard)
-=======
-                    if ((_dashboardWidgets['machine_status'] ?? false) &&
-                        !shouldHideActiveMachine)
->>>>>>> 1155687b (fix: widget dashboard)
-                      ActiveMachine(
-                        data: machineList,
-                        available: machineList['available'],
-                        unavailable: machineList['unavailable'],
-                        handleRefetch: _handleFetchMachine,
-                        isFetching: isMachineLoading,
-                        processNames: menuProcessNames,
-                      ),
-                    if (_dashboardWidgets['wo_list'] ?? false)
-                      WorkOrderProcessScreen(
-                        data: _dataList,
-                        search: _search,
-                        handleSearch: _handleSearch,
-                        firstLoading: _firstLoading,
-                        hasMore: _hasMore,
-                        handleLoadMore: _loadMore,
-                        handleRefetch: _refetch,
-                        isLoadMore: _isLoadMore,
-                        filterWidget: ProcessFilter(
-                          params: params,
-                          onHandleFilter: _handleProcessFilter,
-                        ),
-                        handleFetchData: (params) async {
-                          final service = Provider.of<WorkOrderProcessService>(
-                              context,
-                              listen: false);
-                          await service.getDataList(context, params);
-                          return service.items;
-                        },
-                        service: WorkOrderProcessService(),
-                        isFiltered: _isFiltered,
-                      ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
-=======
                         if (_dashboardWidgets['process_summary'] ?? false)
                           WorkOrderSummary(
                             data: summaryList,
@@ -1942,68 +772,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                       ].separatedBy(CustomTheme().vGap('2xl')),
                     ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   ),
->>>>>>> 99705a2c (fix: home, dashboard)
-=======
-=======
->>>>>>> 6305f554 (fix: UI dashboard)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
-                    if (!shouldHideActiveMachine)
-                      ActiveMachine(
-                        data: machineList,
-                        available: machineList['available'],
-                        unavailable: machineList['unavailable'],
-                        handleRefetch: _handleFetchMachine,
-                        isFetching: isMachineLoading,
-                        processNames: menuProcessNames,
-                      ),
-                    if (_dashboardWidgets['wo_list'] ?? false)
-                      WorkOrderProcessScreen(
-                        data: _dataList,
-                        search: _search,
-                        handleSearch: _handleSearch,
-                        firstLoading: _firstLoading,
-                        hasMore: _hasMore,
-                        handleLoadMore: _loadMore,
-                        handleRefetch: _refetch,
-                        isLoadMore: _isLoadMore,
-                        filterWidget: ProcessFilter(
-                          params: params,
-                          onHandleFilter: _handleProcessFilter,
-                        ),
-                        handleFetchData: (params) async {
-                          final service = Provider.of<WorkOrderProcessService>(
-                              context,
-                              listen: false);
-                          await service.getDataList(context, params);
-                          return service.items;
-                        },
-                        service: WorkOrderProcessService(),
-                        isFiltered: _isFiltered,
-                      ),
-                  ].separatedBy(CustomTheme().vGap('2xl')))),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> bdfe60da (fix: UI dashboard)
-=======
-                  ),
->>>>>>> 7833ba7c (fix: UI mobile dashboard)
-=======
->>>>>>> 6305f554 (fix: UI dashboard)
-=======
-=======
-                  ),
->>>>>>> 2dccfd5 (fix: home, dashboard)
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-                  ),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                 ),
               ],
             ),
@@ -2014,21 +783,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildDashboardSettingsButton() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Padding(
       padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: InkWell(
@@ -2044,35 +798,6 @@ class _DashboardState extends State<Dashboard> {
                   'Widget Dashboard',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: CustomTheme().cardTheme(),
-        child: Row(
-          children: [
-            const Expanded(
-              child: Text(
-                'Widget Dashboard',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
->>>>>>> 2dccfd5 (fix: home, dashboard)
-<<<<<<< HEAD
->>>>>>> e16df531 (fix: home, dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
               ),
               _isDashboardWidgetsLoading
                   ? SizedBox(
@@ -2083,42 +808,6 @@ class _DashboardState extends State<Dashboard> {
                   : Icon(Icons.dashboard_customize_outlined),
             ],
           ),
-=======
-    return InkWell(
-      borderRadius: BorderRadius.circular(12),
-      onTap: _isDashboardWidgetsLoading ? null : _showDashboardWidgetSettings,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: CustomTheme().cardTheme(),
-        child: Row(
-          children: [
-            const Expanded(
-              child: Text(
-                'Widget Dashboard',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
-            _isDashboardWidgetsLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.dashboard_customize_outlined),
-          ],
->>>>>>> 1155687b (fix: widget dashboard)
-=======
-              ),
-              _isDashboardWidgetsLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(Icons.dashboard_customize_outlined),
-            ],
-          ),
->>>>>>> 025659bb (fix: dashboard mobile)
         ),
       ),
     );

@@ -59,20 +59,8 @@ class GreigeProcessEditLayout extends StatelessWidget {
                             color: Colors.white,
                             child: const TabBar(
                               tabs: [
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 Tab(text: 'Mesin'),
                                 Tab(text: 'Info Order Greige'),
-<<<<<<< HEAD
-=======
-                                Tab(text: 'Form Edit'),
-=======
-                                Tab(text: 'Mesin'),
->>>>>>> 80dec51b (fix: edit warping-shearing)
-                                Tab(text: 'Info Greige Order'),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> c940e94a (fix:)
                               ],
                             ),
                           ),
@@ -113,15 +101,7 @@ class GreigeProcessEditLayout extends StatelessWidget {
               : SafeArea(
                   top: false,
                   child: Container(
-<<<<<<< HEAD
-<<<<<<< HEAD
                     padding: CustomTheme().padding('content'),
-=======
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-                    padding: CustomTheme().padding('content'),
->>>>>>> 877fb015 (fix: edit warping)
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border(

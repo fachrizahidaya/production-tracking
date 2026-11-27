@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -20,31 +18,6 @@ import 'package:textile_tracking/helpers/util/separated_column.dart';
 import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
 import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
 import 'package:url_launcher/url_launcher.dart';
-=======
-=======
-import 'dart:io';
-
->>>>>>> deb4d660 (fix: detail warping - shearing)
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:textile_tracking/components/master/button/action_button.dart';
-import 'package:textile_tracking/components/master/card/custom_badge.dart';
-import 'package:textile_tracking/components/master/container/template.dart';
-import 'package:textile_tracking/components/master/text/no_data.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
-import 'package:textile_tracking/helpers/util/format_bytes.dart';
-import 'package:textile_tracking/helpers/util/format_html.dart';
-import 'package:textile_tracking/helpers/util/format_number.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/screens/pdf/pdf_viewer_screen.dart';
-import 'package:textile_tracking/screens/greige-order/%5Bgreige_order_id%5D.dart';
-<<<<<<< HEAD
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-import 'package:url_launcher/url_launcher.dart';
->>>>>>> deb4d660 (fix: detail warping - shearing)
 
 class GreigeProcessDetailList extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -52,8 +25,6 @@ class GreigeProcessDetailList extends StatelessWidget {
   final String processNoKey;
   final Future<void> Function() onRefresh;
   final bool canDelete;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final bool canUpdate;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
@@ -74,39 +45,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       this.withMultiMachine = false,
       this.withBrokenYarns = false,
       this.withAttachments = false});
-<<<<<<< HEAD
-=======
-=======
-  final bool canUpdate;
->>>>>>> 5afc921a (fix: detail proses)
-  final VoidCallback onDelete;
-  final VoidCallback onEdit;
-
-<<<<<<< HEAD
-  const GreigeProcessDetailList({
-    super.key,
-    required this.data,
-    required this.processName,
-    required this.processNoKey,
-    required this.onRefresh,
-    required this.canDelete,
-    required this.onDelete,
-  });
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-  const GreigeProcessDetailList(
-      {super.key,
-      required this.data,
-      required this.processName,
-      required this.processNoKey,
-      required this.onRefresh,
-      required this.canDelete,
-      required this.onDelete,
-      required this.onEdit,
-      required this.canUpdate});
->>>>>>> 5afc921a (fix: detail proses)
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
 
   @override
   Widget build(BuildContext context) {
@@ -122,30 +60,12 @@ class GreigeProcessDetailList extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
                 // _buildTopBar(context, isTablet),
                 _buildOrderGreigeInfo(context, isTablet),
                 if (isTablet)
                   _buildTabletLayout(context, isLargeTablet)
-<<<<<<< HEAD
                 else
                   _buildMobileLayout(context),
-=======
-                _buildTopBar(context, isTablet),
-=======
-                // _buildTopBar(context, isTablet),
->>>>>>> f7a54b43 (fix: detail list)
-                _buildOrderGreigeInfo(context, isTablet),
-                if (isTablet)
-                  _buildTabletLayout(isLargeTablet)
-                else
-                  _buildMobileLayout(),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-                else
-                  _buildMobileLayout(context),
->>>>>>> deb4d660 (fix: detail warping - shearing)
               ],
             ),
           ),
@@ -157,19 +77,10 @@ class GreigeProcessDetailList extends StatelessWidget {
   Widget _buildTopBar(BuildContext context, bool isTablet) {
     final canShowDelete = canDelete && data['can_delete'] != false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5afc921a (fix: detail proses)
     final status = data['status']?.toString().toLowerCase() ?? '';
     final canShowEdit =
         canUpdate && (status == 'diproses' || status.contains('diproses'));
 
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 5afc921a (fix: detail proses)
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
       child: Row(
@@ -177,27 +88,14 @@ class GreigeProcessDetailList extends StatelessWidget {
           IconButton(
             tooltip: 'Kembali',
             onPressed: () => Navigator.pop(context),
-<<<<<<< HEAD
-<<<<<<< HEAD
             icon: const Icon(
               Icons.chevron_left_outlined,
             ),
-=======
-            icon: const Icon(Icons.chevron_left_outlined, size: 28),
-            color: Colors.grey.shade700,
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-            icon: const Icon(
-              Icons.chevron_left_outlined,
-            ),
->>>>>>> 5afc921a (fix: detail proses)
           ),
           Expanded(
             child: Text(
               'Detail Proses $processName',
               style: TextStyle(
-<<<<<<< HEAD
-<<<<<<< HEAD
                 fontSize: CustomTheme().fontSize('xl'),
               ),
             ),
@@ -214,44 +112,6 @@ class GreigeProcessDetailList extends StatelessWidget {
               textColor: Colors.red,
               borderColor: Colors.red,
               onPressed: onDelete,
-=======
-                fontSize: isTablet ? 22 : 18,
-                color: Colors.grey.shade900,
-=======
-                fontSize: CustomTheme().fontSize('xl'),
->>>>>>> 5afc921a (fix: detail proses)
-              ),
-            ),
-          ),
-          if (canShowEdit) ...[
-            ActionTextButton(
-              label: 'Edit',
-              onPressed: onEdit,
-            ),
-          ],
-          if (canShowDelete)
-            ActionTextButton(
-              label: 'Hapus',
-              textColor: Colors.red,
-              borderColor: Colors.red,
-              onPressed: onDelete,
-<<<<<<< HEAD
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CustomTheme().buttonColor('danger'),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text('Hapus $processName'),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 5afc921a (fix: detail proses)
             ),
         ],
       ),
@@ -288,15 +148,7 @@ class GreigeProcessDetailList extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-<<<<<<< HEAD
-<<<<<<< HEAD
               'No. OG',
-=======
-              'No. Order Greige',
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-              'No. OG',
->>>>>>> 5afc921a (fix: detail proses)
               style: TextStyle(
                 fontSize: CustomTheme().fontSize('lg'),
                 fontWeight: CustomTheme().fontWeight('semibold'),
@@ -394,47 +246,22 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Widget _buildMobileLayout(BuildContext context) {
-=======
-  Widget _buildMobileLayout() {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-  Widget _buildMobileLayout(BuildContext context) {
->>>>>>> deb4d660 (fix: detail warping - shearing)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(false),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
           if (withMultiMachine)
             _buildSectionCard(
               title: 'Informasi Mesin',
               icon: Icons.local_laundry_service_outlined,
               child: _buildMachine(context, false),
             ),
-<<<<<<< HEAD
           _buildSectionCard(
             title: 'Informasi Proses',
             icon: Icons.info_outline,
             child: _buildProcessInfo(),
-=======
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
-          _buildSectionCard(
-            title: 'Informasi Proses',
-            icon: Icons.info_outline,
-<<<<<<< HEAD
-            child: _buildProcessInfo(false),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-            child: _buildProcessInfo(),
->>>>>>> a750f85d (fix: warping - shearing)
           ),
           _buildSectionCard(
             title: 'Timeline Proses',
@@ -444,8 +271,6 @@ class GreigeProcessDetailList extends StatelessWidget {
           _buildSectionCard(
             title: 'Hasil $processName',
             icon: Icons.account_tree_outlined,
-<<<<<<< HEAD
-<<<<<<< HEAD
             child: _buildResultInfo(),
           ),
           if (withBrokenYarns)
@@ -461,32 +286,6 @@ class GreigeProcessDetailList extends StatelessWidget {
               child: _buildAttachmentList(context),
             ),
           _buildPasangSection(false),
-=======
-            child: _buildResultInfo(false),
-=======
-            child: _buildResultInfo(),
->>>>>>> a750f85d (fix: warping - shearing)
-          ),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-=======
-          if (withBrokenYarns)
-            _buildSectionCard(
-              title: 'Benang Putus',
-              icon: Icons.content_cut_outlined,
-              child: _buildBrokenYarns(),
-            ),
-          if (withAttachments)
-            _buildSectionCard(
-              title: 'Lampiran',
-              icon: Icons.attachment_outlined,
-              child: _buildAttachmentList(context),
-            ),
->>>>>>> deb4d660 (fix: detail warping - shearing)
-          _buildPasangSection(false),
->>>>>>> 663098db (fix: detail warping)
           _buildSectionCard(
             title: 'Kebutuhan Benang',
             icon: Icons.layers_outlined,
@@ -512,55 +311,28 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
-=======
-  Widget _buildTabletLayout(bool isLargeTablet) {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-  Widget _buildTabletLayout(BuildContext context, bool isLargeTablet) {
->>>>>>> deb4d660 (fix: detail warping - shearing)
     return Padding(
       padding: CustomTheme().padding('card-detail'),
       child: Column(
         children: [
           _buildHeaderSection(true),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
           if (withMultiMachine)
             _buildSectionCard(
               title: 'Informasi Mesin',
               icon: Icons.local_laundry_service_outlined,
               child: _buildMachine(context, true),
             ),
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
           Column(
             children: [
               // _buildSectionCard(
               //   title: 'Informasi Proses',
               //   icon: Icons.info_outline,
-<<<<<<< HEAD
-<<<<<<< HEAD
               //   child: _buildProcessInfo(),
-=======
-              //   child: _buildProcessInfo(true),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-              //   child: _buildProcessInfo(),
->>>>>>> a750f85d (fix: warping - shearing)
               // ),
               _buildSectionCard(
                 title: 'Hasil $processName',
                 icon: Icons.account_tree_outlined,
-<<<<<<< HEAD
-<<<<<<< HEAD
                 child: _buildResultInfo(),
               ),
               if (withBrokenYarns)
@@ -576,32 +348,6 @@ class GreigeProcessDetailList extends StatelessWidget {
                   child: _buildAttachmentList(context),
                 ),
               _buildPasangSection(true),
-=======
-                child: _buildResultInfo(true),
-=======
-                child: _buildResultInfo(),
->>>>>>> a750f85d (fix: warping - shearing)
-              ),
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-=======
-              if (withBrokenYarns)
-                _buildSectionCard(
-                  title: 'Benang Putus',
-                  icon: Icons.content_cut_outlined,
-                  child: _buildBrokenYarns(),
-                ),
-              if (withAttachments)
-                _buildSectionCard(
-                  title: 'Lampiran',
-                  icon: Icons.attachment_outlined,
-                  child: _buildAttachmentList(context),
-                ),
->>>>>>> deb4d660 (fix: detail warping - shearing)
-              _buildPasangSection(true),
->>>>>>> 663098db (fix: detail warping)
               _buildSectionCard(
                 title: 'Timeline Proses',
                 icon: Icons.timeline_outlined,
@@ -614,10 +360,6 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5afc921a (fix: detail proses)
           Column(
             children: [
               _buildSectionCard(
@@ -637,32 +379,6 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ].separatedBy(CustomTheme().vGap('xl')),
           ),
-<<<<<<< HEAD
-=======
-          // Column(
-          //   children: [
-
-          // _buildSectionCard(
-          //   title: 'Kebutuhan Benang',
-          //   icon: Icons.layers_outlined,
-          //   child: _buildYarnItems(true),
-          // ),
-          // _buildSectionCard(
-          //   title: 'Kebutuhan Loom Beam',
-          //   icon: Icons.inventory_2_outlined,
-          //   child: _buildLoomBeams(true),
-          // ),
-          // _buildSectionCard(
-          //   title: 'Catatan Order Greige',
-          //   icon: Icons.note_alt_outlined,
-          //   child:
-          //       _buildNote(_mapValue(data['order_greige'])['notes']),
-          // ),
-          // ].separatedBy(CustomTheme().vGap('xl')),
-          // ),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 5afc921a (fix: detail proses)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -714,15 +430,7 @@ class GreigeProcessDetailList extends StatelessWidget {
               ),
             ],
           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
           if (!withMultiMachine) _buildQuickInfoRow(isTablet),
-=======
-          _buildQuickInfoRow(isTablet),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-          if (!withMultiMachine) _buildQuickInfoRow(isTablet),
->>>>>>> deb4d660 (fix: detail warping - shearing)
         ].separatedBy(CustomTheme().vGap('xl')),
       ),
     );
@@ -808,10 +516,6 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
   Widget _buildMachine(BuildContext context, bool isTablet) {
     final machines = data['machines'] as List? ?? [];
 
@@ -1021,84 +725,24 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
   Widget _buildSectionCard({
     required String title,
     required IconData icon,
     required Widget child,
   }) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     return TemplateCard(
       icon: icon,
       title: title,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-=======
-    return Container(
-      width: double.infinity,
-      padding: CustomTheme().padding('card'),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-=======
-    return TemplateCard(
-      icon: icon,
-      title: title,
->>>>>>> 5afc921a (fix: detail proses)
-      child: Column(
-        children: [
-<<<<<<< HEAD
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: CustomTheme().colors('primary').withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: CustomTheme().colors('primary'),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: CustomTheme().fontSize('lg'),
-                    fontWeight: CustomTheme().fontWeight('bold'),
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('md')),
-          ),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 5afc921a (fix: detail proses)
           child,
         ].separatedBy(CustomTheme().vGap('lg')),
       ),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Widget _buildProcessInfo() {
-=======
-  Widget _buildProcessInfo(bool isTablet) {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-  Widget _buildProcessInfo() {
->>>>>>> a750f85d (fix: warping - shearing)
     final items = [
       {
         'label': 'No. Proses',
@@ -1122,42 +766,16 @@ class GreigeProcessDetailList extends StatelessWidget {
       },
     ];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     return _buildInfoGrid(items);
   }
 
   Widget _buildResultInfo() {
-=======
-    return _buildInfoGrid(items, isTablet);
-  }
-
-  Widget _buildResultInfo(bool isTablet) {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-    return _buildInfoGrid(items);
-  }
-
-  Widget _buildResultInfo() {
->>>>>>> a750f85d (fix: warping - shearing)
     final rows = _resultRows();
 
     if (rows.isEmpty) {
       return NoData();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 581d9e1c (fix:)
-=======
->>>>>>> 968ce058 (fix: warping - shearing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     return _buildInfoGrid(rows);
   }
 
@@ -1237,162 +855,14 @@ class GreigeProcessDetailList extends StatelessWidget {
     List<Map<String, dynamic>> items, {
     bool showIcon = true,
   }) {
-=======
-    return _buildInfoGrid(rows, isTablet);
-=======
-    return _buildInfoGrid(
-      rows,
-      isTablet,
-      crossAxisAlignment: processName == 'Warping'
-          ? WrapCrossAlignment.start
-          : WrapCrossAlignment.center,
-    );
->>>>>>> c940e94a (fix:)
-  }
-
-<<<<<<< HEAD
-  Widget _buildInfoGrid(List<Map<String, dynamic>> items, bool isTablet) {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-  Widget _buildBrokenYarns(bool isTablet) {
-=======
-    return _buildInfoGrid(rows);
-  }
-
-  Widget _buildBrokenYarns() {
->>>>>>> a750f85d (fix: warping - shearing)
-    final brokenYarns = _listValue(data['broken_yarns'])
-      ..sort(
-        (a, b) => (a['sort_order'] as num? ?? 0)
-            .compareTo(b['sort_order'] as num? ?? 0),
-      );
-
-    if (brokenYarns.isEmpty) {
-      return NoData();
-    }
-
-    final rows = brokenYarns
-        .map(
-          (item) => <String, dynamic>{
-            'label': _display(item['label']),
-            'value': formatNumber(item['qty']),
-          },
-        )
-        .toList();
-
-    return _buildWrapInfoGrid(rows);
-  }
-
-  Widget _buildWrapInfoGrid(List<Map<String, dynamic>> items) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = (constraints.maxWidth - 16) / 2;
-
-        return Wrap(
-          alignment: WrapAlignment.start,
-          runAlignment: WrapAlignment.start,
-          spacing: 16,
-          runSpacing: 16,
-          crossAxisAlignment: WrapCrossAlignment.start,
-          children: items.map((item) {
-            return Container(
-              width: itemWidth,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item['label'].toString(),
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('sm'),
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  Text(
-                    item['value'].toString(),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('base'),
-                      fontWeight: CustomTheme().fontWeight('bold'),
-                      color: Colors.grey[800],
-                    ),
-                  ),
-                ].separatedBy(CustomTheme().vGap('xs')),
-              ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-
-  Widget _buildInfoGrid(
-    List<Map<String, dynamic>> items, {
-    bool showIcon = true,
-  }) {
->>>>>>> deb4d660 (fix: detail warping - shearing)
     if (items.isEmpty) {
       return NoData();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a750f85d (fix: warping - shearing)
-=======
->>>>>>> 581d9e1c (fix:)
-=======
-=======
->>>>>>> 4407641 (fix: warping - shearing)
->>>>>>> 968ce058 (fix: warping - shearing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     final children = items
         .map((item) {
           final infoColumn = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 968ce058 (fix: warping - shearing)
-=======
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      crossAxisAlignment: crossAxisAlignment,
-      children: items.map((item) {
-        final width = isTablet ? 220.0 : double.infinity;
-
-        return Container(
-          width: width,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[200]!),
-          ),
-          child: Row(
->>>>>>> 79249c5 (fix:)
-<<<<<<< HEAD
->>>>>>> 581d9e1c (fix:)
-=======
-=======
->>>>>>> 4407641 (fix: warping - shearing)
->>>>>>> 968ce058 (fix: warping - shearing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
             children: [
               Text(
                 item['label'].toString(),
@@ -1442,82 +912,6 @@ class GreigeProcessDetailList extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children,
-=======
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      crossAxisAlignment: crossAxisAlignment,
-      children: items.map((item) {
-        final width = isTablet ? 220.0 : double.infinity;
-
-        return Container(
-          width: width,
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey[200]!),
-          ),
-          child: Row(
-=======
->>>>>>> a750f85d (fix: warping - shearing)
-            children: [
-              Text(
-                item['label'].toString(),
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('sm'),
-                  color: Colors.grey[600],
-                ),
-              ),
-<<<<<<< HEAD
-            ].separatedBy(CustomTheme().hGap('md')),
-          ),
-        );
-      }).toList(),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-              Text(
-                item['value'].toString(),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('base'),
-                  fontWeight: CustomTheme().fontWeight('bold'),
-                  color: Colors.grey[800],
-                ),
-              ),
-            ].separatedBy(CustomTheme().vGap('xs')),
-          );
-
-          final card = Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey[200]!),
-            ),
-            child: Row(
-              children: [
-                if (showIcon)
-                  Icon(
-                    item['icon'] as IconData,
-                    size: 20,
-                    color: CustomTheme().colors('primary'),
-                  ),
-                Expanded(child: infoColumn),
-              ].separatedBy(CustomTheme().hGap('md')),
-            ),
-          );
-
-          return Expanded(child: card);
-        })
-        .toList()
-        .separatedBy(const SizedBox(width: 16));
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: children,
->>>>>>> a750f85d (fix: warping - shearing)
     );
   }
 
@@ -1638,37 +1032,21 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildYarnItems(bool isTablet) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
+    final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
     final yarnItems = _listValue(orderGreige['yarn_items']);
-=======
-    final yarnItems = _listValue(_mapValue(data['order_greige'])['yarn_items']);
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-    final orderGreige = _mapValue(data['order_greige']);
-    final design = _mapValue(orderGreige['design']);
-    final yarnItems = _listValue(orderGreige['yarn_items']);
->>>>>>> b06a3be7 (fix: detail di order greige)
 
     if (yarnItems.isEmpty) {
       return NoData();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
     final warpingTypeLabel = _formatWarpingType(
-      design['warping_type'] ?? orderGreige['warping_type'],
+      warpingPreparation['warping_type'] ??
+          design['warping_type'] ??
+          orderGreige['warping_type'],
     );
 
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> c940e94a (fix:)
     return Column(
       children: yarnItems
           .map((item) {
@@ -1676,8 +1054,6 @@ class GreigeProcessDetailList extends StatelessWidget {
               children: [
                 _buildInfoLine('Kode Warna', _display(item['color_code'])),
                 _buildInfoLine(
-<<<<<<< HEAD
-<<<<<<< HEAD
                     'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
                 if (item['ne'] != null)
                   _buildInfoLine(
@@ -1689,34 +1065,12 @@ class GreigeProcessDetailList extends StatelessWidget {
                   ),
                 _buildInfoLine(
                   'Lot Benang',
-                  _formatYarnLot(design['yarn_lot']),
-                ),
-=======
-                    'Jumlah Benang', _withUnit(item['yarn_qty'], 'PCS')),
-                if (item['ne'] != null)
-                  _buildInfoLine('Ne', _display(item['ne'])),
-<<<<<<< HEAD
-                if (item['lot'] != null)
-                  _buildInfoLine('Lot', _display(item['lot'])),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-                _buildInfoLine('Lot Benang', _display(design['yarn_lot'])),
->>>>>>> b06a3be7 (fix: detail di order greige)
-=======
-                    'Jml. Bng', _withUnit(item['yarn_qty'], 'Helai')),
-                if (item['ne'] != null)
-                  _buildInfoLine(
-                    'Ne',
-                    _display(item['ne']),
-                    trailing: warpingTypeLabel.isEmpty
-                        ? null
-                        : _buildWarpingTypeBadge(warpingTypeLabel),
+                  _formatYarnLot(
+                    warpingPreparation['yarn_lot'] ??
+                        orderGreige['yarn_lot'] ??
+                        design['yarn_lot'],
                   ),
-                _buildInfoLine(
-                  'Lot Benang',
-                  _formatYarnLot(design['yarn_lot']),
                 ),
->>>>>>> c940e94a (fix:)
               ],
             );
           })
@@ -1726,19 +1080,10 @@ class GreigeProcessDetailList extends StatelessWidget {
   }
 
   Widget _buildLoomBeams(bool isTablet) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     final orderGreige = _mapValue(data['order_greige']);
     final design = _mapValue(orderGreige['design']);
+    final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
     final loomBeams = _listValue(orderGreige['loom_beams']);
-=======
-    final loomBeams = _listValue(_mapValue(data['order_greige'])['loom_beams']);
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-    final orderGreige = _mapValue(data['order_greige']);
-    final design = _mapValue(orderGreige['design']);
-    final loomBeams = _listValue(orderGreige['loom_beams']);
->>>>>>> b06a3be7 (fix: detail di order greige)
 
     if (loomBeams.isEmpty) {
       return NoData();
@@ -1749,37 +1094,29 @@ class GreigeProcessDetailList extends StatelessWidget {
           .map((item) {
             return _buildDataBox(
               children: [
-<<<<<<< HEAD
-<<<<<<< HEAD
                 _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
                 _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
                 _buildInfoLine(
-                    'Lebar Beam', _withUnit(design['beam_width'], 'M')),
-                _buildInfoLine('No. MC', _display(design['machine_no'])),
-                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
-                // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
-                // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
-                // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
-=======
-                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'PCS')),
-=======
-                _buildInfoLine('Benang', _withUnit(item['yarn_qty'], 'Helai')),
-                _buildInfoLine('Panjang', _withUnit(item['length'], 'M')),
->>>>>>> c940e94a (fix:)
+                    'Lebar Beam',
+                    _withUnit(
+                      warpingPreparation['beam_width'] ??
+                          orderGreige['beam_width'] ??
+                          design['beam_width'],
+                      'M',
+                    )),
                 _buildInfoLine(
-                    'Lebar Beam', _withUnit(design['beam_width'], 'M')),
-                _buildInfoLine('No. MC', _display(design['machine_no'])),
-<<<<<<< HEAD
-                _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
-                _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
-                _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-                _buildInfoLine('Beam A/B', _display(design['beam_ab'])),
+                    'No. MC',
+                    _display(warpingPreparation['machine_no'] ??
+                        orderGreige['machine_no'] ??
+                        design['machine_no'])),
+                _buildInfoLine(
+                    'Beam A/B',
+                    _display(warpingPreparation['beam_ab'] ??
+                        orderGreige['beam_ab'] ??
+                        design['beam_ab'])),
                 // _buildInfoLine('Berat', _withUnit(item['weight'], 'KG')),
                 // _buildInfoLine('Majun', _withUnit(item['majun'], 'KG')),
                 // _buildInfoLine('Gempor', _withUnit(item['gempor'], 'CNS')),
->>>>>>> c940e94a (fix:)
               ],
             );
           })
@@ -1804,10 +1141,6 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
   Widget _buildInfoLine(String label, String value, {Widget? trailing}) {
     final valueChildren = <Widget>[
       Flexible(
@@ -1830,12 +1163,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       valueChildren.add(trailing);
     }
 
-<<<<<<< HEAD
-=======
-  Widget _buildInfoLine(String label, String value) {
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> c940e94a (fix:)
     return Row(
       children: [
         Expanded(
@@ -1849,39 +1176,16 @@ class GreigeProcessDetailList extends StatelessWidget {
           ),
         ),
         Flexible(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: valueChildren,
-<<<<<<< HEAD
-=======
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: CustomTheme().fontSize('sm'),
-              color: Colors.grey[800],
-              fontWeight: CustomTheme().fontWeight('bold'),
-            ),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> c940e94a (fix:)
           ),
         ),
       ].separatedBy(CustomTheme().hGap('md')),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
   String _formatYarnLot(dynamic value) {
     if (value == null || value.toString().trim().isEmpty) return '-';
     return formatNumber(value);
@@ -1924,11 +1228,6 @@ class GreigeProcessDetailList extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> c940e94a (fix:)
   Widget _buildNote(dynamic value) {
     if (value == null || value.toString().isEmpty) {
       return NoData();
@@ -1971,38 +1270,20 @@ class GreigeProcessDetailList extends StatelessWidget {
 
   List<Map<String, dynamic>> _resultRows() {
     if (processName == 'Warping') {
+      final orderGreige = _mapValue(data['order_greige']);
+      final warpingPreparation = _mapValue(orderGreige['warping_preparation']);
+
       return [
         {
           'label': 'Jenis Warping',
-<<<<<<< HEAD
-<<<<<<< HEAD
-          'value': _formatType(data['order_greige']['warping_type']),
+          'value': _formatType(
+            warpingPreparation['warping_type'] ?? orderGreige['warping_type'],
+          ),
           'icon': Icons.category_outlined
         },
         {
           'label': 'Jumlah Panjang',
           'value': _withUnit(data['length'], ''),
-=======
-          'value': _formatType(data['warping_type']),
-          'icon': Icons.category_outlined
-        },
-        {
-          'label': 'Qty Benang',
-          'value': _withUnit(data['yarn_qty'], 'KG'),
-          'icon': Icons.layers_outlined
-        },
-        {
-          'label': 'Panjang',
-          'value': _withUnit(data['length'], 'M'),
->>>>>>> 230afad3 (feat: greige order detail)
-=======
-          'value': _formatType(data['order_greige']['warping_type']),
-          'icon': Icons.category_outlined
-        },
-        {
-          'label': 'Jumlah Panjang',
-          'value': _withUnit(data['length'], ''),
->>>>>>> deb4d660 (fix: detail warping - shearing)
           'icon': Icons.straighten_outlined
         },
         {
@@ -2010,20 +1291,21 @@ class GreigeProcessDetailList extends StatelessWidget {
           'value': _withUnit(data['section'], ''),
           'icon': Icons.view_column_outlined
         },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
         {
           'label': 'Jumlah Berat',
           'value': _withUnit(data['weight'], 'KG'),
           'icon': Icons.layers_outlined
         },
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> deb4d660 (fix: detail warping - shearing)
+        {
+          'label': 'Waste',
+          'value': _withUnit(data['waste'], 'KG'),
+          'icon': Icons.layers_outlined
+        },
+        {
+          'label': 'Gempor',
+          'value': _withUnit(data['gempor'], 'KG'),
+          'icon': Icons.layers_outlined
+        },
       ];
     }
 
@@ -2070,10 +1352,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       },
     ];
   }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 663098db (fix: detail warping)
 
   Widget _buildPasangSection(bool isTablet) {
     final pasangs = _listValue(data['pasangs']);
@@ -2154,11 +1432,6 @@ class GreigeProcessDetailList extends StatelessWidget {
       }).toList(),
     );
   }
-<<<<<<< HEAD
-=======
->>>>>>> 230afad3 (feat: greige order detail)
-=======
->>>>>>> 663098db (fix: detail warping)
 }
 
 Map<String, dynamic> _mapValue(dynamic value) {

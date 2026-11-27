@@ -28,18 +28,6 @@
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		3BFA4B41777372058695BC0D /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DD6A8CD2B72043415410F3 /* Pods_Runner.framework */; };
-<<<<<<< HEAD
-<<<<<<< HEAD
-		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
-		8CFEC1DBE457878BD2818506 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9876D8AC56298C4629D8C2 /* Pods_RunnerTests.framework */; };
-=======
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
-		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
-		8CFEC1DBE457878BD2818506 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9876D8AC56298C4629D8C2 /* Pods_RunnerTests.framework */; };
-=======
->>>>>>> 55af24b (fix: sortir ambil stok dari wo lain)
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		8CFEC1DBE457878BD2818506 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B9876D8AC56298C4629D8C2 /* Pods_RunnerTests.framework */; };
 /* End PBXBuildFile section */
@@ -800,39 +788,14 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /* Begin XCLocalSwiftPackageReference section */
 		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
-=======
-/* Begin XCLocalSwiftPackageReference section */
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
->>>>>>> 16778356 (feat: fcm notification)
-=======
-
-/* Begin XCLocalSwiftPackageReference section */
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};
 /* End XCLocalSwiftPackageReference section */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> 16778356 (feat: fcm notification)
-=======
-
->>>>>>> c1066ed6 (fix: sortir ambil stok dari wo lain)
-=======
->>>>>>> 9c9cafca (feat: fcm notification)
-=======
-
->>>>>>> 456c0f99 (fix: sortir ambil stok dari wo lain)
 /* Begin XCSwiftPackageProductDependency section */
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;

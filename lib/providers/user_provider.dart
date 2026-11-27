@@ -61,35 +61,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> handleLogout() async {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 38fd9bd2 (fix: logout)
-=======
-=======
-    await FcmService.instance.unregisterCurrentDevice();
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
-=======
-    await FcmService.instance.unregisterCurrentDevice();
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-=======
->>>>>>> 8eae832 (fix: logout)
->>>>>>> 62ea8f9a (fix: logout)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     FcmService.instance.clearPendingNavigation();
-=======
-    await FcmService.instance.unregisterCurrentDevice();
-<<<<<<< HEAD
->>>>>>> 16778356 (feat: fcm notification)
-=======
-    FcmService.instance.clearPendingNavigation();
->>>>>>> 58857212 (feat: notifikasi evaluasi bs)
     _user = null;
     _token = null;
 

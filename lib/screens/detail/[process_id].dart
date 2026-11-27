@@ -15,16 +15,8 @@ import 'package:textile_tracking/models/option/option_item.dart';
 import 'package:textile_tracking/models/option/option_item_type.dart';
 import 'package:textile_tracking/models/option/option_machine.dart';
 import 'package:textile_tracking/models/option/option_master_item_grade.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/models/process/dyeing.dart';
-=======
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
-import 'package:textile_tracking/models/process/dyeing.dart';
->>>>>>> ae9b2985 (fix: rework dyeing)
 import 'package:textile_tracking/screens/update/%5Bupdate_process_id%5D.dart';
-import 'package:textile_tracking/components/master/dialog/select_dialog.dart';
 
 class ProcessDetail<T> extends StatefulWidget {
   final String id;
@@ -192,28 +184,9 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     'total_sorting': '0',
     'semifinished_products': [],
     'items': [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     'rework_category': null,
     'rework_type': [],
     'rework_method': [],
-=======
-    /**
-     * Phase 2
-     */
-    'warping_weight': '0'
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> e03dd57 (chore: remove unnecessary)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-    'rework_category': null,
-    'rework_type': [],
-    'rework_method': [],
->>>>>>> ae9b2985 (fix: rework dyeing)
   };
 
   final fieldConfigs = [
@@ -286,56 +259,12 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _postInit() async {
     await _getDataView();
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 
->>>>>>> 7429ce6e (fix: rework dyeing)
     if (!mounted) return;
->>>>>>> 5f7a4c3d (Release/version 1.2.1 (#30))
 
     await _handleFetchMachine();
 
     if (!mounted) return;
-
-    await _handleFetchItemGrade();
-
-    if (!mounted) return;
-
-    await _handleFetchItemType();
-
-    if (!mounted) return;
-
-<<<<<<< HEAD
-=======
-    await _handleFetchMachine();
->>>>>>> 12b70b7 (fix: mulai weaving)
-    await _handleFetchItemGrade();
-<<<<<<< HEAD
-
-    if (!mounted) return;
-
-    await _handleFetchItemType();
-
-    if (!mounted) return;
-
-=======
->>>>>>> 7429ce6e (fix: rework dyeing)
-    if (widget.label == 'Dyeing' && data['rework'] == true) {
-      await _handleFetchReworkCategory();
-
-      if (!mounted) return;
-
-      setState(() {
-        _mapExistingDyeingRework(data);
-      });
-    }
 
     await _handleFetchItemGrade();
 
@@ -355,53 +284,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       });
     }
 
-=======
-=======
-=======
-
->>>>>>> ae9b2985 (fix: rework dyeing)
-=======
->>>>>>> bd2f8083 (Release/version 1.2.1 (#30))
-=======
-
->>>>>>> d50080d8 (fix: rework dyeing)
-    if (!mounted) return;
-
-    await _handleFetchMachine();
-
-    if (!mounted) return;
-
-    await _handleFetchItemGrade();
-
-    if (!mounted) return;
-
-    await _handleFetchItemType();
-
-    if (!mounted) return;
-
-<<<<<<< HEAD
->>>>>>> 60e98a5 (fix: tipe bs di update)
-    await _handleFetchFinishedGrbMaterial();
-    if (!mounted) return;
-
-    await _handleFetchFinishedGoodMaterial();
-<<<<<<< HEAD
->>>>>>> bf8a2c0 (fix: update process)
-=======
-    if (!mounted) return;
-=======
-    if (widget.label == 'Dyeing' && data['rework'] == true) {
-      await _handleFetchReworkCategory();
-
-      if (!mounted) return;
-
-      setState(() {
-        _mapExistingDyeingRework(data);
-      });
-    }
->>>>>>> ae9b2985 (fix: rework dyeing)
-
->>>>>>> 60e98a5 (fix: tipe bs di update)
     _syncGradesWithOptions();
     _syncDefectsWithOptions();
   }
@@ -598,10 +480,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
   Future<void> _handleUpdate(String id) async {
     try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
       final isDyeingRework = widget.label == 'Dyeing' && data['rework'] == true;
 
       if (isDyeingRework) {
@@ -620,10 +498,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
       }
 
       if (!mounted) return;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       if (widget.openUpdateOnStart) {
         final navigator = Navigator.of(context);
         if (navigator.canPop()) {
@@ -635,65 +509,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         return;
       }
 
-=======
-      final item = widget.modelBuilder(_form, data);
-      await widget.handleUpdateService(context, id, item, _isLoading);
-
-      if (!mounted) return;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
->>>>>>> 8bc14cd (fix: card navigate to update)
-=======
-=======
->>>>>>> 3653fed (fix: update to list)
-      if (widget.openUpdateOnStart) {
-        final navigator = Navigator.of(context);
-        if (navigator.canPop()) {
-          navigator.pop();
-        }
-        if (navigator.canPop()) {
-          navigator.pop(true);
-        }
-        return;
-      }
-
-<<<<<<< HEAD
->>>>>>> c473136 (fix: update then to list)
-=======
->>>>>>> 3653fed (fix: update to list)
-=======
->>>>>>> 94db6889 (fix: card navigate to update)
-=======
-      if (widget.openUpdateOnStart) {
-        final navigator = Navigator.of(context);
-        if (navigator.canPop()) {
-          navigator.pop();
-        }
-        if (navigator.canPop()) {
-          navigator.pop(true);
-        }
-        return;
-      }
-
->>>>>>> 0c78146b (version 1.2.2 (#23))
-=======
->>>>>>> 5da4f044 (fix: card navigate to update)
-=======
-      if (widget.openUpdateOnStart) {
-        final navigator = Navigator.of(context);
-        if (navigator.canPop()) {
-          navigator.pop();
-        }
-        if (navigator.canPop()) {
-          navigator.pop(true);
-        }
-        return;
-      }
-
->>>>>>> 635e8c8c (version 1.2.2 (#23))
       Navigator.pushNamedAndRemoveUntil(context, widget.route, (_) => false);
     } catch (e) {
       rethrow;
@@ -739,16 +554,8 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
           weightGradeA: _weightGradeAController,
           finishedItemGrb: finishedItemGrb,
           finishedItemGood: finishedItemGood,
-<<<<<<< HEAD
-<<<<<<< HEAD
           handleSelectReworkCategory: _selectReworkCategory,
           reworkCategoryOption: reworkCategoryOption,
-=======
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
-          handleSelectReworkCategory: _selectReworkCategory,
-          reworkCategoryOption: reworkCategoryOption,
->>>>>>> ae9b2985 (fix: rework dyeing)
         ),
       ),
     );
@@ -756,24 +563,10 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     if (!mounted) return;
 
     if (widget.openUpdateOnStart) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
       final navigator = Navigator.of(context);
       if (navigator.canPop()) {
         navigator.pop(result == true);
       }
-<<<<<<< HEAD
-=======
-      Navigator.pop(context, result == true);
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
-      Navigator.pop(context, result == true);
->>>>>>> 8bc14cd (fix: card navigate to update)
-=======
->>>>>>> f695641d (feat: multi mesin dyeing - long slitting)
       return;
     }
 
@@ -915,11 +708,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 60e98a5 (fix: tipe bs di update)
   Future<void> _handleFetchItemType({String search = ''}) async {
     final service = context.read<OptionItemTypeService>();
 
@@ -931,47 +719,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
 
       setState(() {
         itemTypeOption = service.dataListOption;
-<<<<<<< HEAD
-=======
-  String formatProcessLabel(String label) {
-    final trimmed = label.trim().toLowerCase();
-
-    // kalau lebih dari 1 kata → pakai underscore
-    if (trimmed.contains(' ')) {
-      return trimmed.replaceAll(RegExp(r'\s+'), '_');
-    }
-
-    return trimmed;
-  }
-
-  Future<void> _handleFetchFinishedMaterial() async {
-    final service = Provider.of<OptionItemService>(context, listen: false);
-
-    try {
-      String baseCode = '';
-      String colorCode = '';
-
-      final itemCode = woData['items']?[0]?['item_code'] ?? '';
-
-      if (itemCode.isNotEmpty) {
-        final parts = itemCode.split('-');
-        baseCode = parts.first;
-        colorCode = parts.last;
-      }
-
-      await service.fetchOptions(
-        process: formatProcessLabel(widget.label),
-        baseCode: baseCode,
-        colorCode: colorCode,
-      );
-
-      final data = service.dataListOption;
-
-      setState(() {
-        finishedItemMaterial = data;
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
->>>>>>> 60e98a5 (fix: tipe bs di update)
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -980,11 +727,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     }
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> bf8a2c0 (fix: update process)
-=======
->>>>>>> 60e98a5 (fix: tipe bs di update)
   Future<void> _handleFetchFinishedGrbMaterial() async {
     final service = Provider.of<OptionItemService>(context, listen: false);
 
@@ -1122,11 +864,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   void _selectReworkCategory() {
     if (reworkCategoryOption.isEmpty) {
       showAlertDialog(
@@ -1135,41 +872,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
         message: 'Saat ini tidak ada kategori rework yang tersedia.',
       );
       return;
-<<<<<<< HEAD
-=======
-  double getTotalItemQty() {
-    final items = data['work_orders']?['items'] as List<dynamic>?;
-
-    if (items == null || items.isEmpty) return 0;
-
-    return items.fold<double>(0, (sum, item) {
-      final qty = double.tryParse(item['qty']?.toString() ?? '0') ?? 0;
-      return sum + qty;
-    });
-  }
-
-  double getRemainingQtyForGrade(int index) {
-    final totalQty = getTotalItemQty();
-    if (totalQty == 0) return 0;
-
-    final grades = _form['grades'] as List<dynamic>?;
-
-    if (grades == null) return totalQty;
-
-    double usedQty = 0;
-
-    for (int i = 0; i < grades.length; i++) {
-      if (i == index) continue;
-
-      final qty = double.tryParse(
-            grades[i]?['qty']?.toString() ?? '0',
-          ) ??
-          0;
-
-      usedQty += qty;
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
     }
 
     showDialog(
@@ -1197,11 +899,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     );
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> bf8a2c0 (fix: update process)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   double _calculateTotalSortingFromWo() {
     final processes = woData['processes'];
 
@@ -1264,10 +961,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     });
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   Future<void> _handleFetchReworkCategory() async {
     if (widget.label != 'Dyeing') return;
 
@@ -1406,11 +1099,6 @@ class _ProcessDetailState<T> extends State<ProcessDetail<T>> {
     return null;
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
->>>>>>> ae9b2985 (fix: rework dyeing)
   @override
   Widget build(BuildContext context) {
     if (widget.openUpdateOnStart) {

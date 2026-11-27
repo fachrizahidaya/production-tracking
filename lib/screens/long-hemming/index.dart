@@ -40,16 +40,6 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
   bool _menuLoaded = false;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-=======
->>>>>>> 56d6598 (fix: loading dan cta to detail proses)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -289,13 +279,6 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
             }
           },
         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 56d6598 (fix: loading dan cta to detail proses)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -367,81 +350,8 @@ class _LongHemmingScreenState extends State<LongHemmingScreen> {
                     handleSearch: _handleSearch,
                     dataList: _dataList,
                   ),
-<<<<<<< HEAD
-<<<<<<< HEAD
                 ),
               ),
-=======
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: ProcessList(
-              fetchData: (params) async {
-                final service =
-                    Provider.of<LongHemmingService>(context, listen: false);
-                await service.getDataList(context, params);
-                return service.items;
-              },
-              canRead: _canRead,
-              isLoadMore: _isLoadMore,
-              itemBuilder: (item) => ItemProcessCard(
-                label: 'No. Long Hemming',
-                item: item,
-                titleKey: 'lh_no',
-                subtitleKey: 'work_orders',
-                subtitleField: 'wo_no',
-                canUpdate: _canUpdate,
-                canDelete: _canDelete,
-                onUpdate: () => _openProcessDetail(
-                  item,
-                  openUpdateOnStart: true,
-=======
->>>>>>> 56d6598 (fix: loading dan cta to detail proses)
-                ),
-              ),
-<<<<<<< HEAD
-              onItemTap: (context, item) {
-                _openProcessDetail(
-                  item,
-                  openUpdateOnStart: item['status'] == 'Diproses',
-                );
-              },
-              filterWidget: ListFilter(
-                params: params,
-                onHandleFilter: _handleFilter,
-                dariTanggal: dariTanggal,
-                sampaiTanggal: sampaiTanggal,
-              ),
-              firstLoading: _firstLoading,
-              isFiltered: _isFiltered,
-              hasMore: _hasMore,
-              handleLoadMore: _loadMore,
-              handleRefetch: _refetch,
-              handleSearch: _handleSearch,
-              dataList: _dataList,
-            ),
-          ),
-        ),
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
->>>>>>> 56d6598 (fix: loading dan cta to detail proses)
-=======
-                ),
-              ),
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
         floatingActionButton: AnimatedSlide(
           duration: Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : Offset(0, 1),

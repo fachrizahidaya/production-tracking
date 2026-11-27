@@ -54,38 +54,14 @@ class _FinishWarpingProcessState extends State<FinishWarpingProcess> {
     'yarn_qty': null,
     'notes': '',
     'warping_type': '',
-<<<<<<< HEAD
-<<<<<<< HEAD
     'beam_qty': null,
     'section': null,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> dc33b21a (fix: selesai warping - shearing)
     'length': null,
     'weight': null,
+    'waste': null,
+    'gempor': null,
     'broken_yarns': [],
     'machines': [],
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-    'beam_qty': null,
-    'section': null,
-<<<<<<< HEAD
-    'lengths': [],
->>>>>>> e02e3ffb (fix: finish warping)
-=======
-    'length': null,
-    'weight': null,
-    'broken_yarns': [],
-    'machines': [],
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-=======
-    'lengths': [],
->>>>>>> 11f11e32 (fix: finish warping)
-=======
->>>>>>> dc33b21a (fix: selesai warping - shearing)
   };
 
   @override

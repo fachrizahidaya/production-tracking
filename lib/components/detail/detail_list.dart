@@ -700,51 +700,10 @@ Ringkasan Sorting
 
   Widget _buildSummaryItem(
     String title,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1691b544 (fix: sortir)
-=======
->>>>>>> 655bb899 (fix: detail packing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     dynamic value, {
     String valuePrefix = '',
     Color? valueColor,
   }) {
-<<<<<<< HEAD
-=======
-    dynamic value,
-    {
-    String valuePrefix = '',
-    Color? valueColor,
-  }
-  ) {
-<<<<<<< HEAD
->>>>>>> 1d6d2ab6 (fix: sortir)
-=======
-    dynamic value, {
-    String valuePrefix = '',
-    Color? valueColor,
-  }) {
->>>>>>> 49d7d9c9 (fix: detail packing)
-=======
->>>>>>> dd7ae31 (fix: sortir)
-<<<<<<< HEAD
->>>>>>> 1691b544 (fix: sortir)
-=======
-=======
-    dynamic value, {
-    String valuePrefix = '',
-    Color? valueColor,
-  }) {
->>>>>>> 80d4e6a (fix: detail packing)
->>>>>>> 655bb899 (fix: detail packing)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     return Expanded(
       child: Container(
         padding: EdgeInsets.all(12),
@@ -2124,10 +2083,6 @@ Catatan WO
     /// MULTIPLE ITEMS
     return DefaultTabController(
       length: items.length,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 49d7d9c9 (fix: detail packing)
       child: Builder(
         builder: (context) {
           final tabController = DefaultTabController.of(context);
@@ -2170,42 +2125,7 @@ Catatan WO
                               ),
                             ),
                         ],
-<<<<<<< HEAD
-=======
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: TabBar(
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.black,
-                indicatorColor: Colors.white,
-                indicator: BoxDecoration(
-                  color: Colors.blue[800],
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                tabAlignment: TabAlignment.start,
-                tabs: items.asMap().entries.map(
-                  (entry) {
-                    final index = entry.key;
-
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Tab(
-                        text: 'Item ${index + 1}',
->>>>>>> 12b70b7 (fix: mulai weaving)
                       ),
-<<<<<<< HEAD
-=======
-                      ),
->>>>>>> 49d7d9c9 (fix: detail packing)
                     ),
                   ),
                   buildItem(item),
@@ -2214,34 +2134,6 @@ Catatan WO
             },
           );
         },
-<<<<<<< HEAD
-=======
-                    );
-                  },
-                ).toList(),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: isPacking
-                ? 250
-                : widget.label == 'Long Hemming'
-                    ? 250
-                    : isQtyProcess
-                        ? 200
-                        : 150,
-            child: TabBarView(
-              children: items.map((item) {
-                return buildItem(item);
-              }).toList(),
-            ),
-          ),
-        ].separatedBy(
-          CustomTheme().vGap('lg'),
-        ),
->>>>>>> 95f19e13 (fix: bug detail process)
-=======
->>>>>>> 49d7d9c9 (fix: detail packing)
       ),
     );
   }

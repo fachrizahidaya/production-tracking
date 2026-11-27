@@ -30,30 +30,8 @@ class SpkListComp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     final isTablet = MediaQuery.sizeOf(context).width >= 600;
     final listHeight = isTablet ? 320.0 : 350.0;
-=======
-    const double listHeight = 350;
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 320.0 : 350.0;
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
-    const double listHeight = 380;
->>>>>>> 1d5490b7 (feat: spk)
-=======
-    const double listHeight = 350;
->>>>>>> 31883749 (fix: report)
-=======
-    final isTablet = MediaQuery.sizeOf(context).width >= 600;
-    final listHeight = isTablet ? 320.0 : 350.0;
->>>>>>> b01fb0fd (fix: responsive size for report)
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -112,31 +90,11 @@ class SpkListComp extends StatelessWidget {
             SizedBox(
               height: loading || items.isEmpty ? 120 : listHeight,
               child: loading
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   ? const Center(
-=======
-                  ? Center(
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-                  ? const Center(
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                  ? Center(
->>>>>>> 1d5490b7 (feat: spk)
-=======
-                  ? const Center(
->>>>>>> 14df3077 (fix: report)
                       child: CircularProgressIndicator(),
                     )
                   : items.isEmpty
                       ? NoData()
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                       : LayoutBuilder(
                           builder: (context, constraints) {
                             final cardWidth =
@@ -146,40 +104,6 @@ class SpkListComp extends StatelessWidget {
                                       isTablet ? 520.0 : 300.0,
                                     )
                                     .toDouble();
-=======
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-<<<<<<< HEAD
-                            final cardWidth = (constraints.maxWidth * 0.8)
-                                .clamp(260.0, 300.0)
-                                .toDouble();
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                            final cardWidth =
-                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
-                                    .clamp(
-                                      isTablet ? 440.0 : 260.0,
-                                      isTablet ? 520.0 : 300.0,
-                                    )
-                                    .toDouble();
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-<<<<<<< HEAD
-                            final cardWidth = (constraints.maxWidth * 0.8)
-                                .clamp(260.0, 300.0)
-                                .toDouble();
->>>>>>> 14df3077 (fix: report)
-=======
-                            final cardWidth =
-                                (constraints.maxWidth * (isTablet ? 0.65 : 0.8))
-                                    .clamp(
-                                      isTablet ? 440.0 : 260.0,
-                                      isTablet ? 520.0 : 300.0,
-                                    )
-                                    .toDouble();
->>>>>>> b01fb0fd (fix: responsive size for report)
 
                             return ScrollConfiguration(
                               behavior: ScrollConfiguration.of(context)
@@ -204,58 +128,13 @@ class SpkListComp extends StatelessWidget {
                                     width: cardWidth,
                                     child: _buildSpkListCard(
                                       items[index],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                                       isTablet: isTablet,
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                                      isTablet: isTablet,
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
->>>>>>> 14df3077 (fix: report)
-=======
-                                      isTablet: isTablet,
->>>>>>> b01fb0fd (fix: responsive size for report)
                                       isLast: index == items.length - 1,
                                     ),
                                   );
                                 },
                               ),
                             );
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 1d5490b7 (feat: spk)
-                      : ListView.builder(
-                          controller: scrollController,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          itemCount: items.length + (loadingMore ? 1 : 0),
-                          padding: const EdgeInsets.fromLTRB(0, 6, 0, 0),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-<<<<<<< HEAD
-<<<<<<< HEAD
-                                width: 360,
-                                child: _buildSpkListCard(items[index],
-                                    isLast: index == items.length - 1));
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
-                                width: 280,
-=======
-                                width: 360,
->>>>>>> 183ac4f1 (fix: report)
-                                child: _buildSpkListCard(items[index],
-                                    isLast: index == items.length - 1));
->>>>>>> 1d5490b7 (feat: spk)
-=======
->>>>>>> 14df3077 (fix: report)
                           },
                         ),
             ),
@@ -266,31 +145,11 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
   Widget _buildSpkListCard(
     SpkListItem item, {
     required bool isTablet,
     isLast = false,
   }) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
-  Widget _buildSpkListCard(SpkListItem item, {isLast = false}) {
->>>>>>> 1d5490b7 (feat: spk)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
     return Padding(
       padding: EdgeInsets.fromLTRB(12, 0, isLast ? 16 : 0, 12),
       child: Container(
@@ -317,14 +176,6 @@ class SpkListComp extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 14),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
             ..._buildInfoRows(
               [
                 MapEntry(
@@ -354,105 +205,6 @@ class SpkListComp extends StatelessWidget {
                 MapEntry('Total Berat', '${formatNumber(item.weight)} KG'),
               ],
               isTablet ? 3 : 2,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 1d5490b7 (feat: spk)
-            _buildInfoPair(
-              'Tanggal',
-              formatDate(DateTime.parse(item.date)),
-              'Qty WO',
-<<<<<<< HEAD
-<<<<<<< HEAD
-              '${formatNumber(item.woQty)} PCS',
-=======
-              formatNumber(item.woQty),
->>>>>>> 1d5490b7 (feat: spk)
-=======
-              '${formatNumber(item.woQty)} PCS',
->>>>>>> 183ac4f1 (fix: report)
-            ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
-              'Total Sortir',
-<<<<<<< HEAD
-<<<<<<< HEAD
-              '${formatNumber(item.sortingQty)} PCS',
-              'Total Packing',
-              '${formatNumber(item.packingQty)} PCS',
-=======
-              formatNumber(item.sortingQty),
-              'Total Packing',
-              formatNumber(item.packingQty),
->>>>>>> 1d5490b7 (feat: spk)
-=======
-              '${formatNumber(item.sortingQty)} PCS',
-              'Total Packing',
-              '${formatNumber(item.packingQty)} PCS',
->>>>>>> 183ac4f1 (fix: report)
-            ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
-              'Grade A',
-<<<<<<< HEAD
-<<<<<<< HEAD
-              '${formatNumber(item.gradeA)} PCS',
-              'Grade B',
-              '${formatNumber(item.gradeB)} PCS',
-=======
-              formatNumber(item.gradeA),
-              'Grade B',
-              formatNumber(item.gradeB),
->>>>>>> 1d5490b7 (feat: spk)
-=======
-              '${formatNumber(item.gradeA)} PCS',
-              'Grade B',
-              '${formatNumber(item.gradeB)} PCS',
->>>>>>> 183ac4f1 (fix: report)
-            ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
-              'Grade BS',
-<<<<<<< HEAD
-<<<<<<< HEAD
-              '${formatNumber(item.gradeBs)} PCS',
-              'Berat 1 Lusin',
-              '${formatNumber(item.dozenWeight)} KG',
-=======
-              formatNumber(item.gradeBs),
-              'Berat 1 Lusin',
-              formatNumber(item.dozenWeight),
->>>>>>> 1d5490b7 (feat: spk)
-=======
-              '${formatNumber(item.gradeBs)} PCS',
-              'Berat 1 Lusin',
-              '${formatNumber(item.dozenWeight)} KG',
->>>>>>> 183ac4f1 (fix: report)
-            ),
-            const SizedBox(height: 14),
-            _buildInfoPair(
-              'Berat Grade A',
-<<<<<<< HEAD
-<<<<<<< HEAD
-              '${formatNumber(item.gradeAWeight)} KG',
-              'Total Berat',
-              '${formatNumber(item.weight)} KG',
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
-              formatNumber(item.gradeAWeight),
-              'Total Berat',
-              formatNumber(item.weight),
->>>>>>> 1d5490b7 (feat: spk)
-=======
-              '${formatNumber(item.gradeAWeight)} KG',
-              'Total Berat',
-              '${formatNumber(item.weight)} KG',
->>>>>>> 183ac4f1 (fix: report)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
             ),
           ],
         ),
@@ -460,10 +212,6 @@ class SpkListComp extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   List<Widget> _buildInfoRows(
     List<MapEntry<String, String>> items,
     int columnCount,
@@ -495,75 +243,6 @@ class SpkListComp extends StatelessWidget {
     }
 
     return rows;
-=======
-  Widget _buildInfoPair(
-    String firstLabel,
-    dynamic firstValue,
-    String secondLabel,
-    dynamic secondValue,
-  ) {
-=======
-  Widget _buildInfoPair(
-    String firstLabel,
-    dynamic firstValue,
-    String secondLabel,
-    dynamic secondValue,
-  ) {
->>>>>>> 1d5490b7 (feat: spk)
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: _buildInfo(firstLabel, firstValue)),
-        const SizedBox(width: 16),
-        Expanded(child: _buildInfo(secondLabel, secondValue)),
-      ],
-    );
-<<<<<<< HEAD
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
-  List<Widget> _buildInfoRows(
-    List<MapEntry<String, String>> items,
-    int columnCount,
-  ) {
-=======
-  List<Widget> _buildInfoRows(
-    List<MapEntry<String, String>> items,
-    int columnCount,
-  ) {
->>>>>>> b01fb0fd (fix: responsive size for report)
-    final rows = <Widget>[];
-
-    for (var start = 0; start < items.length; start += columnCount) {
-      if (rows.isNotEmpty) {
-        rows.add(const SizedBox(height: 14));
-      }
-
-      rows.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount * 2 - 1, (position) {
-            if (position.isOdd) {
-              return const SizedBox(width: 16);
-            }
-
-            final index = start + (position ~/ 2);
-            return Expanded(
-              child: index < items.length
-                  ? _buildInfo(items[index].key, items[index].value)
-                  : const SizedBox.shrink(),
-            );
-          }),
-        ),
-      );
-    }
-
-    return rows;
-<<<<<<< HEAD
->>>>>>> 5ea4dfbf (fix: responsive size for report)
-=======
->>>>>>> 1d5490b7 (feat: spk)
-=======
->>>>>>> b01fb0fd (fix: responsive size for report)
   }
 
   Widget _buildInfo(String label, dynamic value) {

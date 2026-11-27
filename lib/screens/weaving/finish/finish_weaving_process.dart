@@ -55,19 +55,9 @@ class _FinishWeavingProcessState extends State<FinishWeavingProcess> {
     'qty': null,
     'weight': null,
     'waste': null,
-<<<<<<< HEAD
-<<<<<<< HEAD
     'skip_shearing': '',
     'machines': [],
     'attachments': [],
-=======
-    'skip_shearing': ''
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
-    'skip_shearing': '',
-    'machines': [],
-    'attachments': [],
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   };
 
   @override

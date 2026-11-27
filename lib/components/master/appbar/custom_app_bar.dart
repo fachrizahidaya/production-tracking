@@ -7,18 +7,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onReturn;
   final List<Widget>? actions;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  final bool isWithNotification;
-  final int notificationCount;
-  final VoidCallback? onNotifications;
-  final String notificationTooltip;
-=======
->>>>>>> d8439a4 (fix: refactor code)
-  final bool isWithAccount;
-  final bool showAvatar;
-=======
   final bool isWithNotification;
   final int notificationCount;
   final VoidCallback? onNotifications;
@@ -28,22 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onAnomalyNotifications;
   final String anomalyNotificationTooltip;
   final bool isWithAccount;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
-  final bool isWithNotification;
-  final bool isWithAccount;
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
   final bool showAvatar;
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
->>>>>>> b1c3b09b (fix: user name di appbar)
-=======
-  final bool showAvatar;
->>>>>>> aa863171 (fix: responsive UI to mobile)
   final bool showNameWithAvatar;
   final tab;
   final bool? canDelete;
@@ -63,109 +36,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isLoading;
   final bool isDashboardSettingsLoading;
   final VoidCallback? onDashboardSettings;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final VoidCallback? onReportSettings;
-<<<<<<< HEAD
-<<<<<<< HEAD
   final VoidCallback? onEdit;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
->>>>>>> 5e1caa7c (feat: widget controller)
-=======
-  final VoidCallback? onReportSettings;
->>>>>>> 65038198 (feat:)
-=======
-  final VoidCallback? onEdit;
->>>>>>> 41ded02d (fix: rework)
-=======
-  final showAvatar;
->>>>>>> 0721b7ab (chore: update version)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   const CustomAppBar(
       {super.key,
       required this.title,
       this.onReturn,
       this.actions,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       this.isWithNotification = false,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
->>>>>>> 20fcb172 (fix: notification all evaluasi)
       this.notificationCount = 0,
       this.onNotifications,
       this.notificationTooltip = 'Evaluasi',
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> d8439a4 (fix: refactor code)
-=======
-      this.isWithNotification = false,
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
-      this.isWithNotification = false,
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-      this.reworkNotificationCount = 0,
-      this.onReworkNotifications,
-<<<<<<< HEAD
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
-      this.isWithBsNotification = false,
-      this.bsNotificationCount = 0,
-      this.onBsNotifications,
->>>>>>> 58857212 (feat: notifikasi evaluasi bs)
-=======
-      this.notificationCount = 0,
-      this.onNotifications,
-      this.notificationTooltip = 'Evaluasi',
->>>>>>> e2884b8b (fix: notification all evaluasi)
-=======
-      this.reworkNotificationCount = 0,
-      this.onReworkNotifications,
-      this.isWithBsNotification = false,
-      this.bsNotificationCount = 0,
-      this.onBsNotifications,
->>>>>>> 83f4dcb (feat: notifikasi evaluasi bs)
-<<<<<<< HEAD
->>>>>>> 92623572 (feat: notifikasi evaluasi bs)
-=======
-=======
-      this.notificationCount = 0,
-      this.onNotifications,
-      this.notificationTooltip = 'Evaluasi',
->>>>>>> 07c9d40 (fix: notification all evaluasi)
-<<<<<<< HEAD
->>>>>>> 20fcb172 (fix: notification all evaluasi)
-=======
-=======
-=======
-      this.notificationCount = 0,
-      this.onNotifications,
-      this.notificationTooltip = 'Evaluasi',
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.isWithAnomalyNotification = false,
       this.anomalyNotificationCount = 0,
       this.onAnomalyNotifications,
       this.anomalyNotificationTooltip = 'Notifikasi',
-<<<<<<< HEAD
->>>>>>> d94a57a (feat:)
->>>>>>> a5b9c62d (feat:)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       this.isWithAccount = false,
       this.showAvatar = true,
       this.tab,
@@ -182,18 +68,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.isTextEditor = false,
       this.handleSave,
       this.name,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      this.handleFinish,
-      this.isLoading = false,
-<<<<<<< HEAD
-<<<<<<< HEAD
-      this.showNameWithAvatar = false});
-=======
-      this.isLoading = false});
->>>>>>> d8439a4 (fix: refactor code)
-=======
       this.handleFinish,
       this.isLoading = false,
       this.isDashboardSettingsLoading = false,
@@ -201,26 +75,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.onReportSettings,
       this.onEdit,
       this.showNameWithAvatar = false});
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
-      this.handleFinish,
-      this.isLoading = false,
-      this.showNameWithAvatar = false});
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-      this.showNameWithAvatar = false,
-=======
-      this.isDashboardSettingsLoading = false,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
-      this.onDashboardSettings,
-      this.onReportSettings,
-<<<<<<< HEAD
-      this.isDashboardSettingsLoading = false});
->>>>>>> 0721b7ab (chore: update version)
-=======
-      this.onEdit,
-      this.showNameWithAvatar = false});
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 
   @override
   Widget build(BuildContext context) {
@@ -243,10 +97,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         if (isWithNotification)
           _buildNotificationButton(
             tooltip: notificationTooltip,
@@ -254,21 +104,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: notificationCount,
             onPressed: onNotifications,
           ),
-<<<<<<< HEAD
-=======
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
->>>>>>> 5e1b7ecb (fix: dashboard)
-=======
-        if (isWithNotification)
-          _buildNotificationButton(
-            tooltip: notificationTooltip,
-            icon: Icons.assignment_late_outlined,
-            count: notificationCount,
-            onPressed: onNotifications,
-          ),
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
         if (isWithAnomalyNotification)
           _buildNotificationButton(
             tooltip: anomalyNotificationTooltip,
@@ -276,7 +111,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             count: anomalyNotificationCount,
             onPressed: onAnomalyNotifications,
           ),
->>>>>>> a5b9c62d (feat:)
         if (isDashboardSettingsLoading)
           const Padding(
             padding: EdgeInsets.all(14),
@@ -287,47 +121,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           )
         else if (onDashboardSettings != null)
-<<<<<<< HEAD
-=======
-        if (onDashboardSettings != null)
->>>>>>> 5e1caa7c (feat: widget controller)
-=======
->>>>>>> 5e1b7ecb (fix: dashboard)
           IconButton(
             tooltip: 'Atur widget dashboard',
             onPressed: onDashboardSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 65038198 (feat:)
         if (onReportSettings != null)
           IconButton(
             tooltip: 'Atur widget laporan',
             onPressed: onReportSettings,
             icon: const Icon(Icons.dashboard_customize_outlined),
           ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 41ded02d (fix: rework)
         if (onEdit != null)
           IconButton(
             tooltip: 'Edit',
             onPressed: onEdit,
             icon: const Icon(Icons.edit_outlined),
           ),
-<<<<<<< HEAD
-=======
->>>>>>> 7a6aa3b1 (feat: model for report)
-=======
->>>>>>> 5e1caa7c (feat: widget controller)
-=======
->>>>>>> 65038198 (feat:)
-=======
->>>>>>> 41ded02d (fix: rework)
         if (isWithAccount)
           PopupMenuButton<String>(
             icon: Row(
@@ -343,15 +153,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
->>>>>>> aa863171 (fix: responsive UI to mobile)
                   if (showAvatar)
                     CircleAvatar(
                       radius: 16,
@@ -363,57 +164,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: CustomTheme().fontSize('sm'),
                         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
                       ),
                     )
                   else
                     const Icon(Icons.account_circle_outlined),
-=======
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: CustomTheme().colors('primary'),
-                    child: Text(
-                      getInitial(name),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: CustomTheme().fontSize('sm'),
-                      ),
-                    ),
-                  ),
-<<<<<<< HEAD
->>>>>>> 632c9e3 (fix: show logged in name di appbar)
-=======
->>>>>>> 6f05bd35 (merge to fase 2  (#27))
-=======
-                      ),
-                    )
-                  else
-                    const Icon(Icons.account_circle_outlined),
->>>>>>> 9dacc402 (fix: responsive UI to mobile)
-=======
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: CustomTheme().colors('primary'),
-                    child: Text(
-                      getInitial(name),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: CustomTheme().fontSize('sm'),
-                      ),
-                    ),
-                  ),
->>>>>>> b1c3b09b (fix: user name di appbar)
-=======
-                      ),
-                    )
-                  else
-                    const Icon(Icons.account_circle_outlined),
->>>>>>> aa863171 (fix: responsive UI to mobile)
                 ].separatedBy(CustomTheme().hGap('xl'))),
             color: Colors.white,
             offset: Offset(0, 40),

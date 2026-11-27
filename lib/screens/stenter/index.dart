@@ -41,13 +41,6 @@ class _StenterScreenState extends State<StenterScreen> {
   bool _isLoadMore = false;
   bool _showFab = true;
   bool _menuLoaded = false;
-<<<<<<< HEAD
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-=======
->>>>>>> d8439a4 (fix: refactor code)
 
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
 
@@ -295,10 +288,6 @@ class _StenterScreenState extends State<StenterScreen> {
             }
           },
         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d8439a4 (fix: refactor code)
         body: !_menuLoaded
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -319,35 +308,6 @@ class _StenterScreenState extends State<StenterScreen> {
                       }
                     }
                     return false;
-<<<<<<< HEAD
-=======
-        body: SafeArea(
-          child: NotificationListener(
-            onNotification: (notification) {
-              if (notification is UserScrollNotification) {
-                if (notification.direction == ScrollDirection.reverse) {
-                  if (_showFab) {
-                    setState(() => _showFab = false);
-                  }
-                } else if (notification.direction == ScrollDirection.forward) {
-                  if (!_showFab) {
-                    setState(() => _showFab = true);
-                  }
-                }
-              }
-              return false;
-            },
-            child: Column(
-              children: [
-                Expanded(
-                    child: ProcessList(
-                  fetchData: (params) async {
-                    final service =
-                        Provider.of<StenterService>(context, listen: false);
-                    await service.getDataList(context, params);
-                    return service.items;
-=======
->>>>>>> d8439a4 (fix: refactor code)
                   },
                   child: Column(
                     children: [
@@ -404,74 +364,6 @@ class _StenterScreenState extends State<StenterScreen> {
                       ))
                     ],
                   ),
-<<<<<<< HEAD
-                  onItemTap: (context, item) {
-                    _openProcessDetail(
-                      item,
-                      openUpdateOnStart: item['status'] == 'Diproses',
-                    );
-<<<<<<< HEAD
->>>>>>> 993ef46 (fix: card navigate to update (#16))
-=======
->>>>>>> 8bc14cd (fix: card navigate to update)
-                  },
-                  child: Column(
-                    children: [
-                      Expanded(
-                          child: ProcessList(
-                        fetchData: (params) async {
-                          final service = Provider.of<StenterService>(context,
-                              listen: false);
-                          await service.getDataList(context, params);
-                          return service.items;
-                        },
-                        canRead: _canRead,
-                        isLoadMore: _isLoadMore,
-                        itemBuilder: (item) => ItemProcessCard(
-                          label: 'No. Stenter',
-                          item: item,
-                          titleKey: 'stenter_no',
-                          subtitleKey: 'work_orders',
-                          subtitleField: 'wo_no',
-                          itemField: ItemField.get,
-                          nestedField: ItemField.nested,
-                        ),
-                        onItemTap: (context, item) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StenterDetail(
-                                  id: item['id'].toString(),
-                                  no: item['stenter_no'].toString(),
-                                  canDelete: _canDelete,
-                                  canUpdate: _canUpdate,
-                                ),
-                              )).then((value) {
-                            if (value == true) {
-                              _refetch();
-                            } else {
-                              return null;
-                            }
-                          });
-                        },
-                        filterWidget: ListFilter(
-                          params: params,
-                          onHandleFilter: _handleFilter,
-                          dariTanggal: dariTanggal,
-                          sampaiTanggal: sampaiTanggal,
-                        ),
-                        firstLoading: _firstLoading,
-                        isFiltered: _isFiltered,
-                        hasMore: _hasMore,
-                        handleLoadMore: _loadMore,
-                        handleRefetch: _refetch,
-                        handleSearch: _handleSearch,
-                        dataList: _dataList,
-                      ))
-                    ],
-                  ),
-=======
->>>>>>> d8439a4 (fix: refactor code)
                 ),
               ),
         floatingActionButton: AnimatedSlide(

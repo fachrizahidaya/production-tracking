@@ -7,25 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
 import 'package:textile_tracking/components/master/button/custom_floating_button.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
-=======
-import 'package:textile_tracking/components/master/card/item_process_card.dart';
-import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
-import 'package:textile_tracking/components/master/card/item_process_card.dart';
-import 'package:textile_tracking/components/master/dialog/action_dialog.dart';
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-import 'package:textile_tracking/components/master/card/item_dyeing_preparation_card.dart';
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
 import 'package:textile_tracking/components/master/filter/list_filter.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/process_list.dart';
@@ -162,43 +144,11 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
       params['page'] = newPage;
     });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     final service =
         Provider.of<DyeingPreparationService>(context, listen: false);
     await service.fetchPreparationList(context, params);
 
     List<dynamic> loadData = service.items;
-=======
-    await Provider.of<DyeingPreparationService>(context, listen: false)
-        .getDataList(context, params);
-
-    List<dynamic> loadData =
-        Provider.of<DyeingPreparationService>(context, listen: false).items;
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-    final service =
-        Provider.of<DyeingPreparationService>(context, listen: false);
-    await service.fetchPreparationList(context, params);
-
-    List<dynamic> loadData = service.items;
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
-    await Provider.of<DyeingPreparationService>(context, listen: false)
-        .getDataList(context, params);
-
-    List<dynamic> loadData =
-        Provider.of<DyeingPreparationService>(context, listen: false).items;
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-    final service =
-        Provider.of<DyeingPreparationService>(context, listen: false);
-    await service.fetchPreparationList(context, params);
-
-    List<dynamic> loadData = service.items;
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
     if (loadData.isEmpty) {
       setState(() {
@@ -362,57 +312,13 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                       final service = Provider.of<DyeingPreparationService>(
                           context,
                           listen: false);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                       await service.fetchPreparationList(context, params);
-=======
-                      await service.getDataList(context, params);
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-                      await service.fetchPreparationList(context, params);
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
-                      await service.getDataList(context, params);
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-                      await service.fetchPreparationList(context, params);
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
                       return service.items;
                     },
                     isLoadMore: _isLoadMore,
                     canRead: _canRead,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     itemBuilder: (item) => ItemDyeingPreparationCard(
                       item: item,
-=======
-                    itemBuilder: (item) => ItemProcessCard(
-                      label: 'No. Persiapan Dyeing',
-                      item: item,
-                      titleKey: 'prep_no',
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-                    itemBuilder: (item) => ItemDyeingPreparationCard(
-                      item: item,
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
-                    itemBuilder: (item) => ItemProcessCard(
-                      label: 'No. Persiapan Dyeing',
-                      item: item,
-                      titleKey: 'prep_no',
-                      subtitleKey: 'work_orders',
-                      subtitleField: 'wo_no',
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-                    itemBuilder: (item) => ItemDyeingPreparationCard(
-                      item: item,
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
                     ),
                     onItemTap: (context, item) {
                       Navigator.push(
@@ -449,28 +355,12 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                 ),
               ),
         floatingActionButton: AnimatedSlide(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           duration: const Duration(milliseconds: 200),
           offset: _showFab ? Offset.zero : const Offset(0, 1),
-=======
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-          duration: const Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : const Offset(0, 1),
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
             opacity: _showFab ? 1 : 0,
             child: CustomFloatingButton(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
               onPressed: () {
                 Navigator.push(
                   context,
@@ -489,74 +379,6 @@ class _DyeingPreparationScreenState extends State<DyeingPreparationScreen> {
                 size: 72,
               ),
             ),
-<<<<<<< HEAD
-=======
-          duration: Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : Offset(0, 1),
-=======
-          duration: const Duration(milliseconds: 200),
-          offset: _showFab ? Offset.zero : const Offset(0, 1),
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _showFab ? 1 : 0,
-            child: CustomFloatingButton(
-<<<<<<< HEAD
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      final actions = [
-                        DialogActionItem(
-                          icon: Icons.add,
-                          iconColor: CustomTheme().buttonColor('primary'),
-                          title: 'Buat Persiapan Dyeing',
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => CreateDyeingPreparation(),
-                              ),
-                            );
-                          },
-                        ),
-                      ];
-                      return ActionDialog(actions: actions);
-                    },
-                  );
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 72,
-                )),
-<<<<<<< HEAD
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const CreateDyeingPreparation(),
-                  ),
-                ).then((value) {
-                  if (value == true) {
-                    _refetch();
-                  }
-                });
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-                size: 72,
-              ),
-            ),
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
           ),
         ),
       ),

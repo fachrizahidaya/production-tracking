@@ -14,8 +14,6 @@ class CardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
     final woNo = item['wo_no']?.toString() ?? 'Item';
     final status = item['status']?.toString() ?? '-';
     final columnCount = isTablet ? 3 : 2;
@@ -77,94 +75,12 @@ class CardHeader extends StatelessWidget {
               ),
             ],
             columnCount,
-=======
-    final itemName = item['wo_no']?.toString() ?? 'Item';
-    final itemCode = item['spk_no']?.toString() ?? '-';
-=======
-    final woNo = item['wo_no']?.toString() ?? 'Item';
-    final status = item['status']?.toString() ?? '-';
-    final columnCount = isTablet ? 3 : 2;
->>>>>>> 025659bb (fix: dashboard mobile)
-
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        woNo,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 20,
-                      color: Colors.grey.shade500,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              _buildStatusBadge(status),
-            ],
-          ),
-<<<<<<< HEAD
-          const SizedBox(width: 4),
-          Text(
-            '${value?.toString() ?? '-'} ${unit ?? ''}',
-            style: TextStyle(
-              fontSize: isTablet
-                  ? CustomTheme().fontSize('lg')
-                  : CustomTheme().fontSize('md'),
-              fontWeight: CustomTheme().fontWeight('semibold'),
-              color: Colors.grey[700],
-            ),
->>>>>>> 83d26bbb (fix: UI mobile dashboard)
-=======
-          const SizedBox(height: 12),
-          ..._buildInfoRows(
-            [
-              MapEntry('Tanggal', _formatDate(item['wo_date'])),
-              MapEntry(
-                'Proses saat ini',
-                _formatCurrentProcess(
-                  item['currentProcess'] ?? item['current_process'],
-                ),
-              ),
-              MapEntry(
-                'Qty Material',
-                '${formatNumber(item['wo_qty'])} ${item['wo_unit'] ?? ''}'
-                    .trim(),
-              ),
-              MapEntry(
-                'Qty Greige',
-                '${formatNumber(item['greige_qty'])} ${item['greige_unit'] ?? ''}'
-                    .trim(),
-              ),
-            ],
-            columnCount,
->>>>>>> 025659bb (fix: dashboard mobile)
           ),
         ],
       ),
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   List<Widget> _buildInfoRows(
     List<MapEntry<String, String>> items,
     int columnCount,
@@ -222,71 +138,6 @@ class CardHeader extends StatelessWidget {
   }
 
   Widget _buildStatusBadge(String status) {
-=======
-  Widget _buildSpkBadge(
-    String code,
-    bool isTablet,
-  ) {
->>>>>>> 83d26bbb (fix: UI mobile dashboard)
-=======
-  List<Widget> _buildInfoRows(
-    List<MapEntry<String, String>> items,
-    int columnCount,
-  ) {
-    final rows = <Widget>[];
-
-    for (var start = 0; start < items.length; start += columnCount) {
-      if (rows.isNotEmpty) {
-        rows.add(const SizedBox(height: 12));
-      }
-
-      rows.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount * 2 - 1, (position) {
-            if (position.isOdd) {
-              return const SizedBox(width: 16);
-            }
-
-            final index = start + (position ~/ 2);
-            return Expanded(
-              child: index < items.length
-                  ? _buildInfoItem(items[index].key, items[index].value)
-                  : const SizedBox.shrink(),
-            );
-          }),
-        ),
-      );
-    }
-
-    return rows;
-  }
-
-  Widget _buildInfoItem(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatusBadge(String status) {
->>>>>>> 025659bb (fix: dashboard mobile)
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,

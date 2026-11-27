@@ -31,13 +31,6 @@ class _AuthCheckState extends State<AuthCheck> {
       });
       if (token != null) {
         FcmService.instance.registerForCurrentUser();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        FcmService.instance.flushPendingNavigation();
->>>>>>> 16778356 (feat: fcm notification)
-=======
->>>>>>> e4d7831b (fix: handle firebase notification)
       }
     }
   }

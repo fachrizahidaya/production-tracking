@@ -456,42 +456,10 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    final machines = List<Map<String, dynamic>>.from(
-      widget.form?['machines'] ?? [],
-    );
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
->>>>>>> fc4fb8a2 (fix: kondisi button rework)
-=======
-    final machines = List<Map<String, dynamic>>.from(
-      widget.form?['machines'] ?? [],
-    );
->>>>>>> 55a0e7ec (feat: option rework dyeing)
-=======
->>>>>>> 77ccb664 (fix: kondisi button rework)
     final reworkCategory = widget.form?['rework_category'];
     final reworkType = widget.form?['rework_type'] as List? ?? [];
     final reworkMethod = widget.form?['rework_method'] as List? ?? [];
     final isSubmitDisabled = widget.form?['wo_id'] == null ||
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        machines.isEmpty ||
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
->>>>>>> fc4fb8a2 (fix: kondisi button rework)
-=======
-        machines.isEmpty ||
->>>>>>> 55a0e7ec (feat: option rework dyeing)
-=======
->>>>>>> 77ccb664 (fix: kondisi button rework)
         reworkCategory == null ||
         (reworkCategory == 'perbaikan' && reworkType.isEmpty) ||
         (reworkType.contains('perbaikan_warna') && reworkMethod.isEmpty);
@@ -524,21 +492,7 @@ class _ReworkDyeingManualState extends State<ReworkDyeingManual> {
                   handleSelectWorkOrder: _selectWorkOrder,
                   handleSelectReworkCategory: _selectReworkCategory,
                   reworkCategoryOption: reworkCategoryOption,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   onFormChanged: () => setState(() {}),
-=======
->>>>>>> 11b79f06 (feat: option rework dyeing)
-=======
-                  onFormChanged: () => setState(() {}),
->>>>>>> fc4fb8a2 (fix: kondisi button rework)
-=======
->>>>>>> 55a0e7ec (feat: option rework dyeing)
-=======
-                  onFormChanged: () => setState(() {}),
->>>>>>> 77ccb664 (fix: kondisi button rework)
                 ),
               ),
             ],

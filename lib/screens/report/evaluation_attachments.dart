@@ -1,13 +1,14 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:textile_tracking/components/master/container/template.dart';
 import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_image_dialog.dart';
 
 List<Map<String, dynamic>> parseEvaluationAttachments(dynamic raw) {
   if (raw is! List) return [];
@@ -18,47 +19,6 @@ List<Map<String, dynamic>> parseEvaluationAttachments(dynamic raw) {
       .toList();
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-bool sameEvaluationAttachments(
-  List<Map<String, dynamic>> left,
-  List<Map<String, dynamic>> right,
-) {
-  if (left.length != right.length) return false;
-  for (var i = 0; i < left.length; i++) {
-    if (left[i]['id']?.toString() != right[i]['id']?.toString()) return false;
-    if (left[i]['path']?.toString() != right[i]['path']?.toString()) {
-      return false;
-    }
-    if ((left[i]['isNew'] == true) != (right[i]['isNew'] == true)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
 bool evaluationAttachmentIsLocal(Map<String, dynamic> item) =>
     item['isNew'] == true;
 
@@ -91,6 +51,25 @@ String? evaluationAttachmentUrl(Map<String, dynamic> item) {
   return '$base$source';
 }
 
+bool evaluationAttachmentIsVideo(Map<String, dynamic> item) {
+  final value = [
+    item['mime_type'],
+    item['mimeType'],
+    item['type'],
+    item['file_name'],
+    item['name'],
+    evaluationAttachmentSource(item),
+  ].whereType<String>().join(' ').toLowerCase();
+  return value.contains('video/') ||
+      RegExp(r'\.(mp4|mov|m4v|avi|mkv|webm)(\?|$)').hasMatch(value);
+}
+
+String? _formatAttachmentSize(dynamic value) {
+  final bytes = value is num ? value.toDouble() : double.tryParse('$value');
+  if (bytes == null || bytes < 0) return null;
+  return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+}
+
 class EvaluationAttachmentEditor extends StatefulWidget {
   final List<Map<String, dynamic>> attachments;
   final ValueChanged<List<Map<String, dynamic>>> onChanged;
@@ -108,6 +87,8 @@ class EvaluationAttachmentEditor extends StatefulWidget {
 
 class _EvaluationAttachmentEditorState
     extends State<EvaluationAttachmentEditor> {
+  bool _processingVideo = false;
+
   Future<File?> _compressImage(String path) async {
     final dir = await getTemporaryDirectory();
     final targetPath =
@@ -119,6 +100,28 @@ class _EvaluationAttachmentEditorState
     );
     if (result != null) return File(result.path);
     return File(path);
+  }
+
+  Future<File?> _compressVideo(String path) async {
+    final info = await VideoCompress.compressVideo(
+      path,
+      quality: VideoQuality.MediumQuality,
+      includeAudio: true,
+      deleteOrigin: false,
+      frameRate: 30,
+    );
+    final compressedPath = info?.path;
+    return compressedPath == null ? File(path) : File(compressedPath);
+  }
+
+  Widget _attachmentPreview(
+    Map<String, dynamic> item, {
+    BoxFit fit = BoxFit.cover,
+  }) {
+    if (evaluationAttachmentIsVideo(item)) {
+      return _VideoThumbnail(item: item, fit: fit);
+    }
+    return _attachmentImage(item, fit: fit);
   }
 
   Widget _attachmentImage(
@@ -172,7 +175,9 @@ class _EvaluationAttachmentEditorState
                     Expanded(
                       child: _ImageSourceButton(
                         icon: Icons.photo_camera_outlined,
-                        label: 'Ambil gambar',
+                        label: title.toLowerCase().contains('video')
+                            ? 'Ambil video'
+                            : 'Ambil gambar',
                         onTap: () =>
                             Navigator.pop(sheetContext, ImageSource.camera),
                       ),
@@ -204,21 +209,6 @@ class _EvaluationAttachmentEditorState
     );
     if (image == null) return null;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     final fileExtension = image.path.split('.').last.toLowerCase();
     const allowed = {'jpg', 'jpeg', 'png', 'gif', 'webp'};
     if (!allowed.contains(fileExtension)) {
@@ -243,75 +233,56 @@ class _EvaluationAttachmentEditorState
       'name': name,
       'path': file.path,
       'extension': name.split('.').last.toLowerCase(),
-<<<<<<< HEAD
-=======
-    final file = await _compressImage(image.path);
-    if (file == null) return null;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-
-    final File file;
-    if (fileExtension == 'gif' || fileExtension == 'webp') {
-      file = File(image.path);
-    } else {
-      final compressed = await _compressImage(image.path);
-      if (compressed == null) return null;
-      file = compressed;
-    }
-
-    if (await file.length() > 10 * 1024 * 1024) {
-      throw Exception('Ukuran foto maksimal 10MB.');
-    }
-
-    final name = file.path.split('/').last;
-    return {
-      'name': name,
-      'path': file.path,
-<<<<<<< HEAD
-      'extension': 'jpg',
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
-      'extension': name.split('.').last.toLowerCase(),
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-
-    final File file;
-    if (fileExtension == 'gif' || fileExtension == 'webp') {
-      file = File(image.path);
-    } else {
-      final compressed = await _compressImage(image.path);
-      if (compressed == null) return null;
-      file = compressed;
-    }
-
-    if (await file.length() > 10 * 1024 * 1024) {
-      throw Exception('Ukuran foto maksimal 10MB.');
-    }
-
-    final name = file.path.split('/').last;
-    return {
-      'name': name,
-      'path': file.path,
-<<<<<<< HEAD
-      'extension': 'jpg',
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
-      'extension': name.split('.').last.toLowerCase(),
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
       'isNew': true,
     };
+  }
+
+  Future<Map<String, dynamic>?> _pickVideo(ImageSource source) async {
+    final video = await ImagePicker().pickVideo(source: source);
+    if (video == null) return null;
+
+    if (mounted) setState(() => _processingVideo = true);
+    try {
+      final originalBytes = await File(video.path).length();
+      final compressed = await _compressVideo(video.path);
+      if (compressed == null) return null;
+      final compressedBytes = await compressed.length();
+      String toMb(int bytes) => (bytes / (1024 * 1024)).toStringAsFixed(2);
+      debugPrint(
+        '[BS Attachment] Video dipilih: ${video.path} | '
+        'ukuran asli: $originalBytes bytes (${toMb(originalBytes)} MB) | '
+        'ukuran setelah kompresi: $compressedBytes bytes '
+        '(${toMb(compressedBytes)} MB)',
+      );
+
+      if (compressedBytes > 20 * 1024 * 1024) {
+        throw Exception('Ukuran video maksimal 20MB setelah dikompres.');
+      }
+
+      String? thumbnailPath;
+      try {
+        final thumbnail = await VideoCompress.getFileThumbnail(
+          compressed.path,
+          quality: 70,
+          position: 1000,
+        );
+        thumbnailPath = thumbnail.path;
+      } catch (error) {
+        debugPrint('[BS Attachment] Gagal membuat thumbnail video: $error');
+      }
+
+      final name = '${DateTime.now().millisecondsSinceEpoch}.mp4';
+      return {
+        'name': name,
+        'path': compressed.path,
+        if (thumbnailPath != null) 'thumbnailPath': thumbnailPath,
+        'extension': 'mp4',
+        'mime_type': 'video/mp4',
+        'isNew': true,
+      };
+    } finally {
+      if (mounted) setState(() => _processingVideo = false);
+    }
   }
 
   void _showError(Object error) {
@@ -325,55 +296,46 @@ class _EvaluationAttachmentEditorState
 
   Future<void> _addAttachment() async {
     try {
-      final source = await _showImageSourceSheet(title: 'Tambah Foto');
+      final type = await showModalBottomSheet<String>(
+        context: context,
+        showDragHandle: true,
+        builder: (sheetContext) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera_outlined),
+                title: const Text('Tambah foto'),
+                onTap: () => Navigator.pop(sheetContext, 'photo'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.videocam_outlined),
+                title: const Text('Tambah video'),
+                onTap: () => Navigator.pop(sheetContext, 'video'),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (type == null || !mounted) return;
+      if (type == 'video' &&
+          widget.attachments.where(evaluationAttachmentIsVideo).length >= 2) {
+        _showError('Maksimal 2 video dapat dipilih.');
+        return;
+      }
+      final source = await _showImageSourceSheet(
+        title: type == 'video' ? 'Tambah Video' : 'Tambah Foto',
+      );
       if (source == null || !mounted) return;
-      final photo = await _pickPhoto(source);
-      if (photo == null || !mounted) return;
-      widget.onChanged([...widget.attachments, photo]);
+      final attachment =
+          type == 'video' ? await _pickVideo(source) : await _pickPhoto(source);
+      if (attachment == null || !mounted) return;
+      widget.onChanged([...widget.attachments, attachment]);
     } catch (e) {
       _showError(e);
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-  Future<void> _replaceAttachment(int index) async {
-    if (index < 0 || index >= widget.attachments.length) return;
-    try {
-      final source = await _showImageSourceSheet(title: 'Ganti Foto');
-      if (source == null || !mounted) return;
-      final photo = await _pickPhoto(source);
-      if (photo == null || !mounted) return;
-      final next = List<Map<String, dynamic>>.from(widget.attachments);
-      next[index] = photo;
-      widget.onChanged(next);
-    } catch (e) {
-      _showError(e);
-    }
-  }
-
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   Future<void> _deleteAttachment(int index) async {
     if (index < 0 || index >= widget.attachments.length) return;
     final confirmed = await showDialog<bool>(
@@ -410,92 +372,29 @@ class _EvaluationAttachmentEditorState
           child: SafeArea(
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    icon: const Icon(Icons.close, color: Colors.white),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      icon: const Icon(Icons.close, color: Colors.white),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(dialogContext);
+                        await _deleteAttachment(index);
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(0xFFD32F2F),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                      ),
+                      child: const Text('Hapus'),
+                    ),
+                  ],
                 ),
                 Expanded(
-                  child: InteractiveViewer(
-                    minScale: 1,
-                    maxScale: 4,
-                    child: Center(
-                      child: _attachmentImage(
-                        widget.attachments[index],
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-                        child: OutlinedButton.icon(
-                          onPressed: () async {
-                            Navigator.pop(dialogContext);
-                            await _replaceAttachment(index);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white70),
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.edit_outlined),
-                          label: const Text('Ganti'),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            Navigator.pop(dialogContext);
-                            await _deleteAttachment(index);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD32F2F),
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          icon: const Icon(Icons.delete_outline),
-                          label: const Text('Hapus'),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: _AttachmentViewer(item: widget.attachments[index]),
                 ),
               ],
             ),
@@ -517,21 +416,6 @@ class _EvaluationAttachmentEditorState
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                 child: GestureDetector(
                   onTap: () => Navigator.pop(sheetContext, 'view'),
                   child: ClipRRect(
@@ -540,85 +424,21 @@ class _EvaluationAttachmentEditorState
                       aspectRatio: 16 / 9,
                       child: ColoredBox(
                         color: Colors.black,
-                        child: _attachmentImage(
+                        child: _attachmentPreview(
                           widget.attachments[index],
                           fit: BoxFit.contain,
                         ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: ColoredBox(
-                      color: Colors.black,
-                      child: _attachmentImage(
-                        widget.attachments[index],
-                        fit: BoxFit.contain,
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                       ),
                     ),
                   ),
                 ),
               ),
               ListTile(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-                leading: const Icon(Icons.visibility_outlined),
-                title: const Text('Lihat gambar'),
-                onTap: () => Navigator.pop(sheetContext, 'view'),
-              ),
-              ListTile(
-                leading: const Icon(Icons.edit_outlined),
-                title: const Text('Ganti gambar'),
-                onTap: () => Navigator.pop(sheetContext, 'edit'),
-              ),
-              ListTile(
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                 leading: const Icon(Icons.delete_outline, color: Colors.red),
-                title: const Text(
-                  'Hapus gambar',
+                title: Text(
+                  evaluationAttachmentIsVideo(widget.attachments[index])
+                      ? 'Hapus video'
+                      : 'Hapus gambar',
                   style: TextStyle(color: Colors.red),
                 ),
                 onTap: () => Navigator.pop(sheetContext, 'delete'),
@@ -632,206 +452,107 @@ class _EvaluationAttachmentEditorState
 
     if (!mounted || action == null) return;
     if (action == 'view') await _viewAttachment(index);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    if (action == 'edit') await _replaceAttachment(index);
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
-=======
-    if (action == 'edit') await _replaceAttachment(index);
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
-    if (action == 'edit') await _replaceAttachment(index);
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     if (action == 'delete') await _deleteAttachment(index);
   }
 
   @override
   Widget build(BuildContext context) {
-    return TemplateCard(
-      title: 'Lampiran',
-      icon: Icons.photo_library_outlined,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const spacing = 8.0;
-          final columns = constraints.maxWidth < 280 ? 2 : 3;
-          final tileSize =
-              (constraints.maxWidth - spacing * (columns - 1)) / columns;
+    return Stack(
+      children: [
+        TemplateCard(
+          title: 'Lampiran',
+          icon: Icons.photo_library_outlined,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              const spacing = 8.0;
+              final columns = constraints.maxWidth < 280 ? 2 : 3;
+              final tileSize =
+                  (constraints.maxWidth - spacing * (columns - 1)) / columns;
 
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: widget.attachments.length + 1,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns,
-              crossAxisSpacing: spacing,
-              mainAxisSpacing: spacing,
-            ),
-            itemBuilder: (context, index) {
-              if (index == widget.attachments.length) {
-                return _AddPhotoTile(size: tileSize, onTap: _addAttachment);
-              }
-
-              return GestureDetector(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                onTap: () => _viewAttachment(index),
-=======
-                onTap: () => _showAttachmentActions(index),
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
-                onTap: () => _viewAttachment(index),
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-                onTap: () => _viewAttachment(index),
-=======
-                onTap: () => _showAttachmentActions(index),
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
-                onTap: () => _viewAttachment(index),
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
-                onTap: () => _viewAttachment(index),
->>>>>>> 0ba64c26 (chore: adjust fase-2)
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      ColoredBox(
-                        color: Colors.grey.shade200,
-                        child: _attachmentImage(widget.attachments[index]),
-                      ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
-                      Positioned(
-                        right: 6,
-                        bottom: 6,
-                        child: GestureDetector(
-                          onTap: () => _showAttachmentActions(index),
-                          child: const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SizedBox(
-                              width: 28,
-                              height: 28,
-                              child: Icon(
-                                Icons.more_horiz,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-<<<<<<< HEAD
-=======
-                      const Positioned(
-                        right: 6,
-                        bottom: 6,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            shape: BoxShape.circle,
-                          ),
-                          child: SizedBox(
-                            width: 28,
-                            height: 28,
-                            child: Icon(
-                              Icons.more_horiz,
-                              color: Colors.white,
-                              size: 16,
-<<<<<<< HEAD
->>>>>>> 67a12e35 (feat: Lampiran untuk evaluasi)
-=======
-                      Positioned(
-                        right: 6,
-                        bottom: 6,
-                        child: GestureDetector(
-                          onTap: () => _showAttachmentActions(index),
-                          child: const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SizedBox(
-                              width: 28,
-                              height: 28,
-                              child: Icon(
-                                Icons.more_horiz,
-                                color: Colors.white,
-                                size: 16,
-                              ),
->>>>>>> 01aa2117 (fix: attachment evaluation)
-=======
->>>>>>> 20aa0b1 (feat: Lampiran untuk evaluasi)
-<<<<<<< HEAD
->>>>>>> 7da43251 (feat: Lampiran untuk evaluasi)
-=======
-=======
-                      Positioned(
-                        right: 6,
-                        bottom: 6,
-                        child: GestureDetector(
-                          onTap: () => _showAttachmentActions(index),
-                          child: const DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.black54,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SizedBox(
-                              width: 28,
-                              height: 28,
-                              child: Icon(
-                                Icons.more_horiz,
-                                color: Colors.white,
-                                size: 16,
-                              ),
->>>>>>> dc5b5fe (fix: attachment evaluation)
->>>>>>> 6f3012ab (fix: attachment evaluation)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.attachments.length + 1,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: spacing,
+                  mainAxisSpacing: spacing,
                 ),
+                itemBuilder: (context, index) {
+                  if (index == widget.attachments.length) {
+                    return _AddPhotoTile(size: tileSize, onTap: _addAttachment);
+                  }
+
+                  return GestureDetector(
+                    onTap: () => _viewAttachment(index),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          ColoredBox(
+                            color: Colors.grey.shade200,
+                            child:
+                                _attachmentPreview(widget.attachments[index]),
+                          ),
+                          Positioned(
+                            left: 6,
+                            bottom: 6,
+                            child: _AttachmentSizeLabel(
+                              item: widget.attachments[index],
+                            ),
+                          ),
+                          Positioned(
+                            right: 6,
+                            bottom: 6,
+                            child: GestureDetector(
+                              onTap: () => _showAttachmentActions(index),
+                              child: const DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Colors.black54,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SizedBox(
+                                  width: 28,
+                                  height: 28,
+                                  child: Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+        ),
+        if (_processingVideo)
+          Positioned.fill(
+            child: ColoredBox(
+              color: const Color.fromRGBO(0, 0, 0, 0.65),
+              child: const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: Colors.white),
+                    SizedBox(height: 12),
+                    Text(
+                      'Memproses video...',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -844,26 +565,22 @@ class EvaluationAttachmentGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = parseEvaluationAttachments(attachments);
-
     return TemplateCard(
       title: 'Lampiran',
       icon: Icons.photo_library_outlined,
       child: items.isEmpty
           ? Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'Tidak ada lampiran',
-                style: TextStyle(
-                  fontSize: CustomTheme().fontSize('base'),
-                  color: Colors.grey.shade600,
-                ),
-              ),
+              child: Text('Tidak ada lampiran',
+                  style: TextStyle(
+                    fontSize: CustomTheme().fontSize('base'),
+                    color: Colors.grey.shade600,
+                  )),
             )
           : LayoutBuilder(
               builder: (context, constraints) {
                 const spacing = 8.0;
                 final columns = constraints.maxWidth < 280 ? 2 : 3;
-
                 return GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -874,28 +591,37 @@ class EvaluationAttachmentGallery extends StatelessWidget {
                     mainAxisSpacing: spacing,
                   ),
                   itemBuilder: (context, index) {
-                    final url = evaluationAttachmentUrl(items[index]);
+                    final item = items[index];
+                    final url = evaluationAttachmentUrl(item);
                     return GestureDetector(
-                      onTap: url == null
-                          ? null
-                          : () => showImageDialog(
-                                context: context,
-                                isNew: false,
-                                filePath: url,
-                              ),
+                      onTap:
+                          url == null ? null : () => _showViewer(context, item),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: ColoredBox(
-                          color: Colors.grey.shade200,
-                          child: url == null
-                              ? const Icon(Icons.broken_image_outlined)
-                              : Image.network(
-                                  url,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(
-                                    Icons.broken_image_outlined,
-                                  ),
-                                ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            evaluationAttachmentIsVideo(item)
+                                ? _VideoThumbnail(item: item)
+                                : url == null
+                                    ? const ColoredBox(
+                                        color: Colors.grey,
+                                        child: Icon(
+                                          Icons.broken_image_outlined,
+                                        ),
+                                      )
+                                    : Image.network(url,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            const Icon(
+                                              Icons.broken_image_outlined,
+                                            )),
+                            Positioned(
+                              left: 6,
+                              bottom: 6,
+                              child: _AttachmentSizeLabel(item: item),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -903,6 +629,338 @@ class EvaluationAttachmentGallery extends StatelessWidget {
                 );
               },
             ),
+    );
+  }
+
+  void _showViewer(BuildContext context, Map<String, dynamic> item) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black,
+      builder: (dialogContext) => Dialog.fullscreen(
+        backgroundColor: Colors.black,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  icon: const Icon(Icons.close, color: Colors.white),
+                ),
+              ),
+              Expanded(child: _AttachmentViewer(item: item)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AttachmentSizeLabel extends StatefulWidget {
+  final Map<String, dynamic> item;
+
+  const _AttachmentSizeLabel({required this.item});
+
+  @override
+  State<_AttachmentSizeLabel> createState() => _AttachmentSizeLabelState();
+}
+
+class _AttachmentSizeLabelState extends State<_AttachmentSizeLabel> {
+  late final Future<int?> _sizeFuture = _loadSize();
+
+  Future<int?> _loadSize() async {
+    if (evaluationAttachmentIsLocal(widget.item)) {
+      final path = widget.item['path']?.toString().trim() ?? '';
+      if (path.isEmpty) return null;
+      final file = File(path);
+      if (!await file.exists()) return null;
+      return file.length();
+    }
+
+    final value = widget.item['file_size'];
+    if (value is num) return value.toInt();
+    return int.tryParse('$value');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<int?>(
+      future: _sizeFuture,
+      builder: (context, snapshot) {
+        final size = snapshot.data;
+        final label = size == null ? null : _formatAttachmentSize(size);
+        if (label == null) return const SizedBox.shrink();
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _VideoThumbnail extends StatefulWidget {
+  final Map<String, dynamic> item;
+  final BoxFit fit;
+
+  const _VideoThumbnail({required this.item, this.fit = BoxFit.cover});
+
+  @override
+  State<_VideoThumbnail> createState() => _VideoThumbnailState();
+}
+
+class _VideoThumbnailState extends State<_VideoThumbnail> {
+  File? _thumbnail;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _createThumbnail();
+  }
+
+  Future<void> _createThumbnail() async {
+    try {
+      final existingThumbnail =
+          widget.item['thumbnailPath']?.toString().trim() ?? '';
+      if (existingThumbnail.isNotEmpty) {
+        final file = File(existingThumbnail);
+        if (await file.exists()) {
+          if (mounted) setState(() => _thumbnail = file);
+          return;
+        }
+      }
+
+      final source = evaluationAttachmentUrl(widget.item);
+      if (source == null || source.isEmpty) return;
+
+      String localVideoPath;
+      if (evaluationAttachmentIsLocal(widget.item)) {
+        localVideoPath = source;
+      } else {
+        final response = await http.get(Uri.parse(source));
+        if (response.statusCode < 200 || response.statusCode >= 300) return;
+        final directory = await getTemporaryDirectory();
+        final videoFile = File(
+          '${directory.path}/bs_video_${source.hashCode.abs()}.mp4',
+        );
+        if (!await videoFile.exists()) {
+          await videoFile.writeAsBytes(response.bodyBytes, flush: true);
+        }
+        localVideoPath = videoFile.path;
+      }
+
+      final thumbnail = await VideoCompress.getFileThumbnail(
+        localVideoPath,
+        quality: 70,
+        position: 1000,
+      );
+      if (mounted) setState(() => _thumbnail = thumbnail);
+    } catch (error) {
+      debugPrint(
+          '[BS Attachment] Gagal membuat thumbnail video existing: $error');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      alignment: Alignment.center,
+      children: [
+        if (_thumbnail != null)
+          Image.file(
+            _thumbnail!,
+            fit: widget.fit,
+            errorBuilder: (_, __, ___) => const ColoredBox(
+              color: Colors.black87,
+            ),
+          )
+        else
+          const ColoredBox(color: Colors.black87),
+        if (_loading)
+          const Center(
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            ),
+          )
+        else
+          const Center(
+            child: Icon(Icons.play_circle_fill, color: Colors.white, size: 42),
+          ),
+      ],
+    );
+  }
+}
+
+class _AttachmentViewer extends StatefulWidget {
+  final Map<String, dynamic> item;
+
+  const _AttachmentViewer({required this.item});
+
+  @override
+  State<_AttachmentViewer> createState() => _AttachmentViewerState();
+}
+
+class _AttachmentViewerState extends State<_AttachmentViewer> {
+  VideoPlayerController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (evaluationAttachmentIsVideo(widget.item)) {
+      final source = evaluationAttachmentUrl(widget.item);
+      if (source != null) {
+        _controller = evaluationAttachmentIsLocal(widget.item)
+            ? VideoPlayerController.file(File(source))
+            : VideoPlayerController.networkUrl(Uri.parse(source));
+        _controller!.addListener(_onVideoChanged);
+        _controller!.initialize().then((_) {
+          if (mounted) setState(() {});
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.removeListener(_onVideoChanged);
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  void _onVideoChanged() {
+    if (mounted) setState(() {});
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final hours = duration.inHours;
+    return hours > 0 ? '$hours:$minutes:$seconds' : '$minutes:$seconds';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!evaluationAttachmentIsVideo(widget.item)) {
+      final source = evaluationAttachmentUrl(widget.item);
+      return InteractiveViewer(
+        minScale: 1,
+        maxScale: 4,
+        child: Center(
+          child: source == null
+              ? const Icon(Icons.broken_image, color: Colors.white)
+              : evaluationAttachmentIsLocal(widget.item)
+                  ? Image.file(File(source), fit: BoxFit.contain)
+                  : Image.network(source, fit: BoxFit.contain),
+        ),
+      );
+    }
+
+    final controller = _controller;
+    if (controller == null || !controller.value.isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final position = controller.value.position;
+    final duration = controller.value.duration;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const controlsHeight = 58.0;
+          final availableHeight = math.max(
+            100.0,
+            constraints.maxHeight - controlsHeight,
+          );
+          final aspectRatio = controller.value.aspectRatio;
+          final videoHeight = math.min(
+            availableHeight,
+            constraints.maxWidth / aspectRatio,
+          );
+          final videoWidth = videoHeight * aspectRatio;
+
+          return Center(
+            child: SizedBox(
+              width: videoWidth,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AspectRatio(
+                    aspectRatio: aspectRatio,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        VideoPlayer(controller),
+                        IconButton(
+                          iconSize: 64,
+                          color: Colors.white,
+                          icon: Icon(controller.value.isPlaying
+                              ? Icons.pause_circle_filled
+                              : Icons.play_circle_fill),
+                          onPressed: () {
+                            controller.value.isPlaying
+                                ? controller.pause()
+                                : controller.play();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: VideoProgressIndicator(
+                      controller,
+                      allowScrubbing: true,
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.white,
+                        bufferedColor: Colors.white54,
+                        backgroundColor: Colors.white24,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _formatDuration(position),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          _formatDuration(duration),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

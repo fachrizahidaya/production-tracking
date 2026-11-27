@@ -42,14 +42,6 @@ class SortingDetailComp extends StatelessWidget {
                       ),
                     ),
                   ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
->>>>>>> 14df3077 (fix: report)
                   // const SizedBox(width: 8),
                   // Expanded(
                   //   child: InkWell(
@@ -61,30 +53,6 @@ class SortingDetailComp extends StatelessWidget {
                   //     ),
                   //   ),
                   // ),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 65038198 (feat:)
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: InkWell(
-                      onTap: onDownload,
-                      child: Container(
-                        decoration: CustomTheme().cardTheme(),
-                        padding: const EdgeInsets.all(12),
-                        child: const Icon(Icons.download_outlined, size: 18),
-                      ),
-                    ),
-                  ),
-<<<<<<< HEAD
->>>>>>> 5ad2d445 (feat: temporarily)
-=======
->>>>>>> 2261585c (fix: report axis horizontal)
-=======
->>>>>>> 65038198 (feat:)
-=======
->>>>>>> 14df3077 (fix: report)
                 ],
               ),
             ),

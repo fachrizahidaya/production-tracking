@@ -12,25 +12,7 @@ class SummaryCard extends StatefulWidget {
   final bool isSelected;
   final showProgress;
   final filter;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   final bool isGreige;
-=======
-  final isMobile;
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-=======
->>>>>>> 3bba1171 (fix: filter summary)
-=======
-  final isMobile;
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
->>>>>>> 51527bb3 (fix: filter summary)
-=======
-  final bool isGreige;
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   const SummaryCard(
       {super.key,
@@ -38,30 +20,8 @@ class SummaryCard extends StatefulWidget {
       this.onTap,
       this.isSelected = false,
       this.showProgress,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      this.filter,
-<<<<<<< HEAD
-      this.isGreige = false});
-=======
-      this.isMobile = false});
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-=======
-      this.filter});
->>>>>>> 3bba1171 (fix: filter summary)
-=======
-      this.filter,
-      this.isMobile = false});
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
-      this.filter});
->>>>>>> 51527bb3 (fix: filter summary)
-=======
       this.filter,
       this.isGreige = false});
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
 
   @override
   State<SummaryCard> createState() => _SummaryCardState();
@@ -84,28 +44,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  void _showWorkOrdersByStatusDialog({
-    required String title,
-    required List<dynamic> woList,
-  }) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return CardDialog(
-          title: title,
-          woList: woList,
-          isGreige: widget.isGreige,
-        );
-      },
-    );
-  }
-
->>>>>>> 720fcd7c (fix: dashboard work order summary untuk greige)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
   @override
   void dispose() {
     _animationController.dispose();
@@ -135,23 +73,6 @@ class _SummaryCardState extends State<SummaryCard>
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
->>>>>>> d5a67e50 (fix: filter summary)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
   Widget _buildCard(bool isTablet) {
     return Container(
       width: double.infinity,
@@ -183,201 +104,6 @@ class _SummaryCardState extends State<SummaryCard>
           ),
         ],
       ),
-<<<<<<< HEAD
-=======
-  Widget _buildCard(bool isMobile) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> 3bba1171 (fix: filter summary)
-=======
-  Widget _buildCard(bool isMobile) {
->>>>>>> 73378bdd (fix: UI mobile dashboard)
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> 51527bb3 (fix: filter summary)
-=======
-  Widget _buildCard(bool isMobile) {
->>>>>>> 62cb1f4a (fix: UI mobile dashboard)
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> 19a47673 (fix: filter summary)
-=======
-  Widget _buildCard(bool isMobile) {
->>>>>>> 1c1ecf12 (fix: UI mobile dashboard)
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> b167f1b0 (fix: filter summary)
-=======
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-=======
-  Widget _buildCard(bool isTablet) {
->>>>>>> 887d25a (fix: filter summary)
->>>>>>> d5a67e50 (fix: filter summary)
-    final Map<String, dynamic> summary =
-        (widget.data['summary'] as Map<String, dynamic>?) ??
-            {
-              'completed': 0,
-              'in_progress': 0,
-              'waiting': 0,
-              'skipped': 0,
-            };
-
-    final statusColor = _getSummaryColor(summary);
-
-    return AnimatedContainer(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-      width: double.infinity,
-      decoration: CustomTheme().cardTheme().copyWith(
-            border: Border.all(
-              color: widget.isSelected
-                  ? CustomTheme().buttonColor('primary')
-                  : Colors.grey[200]!,
-              width: widget.isSelected ? 2 : 1,
-            ),
-          ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CardHeader(
-            data: widget.data,
-            isTablet: isTablet,
-            filter: widget.filter,
-            getTotalCount: _getTotalCount,
-          ),
-          const SizedBox(height: 10),
-          CardContent(
-            data: widget.data,
-            filter: widget.filter,
-            isTablet: isTablet,
-            showProgress: widget.showProgress,
-          ),
-        ],
-      ),
-<<<<<<< HEAD
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-=======
-      duration: const Duration(milliseconds: 200),
-=======
-      width: double.infinity,
-      duration: Duration(milliseconds: 200),
->>>>>>> d5a67e50 (fix: filter summary)
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: widget.isSelected
-              ? CustomTheme().buttonColor('primary')
-              : Colors.grey[200]!,
-          width: widget.isSelected ? 2 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: widget.isSelected
-                ? CustomTheme().buttonColor('primary').withOpacity(0.15)
-                : Colors.black.withOpacity(0.05),
-            blurRadius: widget.isSelected ? 12 : 10,
-            offset: Offset(0, 2),
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
-      width: double.infinity,
-      decoration: CustomTheme().cardTheme().copyWith(
-            border: Border.all(
-              color: widget.isSelected
-                  ? CustomTheme().buttonColor('primary')
-                  : Colors.grey[200]!,
-              width: widget.isSelected ? 2 : 1,
-            ),
-          ),
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CardHeader(
-            data: widget.data,
-            isTablet: isTablet,
-            filter: widget.filter,
-            getTotalCount: _getTotalCount,
-          ),
-          const SizedBox(height: 10),
-          CardContent(
-            data: widget.data,
-            filter: widget.filter,
-            isTablet: isTablet,
-            showProgress: widget.showProgress,
->>>>>>> 727a4ffa (fix: dashboard mobile)
-          ),
-        ],
-      ),
-<<<<<<< HEAD
-      child: ClipRRect(
-<<<<<<< HEAD
-        borderRadius: BorderRadius.circular(10),
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-        borderRadius: BorderRadius.circular(8),
->>>>>>> d5a67e50 (fix: filter summary)
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CardHeader(
-              data: widget.data,
-<<<<<<< HEAD
-<<<<<<< HEAD
-              isTablet: isTablet,
-=======
-              isTablet: !isMobile,
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-              isTablet: isTablet,
->>>>>>> d5a67e50 (fix: filter summary)
-              statusColor: statusColor,
-              filter: widget.filter,
-              getTotalCount: _getTotalCount,
-            ),
-            CardContent(
-              data: widget.data,
-              filter: widget.filter,
-<<<<<<< HEAD
-<<<<<<< HEAD
-              isTablet: isTablet,
-=======
-              isTablet: !isMobile,
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-              isTablet: isTablet,
->>>>>>> d5a67e50 (fix: filter summary)
-              showProgress: widget.showProgress,
-              showWorkOrdersByStatusDialog: _showWorkOrdersByStatusDialog,
-            ),
-          ],
-        ),
-      ),
-<<<<<<< HEAD
->>>>>>> d86a31e7 (fix: UI mobile dashboard)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
-=======
->>>>>>> e61620e (fix: UI mobile dashboard)
-<<<<<<< HEAD
->>>>>>> bc05a2f3 (fix: UI mobile dashboard)
-=======
-=======
->>>>>>> ecdad3e (fix: dashboard mobile)
->>>>>>> 727a4ffa (fix: dashboard mobile)
-=======
->>>>>>> 0ba64c26 (chore: adjust fase-2)
     );
   }
 

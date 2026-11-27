@@ -24,41 +24,12 @@ class ItemProcess extends StatelessWidget {
     final id = item['id']?.toString();
     if (id == null || id.isEmpty) return;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WorkOrderDetail(id: id),
       ),
     );
-<<<<<<< HEAD
-=======
-class _ItemProcessState extends State<ItemProcess> {
-  bool _showAllTimeline = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _showAllTimeline = widget.isExpanded;
-  }
-
-  String capitalizeFirst(String text) {
-    if (text.isEmpty) return text;
-    return text[0].toUpperCase() + text.substring(1);
-  }
-
-  @override
-  void didUpdateWidget(covariant ItemProcess oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.isExpanded != widget.isExpanded) {
-      _showAllTimeline = widget.isExpanded;
-    }
->>>>>>> bb29b60 (fix: clear warning)
-=======
->>>>>>> 025659bb (fix: dashboard mobile)
   }
 
   @override

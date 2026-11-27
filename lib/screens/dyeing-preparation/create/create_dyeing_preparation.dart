@@ -11,14 +11,6 @@ import 'package:textile_tracking/screens/dyeing-preparation/model/dyeing_prepara
 class CreateDyeingPreparation extends StatelessWidget {
   const CreateDyeingPreparation({super.key});
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   List<Map<String, dynamic>> _mapCreateItems(dynamic items) {
     return List<dynamic>.from(items ?? []).map<Map<String, dynamic>>((rawItem) {
       final item = Map<String, dynamic>.from(rawItem);
@@ -31,74 +23,18 @@ class CreateDyeingPreparation extends StatelessWidget {
     }).toList();
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
   Future<void> _submitToService(
       BuildContext context, Map<String, dynamic> form, isLoading) async {
     final dyeingPreparation = DyeingPreparation(
       woId: int.tryParse(form['wo_id']?.toString() ?? ''),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
       items: _mapCreateItems(form['items']),
       notes: form['notes']?.toString() ?? '',
       attachments: form['attachments'],
-=======
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-      items: form['items'] ?? [],
-      notes: form['notes']?.toString() ?? '',
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
-      attachments: form['attachments'],
->>>>>>> 7a6d7992 (fix: attachment for dyeing preparation)
-=======
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-      items: form['items'] ?? [],
-      notes: form['notes']?.toString() ?? '',
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
-=======
-      attachments: form['attachments'],
->>>>>>> e467a136 (fix: attachment for dyeing preparation)
     );
 
     final message =
         await Provider.of<DyeingPreparationService>(context, listen: false)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             .createPreparation(context, dyeingPreparation, isLoading);
-=======
-            .addItem(context, dyeingPreparation, isLoading);
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-            .createPreparation(context, dyeingPreparation, isLoading);
->>>>>>> 5ac5af63 (fix: persiapan dyeing buat ddan edit)
-=======
-            .addItem(context, dyeingPreparation, isLoading);
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-            .createPreparation(context, dyeingPreparation, isLoading);
->>>>>>> 72a8ec95 (fix: persiapan dyeing buat ddan edit)
 
     Navigator.pushNamedAndRemoveUntil(
         context, '/dyeing-preparations', (route) => false);
@@ -109,31 +45,7 @@ class CreateDyeingPreparation extends StatelessWidget {
           title: 'Persiapan Dyeing Dimulai',
           child: buildBoldMessage(
             message: message,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             prefix: "PD",
-=======
-            prefix: "PDP",
->>>>>>> 57f45d55 (feat: persiapan dyeing)
-=======
-            prefix: "PRE",
->>>>>>> 7e9db1cc (feat: buat persiapan dyeing)
-=======
-            prefix: "PD",
->>>>>>> eb21d940 (fix: buat persiapan dyeing)
-=======
-            prefix: "PDP",
->>>>>>> b70754b7 (feat: persiapan dyeing)
-=======
-            prefix: "PRE",
->>>>>>> c0b3008b (feat: buat persiapan dyeing)
-=======
-            prefix: "PD",
->>>>>>> cc9a0d2c (fix: buat persiapan dyeing)
           ));
     });
   }

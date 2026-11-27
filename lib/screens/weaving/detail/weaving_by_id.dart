@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 // ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,38 +9,8 @@ import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/util/format_number.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f7a54b43 (fix: detail list)
 import 'package:textile_tracking/models/option/option_greige_order.dart';
 import 'package:textile_tracking/screens/weaving/detail/edit_weaving.dart';
-=======
-=======
-// ignore_for_file: use_build_context_synchronously
-
->>>>>>> 12b70b7 (fix: mulai weaving)
-=======
-// ignore_for_file: use_build_context_synchronously, unused_element, unused_element_parameter
-
-import 'package:easy_localization/easy_localization.dart';
->>>>>>> 95d1a035 (fix: weaving, shearing)
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:textile_tracking/components/detail/greige_process_detail_list.dart';
-import 'package:textile_tracking/components/master/theme.dart';
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
-<<<<<<< HEAD
-import 'package:textile_tracking/helpers/util/bold_message.dart';
-import 'package:textile_tracking/screens/detail/%5Bprocess_id%5D.dart';
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/util/format_number.dart';
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
-import 'package:textile_tracking/screens/weaving/detail/edit_weaving.dart';
->>>>>>> 5afc921a (fix: detail proses)
 import 'package:textile_tracking/screens/weaving/model/weaving.dart';
 
 class WeavingDetailScreen extends StatefulWidget {
@@ -53,10 +20,6 @@ class WeavingDetailScreen extends StatefulWidget {
   final canUpdate;
   final bool openUpdateOnStart;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 95d1a035 (fix: weaving, shearing)
   const WeavingDetailScreen({
     super.key,
     this.id,
@@ -65,26 +28,12 @@ class WeavingDetailScreen extends StatefulWidget {
     this.canUpdate,
     this.openUpdateOnStart = false,
   });
-<<<<<<< HEAD
-=======
-  const WeavingDetailScreen(
-      {super.key,
-      this.id,
-      this.no,
-      this.canDelete,
-      this.canUpdate,
-      this.openUpdateOnStart = false});
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> 95d1a035 (fix: weaving, shearing)
 
   @override
   State<WeavingDetailScreen> createState() => _WeavingDetailScreenState();
 }
 
 class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
-<<<<<<< HEAD
-<<<<<<< HEAD
   final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
   final OptionGreigeOrderService _greigeOrderService =
       OptionGreigeOrderService();
@@ -101,28 +50,6 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchDetail();
     });
-=======
-  final ValueNotifier<bool> _deleteLoading = ValueNotifier(false);
-  final OptionGreigeOrderService _greigeOrderService =
-      OptionGreigeOrderService();
-
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  Map<String, dynamic> _greigeOrder = {};
-  Map<String, dynamic> _data = {};
-
-  @override
-  void initState() {
-    super.initState();
-<<<<<<< HEAD
-    _fetchDetail();
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _fetchDetail();
-    });
->>>>>>> 80dec51b (fix: edit warping-shearing)
   }
 
   @override
@@ -138,10 +65,6 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
     });
 
     try {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f7a54b43 (fix: detail list)
       final weavingService =
           Provider.of<WeavingService>(context, listen: false);
 
@@ -175,7 +98,6 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
 
         _isLoading = false;
       });
-<<<<<<< HEAD
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -183,24 +105,6 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
         setState(() {
           _isLoading = false;
         });
-=======
-      await Provider.of<WeavingService>(context, listen: false)
-          .getDataView(context, widget.id);
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      if (mounted && _isLoading) {
-        setState(() {
-          _isLoading = false;
-        });
->>>>>>> f7a54b43 (fix: detail list)
       }
     }
   }
@@ -211,19 +115,9 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
     return response;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Future _handleDelete(dynamic _) async {
     final data = _data;
 
-=======
-  Future<void> _handleDelete(Map<String, dynamic> data) async {
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
-  Future _handleDelete(dynamic _) async {
-    final data = _data;
-
->>>>>>> f7a54b43 (fix: detail list)
     final hasDeletePermission = widget.canDelete == true;
     final canDeleteItem = data['can_delete'] != false;
 
@@ -247,21 +141,11 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
         try {
           final message =
               await Provider.of<WeavingService>(context, listen: false)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> f7a54b43 (fix: detail list)
                   .deleteItem(
             context,
             widget.id.toString(),
             _deleteLoading,
           );
-<<<<<<< HEAD
-=======
-                  .deleteItem(context, widget.id.toString(), _deleteLoading);
->>>>>>> 95d1a035 (fix: weaving, shearing)
-=======
->>>>>>> f7a54b43 (fix: detail list)
 
           if (Navigator.canPop(context)) {
             Navigator.pop(context);
@@ -290,7 +174,6 @@ class _WeavingDetailScreenState extends State<WeavingDetailScreen> {
       },
     );
   }
-<<<<<<< HEAD
 
   @override
   Widget build(BuildContext context) {
@@ -469,215 +352,10 @@ class _WarpingDetailHeader extends StatelessWidget {
                 )
               : titleContent,
         );
-=======
-  final WeavingService _weavingService = WeavingService();
-=======
->>>>>>> 95d1a035 (fix: weaving, shearing)
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: 'Detail Proses Weaving',
-          onReturn: () => Navigator.pop(context),
-          handleDelete: _handleDelete,
-          handleUpdate: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => EditWeavingScreen(
-                  id: widget.id,
-                ),
-              ),
-            );
-
-            if (!mounted) return;
-
-            if (result == true) {
-              Navigator.pop(context, true);
-            }
-          },
-          id: widget.id,
-          updateStatus:
-              widget.canUpdate == true && (_data['can_update'] != false),
-          deleteStatus:
-              widget.canDelete == true && (_data['can_delete'] != false),
-          label: 'Weaving',
-        ),
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: SafeArea(
-          child: Consumer<WeavingService>(
-            builder: (context, service, _) {
-              if (_isLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (_errorMessage != null) {
-                return _ErrorView(
-                  message: _errorMessage!,
-                  onRetry: _fetchDetail,
-                );
-              }
-
-              final data = _detailData(service.dataView);
-
-              return GreigeProcessDetailList(
-                data: data,
-                processName: 'Weaving',
-                processNoKey: 'weaving_no',
-                withMultiMachine: true,
-                withAttachments: true,
-                onRefresh: _fetchDetail,
-                canDelete: widget.canDelete,
-                canUpdate: widget.canUpdate,
-                onDelete: () => _handleDelete(data),
-                onEdit: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditWeavingScreen(
-                        id: widget.id,
-                      ),
-                    ),
-                  );
-
-                  if (!mounted) return;
-
-                  if (result == true) {
-                    Navigator.pop(context, true);
-                  }
-                },
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _WarpingDetailHeader extends StatelessWidget {
-  final Map<String, dynamic> data;
-  final bool canDelete;
-  final VoidCallback onDelete;
-
-  const _WarpingDetailHeader({
-    required this.data,
-    required this.canDelete,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isCompact = constraints.maxWidth < 640;
-        final deleteButton = canDelete && data['can_delete'] != false
-            ? ElevatedButton.icon(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline, color: Colors.white),
-                label: const Text('Hapus Weaving'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomTheme().buttonColor('danger'),
-                  foregroundColor: Colors.white,
-                  elevation: 2,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              )
-            : null;
-
-        final titleContent = Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconButton(
-              tooltip: 'Kembali',
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back, size: 28),
-              color: Colors.grey.shade700,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Detail Proses Weaving',
-                    style: TextStyle(
-                      fontSize: isCompact ? 24 : 28,
-                      height: 1.15,
-                      color: Colors.grey.shade900,
-                      fontWeight: CustomTheme().fontWeight('bold'),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    'Lihat ringkasan proses Weaving dan item Persiapan Produksi.',
-                    style: TextStyle(
-                      fontSize: CustomTheme().fontSize('md'),
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (!isCompact && deleteButton != null) ...[
-              const SizedBox(width: 16),
-              deleteButton,
-            ],
-          ],
-        );
-
-<<<<<<< HEAD
-        final message =
-            await Provider.of<WeavingService>(context, listen: false)
-                .finishItem(context, id, weaving, isLoading);
-
-        Navigator.pushNamedAndRemoveUntil(context, '/weaving', (_) => false);
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showAlertDialog(
-              context: context,
-              title: 'Weaving Selesai',
-              child: buildBoldMessage(
-                message: message,
-                prefix: "WEA",
-              ));
-        });
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 16, 18),
-          child: isCompact && deleteButton != null
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    titleContent,
-                    const SizedBox(height: 14),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 48),
-                      child: deleteButton,
-                    ),
-                  ],
-                )
-              : titleContent,
-        );
->>>>>>> 95d1a035 (fix: weaving, shearing)
       },
     );
   }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 95d1a035 (fix: weaving, shearing)
 
 class _WarpingDetailBody extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -1573,8 +1251,3 @@ String _formatType(dynamic value) {
           word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
       .join(' ');
 }
-<<<<<<< HEAD
-=======
->>>>>>> 7fd183d (feat: create and finish warping, weaving)
-=======
->>>>>>> 95d1a035 (fix: weaving, shearing)

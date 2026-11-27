@@ -1,17 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'dart:async';
 import 'dart:io';
 
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-import 'dart:async';
-import 'dart:io';
-
->>>>>>> 64274789 (fix: selesai warping-shearing)
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:textile_tracking/components/master/appbar/custom_app_bar.dart';
@@ -22,8 +13,6 @@ import 'package:textile_tracking/components/master/form/select_form.dart';
 import 'package:textile_tracking/components/master/form/text_form.dart';
 import 'package:textile_tracking/components/master/theme.dart';
 import 'package:textile_tracking/components/process/create/greige_info_tab.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
 import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
@@ -38,26 +27,6 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
-=======
-=======
-import 'package:textile_tracking/helpers/result/show_alert_dialog.dart';
->>>>>>> 64274789 (fix: selesai warping-shearing)
-import 'package:textile_tracking/helpers/result/show_confirmation_dialog.dart';
-import 'package:textile_tracking/helpers/result/show_select_dialog.dart';
-import 'package:textile_tracking/helpers/util/attachment_picker.dart';
-import 'package:textile_tracking/helpers/util/note_editor.dart';
-import 'package:textile_tracking/helpers/util/separated_column.dart';
-import 'package:textile_tracking/models/option/option_greige_order.dart';
-import 'package:textile_tracking/screens/update/process/machine.dart';
-import 'package:textile_tracking/screens/warping/model/warping.dart';
-<<<<<<< HEAD
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-import 'package:flutter/foundation.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:path_provider/path_provider.dart';
->>>>>>> 64274789 (fix: selesai warping-shearing)
 
 class FinishWarpingProcessManual extends StatefulWidget {
   final dynamic id;
@@ -89,31 +58,14 @@ class _FinishWarpingProcessManualState
   final WarpingService _warpingService = WarpingService();
   final ValueNotifier<bool> _isSubmitting = ValueNotifier(false);
   final TextEditingController _noteController = TextEditingController();
-<<<<<<< HEAD
-<<<<<<< HEAD
   final TextEditingController _lengthController = TextEditingController();
   final TextEditingController _sectionController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _wasteController = TextEditingController();
+  final TextEditingController _gemporController = TextEditingController();
   List<Map<String, dynamic>> _brokenYarnTypes = [];
   List<TextEditingController> _brokenYarnQtyControllers = [];
   final List<_CustomBrokenYarnEntry> _customBrokenYarns = [];
-=======
-  final TextEditingController _yarnQtyController = TextEditingController();
-  List<TextEditingController> _lengthControllers = [];
-  final TextEditingController _sectionController = TextEditingController();
-<<<<<<< HEAD
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-  final TextEditingController _beamQtyController = TextEditingController();
->>>>>>> e02e3ffb (fix: finish warping)
-=======
-  final TextEditingController _lengthController = TextEditingController();
-  final TextEditingController _sectionController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-  List<Map<String, dynamic>> _brokenYarnTypes = [];
-  List<TextEditingController> _brokenYarnQtyControllers = [];
-  final List<_CustomBrokenYarnEntry> _customBrokenYarns = [];
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
   bool _firstLoading = false;
   bool _isFetchingWorkOrder = false;
@@ -122,19 +74,10 @@ class _FinishWarpingProcessManualState
   Map<String, dynamic> processData = {};
   String? processId;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
   late List<Map<String, dynamic>> allAttachments;
 
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
 
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void initState() {
     super.initState();
@@ -142,11 +85,12 @@ class _FinishWarpingProcessManualState
     processId = widget.processId?.toString();
     woData = Map<String, dynamic>.from(widget.data ?? {});
     _noteController.text = widget.form?['notes']?.toString() ?? '';
+    _lengthController.text = widget.form?['length']?.toString() ?? '';
+    _sectionController.text = widget.form?['section']?.toString() ?? '';
+    _weightController.text = widget.form?['weight']?.toString() ?? '';
+    _wasteController.text = widget.form?['waste']?.toString() ?? '';
+    _gemporController.text = widget.form?['gempor']?.toString() ?? '';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
     final existing = List<Map<String, dynamic>>.from(
       widget.form?['attachments'] ?? [],
     );
@@ -156,11 +100,6 @@ class _FinishWarpingProcessManualState
       {'is_add_button': true},
     ];
 
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _postInit();
     });
@@ -168,14 +107,7 @@ class _FinishWarpingProcessManualState
 
   Future<void> _postInit() async {
     await _fetchWorkOrder();
-<<<<<<< HEAD
-<<<<<<< HEAD
     await _fetchBrokenYarnTypes();
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-    await _fetchBrokenYarnTypes();
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
     if (widget.processId != null) {
       await _getProcessView(widget.processId);
@@ -202,10 +134,6 @@ class _FinishWarpingProcessManualState
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   Future<void> _fetchBrokenYarnTypes() async {
     try {
       final types = await _warpingService.fetchBrokenYarnTypes(context);
@@ -236,11 +164,6 @@ class _FinishWarpingProcessManualState
     }
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   void _handleChangeInput(String field, dynamic value) {
     setState(() {
       widget.form?[field] = value;
@@ -248,8 +171,6 @@ class _FinishWarpingProcessManualState
     widget.handleChangeInput?.call(field, value);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   num? _parseBrokenYarnQty(String value) {
     final parsed = num.tryParse(
       value.trim().replaceAll('.', '').replaceAll(',', '.'),
@@ -271,32 +192,6 @@ class _FinishWarpingProcessManualState
     return total;
   }
 
-=======
-  num? _parseBrokenYarnQty(String value) {
-    final parsed = num.tryParse(
-      value.trim().replaceAll('.', '').replaceAll(',', '.'),
-    );
-    return parsed != null && parsed > 0 ? parsed : null;
-  }
-
-<<<<<<< HEAD
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-=======
-  num get _totalBrokenYarnQty {
-    num total = 0;
-
-    for (final controller in _brokenYarnQtyControllers) {
-      total += _parseBrokenYarnQty(controller.text) ?? 0;
-    }
-
-    for (final entry in _customBrokenYarns) {
-      total += _parseBrokenYarnQty(entry.qtyController.text) ?? 0;
-    }
-
-    return total;
-  }
-
->>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
   void _syncBrokenYarns() {
     final brokenYarns = <Map<String, dynamic>>[];
 
@@ -371,7 +266,6 @@ class _FinishWarpingProcessManualState
     });
   }
 
-<<<<<<< HEAD
   Future<void> _getWorkOrderView(dynamic id) async {
     await _greigeOrderService.getDataView(id);
 
@@ -383,39 +277,6 @@ class _FinishWarpingProcessManualState
       if (warpingType != null) {
         widget.form?['warping_type'] = warpingType;
       }
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-  Future<void> _getWorkOrderView(dynamic id) async {
-    await _greigeOrderService.getDataView(id);
-
-    final data = _greigeOrderService.dataView;
-
-    setState(() {
-<<<<<<< HEAD
-      woData = _greigeOrderService.dataView;
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-      woData = data;
-<<<<<<< HEAD
-
-      // dispose controller lama
-      for (final c in _lengthControllers) {
-        c.dispose();
-      }
-
-      _lengthControllers = List.generate(
-        pasangQty,
-        (_) => TextEditingController(),
-      );
-
-      widget.form?['lengths'] = List.generate(pasangQty, (_) => '');
->>>>>>> e02e3ffb (fix: finish warping)
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-=======
->>>>>>> c940e94a (fix:)
     });
   }
 
@@ -425,8 +286,6 @@ class _FinishWarpingProcessManualState
     try {
       await _warpingService.getDataView(context, id);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       final data = _warpingService.dataView['data'];
       final attachments = List<Map<String, dynamic>>.from(
         data['attachments'] ?? [],
@@ -454,6 +313,8 @@ class _FinishWarpingProcessManualState
         widget.form?['attachments'] = attachments;
         widget.form?['length'] = data['length'];
         widget.form?['weight'] = data['weight'];
+        widget.form?['waste'] = data['waste'];
+        widget.form?['gempor'] = data['gempor'];
 
         allAttachments = [
           ...attachments,
@@ -464,100 +325,20 @@ class _FinishWarpingProcessManualState
 
         _weightController.text = data['weight']?.toString() ?? '';
 
-        _sectionController.text = data['section']?.toString() ?? '';
+        _wasteController.text = data['waste']?.toString() ?? '';
 
-        _noteController.text = data['notes']?.toString() ?? '';
-        _applyExistingBrokenYarns(data['broken_yarns']);
-=======
-      setState(() {
-        processData = _warpingService.dataView['data'];
-        widget.form?['process_id'] = processData['id']?.toString();
-        widget.form?['machine_id'] = processData['machine']['id'];
-        widget.form?['warping_type'] = processData['warping_type'];
-        widget.form?['yarn_qty'] = processData['yarn_qty'];
-        widget.form?['length'] = processData['length'];
-        widget.form?['section'] = processData['section'];
-        widget.form?['order_greige_id'] = processData['order_greige_id'];
-        widget.form?['no_og'] =
-            processData['order_greige']?['og_no'] ?? widget.form?['no_og'];
-        widget.form?['notes'] = processData['notes']?.toString() ?? '';
-
-        _yarnQtyController.text = processData['yarn_qty']?.toString() ?? '';
-        _lengthController.text = processData['length']?.toString() ?? '';
-        _sectionController.text = processData['section']?.toString() ?? '';
-        _noteController.text = processData['notes']?.toString() ??
-            widget.form?['notes']?.toString() ??
-            '';
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-      final data = _warpingService.dataView['data'];
-      final attachments = List<Map<String, dynamic>>.from(
-        data['attachments'] ?? [],
-      );
-
-      setState(() {
-        processData = data;
-
-        widget.form?['process_id'] = data['id']?.toString();
-        widget.form?['machines'] = List<Map<String, dynamic>>.from(
-          data['machines'] ?? [],
-        );
-        widget.form?['machine_id'] = data['machine']?['id'];
-        widget.form?['warping_type'] = _readWarpingType(data) ??
-            _readWarpingType(data['order_greige']) ??
-            _readWarpingType(woData) ??
-            _readWarpingType(widget.form?['warping_type']);
-        widget.form?['yarn_qty'] = data['yarn_qty'];
-        widget.form?['beam_qty'] = data['beam_qty'];
-        widget.form?['section'] = data['section'];
-        widget.form?['order_greige_id'] = data['order_greige_id'];
-        widget.form?['no_og'] =
-            data['order_greige']?['og_no'] ?? widget.form?['no_og'];
-        widget.form?['notes'] = data['notes']?.toString() ?? '';
-        widget.form?['attachments'] = attachments;
-        widget.form?['length'] = data['length'];
-        widget.form?['weight'] = data['weight'];
-
-        allAttachments = [
-          ...attachments,
-          {'is_add_button': true},
-        ];
-
-        _lengthController.text = data['length']?.toString() ?? '';
-
-        _weightController.text = data['weight']?.toString() ?? '';
+        _gemporController.text = data['gempor']?.toString() ?? '';
 
         _sectionController.text = data['section']?.toString() ?? '';
 
         _noteController.text = data['notes']?.toString() ?? '';
-<<<<<<< HEAD
-
-        // dispose controller lama
-        for (final c in _lengthControllers) {
-          c.dispose();
-        }
-
-        // buat controller baru
-        _lengthControllers = List.generate(
-          lengths.length,
-          (index) => TextEditingController(
-            text: lengths[index].toString(),
-          ),
-        );
->>>>>>> e02e3ffb (fix: finish warping)
-=======
         _applyExistingBrokenYarns(data['broken_yarns']);
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
       });
     } finally {
       setState(() => _firstLoading = false);
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
   dynamic _readWarpingType(dynamic source, [int depth = 0]) {
     if (source == null) return null;
 
@@ -597,25 +378,13 @@ class _FinishWarpingProcessManualState
         .join(' ');
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> c940e94a (fix:)
   void _selectWorkOrder() {
     showSelectDialog(
       context: context,
       title: 'Work Order',
       isFetching: _isFetchingWorkOrder,
       option: workOrderOption,
-<<<<<<< HEAD
-<<<<<<< HEAD
       badgeKey: 'warping_type',
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-      badgeKey: 'warping_type',
->>>>>>> c940e94a (fix:)
       selected: widget.form?['wo_id']?.toString() ?? '',
       handleChangeValue: (selected) async {
         final woId = selected['value']?.toString();
@@ -624,14 +393,7 @@ class _FinishWarpingProcessManualState
         setState(() {
           widget.form?['order_greige_id'] = woId;
           widget.form?['no_og'] = selected['label']?.toString() ?? '';
-<<<<<<< HEAD
-<<<<<<< HEAD
           widget.form?['warping_type'] = _readWarpingType(selected);
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-          widget.form?['warping_type'] = _readWarpingType(selected);
->>>>>>> c940e94a (fix:)
           widget.form?['process_id'] = selectedProcessId;
           processId = selectedProcessId;
           processData = {};
@@ -693,11 +455,6 @@ class _FinishWarpingProcessManualState
     );
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   dynamic _getMachineStatus(dynamic machineId) {
     final machines = List<Map<String, dynamic>>.from(
       processData['machines'] ?? [],
@@ -719,11 +476,6 @@ class _FinishWarpingProcessManualState
         machines.every((machine) => machine?['status'] == 'Selesai');
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
   Future<File?> compressImage(String path) async {
     if (kIsWeb) {
       return File(path);
@@ -743,28 +495,12 @@ class _FinishWarpingProcessManualState
     return result != null ? File(result.path) : null;
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   Future<void> _pickAttachments(ImageSource source) async {
-=======
-  Future<void> _pickAttachments() async {
->>>>>>> 64274789 (fix: selesai warping-shearing)
-=======
-  Future<void> _pickAttachments(ImageSource source) async {
->>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
     try {
       final picker = ImagePicker();
 
       final XFile? image = await picker.pickImage(
-<<<<<<< HEAD
-<<<<<<< HEAD
         source: source,
-=======
-        source: ImageSource.camera,
->>>>>>> 64274789 (fix: selesai warping-shearing)
-=======
-        source: source,
->>>>>>> 04066211 (fix: attachment pick dari galeri untuk warping - persiapan dyeing)
       );
 
       if (image == null) return;
@@ -881,18 +617,11 @@ class _FinishWarpingProcessManualState
     return completer.future;
   }
 
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> 64274789 (fix: selesai warping-shearing)
   @override
   void dispose() {
     widget.form?.clear();
 
     _noteController.dispose();
-<<<<<<< HEAD
-<<<<<<< HEAD
     _lengthController.dispose();
     for (final controller in _brokenYarnQtyControllers) {
       controller.dispose();
@@ -901,40 +630,14 @@ class _FinishWarpingProcessManualState
       entry.dispose();
     }
     _weightController.dispose();
-=======
-    _yarnQtyController.dispose();
-<<<<<<< HEAD
-    _lengthController.dispose();
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-    for (final controller in _lengthControllers) {
-      controller.dispose();
-    }
-<<<<<<< HEAD
->>>>>>> e02e3ffb (fix: finish warping)
-=======
-    _beamQtyController.dispose();
->>>>>>> 64274789 (fix: selesai warping-shearing)
-=======
-    _lengthController.dispose();
-    for (final controller in _brokenYarnQtyControllers) {
-      controller.dispose();
-    }
-    for (final entry in _customBrokenYarns) {
-      entry.dispose();
-    }
-    _weightController.dispose();
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
+    _wasteController.dispose();
+    _gemporController.dispose();
     _sectionController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
     final isDisabled = widget.form?['order_greige_id'] == null
         // ||
         // !_isAllMachineDone()
@@ -942,7 +645,6 @@ class _FinishWarpingProcessManualState
         // widget.form?['machine_id'] == null ||
         // widget.form?['warping_type'] == null ||
         // widget.form?['yarn_qty'] == null
-<<<<<<< HEAD
         // ||
         // widget.form?['length'] == null
         // ||
@@ -950,29 +652,6 @@ class _FinishWarpingProcessManualState
         //  ||
         // widget.form?['beam_qty'] == null
         ;
-=======
-    final isDisabled = widget.form?['order_greige_id'] == null ||
-<<<<<<< HEAD
-        widget.form?['machine_id'] == null ||
-        widget.form?['warping_type'] == null ||
-        widget.form?['yarn_qty'] == null ||
-        widget.form?['length'] == null ||
-        widget.form?['section'] == null;
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-            widget.form?['machine_id'] == null ||
-            widget.form?['warping_type'] == null ||
-            widget.form?['yarn_qty'] == null
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-        // ||
-        // widget.form?['length'] == null
-        // ||
-        // widget.form?['section'] == null
-        //  ||
-        // widget.form?['beam_qty'] == null
-        ;
->>>>>>> e02e3ffb (fix: finish warping)
 
     return DefaultTabController(
       length: 2,
@@ -995,15 +674,7 @@ class _FinishWarpingProcessManualState
                       text: 'Form',
                     ),
                     Tab(
-<<<<<<< HEAD
-<<<<<<< HEAD
                       text: 'Info Order Greige',
-=======
-                      text: 'Info Greige Order',
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-                      text: 'Info Order Greige',
->>>>>>> 64274789 (fix: selesai warping-shearing)
                     ),
                   ]),
                 ),
@@ -1017,52 +688,25 @@ class _FinishWarpingProcessManualState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TemplateCard(
-<<<<<<< HEAD
-<<<<<<< HEAD
                                 title: 'Order Greige',
                                 icon: Icons.assignment_outlined,
                                 child: SelectForm(
                                   label: 'Order Greige',
-=======
-                                title: 'Greige Order',
-                                icon: Icons.assignment_outlined,
-                                child: SelectForm(
-                                  label: 'Greige Order',
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-                                title: 'Order Greige',
-                                icon: Icons.assignment_outlined,
-                                child: SelectForm(
-                                  label: 'Order Greige',
->>>>>>> 64274789 (fix: selesai warping-shearing)
                                   onTap: _selectWorkOrder,
                                   selectedLabel: widget.form?['no_og'] ?? '',
                                   selectedValue: widget.form?['order_greige_id']
                                           ?.toString() ??
                                       '',
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c940e94a (fix:)
                                   badge: _formatWarpingType(
                                     _readWarpingType(
                                             widget.form?['warping_type']) ??
                                         _readWarpingType(woData) ??
                                         _readWarpingType(processData),
                                   ),
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> c940e94a (fix:)
                                   required: true,
                                 ),
                               ),
                               if (widget.form?['order_greige_id'] != null) ...[
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
                                 TemplateCard(
                                   title: 'Mesin',
                                   icon: Icons.local_laundry_service_outlined,
@@ -1072,39 +716,8 @@ class _FinishWarpingProcessManualState
                                     getMachineStatus: _getMachineStatus,
                                     newMachines: <Map<String, dynamic>>[],
                                     withAddMachine: false,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                                     columns: 2,
                                     compactDisplay: true,
-=======
->>>>>>> c940e94a (fix:)
-=======
-                                    columns: 2,
-                                    compactDisplay: true,
->>>>>>> a750f85d (fix: warping - shearing)
-=======
-=======
->>>>>>> 968ce058 (fix: warping - shearing)
-                                    columns: 2,
-                                    compactDisplay: true,
-=======
->>>>>>> 79249c5 (fix:)
-<<<<<<< HEAD
->>>>>>> 581d9e1c (fix:)
-=======
-=======
-                                    columns: 2,
-                                    compactDisplay: true,
->>>>>>> 4407641 (fix: warping - shearing)
->>>>>>> 968ce058 (fix: warping - shearing)
-=======
-                                    columns: 2,
-                                    compactDisplay: true,
->>>>>>> 0ba64c26 (chore: adjust fase-2)
                                     wrapCrossAxisAlignment:
                                         WrapCrossAlignment.start,
                                     onMachineChanged: () => setState(() {}),
@@ -1112,17 +725,6 @@ class _FinishWarpingProcessManualState
                                 ),
                                 _buildBrokenYarnSection(),
                                 _buildBeamWeightSection(),
-<<<<<<< HEAD
-=======
-                                    onMachineChanged: () => setState(() {}),
-                                  ),
-                                ),
-                                _buildBrokenYarnSection(),
-<<<<<<< HEAD
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-=======
-                                _buildBeamWeightSection(),
->>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
                                 AttachmentPicker(
                                   attachments: allAttachments,
                                   onAddAttachment: _pickAttachments,
@@ -1135,27 +737,6 @@ class _FinishWarpingProcessManualState
                                     );
                                   },
                                 ),
-=======
-                                _buildBeamWeightSection(),
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
-                                _buildPanjangSection(),
-<<<<<<< HEAD
->>>>>>> e02e3ffb (fix: finish warping)
-=======
-                                AttachmentPicker(
-                                  attachments: allAttachments,
-                                  onAddAttachment: _pickAttachments,
-                                  onDeleteAttachment: _handleDeleteAttachment,
-                                  onPreviewImage: (isNew, filePath) {
-                                    showImageDialog(
-                                      context,
-                                      isNew,
-                                      filePath,
-                                    );
-                                  },
-                                ),
->>>>>>> 64274789 (fix: selesai warping-shearing)
                                 NoteEditor(
                                   controller: _noteController,
                                   formKey: 'notes',
@@ -1213,52 +794,80 @@ class _FinishWarpingProcessManualState
     return TemplateCard(
       title: 'Benang',
       icon: Icons.rule,
-<<<<<<< HEAD
-<<<<<<< HEAD
       child: Column(
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
             children: [
-              Expanded(
-                child: TextForm(
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  label: 'Jumlah Panjang (M)',
-                  controller: _lengthController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('length', value);
-                  },
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Panjang (M)',
+                      controller: _lengthController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('length', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Berat (KG)',
+                      controller: _weightController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('weight', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Jumlah Section',
+                      controller: _sectionController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('section', value);
+                      },
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl')),
               ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Berat (KG)',
-                  controller: _weightController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('weight', value);
-                  },
-                ),
-              ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Section',
-                  controller: _sectionController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('section', value);
-                  },
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextForm(
+                      label: 'Waste',
+                      controller: _wasteController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('waste', value);
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: TextForm(
+                      label: 'Gempor',
+                      controller: _gemporController,
+                      req: false,
+                      isNumber: true,
+                      isSorting: true,
+                      handleChange: (value) {
+                        _handleChangeInput('gempor', value);
+                      },
+                    ),
+                  ),
+                ].separatedBy(CustomTheme().hGap('xl')),
+              )
+            ].separatedBy(CustomTheme().vGap('xl')),
           ),
         ],
       ),
@@ -1293,25 +902,17 @@ class _FinishWarpingProcessManualState
                   ),
                 ),
               ),
-<<<<<<< HEAD
               Wrap(
-                spacing: spacing,
-                runSpacing: 16,
+                spacing: 12,
+                runSpacing: 12,
                 children: List.generate(
                   _brokenYarnTypes.length,
                   (index) => SizedBox(
                     width: itemWidth,
-                    child: TextForm(
+                    child: _buildBrokenYarnQtyField(
                       label:
                           _brokenYarnTypes[index]['label']?.toString() ?? '-',
                       controller: _brokenYarnQtyControllers[index],
-                      req: false,
-                      isNumber: true,
-                      isSorting: true,
-                      handleChange: (_) {
-                        _syncBrokenYarns();
-                        setState(() {});
-                      },
                     ),
                   ),
                 ),
@@ -1334,16 +935,9 @@ class _FinishWarpingProcessManualState
                       ),
                     ),
                     Expanded(
-                      child: TextForm(
+                      child: _buildBrokenYarnQtyField(
                         label: 'Qty',
                         controller: item.qtyController,
-                        req: false,
-                        isNumber: true,
-                        isSorting: true,
-                        handleChange: (_) {
-                          _syncBrokenYarns();
-                          setState(() {});
-                        },
                       ),
                     ),
                     IconButton(
@@ -1365,203 +959,75 @@ class _FinishWarpingProcessManualState
             ].separatedBy(CustomTheme().vGap('lg')),
           );
         },
-=======
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-=======
-      child: Column(
->>>>>>> e02e3ffb (fix: finish warping)
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Benang (KG)',
-=======
-                  label: 'Qty Benang (KG)',
->>>>>>> 64274789 (fix: selesai warping-shearing)
-                  controller: _yarnQtyController,
-=======
-                  label: 'Jumlah Panjang (M)',
-                  controller: _lengthController,
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('length', value);
-                  },
-                ),
-              ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Berat (KG)',
-                  controller: _weightController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('weight', value);
-                  },
-                ),
-              ),
-              Expanded(
-                child: TextForm(
-                  label: 'Jumlah Section',
-                  controller: _sectionController,
-                  req: false,
-                  isNumber: true,
-                  isSorting: true,
-                  handleChange: (value) {
-                    _handleChangeInput('section', value);
-                  },
-                ),
-              ),
-            ].separatedBy(CustomTheme().hGap('xl')),
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildBrokenYarnSection() {
-    return TemplateCard(
-      title: 'Jenis Benang Putus',
-      icon: Icons.content_cut_outlined,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const spacing = 24.0;
-          final columns = constraints.maxWidth >= 900
-              ? 3
-              : constraints.maxWidth >= 600
-                  ? 2
-                  : 1;
-          final itemWidth =
-              (constraints.maxWidth - (spacing * (columns - 1))) / columns;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-=======
->>>>>>> ffa19d72 (fix: akumulasi jumlah benang di warping)
-              Wrap(
-                spacing: spacing,
-                runSpacing: 16,
-                children: List.generate(
-                  _brokenYarnTypes.length,
-                  (index) => SizedBox(
-                    width: itemWidth,
-                    child: TextForm(
-                      label:
-                          _brokenYarnTypes[index]['label']?.toString() ?? '-',
-                      controller: _brokenYarnQtyControllers[index],
-                      req: false,
-                      isNumber: true,
-                      isSorting: true,
-                      handleChange: (_) {
-                        _syncBrokenYarns();
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                ),
-              ),
-<<<<<<< HEAD
-            ),
-<<<<<<< HEAD
+  Widget _buildBrokenYarnQtyField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        // _buildQuantityButton(
+        //   icon: Icons.remove,
+        //   tooltip: 'Kurangi $label',
+        //   onPressed: () => _adjustBrokenYarnQty(controller, -1),
+        // ),
+        Expanded(
+          child: TextForm(
+            label: label,
+            controller: controller,
+            req: false,
+            isNumber: true,
+            isSorting: true,
+            handleChange: (_) {
+              _syncBrokenYarns();
+              setState(() {});
+            },
           ),
-<<<<<<< HEAD
-          Expanded(
-            child: TextForm(
-              label: 'Jumlah Panjang (M)',
-              controller: _lengthController,
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                _handleChangeInput('length', value);
-              },
-            ),
-          ),
-          Expanded(
-            child: TextForm(
-              label: 'Jumlah Section (PCS)',
-              controller: _sectionController,
-              req: false,
-              isNumber: true,
-              isSorting: true,
-              handleChange: (value) {
-                _handleChangeInput('section', value);
-              },
-            ),
-          ),
-        ].separatedBy(CustomTheme().hGap('xl')),
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
         ),
->>>>>>> e02e3ffb (fix: finish warping)
-=======
-=======
-              ..._customBrokenYarns.asMap().entries.map((entry) {
-                final index = entry.key;
-                final item = entry.value;
-
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: TextForm(
-                        label: 'Jenis Lainnya',
-                        controller: item.labelController,
-                        req: false,
-                        handleChange: (_) {
-                          _syncBrokenYarns();
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: TextForm(
-                        label: 'Qty',
-                        controller: item.qtyController,
-                        req: false,
-                        isNumber: true,
-                        isSorting: true,
-                        handleChange: (_) {
-                          _syncBrokenYarns();
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: 'Hapus jenis',
-                      onPressed: () => _removeCustomBrokenYarn(index),
-                      icon: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ].separatedBy(CustomTheme().hGap('lg')),
-                );
-              }),
-              TextButton.icon(
-                onPressed: _addCustomBrokenYarn,
-                icon: const Icon(Icons.add),
-                label: const Text('Tambah Jenis'),
-              ),
-            ].separatedBy(CustomTheme().vGap('lg')),
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
-          );
-        },
->>>>>>> 64274789 (fix: selesai warping-shearing)
-      ),
+        // _buildQuantityButton(
+        //   icon: Icons.add,
+        //   tooltip: 'Tambah $label',
+        //   onPressed: () => _adjustBrokenYarnQty(controller, 1),
+        // ),
+      ],
     );
+  }
+
+  Widget _buildQuantityButton({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onPressed,
+  }) {
+    return IconButton(
+      icon: Icon(icon, size: 20),
+      tooltip: tooltip,
+      visualDensity: VisualDensity.compact,
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(minWidth: 28, minHeight: 48),
+      onPressed: onPressed,
+    );
+  }
+
+  void _adjustBrokenYarnQty(TextEditingController controller, num delta) {
+    final current = _parseBrokenYarnQty(controller.text) ?? 0;
+    final next = (current + delta).clamp(0, double.infinity);
+
+    controller.text = next == 0 ? '' : _formatQuantity(next);
+    controller.selection = TextSelection.collapsed(
+      offset: controller.text.length,
+    );
+    _syncBrokenYarns();
+    setState(() {});
+  }
+
+  String _formatQuantity(num value) {
+    return value % 1 == 0 ? value.toInt().toString() : value.toString();
   }
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
 
 class _CustomBrokenYarnEntry {
   final TextEditingController labelController;
@@ -1578,8 +1044,3 @@ class _CustomBrokenYarnEntry {
     qtyController.dispose();
   }
 }
-<<<<<<< HEAD
-=======
->>>>>>> 5d1f483f (fix: warping, sizing)
-=======
->>>>>>> 3562ec45 (fix: selesai warping - shearing)
